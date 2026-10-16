@@ -523,11 +523,56 @@ const RLY3_CSS = `
 `;
 
 
+const FL_HARMONY_CSS = `
+    /* ===== Armonizzazione tema scuro: una sola palette (navy + oro, verde = giusto, rosso = sbagliato) ===== */
+    html.fl-dark { --fl-bg: #0B1322; --fl-s1: #111C33; --fl-s2: #16243F; --fl-s3: #1C2C4C; --fl-line: #22324F;
+      --fl-fg: #F3EEE4; --fl-fg2: #C9D1E0; --fl-muted: #8E9BB5; --fl-gold: #FFB020; --fl-gold2: #F08A00;
+      --fl-green: #22C55E; --fl-green2: #16A34A; --fl-red: #FF5A5F; background: var(--fl-bg); color-scheme: dark; }
+    html.fl-dark body { background: var(--fl-bg); }
+    html.fl-dark .bg-white, html.fl-dark .bg-slate-50, html.fl-dark .bg-white\\/90, html.fl-dark .bg-slate-800, html.fl-dark .bg-zinc-900 { background-color: var(--fl-s1) !important; }
+    html.fl-dark .bg-slate-100, html.fl-dark .bg-slate-200, html.fl-dark .bg-slate-700, html.fl-dark .bg-purple-100, html.fl-dark .bg-blue-100, html.fl-dark .bg-zinc-700 { background-color: var(--fl-s2) !important; }
+    html.fl-dark .bg-slate-900 { background-color: var(--fl-bg) !important; }
+    html.fl-dark .bg-slate-700\\/50, html.fl-dark .bg-slate-800\\/50 { background-color: rgba(28,44,76,.6) !important; }
+    html.fl-dark .bg-slate-300, html.fl-dark .bg-zinc-500 { background-color: var(--fl-s3) !important; }
+    html.fl-dark .text-slate-900, html.fl-dark .text-slate-800, html.fl-dark .text-slate-700, html.fl-dark .text-zinc-900, html.fl-dark .text-zinc-700 { color: var(--fl-fg) !important; }
+    html.fl-dark .text-slate-600, html.fl-dark .text-slate-300, html.fl-dark .text-zinc-300 { color: var(--fl-fg2) !important; }
+    html.fl-dark .text-slate-500, html.fl-dark .text-slate-400, html.fl-dark .text-zinc-500 { color: var(--fl-muted) !important; }
+    html.fl-dark .border-slate-200, html.fl-dark .border-slate-300, html.fl-dark .border-slate-600, html.fl-dark .border-slate-700, html.fl-dark .border-slate-800, html.fl-dark .border-zinc-700, html.fl-dark .border-zinc-800 { border-color: var(--fl-line) !important; }
+    html.fl-dark .bg-emerald-50, html.fl-dark .bg-emerald-100 { background-color: rgba(34,197,94,.12) !important; }
+    html.fl-dark .border-emerald-200 { border-color: rgba(34,197,94,.4) !important; }
+    html.fl-dark .text-emerald-700, html.fl-dark .text-emerald-600 { color: #4ADE80 !important; }
+    html.fl-dark .bg-rose-50, html.fl-dark .bg-rose-100, html.fl-dark .bg-red-100 { background-color: rgba(255,90,95,.12) !important; }
+    html.fl-dark .border-rose-300 { border-color: rgba(255,90,95,.45) !important; }
+    html.fl-dark .text-rose-700, html.fl-dark .text-rose-600 { color: #FF8A8E !important; }
+    html.fl-dark .bg-amber-50, html.fl-dark .bg-orange-50 { background-color: rgba(255,176,32,.1) !important; }
+    html.fl-dark .border-amber-200, html.fl-dark .border-amber-300, html.fl-dark .border-orange-200 { border-color: rgba(255,176,32,.4) !important; }
+    html.fl-dark .text-amber-700, html.fl-dark .text-amber-800, html.fl-dark .text-orange-900 { color: #FFC555 !important; }
+    /* colori decorativi fuori palette -> oro */
+    html.fl-dark .text-purple-700, html.fl-dark .text-purple-500, html.fl-dark .text-purple-400 { color: var(--fl-gold) !important; }
+    html.fl-dark .bg-purple-500, html.fl-dark .bg-purple-400 { background-color: var(--fl-gold) !important; }
+    html.fl-dark .bg-purple-500\\/20 { background-color: rgba(255,176,32,.16) !important; }
+    html.fl-dark .from-white, html.fl-dark .from-slate-100 { --tw-gradient-from: var(--fl-s1) !important; --tw-gradient-to: rgba(17,28,51,0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+    html.fl-dark .to-orange-50, html.fl-dark .to-slate-50, html.fl-dark .to-slate-100 { --tw-gradient-to: var(--fl-s1) !important; }
+    html.fl-dark .via-white { --tw-gradient-stops: var(--tw-gradient-from), var(--fl-s1), var(--tw-gradient-to) !important; }
+    html.fl-dark .from-purple-400, html.fl-dark .from-purple-500, html.fl-dark .from-blue-400, html.fl-dark .from-blue-500, html.fl-dark .from-cyan-400, html.fl-dark .from-rose-400 { --tw-gradient-from: #FFC14D !important; --tw-gradient-to: rgba(255,176,32,0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+    html.fl-dark .to-indigo-600, html.fl-dark .to-purple-600, html.fl-dark .to-pink-500, html.fl-dark .to-blue-500, html.fl-dark .to-blue-600, html.fl-dark .to-cyan-500, html.fl-dark .to-rose-500 { --tw-gradient-to: var(--fl-gold2) !important; }
+    html.fl-dark .to-teal-500, html.fl-dark .to-teal-600, html.fl-dark .to-emerald-600 { --tw-gradient-to: var(--fl-green2) !important; }
+    html.fl-dark .from-emerald-400, html.fl-dark .from-emerald-500 { --tw-gradient-from: var(--fl-green) !important; }
+    html.fl-dark .shadow-teal-500\\/30, html.fl-dark .shadow-teal-500\\/20 { --tw-shadow-color: rgba(34,197,94,.25) !important; }
+    html.fl-dark .fl-grid-bg { display: none; }
+    html.fl-dark .from-amber-50, html.fl-dark .from-orange-50 { --tw-gradient-from: var(--fl-s1) !important; --tw-gradient-to: rgba(17,28,51,0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+    html.fl-dark .bg-amber-100 { background-color: rgba(255,176,32,.16) !important; }
+    html.fl-dark .text-amber-600 { color: var(--fl-gold) !important; }
+    html.fl-dark .hover\\:bg-slate-100:hover, html.fl-dark .hover\\:bg-amber-100:hover, html.fl-dark .hover\\:bg-slate-300:hover { background-color: var(--fl-s2) !important; }
+    html.fl-dark .text-slate-300 { color: var(--fl-muted) !important; }
+    html.fl-dark .border-b.bg-white { border-color: var(--fl-line) !important; }
+    body, button, input, textarea { font-family: 'Nunito', system-ui, sans-serif; }
+`;
 if (typeof document !== 'undefined' && !document.getElementById('rly-css')) {
-  const st = document.createElement('style'); st.id = 'rly-css'; st.textContent = RLY3_CSS; document.head.appendChild(st);
+  const st = document.createElement('style'); st.id = 'rly-css'; st.textContent = RLY3_CSS + FL_HARMONY_CSS; document.head.appendChild(st);
   if (!document.getElementById('rly-font')) {
     const lk = document.createElement('link'); lk.id = 'rly-font'; lk.rel = 'stylesheet';
-    lk.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap'; document.head.appendChild(lk);
+    lk.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap'; document.head.appendChild(lk);
   }
 }
 let rlyCounter = 0;
@@ -993,11 +1038,11 @@ const getLevelInfo = xp => {
 
 // ========== GLOBAL DESIGN SYSTEM ==========
 const GlobalStyles = () => /*#__PURE__*/React.createElement("style", null, `
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap');
 
-    body, button, input, textarea { font-family: 'Outfit', system-ui, sans-serif; }
-    .fl-display { font-family: 'Space Grotesk', system-ui, sans-serif !important; letter-spacing: 0.06em; }
-    .fl-mono { font-family: 'JetBrains Mono', monospace !important; font-variant-numeric: tabular-nums; }
+    body, button, input, textarea { font-family: 'Nunito', system-ui, sans-serif; }
+    .fl-display { font-family: 'Nunito', system-ui, sans-serif !important; font-weight: 900 !important; letter-spacing: -0.01em; }
+    .fl-mono { font-family: 'Nunito', system-ui, sans-serif !important; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
 
     @keyframes flShimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
     @keyframes flTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -1020,7 +1065,7 @@ const GlobalStyles = () => /*#__PURE__*/React.createElement("style", null, `
       animation: flShimmer 4.5s linear infinite;
     }
     .fl-glass {
-      background: rgba(13, 20, 38, 0.62);
+      background: rgba(17, 28, 51, 0.78);
       backdrop-filter: blur(20px) saturate(1.3);
       -webkit-backdrop-filter: blur(20px) saturate(1.3);
       border: 1px solid rgba(232, 185, 49, 0.14);
@@ -1045,6 +1090,7 @@ const GlobalStyles = () => /*#__PURE__*/React.createElement("style", null, `
     }
     .fl-ticker-track { display: flex; width: max-content; animation: flTicker 32s linear infinite; }
     .fl-ticker-track:hover { animation-play-state: paused; }
+
 
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -5971,7 +6017,8 @@ function MainApp({
 
   // Salva theme quando cambia
   useEffect(() => {
-    localStorage.setItem('finlearn_theme', theme);
+    try { localStorage.setItem('finlearn_theme', theme); } catch {}
+    document.documentElement.classList.toggle('fl-dark', theme === 'dark');
   }, [theme]);
 
   // Theme colors helper
@@ -8756,9 +8803,9 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
   return /*#__PURE__*/React.createElement("div", {
     className: "min-h-screen pb-24 relative",
     style: {
-      background: theme === 'dark' ? '#070b14' : '#f8fafc'
+      background: theme === 'dark' ? '#0B1322' : '#f8fafc'
     }
-  }, /*#__PURE__*/React.createElement(GlobalStyles, null), theme === 'dark' && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(GlobalStyles, null), false && /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 fl-grid-bg opacity-40 pointer-events-none"
   }), /*#__PURE__*/React.createElement("div", {
     className: "relative z-10"
@@ -8772,10 +8819,6 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       background: 'radial-gradient(ellipse at 50% -40%, rgba(232,185,49,0.18) 0%, transparent 60%)'
     }
   }), /*#__PURE__*/React.createElement("div", {
-    className: "absolute inset-x-0 bottom-0 h-28 opacity-[0.18] pointer-events-none"
-  }, /*#__PURE__*/React.createElement(CandleChart, {
-    className: "w-full h-full"
-  })), /*#__PURE__*/React.createElement("div", {
     className: "relative",
     style: {
       borderBottomWidth: 1,
@@ -8787,12 +8830,9 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     className: "flex items-center gap-3"
   }, (() => {
     const level = getLevelInfo(stats.xp);
-    return /*#__PURE__*/React.createElement("div", {
-      className: "fl-float"
-    }, /*#__PURE__*/React.createElement(level.Icon, {
-      size: 46,
-      className: "drop-shadow-lg"
-    }));
+    return /*#__PURE__*/React.createElement(FinLearnMark, {
+      size: 44
+    });
   })(), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
     className: "leading-none"
   }, React.createElement(FinLearnWordmark, { size: 26, light: theme !== 'dark' })), /*#__PURE__*/React.createElement("p", {
@@ -8814,7 +8854,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }
   }, /*#__PURE__*/React.createElement(StarIconSVG, {
     size: 15
-  }), stats.coins)))), /*#__PURE__*/React.createElement(TickerTape, null)), /*#__PURE__*/React.createElement("div", {
+  }), stats.coins))))), /*#__PURE__*/React.createElement("div", {
     className: "max-w-xl mx-auto px-4 py-6"
   }, /*#__PURE__*/React.createElement("div", {
     className: "fl-fade-up relative overflow-hidden rounded-3xl p-5 text-white mb-6 fl-sweep",
@@ -8932,7 +8972,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }
   }, /*#__PURE__*/React.createElement(TrophyIconSVG, {
     size: 24
-  }), " Mock Exam Arena"), /*#__PURE__*/React.createElement("div", {
+  }), " Arena delle simulazioni"), /*#__PURE__*/React.createElement("div", {
     className: "text-xs px-3 py-1 rounded-full",
     style: {
       backgroundColor: theme === 'dark' ? 'rgba(51,65,85,0.5)' : '#f1f5f9',
@@ -9017,7 +9057,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     className: "absolute top-3 right-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"
   }, /*#__PURE__*/React.createElement(Award, {
     size: 12
-  }), "OFFICIAL"), /*#__PURE__*/React.createElement("div", {
+  }), "UFFICIALE"), /*#__PURE__*/React.createElement("div", {
     className: "p-5"
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-start gap-4"
@@ -9029,10 +9069,10 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
   })), /*#__PURE__*/React.createElement("div", {
     className: "flex-1"
   }, /*#__PURE__*/React.createElement("h3", {
-    className: "font-bold text-lg text-slate-800"
-  }, "\uD83C\uDFC6 FULL Mock Exam"), /*#__PURE__*/React.createElement("p", {
+    className: "font-bold text-lg text-slate-800 pr-20"
+  }, "Esame completo"), /*#__PURE__*/React.createElement("p", {
     className: "text-sm mt-1 text-slate-600"
-  }, "180 domande \u2022 4h 30min \u2022 Come l'esame VERO"), /*#__PURE__*/React.createElement("div", {
+  }, "180 domande \u2022 4h 30min \u2022 come all'esame vero"), /*#__PURE__*/React.createElement("div", {
     className: "flex items-center gap-2 mt-3 flex-wrap"
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700"
@@ -9065,14 +9105,14 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       });
     },
     className: "w-full mt-4 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 shadow-lg shadow-teal-500/20"
-  }, "\uD83D\uDE80 INIZIA FULL EXAM (180 Q)"))), /*#__PURE__*/React.createElement("div", {
+  }, "Inizia la simulazione (180 domande)"))), /*#__PURE__*/React.createElement("div", {
     className: "relative overflow-hidden rounded-2xl border-2 transition-all cursor-pointer bg-gradient-to-br from-amber-50 to-orange-50 border-amber-300 hover:border-amber-400 hover:shadow-lg mt-4",
     onClick: () => setShowMockExamSetup(true)
   }, /*#__PURE__*/React.createElement("div", {
     className: "absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"
   }, /*#__PURE__*/React.createElement(BookOpen, {
     size: 12
-  }), "PRACTICE"), /*#__PURE__*/React.createElement("div", {
+  }), "ALLENAMENTO"), /*#__PURE__*/React.createElement("div", {
     className: "p-5"
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-start gap-4"
@@ -9084,10 +9124,10 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
   })), /*#__PURE__*/React.createElement("div", {
     className: "flex-1"
   }, /*#__PURE__*/React.createElement("h3", {
-    className: "font-bold text-lg text-slate-800"
-  }, "\uD83D\uDCDA Practice Quiz"), /*#__PURE__*/React.createElement("p", {
+    className: "font-bold text-lg text-slate-800 pr-20"
+  }, "Allenamento"), /*#__PURE__*/React.createElement("p", {
     className: "text-sm mt-1 text-slate-600"
-  }, "Scegli topic e numero domande"), /*#__PURE__*/React.createElement("div", {
+  }, "Scegli argomenti e numero di domande"), /*#__PURE__*/React.createElement("div", {
     className: "flex items-center gap-3 mt-3"
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700"
@@ -9099,7 +9139,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       setShowMockExamSetup(true);
     },
     className: "w-full mt-4 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-orange-500/20"
-  }, "\u2699\uFE0F CONFIGURA PRACTICE"))), /*#__PURE__*/React.createElement("div", {
+  }, "Configura l'allenamento"))), /*#__PURE__*/React.createElement("div", {
     className: "mt-4 bg-white rounded-xl p-4 border border-slate-200"
   }, /*#__PURE__*/React.createElement("div", {
     className: "text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2"
@@ -9177,7 +9217,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }
   }, /*#__PURE__*/React.createElement(GraduationCap, {
     size: 16
-  }), "CFA Curriculum"), /*#__PURE__*/React.createElement("button", {
+  }), "Curriculum CFA"), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       setStudyMode('topics');
       setCfaTopic(null);
@@ -9195,7 +9235,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }
   }, /*#__PURE__*/React.createElement(Zap, {
     size: 16
-  }), "Quick Topics")))), /*#__PURE__*/React.createElement("div", {
+  }), "Argomenti rapidi")))), /*#__PURE__*/React.createElement("div", {
     className: "max-w-xl mx-auto px-4 py-6"
   }, eqOpen && /*#__PURE__*/React.createElement(EquityModule, {
     th: th,
@@ -9231,12 +9271,12 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     style: {
       color: th.text
     }
-  }, "Your Progress"), /*#__PURE__*/React.createElement("p", {
+  }, "I tuoi progressi"), /*#__PURE__*/React.createElement("p", {
     className: "text-sm",
     style: {
       color: th.textMuted
     }
-  }, losProgress.length, "/3 LOS completed")), /*#__PURE__*/React.createElement("span", {
+  }, losProgress.length, "/3 LOS completati")), /*#__PURE__*/React.createElement("span", {
     className: "text-2xl font-black text-amber-500"
   }, Math.round(losProgress.length / 3 * 100), "%")), /*#__PURE__*/React.createElement("div", {
     className: "h-2.5 rounded-full overflow-hidden",
@@ -9294,7 +9334,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
   }, /*#__PURE__*/React.createElement(BookOpen, {
     size: 18,
     className: "text-amber-500"
-  }), "Topics"), Object.entries(CFA_CURRICULUM).map(([key, td]) => /*#__PURE__*/React.createElement("button", {
+  }), "Argomenti"), Object.entries(CFA_CURRICULUM).map(([key, td]) => /*#__PURE__*/React.createElement("button", {
     key: key,
     onClick: () => setCfaTopic(td),
     className: "w-full rounded-2xl p-5 text-left transition-all hover:scale-[1.01]",
@@ -9322,7 +9362,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     style: {
       color: th.textMuted
     }
-  }, td.totalModules, " Modules"))), /*#__PURE__*/React.createElement(ChevronRight, {
+  }, td.totalModules, " moduli"))), /*#__PURE__*/React.createElement(ChevronRight, {
     size: 24,
     style: {
       color: th.textMuted
@@ -9338,12 +9378,12 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     className: "text-2xl"
   }, "\uD83D\uDCA1"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
     className: "text-amber-500 font-semibold text-sm"
-  }, "Demo: 3 LOS"), /*#__PURE__*/React.createElement("p", {
+  }, "Demo: 3 LOS disponibili"), /*#__PURE__*/React.createElement("p", {
     className: "text-xs mt-1",
     style: {
       color: th.textMuted
     }
-  }, "Full curriculum coming soon!"))))), cfaTopic && !cfaModule && !cfaLOS && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+  }, "Il curriculum completo arriva presto"))))), cfaTopic && !cfaModule && !cfaLOS && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: `rounded-2xl p-5 mb-4 bg-gradient-to-br ${cfaTopic.color}`
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => setCfaTopic(null),
@@ -9358,7 +9398,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     className: "text-xl font-black"
   }, cfaTopic.name), /*#__PURE__*/React.createElement("p", {
     className: "text-white/80 text-sm"
-  }, cfaTopic.weight, " \xB7 ", cfaTopic.totalModules, " Modules")))), /*#__PURE__*/React.createElement("h3", {
+  }, cfaTopic.weight, " \xB7 ", cfaTopic.totalModules, " moduli")))), /*#__PURE__*/React.createElement("h3", {
     className: "font-bold mb-4 flex items-center gap-2",
     style: {
       color: th.text
@@ -9366,7 +9406,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
   }, /*#__PURE__*/React.createElement(Layers, {
     size: 18,
     className: "text-amber-500"
-  }), "Learning Modules"), cfaTopic.modules.map(m => {
+  }), "Moduli"), cfaTopic.modules.map(m => {
     const done = losProgress.filter(id => id.startsWith(m.id)).length;
     const pct = done / m.los.length * 100;
     return /*#__PURE__*/React.createElement("button", {
@@ -10048,9 +10088,9 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     className: "w-24 h-24 mx-auto mb-3"
   }, (() => {
     const level = getLevelInfo(stats.xp);
-    return /*#__PURE__*/React.createElement(level.Icon, {
-      size: 96,
-      className: "drop-shadow-xl"
+    return /*#__PURE__*/React.createElement(BullMascot, {
+      size: 92,
+      mood: "happy"
     });
   })()), /*#__PURE__*/React.createElement("h1", {
     className: "text-2xl font-bold"
@@ -10064,12 +10104,12 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       className: `inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium`
     }, level.name, " \u2022 ", stats.xp.toLocaleString(), " XP");
   })()))), /*#__PURE__*/React.createElement("div", {
-    className: "max-w-xl mx-auto px-4 -mt-8"
+    className: "max-w-xl mx-auto px-4 mt-4 relative z-10"
   }, /*#__PURE__*/React.createElement("div", {
     className: "grid grid-cols-2 gap-3 mb-4"
   }, [{
     icon: StarIconSVG,
-    label: 'Coins',
+    label: 'Monete',
     value: stats.coins,
     color: 'amber'
   }, {
@@ -10079,7 +10119,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     color: 'orange'
   }, {
     icon: Target,
-    label: 'Accuracy',
+    label: 'Precisione',
     value: `${stats.quizzes ? Math.round(stats.correct / stats.quizzes * 100) : 0}%`,
     color: 'emerald'
   }, {
@@ -10150,8 +10190,8 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     } : null;
     const prevXp = stats.xp < 500 ? 0 : stats.xp < 2000 ? 500 : stats.xp < 5000 ? 2000 : 5000;
     const progress = nextLevel ? (stats.xp - prevXp) / (nextLevel.xp - prevXp) * 100 : 100;
-    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(level.Icon, {
-      size: 50
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FinLearnMark, {
+      size: 46
     }), /*#__PURE__*/React.createElement("div", {
       className: "flex-1"
     }, /*#__PURE__*/React.createElement("div", {
