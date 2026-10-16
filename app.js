@@ -146,1159 +146,426 @@ const themes = {
 
 // ========== PROFESSIONAL SVG ICONS ==========
 
-// Bull Mascot - Professional stylized bull head
-// ========== BULL MASCOT v4 — anatomia ricca + 7 mood + vestiti + animazioni complesse ==========
-// Struttura: macchia sull'occhio, chiazze sul corpo, zoccoli bipartiti, ciuffo petto, anelli sulle corna, coda animata
-// Mood: neutral · happy · thinking (occhiali+matita) · celebrating (cappellino) · sad · correct (medaglia+wink+salto) · wrong (testa che fa no+sudore+grattata)
-const BullMascot = ({
-  size = 80,
-  mood = 'neutral',
-  className = ''
-}) => {
-  const lookUp = mood === 'thinking';
-  const pupX = lookUp ? 2.5 : 0;
-  const pupY = lookUp ? -3 : 0;
-  const openEyes = !['happy', 'celebrating', 'correct', 'wrong'].includes(mood);
-  const earL = mood === 'wrong' ? -62 : -32;
-  const earR = mood === 'wrong' ? 62 : 32;
-  return /*#__PURE__*/React.createElement("svg", {
-    viewBox: "0 0 100 104",
-    width: size,
-    height: size * 1.04,
-    className: className
-  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("radialGradient", {
-    id: "bmHead3d",
-    cx: "38%",
-    cy: "28%",
-    r: "78%"
-  }, /*#__PURE__*/React.createElement("stop", {
-    offset: "0%",
-    stopColor: "#fde68a"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "38%",
-    stopColor: "#fbbf24"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "72%",
-    stopColor: "#f59e0b"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "100%",
-    stopColor: "#c2410c"
-  })), /*#__PURE__*/React.createElement("radialGradient", {
-    id: "bmBody3d",
-    cx: "40%",
-    cy: "25%",
-    r: "80%"
-  }, /*#__PURE__*/React.createElement("stop", {
-    offset: "0%",
-    stopColor: "#fcd34d"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "60%",
-    stopColor: "#f59e0b"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "100%",
-    stopColor: "#b45309"
-  })), /*#__PURE__*/React.createElement("radialGradient", {
-    id: "bmMuzzle3d",
-    cx: "42%",
-    cy: "28%",
-    r: "80%"
-  }, /*#__PURE__*/React.createElement("stop", {
-    offset: "0%",
-    stopColor: "#fef3c7"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "55%",
-    stopColor: "#fde68a"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "100%",
-    stopColor: "#f59e0b"
-  })), /*#__PURE__*/React.createElement("linearGradient", {
-    id: "bmHorn3d",
-    x1: "0%",
-    y1: "100%",
-    x2: "30%",
-    y2: "0%"
-  }, /*#__PURE__*/React.createElement("stop", {
-    offset: "0%",
-    stopColor: "#eab308"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "45%",
-    stopColor: "#fcd34d"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "100%",
-    stopColor: "#fefce8"
-  })), /*#__PURE__*/React.createElement("radialGradient", {
-    id: "bmPupil",
-    cx: "38%",
-    cy: "32%",
-    r: "80%"
-  }, /*#__PURE__*/React.createElement("stop", {
-    offset: "0%",
-    stopColor: "#5b3a1e"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "100%",
-    stopColor: "#241105"
-  })), /*#__PURE__*/React.createElement("radialGradient", {
-    id: "bmBelly",
-    cx: "45%",
-    cy: "30%",
-    r: "80%"
-  }, /*#__PURE__*/React.createElement("stop", {
-    offset: "0%",
-    stopColor: "#fef3c7"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "100%",
-    stopColor: "#fbbf24"
-  })), /*#__PURE__*/React.createElement("radialGradient", {
-    id: "bmMedal",
-    cx: "38%",
-    cy: "32%",
-    r: "80%"
-  }, /*#__PURE__*/React.createElement("stop", {
-    offset: "0%",
-    stopColor: "#fef08a"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "70%",
-    stopColor: "#facc15"
-  }), /*#__PURE__*/React.createElement("stop", {
-    offset: "100%",
-    stopColor: "#a16207"
-  }))), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "50",
-    cy: "100",
-    rx: "24",
-    ry: "3.6",
-    fill: "#000",
-    opacity: "0.22"
-  }, mood === 'correct' ? /*#__PURE__*/React.createElement("animate", {
-    attributeName: "rx",
-    values: "24;20;24",
-    dur: "0.62s",
-    repeatCount: "indefinite"
-  }) : /*#__PURE__*/React.createElement("animate", {
-    attributeName: "rx",
-    values: "24;25.5;24",
-    dur: "3.4s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("g", null, mood === 'correct' && /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "translate",
-    values: "0 0;0 -4;0 0",
-    keyTimes: "0;0.4;1",
-    dur: "0.62s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "6 68 82;-8 68 82;6 68 82",
-    dur: mood === 'correct' ? '0.7s' : '1.9s',
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M68,82 Q80,84 79,93",
-    stroke: "#c2620a",
-    strokeWidth: "3.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M77.5,91 Q82,92 80,97 Q77,96 77.5,91 Z",
-    fill: "#7c3b0c"
-  })), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("ellipse", {
-    cx: "50",
-    cy: "84",
-    rx: "19",
-    ry: "13.5",
-    fill: "url(#bmBody3d)"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "ry",
-    values: "13.5;14.3;13.5",
-    dur: "3.4s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("animate", {
-    attributeName: "cy",
-    values: "84;83.4;84",
-    dur: "3.4s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "35",
-    cy: "80",
-    rx: "4.5",
-    ry: "3.2",
-    fill: "#c2620a",
-    opacity: "0.55",
-    transform: "rotate(-18 35 80)"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "64",
-    cy: "88",
-    rx: "3.6",
-    ry: "2.6",
-    fill: "#c2620a",
-    opacity: "0.5",
-    transform: "rotate(14 64 88)"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "50",
-    cy: "87",
-    rx: "11.5",
-    ry: "8",
-    fill: "url(#bmBelly)"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "ry",
-    values: "8;8.6;8",
-    dur: "3.4s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("path", {
-    d: "M44,79.5 L46.5,82.5 L50,79.5 L53.5,82.5 L56,79.5",
-    stroke: "#fde68a",
-    strokeWidth: "1.8",
-    fill: "none",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M33,76 Q50,83 67,76 Q50,72 33,76 Z",
-    fill: "#7c2d12",
-    opacity: "0.25"
-  })), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "42",
-    cy: "96",
-    rx: "5.5",
-    ry: "3.8",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "58",
-    cy: "96",
-    rx: "5.5",
-    ry: "3.8",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "41",
-    cy: "94.8",
-    rx: "4",
-    ry: "2.2",
-    fill: "#a85e16"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "57",
-    cy: "94.8",
-    rx: "4",
-    ry: "2.2",
-    fill: "#a85e16"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M42,93.5 L42,98.5",
-    stroke: "#6b3a0c",
-    strokeWidth: "1.2",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M58,93.5 L58,98.5",
-    stroke: "#6b3a0c",
-    strokeWidth: "1.2",
-    strokeLinecap: "round"
-  }), mood === 'celebrating' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "-10 34 80;12 34 80;-10 34 80",
-    dur: "0.65s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M34,80 Q24,72 21,62",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "20.5",
-    cy: "60.5",
-    r: "4",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M18.5,60.5 L22.5,60.5",
-    stroke: "#6b3a0c",
-    strokeWidth: "1"
-  })), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "10 66 80;-12 66 80;10 66 80",
-    dur: "0.65s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M66,80 Q76,72 79,62",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "79.5",
-    cy: "60.5",
-    r: "4",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M77.5,60.5 L81.5,60.5",
-    stroke: "#6b3a0c",
-    strokeWidth: "1"
-  }))) : mood === 'correct' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M34,81 Q27,84 25,89",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "25",
-    cy: "90",
-    r: "4",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "0 66 80;-16 66 80;0 66 80",
-    dur: "0.62s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M66,80 Q76,70 77,60",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "77.5",
-    cy: "58.5",
-    r: "4.6",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M75.3,58.5 L79.7,58.5",
-    stroke: "#6b3a0c",
-    strokeWidth: "1"
-  }))) : mood === 'wrong' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M34,82 Q28,86 26,91",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "26",
-    cy: "92",
-    r: "4",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "translate",
-    values: "0 0;0 -2.5;0 0",
-    dur: "0.5s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M66,80 Q78,66 72,52",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "71.5",
-    cy: "50.5",
-    r: "4",
-    fill: "#8a4a10"
-  }))) : mood === 'thinking' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M34,82 Q28,86 26,91",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "26",
-    cy: "92",
-    r: "4",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "0 66 82;-4 66 82;0 66 82",
-    dur: "2.2s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M66,82 Q70,74 62,68",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "61",
-    cy: "67.5",
-    r: "4",
-    fill: "#8a4a10"
-  }))) : mood === 'sad' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M34,82 Q30,88 30,93",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M66,82 Q70,88 70,93",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "30",
-    cy: "93.5",
-    r: "4",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "70",
-    cy: "93.5",
-    r: "4",
-    fill: "#8a4a10"
-  })) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M34,81 Q27,84 25,89",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M66,81 Q73,84 75,89",
-    stroke: "#e8890c",
-    strokeWidth: "6.5",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "25",
-    cy: "90",
-    r: "4",
-    fill: "#8a4a10"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "75",
-    cy: "90",
-    r: "4",
-    fill: "#8a4a10"
-  })), mood === 'correct' && /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "-3 50 72;3 50 72;-3 50 72",
-    dur: "0.62s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M43,71 L50,80 L57,71",
-    stroke: "#dc2626",
-    strokeWidth: "3.2",
-    fill: "none",
-    strokeLinejoin: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "50",
-    cy: "82",
-    r: "5.2",
-    fill: "url(#bmMedal)",
-    stroke: "#a16207",
-    strokeWidth: "0.8"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M50,79.2 l0.9,1.8 2,.3 -1.45,1.4 .35,2 -1.8,-1 -1.8,1 .35,-2 -1.45,-1.4 2,-.3 Z",
-    fill: "#a16207"
-  })), /*#__PURE__*/React.createElement("g", null, mood === 'wrong' ? /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "0 50 45;-6 50 45;6 50 45;-4 50 45;4 50 45;0 50 45;0 50 45",
-    keyTimes: "0;0.08;0.2;0.32;0.44;0.55;1",
-    dur: "1.8s",
-    repeatCount: "indefinite"
-  }) : mood === 'happy' || mood === 'celebrating' || mood === 'correct' ? /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "-2.5 50 45;2.5 50 45;-2.5 50 45",
-    dur: "1.6s",
-    repeatCount: "indefinite"
-  }) : /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "translate",
-    values: "0 0;0 1.5;0 0",
-    dur: "3.4s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M21,32 Q8,24 9,11 Q12,9 17,12 Q26,18 29,28 Z",
-    fill: "url(#bmHorn3d)",
-    stroke: "#b8932e",
-    strokeWidth: "0.8"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M79,32 Q92,24 91,11 Q88,9 83,12 Q74,18 71,28 Z",
-    fill: "url(#bmHorn3d)",
-    stroke: "#b8932e",
-    strokeWidth: "0.8"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M22,29 Q26,26 28,24",
-    stroke: "#b8932e",
-    strokeWidth: "1.3",
-    fill: "none",
-    opacity: "0.8"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M18,23 Q22,20 24,18",
-    stroke: "#b8932e",
-    strokeWidth: "1.1",
-    fill: "none",
-    opacity: "0.6"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M78,29 Q74,26 72,24",
-    stroke: "#b8932e",
-    strokeWidth: "1.3",
-    fill: "none",
-    opacity: "0.8"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M82,23 Q78,20 76,18",
-    stroke: "#b8932e",
-    strokeWidth: "1.1",
-    fill: "none",
-    opacity: "0.6"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M12,26 Q10,19 11,13",
-    stroke: "#fffbeb",
-    strokeWidth: "1.6",
-    fill: "none",
-    strokeLinecap: "round",
-    opacity: "0.8"
-  }), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("ellipse", {
-    cx: "17",
-    cy: "40",
-    rx: "9.5",
-    ry: "6.5",
-    fill: "#d96708",
-    transform: `rotate(${earL} 17 40)`
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "18.5",
-    cy: "40.5",
-    rx: "6",
-    ry: "3.6",
-    fill: "#fdba74",
-    transform: `rotate(${earL} 18.5 40.5)`
-  })), /*#__PURE__*/React.createElement("g", null, mood !== 'wrong' && /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "rotate",
-    values: "0 80 36;0 80 36;-14 80 36;10 80 36;0 80 36;0 80 36",
-    keyTimes: "0;0.82;0.87;0.91;0.95;1",
-    dur: "5.5s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "83",
-    cy: "40",
-    rx: "9.5",
-    ry: "6.5",
-    fill: "#d96708",
-    transform: `rotate(${earR} 83 40)`
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "81.5",
-    cy: "40.5",
-    rx: "6",
-    ry: "3.6",
-    fill: "#fdba74",
-    transform: `rotate(${earR} 81.5 40.5)`
-  })), /*#__PURE__*/React.createElement("path", {
-    d: "M50,11 C71,11 83,25 83,42 C83,60 70,70 50,70 C30,70 17,60 17,42 C17,25 29,11 50,11 Z",
-    fill: "url(#bmHead3d)"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "64.5",
-    cy: "36",
-    rx: "12",
-    ry: "13",
-    fill: "#d97706",
-    opacity: "0.5"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M26,20 Q36,12 48,12",
-    stroke: "#fef3c7",
-    strokeWidth: "2.4",
-    fill: "none",
-    strokeLinecap: "round",
-    opacity: "0.6"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M24,58 Q38,69 50,69.5 Q35,71 25,62 Z",
-    fill: "#7c2d12",
-    opacity: "0.22"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M76,58 Q62,69 50,69.5 Q65,71 75,62 Z",
-    fill: "#7c2d12",
-    opacity: "0.16"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M40,12 Q43,5 48,10 Q50,3 54,9 Q58,4 60,12 Q55,15 50,14 Q45,15 40,12 Z",
-    fill: "#c2620a"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M42,11.5 Q45,7 48,10.5",
-    stroke: "#e8890c",
-    strokeWidth: "1.6",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M51,10 Q53,6.5 55.5,9.5",
-    stroke: "#e8890c",
-    strokeWidth: "1.3",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "50",
-    cy: "57",
-    rx: "19.5",
-    ry: "13",
-    fill: "url(#bmMuzzle3d)"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M33,61 Q50,71.5 67,61 Q50,67 33,61 Z",
-    fill: "#b45309",
-    opacity: "0.2"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "43",
-    cy: "56",
-    rx: "3.4",
-    ry: "4.2",
-    fill: "#7c3b0c"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "57",
-    cy: "56",
-    rx: "3.4",
-    ry: "4.2",
-    fill: "#7c3b0c"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "42.2",
-    cy: "54.6",
-    rx: "1.2",
-    ry: "1.6",
-    fill: "#b06a36"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "56.2",
-    cy: "54.6",
-    rx: "1.2",
-    ry: "1.6",
-    fill: "#b06a36"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M45.5,64 A4.5,4.5 0 0 0 54.5,64",
-    stroke: "#ca8a04",
-    strokeWidth: "3",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M46.5,65.5 A3.6,3.6 0 0 0 51,67.5",
-    stroke: "#fef08a",
-    strokeWidth: "1.2",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "45.5",
-    cy: "64",
-    r: "1.3",
-    fill: "#facc15"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "54.5",
-    cy: "64",
-    r: "1.3",
-    fill: "#facc15"
-  }), mood === 'celebrating' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M42,65.5 Q50,75 58,65.5 Q50,69.5 42,65.5 Z",
-    fill: "#5c1f0a"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M46,69.5 Q50,72.5 54,69.5 Q50,74 46,69.5 Z",
-    fill: "#fb7185"
-  })), mood === 'correct' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M41,64.5 Q50,73.5 59,64.5 Q50,68.5 41,64.5 Z",
-    fill: "#5c1f0a"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M45,64.9 L55,64.9 L54,67 L46,67 Z",
-    fill: "#fff"
-  })), mood === 'wrong' && /*#__PURE__*/React.createElement("path", {
-    d: "M43,67 Q46,65 49,67 Q52,69 55,67",
-    stroke: "#7c3b0c",
-    strokeWidth: "2.3",
-    fill: "none",
-    strokeLinecap: "round"
-  }), mood === 'happy' && /*#__PURE__*/React.createElement("path", {
-    d: "M42,64.5 Q50,71 58,64.5",
-    stroke: "#7c3b0c",
-    strokeWidth: "2.4",
-    fill: "none",
-    strokeLinecap: "round"
-  }), mood === 'neutral' && /*#__PURE__*/React.createElement("path", {
-    d: "M44,65.5 Q50,69 56,65.5",
-    stroke: "#7c3b0c",
-    strokeWidth: "2.2",
-    fill: "none",
-    strokeLinecap: "round"
-  }), mood === 'thinking' && /*#__PURE__*/React.createElement("path", {
-    d: "M45,66.5 Q49,65 53,67.5",
-    stroke: "#7c3b0c",
-    strokeWidth: "2.2",
-    fill: "none",
-    strokeLinecap: "round"
-  }), mood === 'sad' && /*#__PURE__*/React.createElement("path", {
-    d: "M43,68 Q50,62.5 57,68",
-    stroke: "#7c3b0c",
-    strokeWidth: "2.4",
-    fill: "none",
-    strokeLinecap: "round"
-  }), (mood === 'happy' || mood === 'celebrating') && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M28,38 Q35,29 42,38",
-    stroke: "#2a160a",
-    strokeWidth: "3.6",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M58,38 Q65,29 72,38",
-    stroke: "#2a160a",
-    strokeWidth: "3.6",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "30",
-    cy: "47",
-    rx: "5",
-    ry: "3",
-    fill: "#fb923c",
-    opacity: "0.6"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "70",
-    cy: "47",
-    rx: "5",
-    ry: "3",
-    fill: "#fb923c",
-    opacity: "0.6"
-  })), mood === 'correct' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("ellipse", {
-    cx: "35.5",
-    cy: "37.5",
-    rx: "10",
-    ry: "11.6",
-    fill: "#c2620a",
-    opacity: "0.45"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "35.5",
-    cy: "37",
-    rx: "9.2",
-    ry: "10.8",
-    fill: "#ffffff"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "35.5",
-    cy: "38",
-    r: "5.8",
-    fill: "url(#bmPupil)"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "37.7",
-    cy: "35.4",
-    r: "2.3",
-    fill: "#ffffff"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "33.5",
-    cy: "40.4",
-    r: "1.1",
-    fill: "#ffffff",
-    opacity: "0.9"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M58,38 Q65,30 72,38",
-    stroke: "#2a160a",
-    strokeWidth: "3.6",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "70",
-    cy: "46.5",
-    rx: "5",
-    ry: "3",
-    fill: "#fb923c",
-    opacity: "0.6"
-  })), mood === 'wrong' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M29,33.5 L41,38 L29,42.5",
-    stroke: "#2a160a",
-    strokeWidth: "3.2",
-    fill: "none",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M71,33.5 L59,38 L71,42.5",
-    stroke: "#2a160a",
-    strokeWidth: "3.2",
-    fill: "none",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })), openEyes && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("ellipse", {
-    cx: "35.5",
-    cy: "37.5",
-    rx: "10",
-    ry: "11.6",
-    fill: "#c2620a",
-    opacity: "0.45"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "64.5",
-    cy: "37.5",
-    rx: "10",
-    ry: "11.6",
-    fill: "#c2620a",
-    opacity: "0.45"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "35.5",
-    cy: "37",
-    rx: "9.2",
-    ry: "10.8",
-    fill: "#ffffff"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "64.5",
-    cy: "37",
-    rx: "9.2",
-    ry: "10.8",
-    fill: "#ffffff"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M26.3,33 A9.2,10.8 0 0 1 44.7,33 A9.2,7 0 0 0 26.3,33 Z",
-    fill: "#d4c19a",
-    opacity: "0.5"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M55.3,33 A9.2,10.8 0 0 1 73.7,33 A9.2,7 0 0 0 55.3,33 Z",
-    fill: "#d4c19a",
-    opacity: "0.5"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 35.5 + pupX,
-    cy: 38 + pupY,
-    r: "5.6",
-    fill: "url(#bmPupil)"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 64.5 + pupX,
-    cy: 38 + pupY,
-    r: "5.6",
-    fill: "url(#bmPupil)"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 37.6 + pupX,
-    cy: 35.6 + pupY,
-    r: "2.1",
-    fill: "#ffffff"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 66.6 + pupX,
-    cy: 35.6 + pupY,
-    r: "2.1",
-    fill: "#ffffff"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 33.6 + pupX,
-    cy: 40.2 + pupY,
-    r: "1",
-    fill: "#ffffff",
-    opacity: "0.85"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: 62.6 + pupX,
-    cy: 40.2 + pupY,
-    r: "1",
-    fill: "#ffffff",
-    opacity: "0.85"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: 35.5 + pupX,
-    cy: 42 + pupY,
-    rx: "3.4",
-    ry: "1.2",
-    fill: "#8b5a2b",
-    opacity: "0.5"
-  }), /*#__PURE__*/React.createElement("ellipse", {
-    cx: 64.5 + pupX,
-    cy: 42 + pupY,
-    rx: "3.4",
-    ry: "1.2",
-    fill: "#8b5a2b",
-    opacity: "0.5"
-  }), /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("ellipse", {
-    cx: "35.5",
-    cy: "30",
-    rx: "9.4",
-    ry: "0",
-    fill: "url(#bmHead3d)"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "ry",
-    values: "0;0;11;0;0",
-    keyTimes: "0;0.9;0.94;0.98;1",
-    dur: "4.6s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("animate", {
-    attributeName: "cy",
-    values: "30;30;37;30;30",
-    keyTimes: "0;0.9;0.94;0.98;1",
-    dur: "4.6s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("ellipse", {
-    cx: "64.5",
-    cy: "30",
-    rx: "9.4",
-    ry: "0",
-    fill: "url(#bmHead3d)"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "ry",
-    values: "0;0;11;0;0",
-    keyTimes: "0;0.9;0.94;0.98;1",
-    dur: "4.6s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("animate", {
-    attributeName: "cy",
-    values: "30;30;37;30;30",
-    keyTimes: "0;0.9;0.94;0.98;1",
-    dur: "4.6s",
-    repeatCount: "indefinite"
-  }))), mood === 'sad' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M26.3,26 L44.7,26 L44.7,31 Q35.5,33 26.3,31 Z",
-    fill: "url(#bmHead3d)"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M55.3,26 L73.7,26 L73.7,31 Q64.5,33 55.3,31 Z",
-    fill: "url(#bmHead3d)"
-  }))), mood === 'thinking' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("circle", {
-    cx: "35.5",
-    cy: "37.5",
-    r: "11",
-    fill: "none",
-    stroke: "#3b2313",
-    strokeWidth: "2.2"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "64.5",
-    cy: "37.5",
-    r: "11",
-    fill: "none",
-    stroke: "#3b2313",
-    strokeWidth: "2.2"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M46.5,37 Q50,34.5 53.5,37",
-    stroke: "#3b2313",
-    strokeWidth: "2.2",
-    fill: "none"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M24.5,36 L18,33",
-    stroke: "#3b2313",
-    strokeWidth: "2",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M75.5,36 L82,33",
-    stroke: "#3b2313",
-    strokeWidth: "2",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("g", {
-    transform: "rotate(-24 22 28)"
-  }, /*#__PURE__*/React.createElement("rect", {
-    x: "14",
-    y: "25.5",
-    width: "15",
-    height: "4.2",
-    rx: "1",
-    fill: "#fbbf24",
-    stroke: "#b45309",
-    strokeWidth: "0.7"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M29,25.5 L33,27.6 L29,29.7 Z",
-    fill: "#fde68a",
-    stroke: "#b45309",
-    strokeWidth: "0.7"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M31.7,26.9 L33,27.6 L31.7,28.3 Z",
-    fill: "#3b2313"
-  }), /*#__PURE__*/React.createElement("rect", {
-    x: "14",
-    y: "25.5",
-    width: "2.6",
-    height: "4.2",
-    rx: "1",
-    fill: "#fb7185"
-  }))), mood === 'neutral' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M28,24.5 Q35,21.5 42,24.5",
-    stroke: "#8a4a10",
-    strokeWidth: "2.6",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M58,24.5 Q65,21.5 72,24.5",
-    stroke: "#8a4a10",
-    strokeWidth: "2.6",
-    fill: "none",
-    strokeLinecap: "round"
-  })), mood === 'correct' && /*#__PURE__*/React.createElement("path", {
-    d: "M28,24 Q35,20.5 42,23.5",
-    stroke: "#8a4a10",
-    strokeWidth: "2.6",
-    fill: "none",
-    strokeLinecap: "round"
-  }), mood === 'wrong' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M28,27 Q35,29.5 41,31",
-    stroke: "#8a4a10",
-    strokeWidth: "2.8",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M59,31 Q65,29.5 72,27",
-    stroke: "#8a4a10",
-    strokeWidth: "2.8",
-    fill: "none",
-    strokeLinecap: "round"
-  })), mood === 'thinking' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M28,22 Q35,17.5 42,21",
-    stroke: "#8a4a10",
-    strokeWidth: "2.8",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M58,25 Q65,23.5 72,25.5",
-    stroke: "#8a4a10",
-    strokeWidth: "2.8",
-    fill: "none",
-    strokeLinecap: "round"
-  })), mood === 'sad' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("path", {
-    d: "M29,26.5 Q35.5,25.5 42,22.5",
-    stroke: "#8a4a10",
-    strokeWidth: "2.6",
-    fill: "none",
-    strokeLinecap: "round"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M58,22.5 Q64.5,25.5 71,26.5",
-    stroke: "#8a4a10",
-    strokeWidth: "2.6",
-    fill: "none",
-    strokeLinecap: "round"
-  })), mood === 'celebrating' && /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("path", {
-    d: "M44,11 L50,1 L56,11 Z",
-    fill: "#7c4dd6",
-    transform: "rotate(8 50 6)"
-  }), /*#__PURE__*/React.createElement("path", {
-    d: "M44,11 L50,1 L50.5,11 Z",
-    fill: "#9d75e8",
-    transform: "rotate(8 50 6)"
-  }), /*#__PURE__*/React.createElement("circle", {
-    cx: "50.5",
-    cy: "1.5",
-    r: "2.2",
-    fill: "#facc15",
-    transform: "rotate(8 50 6)"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "r",
-    values: "2.2;2.7;2.2",
-    dur: "0.65s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("path", {
-    d: "M44.5,10.5 L55.5,10.5",
-    stroke: "#facc15",
-    strokeWidth: "1.5",
-    transform: "rotate(8 50 6)"
-  })), mood === 'wrong' && /*#__PURE__*/React.createElement("path", {
-    d: "M77,24 q-2.8,4.8 0,7 q2.8,-2.2 0,-7 Z",
-    fill: "#7dd3fc"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0;1;1;0",
-    keyTimes: "0;0.15;0.75;1",
-    dur: "1.8s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "translate",
-    values: "0 0;0 9",
-    dur: "1.8s",
-    repeatCount: "indefinite"
-  })), mood === 'sad' && /*#__PURE__*/React.createElement("path", {
-    d: "M28,46 q-2.6,4.5 0,6.5 q2.6,-2 0,-6.5 Z",
-    fill: "#7dd3fc"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0;1;1;0",
-    keyTimes: "0;0.2;0.8;1",
-    dur: "2.4s",
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "translate",
-    values: "0 0;0 7",
-    dur: "2.4s",
-    repeatCount: "indefinite"
-  })))), mood === 'correct' && /*#__PURE__*/React.createElement(React.Fragment, null, [[14, 30, 0], [86, 26, 0.2], [10, 58, 0.45], [90, 56, 0.32]].map(([x, y, d], i) => /*#__PURE__*/React.createElement("g", {
-    key: i
-  }, /*#__PURE__*/React.createElement("path", {
-    d: `M${x - 3},${y} l2.2,2.4 l4,-5`,
-    stroke: "#34d399",
-    strokeWidth: "2.6",
-    fill: "none",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0;1;0",
-    keyTimes: "0;0.3;1",
-    dur: "1.25s",
-    begin: `${d}s`,
-    repeatCount: "indefinite"
-  })))), /*#__PURE__*/React.createElement("path", {
-    d: "M50,2 l1.3,2.6 2.8,.4 -2,1.95 .47,2.8 -2.57,-1.35 -2.57,1.35 .47,-2.8 -2,-1.95 2.8,-.4 Z",
-    fill: "#facc15"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0.3;1;0.3",
-    dur: "0.62s",
-    repeatCount: "indefinite"
-  }))), mood === 'wrong' && /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("text", {
-    x: "87",
-    y: "16",
-    fontSize: "13",
-    fontWeight: "bold",
-    fill: "#fb923c",
-    fontFamily: "sans-serif"
-  }, "?", /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0;1;1;0",
-    keyTimes: "0;0.2;0.8;1",
-    dur: "1.8s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "translate",
-    values: "0 2;0 -3;0 2",
-    dur: "1.8s",
-    repeatCount: "indefinite"
-  })), mood === 'celebrating' && /*#__PURE__*/React.createElement(React.Fragment, null, [[12, '#34d399', 0], [88, '#60a5fa', 0.4], [22, '#fb7185', 0.9], [78, '#facc15', 0.2], [50, '#7c4dd6', 0.6]].map(([x, c, d], i) => /*#__PURE__*/React.createElement("circle", {
-    key: i,
-    cx: x,
-    cy: "6",
-    r: "2",
-    fill: c
-  }, /*#__PURE__*/React.createElement("animateTransform", {
-    attributeName: "transform",
-    type: "translate",
-    values: "0 -6;0 86",
-    dur: "1.7s",
-    begin: `${d}s`,
-    repeatCount: "indefinite"
-  }), /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0;1;1;0",
-    keyTimes: "0;0.1;0.75;1",
-    dur: "1.7s",
-    begin: `${d}s`,
-    repeatCount: "indefinite"
-  }))), /*#__PURE__*/React.createElement("path", {
-    d: "M10,56 l1.4,2.8 3,.4 -2.2,2.1 .5,3 -2.7,-1.5 -2.7,1.5 .5,-3 -2.2,-2.1 3,-.4 Z",
-    fill: "#facc15"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0.2;1;0.2",
-    dur: "1.1s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("path", {
-    d: "M86,58 l1.2,2.4 2.6,.35 -1.9,1.8 .45,2.6 -2.35,-1.3 -2.35,1.3 .45,-2.6 -1.9,-1.8 2.6,-.35 Z",
-    fill: "#34d399"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "1;0.2;1",
-    dur: "1.3s",
-    repeatCount: "indefinite"
-  }))), mood === 'thinking' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("circle", {
-    cx: "80",
-    cy: "18",
-    r: "2",
-    fill: "#cbd5e1"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0.25;1;0.25",
-    dur: "1.8s",
-    begin: "0s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("circle", {
-    cx: "86",
-    cy: "11",
-    r: "3",
-    fill: "#cbd5e1"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0.25;1;0.25",
-    dur: "1.8s",
-    begin: "0.45s",
-    repeatCount: "indefinite"
-  })), /*#__PURE__*/React.createElement("circle", {
-    cx: "93",
-    cy: "4",
-    r: "3.8",
-    fill: "#cbd5e1"
-  }, /*#__PURE__*/React.createElement("animate", {
-    attributeName: "opacity",
-    values: "0.25;1;0.25",
-    dur: "1.8s",
-    begin: "0.9s",
-    repeatCount: "indefinite"
-  }))));
+// ========== RALLY v3 — mascotte FinLearn (cel-shading a toni piatti + animazione con squash & stretch) ==========
+// Mood: neutral · happy · thinking · celebrating · sad · correct · wrong · walking
+// Tecnica: ogni parte = forma in tono d'ombra + area illuminata ritagliata (clipPath) + riflesso. Luce fissa da in alto a sinistra.
+const R3 = {
+  S: '#D57E1A', B: '#F6A730', H: '#FFC45C',            // pelo: ombra · base · luce
+  tuftS: '#B8640F', tuftB: '#D9821F',
+  bellyS: '#F0BE80', bellyB: '#FFE0B0',
+  muzS: '#EDB37E', muzB: '#FFD7A6', muzH: '#FFEBCB',
+  hornS: '#E2C690', hornB: '#FFF4DE', hornTip: '#B98F5A', hornRing: '#CFAE76',
+  hoofS: '#33231B', hoofB: '#563C2F', hoofH: '#7B5A48',
+  ear: '#EF8A78', earH: '#FFA898',
+  ink: '#1A0F08', iris: '#4A2A15', eyeShade: '#EBEFF5',
+  nostril: '#7A3418', nostrilIn: '#4E1E0B',
+  mouth: '#5C1A0E', tongue: '#FF7B7B', cheek: '#FF8A73',
+  gold: '#F2C440', goldS: '#C4931C', brow: '#A9570C'
 };
+
+function r3Mirror(d) {
+  return d.replace(/([MLCQHVZ])([^MLCQHVZ]*)/g, (all, cmd, args) => {
+    if (cmd === 'Z' || cmd === 'V') return all;
+    const n = args.trim().split(/[\s,]+/).filter(Boolean).map(Number);
+    if (cmd === 'H') return 'H' + (160 - n[0]);
+    for (let i = 0; i < n.length; i += 2) n[i] = +(160 - n[i]).toFixed(2);
+    return cmd + n.join(' ');
+  });
+}
+
+// parte con cel-shading: d = contorno; lit/hi = forme (stringhe svg) disegnate dentro il ritaglio
+function r3Part(u, key, d, shadowFill, inner, extraAttr) {
+  return `<clipPath id="${key}${u}"><path d="${d}"/></clipPath>` +
+    `<path d="${d}" fill="${shadowFill}"${extraAttr || ''}/>` +
+    `<g clip-path="url(#${key}${u})">${inner}</g>`;
+}
+
+function r3Eye(u, m, side) {
+  const C = R3;
+  const cx = side === 'L' ? 63 : 97, cy = 46, rx = 12, ry = 13.4;
+  const sgn = side === 'L' ? 1 : -1;
+  if (m === 'celebrating') return `<path d="M${cx - 9.5} ${cy + 3} Q${cx} ${cy - 8} ${cx + 9.5} ${cy + 3}" fill="none" stroke="${C.ink}" stroke-width="4.2" stroke-linecap="round"/>`;
+  const look = m === 'thinking' ? [2.6, -4] : (m === 'sad' || m === 'wrong') ? [0, 3] : [1, 1.2];
+  const px = cx + look[0], py = cy + look[1];
+  // palpebra superiore per mood: [abbassamento, rotazione]
+  const lid = {
+    neutral: [3.5, 6], walking: [3.5, 6], happy: [0, 0], correct: [0, 0],
+    thinking: side === 'L' ? [1, -4] : [7, 4], sad: [8, -16], wrong: [7, -12]
+  }[m] || [3, 5];
+  const bottom = (m === 'happy' || m === 'correct') ? `<ellipse cx="${cx}" cy="${cy + 20}" rx="17" ry="10" fill="${C.B}"/>` : '';
+  const k = `e${side}`;
+  return `<clipPath id="${k}${u}"><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/></clipPath>` +
+    `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#fff"/>` +
+    `<g clip-path="url(#${k}${u})">` +
+      `<ellipse cx="${cx}" cy="${cy - 14}" rx="15" ry="5" fill="${C.eyeShade}"/>` +
+      `<g class="r3-look"><circle cx="${px}" cy="${py}" r="7.8" fill="${C.iris}"/><circle cx="${px + .4}" cy="${py + .4}" r="5.4" fill="${C.ink}"/>` +
+      `<circle cx="${px + 2.7}" cy="${py - 3}" r="2.9" fill="#fff"/><circle cx="${px - 2.5}" cy="${py + 2.7}" r="1.25" fill="#fff"/></g>` +
+      bottom +
+      `<g class="r3-blink"><g transform="translate(0 ${lid[0]}) rotate(${lid[1] * sgn} ${cx} ${cy - 13})"><rect x="${cx - 18}" y="${cy - 39}" width="36" height="26" fill="${C.B}"/></g></g>` +
+    `</g>`;
+}
+
+function r3Face(u, m) {
+  const C = R3;
+  let s = '';
+  s += `<g class="r3-eyes">${r3Eye(u, m, 'L')}${r3Eye(u, m, 'R')}</g>`;
+  // sopracciglia (ciuffi di pelo)
+  const br = (d) => `<path d="${d}" fill="none" stroke="${C.brow}" stroke-width="4.4" stroke-linecap="round"/>`;
+  if (m === 'thinking') s += br('M53 27 Q62 20.5 72 26');
+  if (m === 'sad' || m === 'wrong') s += br('M53 31.5 Q62 31 70.5 25.5') + br('M89.5 25.5 Q98 31 107 31.5');
+  if (m === 'celebrating' || m === 'correct') s += br('M54 28 Q63 22 72 27') + br('M88 27 Q97 22 106 28');
+  // guance
+  const blush = (m === 'sad' || m === 'wrong') ? .18 : .38;
+  s += `<ellipse cx="45" cy="72" rx="7.5" ry="4.2" fill="${C.cheek}" opacity="${blush}"/><ellipse cx="115" cy="72" rx="7.5" ry="4.2" fill="${C.cheek}" opacity="${blush}"/>`;
+  // muso
+  const muz = 'M80 58 C99 58 111 66 111 77 C111 89 98 96 80 96 C62 96 49 89 49 77 C49 66 61 58 80 58 Z';
+  s += r3Part(u, 'mz', muz, C.muzS,
+    `<ellipse cx="77" cy="73" rx="30" ry="16" fill="${C.muzB}"/><ellipse cx="70" cy="63.5" rx="15" ry="3.4" fill="${C.muzH}"/>`);
+  // narici
+  const nos = 'M68.5 68 C72.5 67.6 75 71 74.4 74.8 C73.9 78 68.6 78.6 66.8 76 C65 73 65.6 68.3 68.5 68 Z';
+  s += `<path d="${nos}" fill="${C.nostril}"/><path d="${r3Mirror(nos)}" fill="${C.nostril}"/>`;
+  s += `<ellipse cx="70.4" cy="74" rx="2.2" ry="2.8" fill="${C.nostrilIn}"/><ellipse cx="89.6" cy="74" rx="2.2" ry="2.8" fill="${C.nostrilIn}"/>`;
+  // anello al naso
+  s += `<path d="M75 79.5 A5 5 0 1 0 85 79.5" fill="none" stroke="${C.goldS}" stroke-width="3.2" stroke-linecap="round"/>` +
+       `<path d="M75.6 80.6 A4.6 4.6 0 0 0 79.2 84.4" fill="none" stroke="#FFE68A" stroke-width="1.3" stroke-linecap="round"/>` +
+       `<path d="M75 79.5 A5 5 0 1 0 85 79.5" fill="none" stroke="${C.gold}" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>`;
+  // bocca
+  const line = (d) => `<path d="${d}" fill="none" stroke="${C.mouth}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const open = (d, ty, rx, ry) => `<clipPath id="mo${u}"><path d="${d}"/></clipPath><path d="${d}" fill="${C.mouth}" stroke="${C.mouth}" stroke-width="1.4" stroke-linejoin="round"/>` +
+    `<g clip-path="url(#mo${u})"><ellipse cx="80" cy="${ty}" rx="${rx}" ry="${ry}" fill="${C.tongue}"/></g>`;
+  const mouths = {
+    neutral: line('M71.5 89.5 Q80 93.5 88.5 89.5'),
+    happy: open('M68 88 Q80 100.5 92 88 Q80 91 68 88 Z', 97, 7, 4),
+    celebrating: open('M66 87 Q80 104 94 87 Q80 90.5 66 87 Z', 100.5, 8.5, 5),
+    thinking: line('M73.5 91.2 Q79.5 89.6 87.5 90.6'),
+    sad: line('M71.5 93.5 Q80 87.5 88.5 93.5'),
+    wrong: line('M70.5 91.5 Q75.2 88.4 80 91.5 Q84.8 94.6 89.5 91.5')
+  };
+  mouths.correct = mouths.celebrating; mouths.walking = mouths.neutral;
+  s += mouths[m] || mouths.neutral;
+  // sbuffi di vapore, lacrima, sudore
+  s += `<g fill="#fff"><circle class="r3-puffL" cx="63" cy="82" r="3.4" opacity="0"/><circle class="r3-puffR" cx="97" cy="82" r="3.4" opacity="0"/></g>`;
+  if (m === 'sad') s += `<path class="r3-tear" d="M58 66 C54.6 71.6 54 75 58 76.6 C62 75 61.4 71.6 58 66 Z" fill="#7DD3FC"/>`;
+  if (m === 'wrong') s += `<path class="r3-sweat" d="M123 30 C118.6 37 117.6 41.4 123 43.4 C128.4 41.4 127.4 37 123 30 Z" fill="#7DD3FC"/><ellipse cx="121.4" cy="38.6" rx="1.2" ry="2" fill="#fff" opacity=".8"/>`;
+  return s;
+}
+
+function r3Character(u, m) {
+  const C = R3;
+  let s = '';
+  // --- coda (base + punta con ritardo)
+  s += `<g class="r3-tail"><path d="M117 131 C129 129 135.5 121 137.5 110" fill="none" stroke="${C.S}" stroke-width="5" stroke-linecap="round"/>` +
+    `<g class="r3-tailTip">` + r3Part(u, 'tt', 'M137.6 111.5 C131.4 106.6 132.4 97.4 137.6 93 C140.6 98.4 147 101 145 108.4 C144 112.2 140.4 113.4 137.6 111.5 Z', C.tuftS,
+      `<ellipse cx="136.5" cy="101" rx="5" ry="9" fill="${C.tuftB}"/>`) + `</g></g>`;
+  // --- gambe
+  const leg = (dx, cls, k) => `<g class="${cls}"><g transform="translate(${dx} 0)">` +
+    r3Part(u, k + 'l', 'M64 128 C71 128 77 132 77 139 V150 H53 V139 C53 132 57 128 64 128 Z', C.S, `<ellipse cx="60" cy="138" rx="12" ry="16" fill="${C.B}"/>`) +
+    r3Part(u, k + 'h', 'M50 154 Q50 149 56 149 H74 Q80 149 80 154 V158 Q80 163 75 163 H55 Q50 163 50 158 Z', C.hoofS,
+      `<ellipse cx="61" cy="154" rx="14" ry="6.5" fill="${C.hoofB}"/><ellipse cx="57" cy="151.4" rx="5.2" ry="1.5" fill="${C.hoofH}"/>`) +
+    `<path d="M65 156 V163" stroke="${C.hoofS}" stroke-width="2.2" stroke-linecap="round"/></g></g>`;
+  s += leg(0, 'r3-legL', 'gL') + leg(31, 'r3-legR', 'gR');
+  // --- parte superiore (respira come un blocco)
+  s += `<g class="r3-upper">`;
+  const torso = 'M80 82 C107 82 123 99 123 118 C123 135 105 145 80 145 C55 145 37 135 37 118 C37 99 53 82 80 82 Z';
+  s += r3Part(u, 'to', torso, C.S, `<ellipse cx="72" cy="113" rx="45" ry="37" fill="${C.B}"/><ellipse cx="60" cy="98" rx="17" ry="8" fill="${C.H}" transform="rotate(-18 60 98)"/>`);
+  s += r3Part(u, 'be', 'M80 102 C94 102 104 110 104 121 C104 132 94 140 80 140 C66 140 56 132 56 121 C56 110 66 102 80 102 Z', C.bellyS,
+    `<ellipse cx="76.5" cy="117" rx="22" ry="18" fill="${C.bellyB}"/>`);
+  s += `<path d="M73 109 l3.5 3.5 l3.5 -3.5 l3.5 3.5 l3.5 -3.5" fill="none" stroke="${C.bellyS}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`;
+  // braccia (dietro la testa)
+  const armD = 'M55 94 C44 95 34 105 31 118 C29 126.5 36 131.5 40.5 126.5 C44.5 117 50.5 108.5 61 101.5 Z';
+  const arm = (side) => {
+    const L = side === 'L';
+    const d = L ? armD : r3Mirror(armD);
+    const hx = L ? 36 : 124;
+    return `<g class="r3-arm${side}"><path d="${d}" fill="${C.S}" opacity=".55" transform="translate(${L ? 3.5 : -3.5} 2.5)"/>` +
+      r3Part(u, 'a' + side, d, C.S, `<ellipse cx="${L ? 39 : 117}" cy="106" rx="${L ? 9 : 6.5}" ry="16" fill="${C.B}" transform="rotate(${L ? 25 : -25} ${L ? 39 : 117} 106)"/>`) +
+      r3Part(u, 'ah' + side, `M${hx - 7.6} 127 C${hx - 7.6} 122.5 ${hx + 7.6} 122.5 ${hx + 7.6} 127 C${hx + 7.6} 132.5 ${hx - 7.6} 132.5 ${hx - 7.6} 127 Z`, C.hoofS,
+        `<ellipse cx="${hx - 1.4}" cy="125.8" rx="6.4" ry="4.6" fill="${C.hoofB}"/><ellipse cx="${hx - 3}" cy="124.2" rx="2.6" ry="1" fill="${C.hoofH}"/>`) +
+      `<path d="M${hx} 125.5 V132" stroke="${C.hoofS}" stroke-width="1.6" stroke-linecap="round"/></g>`;
+  };
+  s += arm('L') + (m === 'thinking' ? '' : arm('R'));
+  // --- testa
+  s += `<g class="r3-head">`;
+  const earD = 'M43 47 C33 39 17 40 8 50.5 C17 60.5 33 59.5 44 55 Z';
+  const earIn = 'M39 49.5 C31 44.6 20.5 45.4 14 50.6 C21 55.4 31 55.4 39 53 Z';
+  const ear = (side) => {
+    const L = side === 'L', M = L ? (d) => d : r3Mirror;
+    return `<g class="r3-ear${side}">` + r3Part(u, 'er' + side, M(earD), C.S, `<ellipse cx="${L ? 25 : 135}" cy="47.5" rx="18" ry="6.5" fill="${C.B}"/>`) +
+      r3Part(u, 'ei' + side, M(earIn), C.ear, `<ellipse cx="${L ? 26 : 134}" cy="49" rx="12" ry="3" fill="${C.earH}"/>`) + `</g>`;
+  };
+  s += ear('L') + ear('R');
+  const hornD = 'M51 31 C40 32 27 28.5 20.5 18.5 C16.4 12 17 4.6 21.2 1.2 C24 9.4 30.4 15.4 38.4 18.2 C44.4 20.3 50.6 21.4 57 22.4 Z';
+  const horn = (side) => {
+    const L = side === 'L';
+    const d = L ? hornD : r3Mirror(hornD);
+    const x = (v) => L ? v : 160 - v;
+    return r3Part(u, 'hn' + side, d, C.hornS,
+      `<ellipse cx="${x(37)}" cy="19" rx="21" ry="5.8" fill="${C.hornB}" transform="rotate(${L ? 27 : -27} ${x(37)} ${19})"/>` +
+      `<circle cx="${x(19.4)}" cy="5" r="7.6" fill="${C.hornTip}"/>` +
+      `<path d="M${x(44.6)} 20.8 Q${x(42)} 25.8 ${x(44.8)} 31.2 M${x(49.4)} 21.6 Q${x(47)} 26.4 ${x(49.6)} 31.4" fill="none" stroke="${C.hornRing}" stroke-width="1.6" stroke-linecap="round"/>`);
+  };
+  s += horn('L') + horn('R');
+  const headD = 'M80 16 C111 16 129 34 129 58 C129 80 111 95 80 95 C49 95 31 80 31 58 C31 34 49 16 80 16 Z';
+  s += r3Part(u, 'hd', headD, C.S,
+    `<ellipse cx="73" cy="51" rx="51" ry="40" fill="${C.B}"/><ellipse cx="58" cy="31" rx="17" ry="7.5" fill="${C.H}" transform="rotate(-22 58 31)"/>`);
+  s += r3Part(u, 'tf', 'M65 25 C61 17 65 8.5 71.5 8 C70.8 12 73.4 14.4 76 12.6 C76 6.4 82 3 87.6 6 C84.6 9 86.4 12.2 89.4 12.4 C92.4 9.2 97.6 10.6 98.4 14.6 C96.6 20.4 92.4 24.2 86 25.4 C79 22.6 71.6 22.6 65 25 Z', C.tuftS,
+    `<ellipse cx="79" cy="13" rx="17" ry="9" fill="${C.tuftB}"/>`);
+  s += r3Face(u, m);
+  s += `</g>`;
+  if (m === 'thinking') s += arm('R');
+  s += `</g>`; // upper
+  return s;
+}
+
+function r3Extras(m) {
+  let s = '';
+  if (m === 'thinking') s += `<g fill="#CBD5E1"><circle class="r3-dot1" cx="133" cy="30" r="3"/><circle class="r3-dot2" cx="142" cy="18" r="4.2"/><circle class="r3-dot3" cx="152" cy="4" r="5.8"/></g>`;
+  if (m === 'correct') {
+    const star = (x, y, r, c, k) => `<path class="r3-tw${k}" d="M${x} ${y - r} Q${x + r * .2} ${y - r * .2} ${x + r} ${y} Q${x + r * .2} ${y + r * .2} ${x} ${y + r} Q${x - r * .2} ${y + r * .2} ${x - r} ${y} Q${x - r * .2} ${y - r * .2} ${x} ${y - r} Z" fill="${c}"/>`;
+    s += star(10, 28, 7, '#FFD43B', 1) + star(150, 34, 6, '#FFD43B', 2) + star(24, 8, 4, '#fff', 3) + star(140, 10, 3.5, '#fff', 1);
+  }
+  if (m === 'celebrating') {
+    const conf = [[8, 18, '#58CC02', 20], [28, 2, '#1CB0F6', -30], [126, 4, '#FF4B8B', 35], [148, 24, '#FFD43B', -15], [2, 48, '#FF4B8B', 45], [152, 52, '#1CB0F6', 10], [52, -4, '#FFD43B', 60], [106, -6, '#58CC02', -50]];
+    s += conf.map(([x, y, c, r], i) => `<g class="r3-conf r3-c${i % 4}"><rect x="${x}" y="${y}" width="6" height="9" rx="2" fill="${c}" transform="rotate(${r} ${x + 3} ${y + 4.5})"/></g>`).join('');
+  }
+  return s;
+}
+
+function r3Delay(u) { let h = 0; for (const ch of String(u)) h = (h * 31 + ch.charCodeAt(0)) % 997; return -(h % 40) / 10; }
+
+function rly3SVG(mood, size, uid, opts) {
+  const o = opts || {};
+  const m = mood || 'neutral';
+  const u = uid || 'r';
+  return `<svg viewBox="0 0 160 170" width="${size}" height="${size * 170 / 160}" style="overflow:visible;display:block" aria-hidden="true">` +
+    `<ellipse class="r3-shadow" cx="80" cy="164" rx="38" ry="5" fill="#000" opacity=".18"/>` +
+    `<g class="r3 r3-m-${m}${o.static ? ' r3-static' : ''}${o.poke ? ' r3-poke' : ''}" style="--rd:${r3Delay(u)}s">${r3Extras(m)}<g class="r3-all">${r3Character(u, m)}</g></g></svg>`;
+}
+
+function rly3MarkSVG(size, opts) {
+  const o = opts || {};
+  const u = o.uid || 'mk';
+  const sc = o.maskable ? 0.64 : 0.9;
+  const tx = 60 - 80 * sc;
+  const ty = o.maskable ? 60 - 84 * sc : 6 - 1 * sc;
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}" style="display:block" aria-hidden="true">` +
+    `<rect width="120" height="120" rx="${o.rounded ? 26 : 0}" fill="${o.bg || '#0B1322'}"/>` +
+    `<circle cx="60" cy="${o.maskable ? 62 : 66}" r="${o.maskable ? 40 : 52}" fill="#14213C"/>` +
+    `<g transform="translate(${tx} ${ty}) scale(${sc})"><g class="r3 r3-static">${r3Character(u, 'happy')}</g></g></svg>`;
+}
+
+const RLY3_CSS = `
+.r3, .r3 * { transform-box: view-box; }
+.r3-all { transform-origin: 80px 163px; }
+.r3-upper { transform-origin: 80px 150px; animation: r3Breath 3.4s cubic-bezier(.45,0,.55,1) var(--rd) infinite; }
+.r3-head { transform-origin: 80px 92px; animation: r3HeadBob 3.4s cubic-bezier(.45,0,.55,1) calc(var(--rd) + .25s) infinite; }
+.r3-earL { transform-origin: 43px 51px; animation: r3EarL 3.4s cubic-bezier(.45,0,.55,1) calc(var(--rd) + .45s) infinite; }
+.r3-earR { transform-origin: 117px 51px; animation: r3EarR 3.4s cubic-bezier(.45,0,.55,1) calc(var(--rd) + .45s) infinite; }
+.r3-tail { transform-origin: 117px 131px; animation: r3Tail 2.6s cubic-bezier(.45,0,.55,1) var(--rd) infinite; }
+.r3-tailTip { transform-origin: 137.5px 110px; animation: r3TailTip 2.6s cubic-bezier(.45,0,.55,1) calc(var(--rd) + .3s) infinite; }
+.r3-armL { transform-origin: 55px 98px; animation: r3ArmIdleL 3.4s cubic-bezier(.45,0,.55,1) calc(var(--rd) + .15s) infinite; }
+.r3-armR { transform-origin: 105px 98px; animation: r3ArmIdleR 3.4s cubic-bezier(.45,0,.55,1) calc(var(--rd) + .15s) infinite; }
+.r3-legL { transform-origin: 65px 138px; } .r3-legR { transform-origin: 96px 138px; }
+.r3-blink { animation: r3Blink 5.2s linear var(--rd) infinite; }
+.r3-look { animation: r3Look 8s cubic-bezier(.2,.9,.3,1) var(--rd) infinite; }
+.r3-puffL, .r3-puffR { transform-box: fill-box; transform-origin: center; }
+
+/* NEUTRO: si guarda intorno, ogni tanto raspa con lo zoccolo e sbuffa */
+.r3-m-neutral .r3-legR { animation: r3Paw 7s cubic-bezier(.45,0,.55,1) var(--rd) infinite; }
+.r3-m-neutral .r3-all { animation: r3PawBody 7s cubic-bezier(.45,0,.55,1) var(--rd) infinite; }
+.r3-m-neutral .r3-puffL { animation: r3PuffL 7s ease-out var(--rd) infinite; }
+.r3-m-neutral .r3-puffR { animation: r3PuffR 7s ease-out var(--rd) infinite; }
+
+/* FELICE: saltello con anticipo + saluto con la mano */
+.r3-m-happy .r3-all { animation: r3Hop 1.6s linear infinite; }
+.r3-m-happy .r3-armL { animation: r3Wave 1.6s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-happy .r3-look { animation: none; }
+
+/* PENSA */
+.r3-m-thinking .r3-head { animation: r3Ponder 4s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-thinking .r3-armR { animation: r3Chin 1.4s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-thinking .r3-legL { animation: r3FootTap .7s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-thinking .r3-look { animation: none; }
+
+/* FESTEGGIA: balla sul ritmo */
+.r3-m-celebrating .r3-all { animation: r3Dance 1s linear infinite; }
+.r3-m-celebrating .r3-armL { animation: r3CheerL .5s cubic-bezier(.34,1.56,.64,1) infinite alternate; }
+.r3-m-celebrating .r3-armR { animation: r3CheerR .5s cubic-bezier(.34,1.56,.64,1) infinite alternate-reverse; }
+.r3-m-celebrating .r3-legL { animation: r3Kick 1s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-celebrating .r3-legR { animation: r3Kick 1s cubic-bezier(.45,0,.55,1) -.5s infinite; }
+.r3-m-celebrating .r3-head { animation: r3HeadDance 1s cubic-bezier(.45,0,.55,1) .08s infinite; }
+
+/* TRISTE */
+.r3-m-sad .r3-upper { animation: r3Sag 4.6s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-sad .r3-head { animation: r3SadHead 4.6s cubic-bezier(.45,0,.55,1) .3s infinite; }
+.r3-m-sad .r3-earL, .r3-m-wrong .r3-earL { animation: r3DroopL 4.6s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-sad .r3-earR, .r3-m-wrong .r3-earR { animation: r3DroopR 4.6s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-sad .r3-tail { animation-duration: 6s; }
+.r3-m-sad .r3-look { animation: none; }
+
+/* RISPOSTA GIUSTA: carica, salta, pugno al cielo, atterra */
+.r3-m-correct .r3-all { animation: r3Jump 1.8s linear infinite; }
+.r3-m-correct .r3-armR { animation: r3Pump 1.8s linear infinite; }
+.r3-m-correct .r3-legL { animation: r3TuckL 1.8s linear infinite; }
+.r3-m-correct .r3-legR { animation: r3TuckR 1.8s linear infinite; }
+.r3-m-correct .r3-look { animation: none; }
+
+/* RISPOSTA SBAGLIATA: scuote la testa, poi alza le spalle */
+.r3-m-wrong .r3-head { animation: r3Shake 2.6s linear infinite; }
+.r3-m-wrong .r3-upper { animation: r3ShrugBody 2.6s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-wrong .r3-armL { animation: r3ShrugL 2.6s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-wrong .r3-armR { animation: r3ShrugR 2.6s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-wrong .r3-look { animation: none; }
+
+/* CAMMINA */
+.r3-m-walking .r3-all { animation: r3Bob .8s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-walking .r3-legL { animation: r3Step .8s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-walking .r3-legR { animation: r3Step .8s cubic-bezier(.45,0,.55,1) -.4s infinite; }
+.r3-m-walking .r3-armL { animation: r3Swing .8s cubic-bezier(.45,0,.55,1) -.4s infinite; }
+.r3-m-walking .r3-armR { animation: r3Swing .8s cubic-bezier(.45,0,.55,1) infinite; }
+.r3-m-walking .r3-head { animation: r3WalkHead .4s cubic-bezier(.45,0,.55,1) .08s infinite; }
+
+/* TOCCO */
+.r3-poke .r3-all { animation: r3Poke .75s linear 1 !important; }
+.r3-poke .r3-puffL { animation: r3PuffLq .75s ease-out 1 !important; }
+.r3-poke .r3-puffR { animation: r3PuffRq .75s ease-out 1 !important; }
+.r3-poke .r3-blink { animation: r3BlinkQ .75s linear 1 !important; }
+
+/* extra */
+.r3-dot1, .r3-dot2, .r3-dot3 { animation: r3Fade 1.8s infinite; } .r3-dot2 { animation-delay: .3s; } .r3-dot3 { animation-delay: .6s; }
+.r3-tear, .r3-sweat { animation: r3Drip 1.6s ease-in infinite; }
+.r3-tw1, .r3-tw2, .r3-tw3 { transform-box: fill-box; transform-origin: center; animation: r3Tw 1.2s cubic-bezier(.34,1.56,.64,1) infinite; } .r3-tw2 { animation-delay: .4s; } .r3-tw3 { animation-delay: .8s; }
+.r3-conf { animation: r3Conf 1.4s cubic-bezier(.45,0,.55,1) infinite; } .r3-c1 { animation-delay: .2s; } .r3-c2 { animation-delay: .5s; } .r3-c3 { animation-delay: .8s; }
+.r3-static, .r3-static * { animation: none !important; }
+
+@keyframes r3Breath { 0%,100% { transform: scale(1,1); } 50% { transform: scale(.988,1.022); } }
+@keyframes r3HeadBob { 0%,100% { transform: translateY(0) rotate(0); } 25% { transform: rotate(-1.6deg); } 50% { transform: translateY(-1.6px) rotate(0); } 75% { transform: rotate(1.6deg); } }
+@keyframes r3EarL { 0%,100% { transform: rotate(0); } 50% { transform: rotate(5deg); } 90% { transform: rotate(-2deg); } 93% { transform: rotate(14deg); } 96% { transform: rotate(-4deg); } }
+@keyframes r3EarR { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-5deg); } }
+@keyframes r3Tail { 0%,100% { transform: rotate(-9deg); } 50% { transform: rotate(11deg); } }
+@keyframes r3TailTip { 0%,100% { transform: rotate(-14deg); } 50% { transform: rotate(16deg); } }
+@keyframes r3ArmIdleL { 0%,100% { transform: rotate(0); } 50% { transform: rotate(3deg); } }
+@keyframes r3ArmIdleR { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-3deg); } }
+@keyframes r3Blink { 0%,88%,91.5%,94%,96.5%,100% { transform: translateY(0); } 89.5% { transform: translateY(30px); } 95.2% { transform: translateY(30px); } }
+@keyframes r3BlinkQ { 0%,40%,100% { transform: translateY(0); } 15%,25% { transform: translateY(30px); } }
+@keyframes r3Look { 0%,14%,100% { transform: translate(0,0); } 17%,36% { transform: translate(3.2px,-.6px); } 39%,58% { transform: translate(-3.4px,.4px); } 61%,80% { transform: translate(.6px,-2.2px); } 83%,97% { transform: translate(0,0); } }
+@keyframes r3Paw { 0%,64%,92%,100% { transform: rotate(0) translate(0,0); } 67% { transform: rotate(-18deg) translate(0,-4px); } 71% { transform: rotate(8deg) translate(0,0); } 75% { transform: rotate(-18deg) translate(0,-4px); } 79% { transform: rotate(8deg) translate(0,0); } 84% { transform: rotate(0); } }
+@keyframes r3PawBody { 0%,62%,90%,100% { transform: rotate(0) scale(1,1); } 66%,82% { transform: rotate(-2deg) scale(1.02,.98); } 86% { transform: rotate(0) scale(.98,1.03); } }
+@keyframes r3PuffL { 0%,84% { opacity: 0; transform: translate(0,0) scale(.3); } 86% { opacity: .95; transform: translate(-2px,1px) scale(.8); } 97% { opacity: 0; transform: translate(-13px,6px) scale(2); } 100% { opacity: 0; } }
+@keyframes r3PuffR { 0%,84% { opacity: 0; transform: translate(0,0) scale(.3); } 86% { opacity: .95; transform: translate(2px,1px) scale(.8); } 97% { opacity: 0; transform: translate(13px,6px) scale(2); } 100% { opacity: 0; } }
+@keyframes r3PuffLq { 0% { opacity: 0; transform: scale(.3); } 20% { opacity: .95; } 100% { opacity: 0; transform: translate(-14px,6px) scale(2.1); } }
+@keyframes r3PuffRq { 0% { opacity: 0; transform: scale(.3); } 20% { opacity: .95; } 100% { opacity: 0; transform: translate(14px,6px) scale(2.1); } }
+@keyframes r3Hop {
+  0% { transform: translateY(0) scale(1,1); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  14% { transform: translateY(0) scale(1.07,.92); animation-timing-function: cubic-bezier(.2,.7,.4,1); }
+  34% { transform: translateY(-11px) scale(.95,1.06); animation-timing-function: cubic-bezier(.6,0,.8,.4); }
+  50% { transform: translateY(0) scale(1.08,.93); animation-timing-function: cubic-bezier(.34,1.56,.64,1); }
+  64% { transform: translateY(0) scale(1,1); } 100% { transform: translateY(0) scale(1,1); } }
+@keyframes r3Wave { 0%,100% { transform: rotate(66deg); } 20% { transform: rotate(98deg); } 40% { transform: rotate(68deg); } 60% { transform: rotate(98deg); } 80% { transform: rotate(72deg); } }
+@keyframes r3Ponder { 0%,100% { transform: rotate(7deg); } 50% { transform: rotate(10deg) translateY(-1.2px); } }
+@keyframes r3Chin { 0%,100% { transform: rotate(124deg); } 50% { transform: rotate(132deg); } }
+@keyframes r3FootTap { 0%,100% { transform: rotate(0); } 45% { transform: rotate(-11deg) translateY(-2px); } }
+@keyframes r3Dance {
+  0% { transform: translateY(0) rotate(-6deg) scale(1.05,.95); animation-timing-function: cubic-bezier(.2,.7,.4,1); }
+  25% { transform: translateY(-9px) rotate(0) scale(.97,1.04); animation-timing-function: cubic-bezier(.6,0,.8,.4); }
+  50% { transform: translateY(0) rotate(6deg) scale(1.05,.95); animation-timing-function: cubic-bezier(.2,.7,.4,1); }
+  75% { transform: translateY(-9px) rotate(0) scale(.97,1.04); animation-timing-function: cubic-bezier(.6,0,.8,.4); }
+  100% { transform: translateY(0) rotate(-6deg) scale(1.05,.95); } }
+@keyframes r3HeadDance { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+@keyframes r3CheerL { from { transform: rotate(72deg); } to { transform: rotate(100deg); } }
+@keyframes r3CheerR { from { transform: rotate(-72deg); } to { transform: rotate(-100deg); } }
+@keyframes r3Kick { 0%,50%,100% { transform: rotate(0); } 25% { transform: rotate(-15deg) translateY(-3px); } }
+@keyframes r3Sag { 0%,100% { transform: scale(1.02,.965); } 50% { transform: scale(1.01,.975); } }
+@keyframes r3SadHead { 0%,100% { transform: translateY(4px) rotate(-3deg); } 50% { transform: translateY(5px) rotate(2deg); } }
+@keyframes r3DroopL { 0%,100% { transform: rotate(-30deg); } 50% { transform: rotate(-24deg); } }
+@keyframes r3DroopR { 0%,100% { transform: rotate(30deg); } 50% { transform: rotate(24deg); } }
+@keyframes r3Jump {
+  0% { transform: translateY(0) scale(1,1); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  12% { transform: translateY(0) scale(1.1,.88); animation-timing-function: cubic-bezier(.15,.75,.35,1); }
+  30% { transform: translateY(-18px) scale(.93,1.08); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  38% { transform: translateY(-20px) scale(1,1); animation-timing-function: cubic-bezier(.6,0,.85,.35); }
+  52% { transform: translateY(0) scale(1.12,.88); animation-timing-function: cubic-bezier(.34,1.56,.64,1); }
+  66% { transform: translateY(0) scale(1,1); } 100% { transform: translateY(0) scale(1,1); } }
+@keyframes r3Pump {
+  0% { transform: rotate(-20deg); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  12% { transform: rotate(-10deg); animation-timing-function: cubic-bezier(.2,.8,.3,1.3); }
+  32% { transform: rotate(-104deg); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  44% { transform: rotate(-86deg); } 56% { transform: rotate(-102deg); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  85% { transform: rotate(-20deg); } 100% { transform: rotate(-20deg); } }
+@keyframes r3TuckL { 0%,14%,52%,100% { transform: rotate(0); } 32% { transform: rotate(20deg) translateY(-4px); } }
+@keyframes r3TuckR { 0%,14%,52%,100% { transform: rotate(0); } 32% { transform: rotate(-20deg) translateY(-4px); } }
+@keyframes r3Shake {
+  0% { transform: rotate(0); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  7% { transform: rotate(-12deg); } 16% { transform: rotate(11deg); } 25% { transform: rotate(-8deg); } 34% { transform: rotate(5deg); }
+  42% { transform: rotate(-2deg); } 50% { transform: rotate(0); } 100% { transform: rotate(0); } }
+@keyframes r3ShrugBody { 0%,52%,96%,100% { transform: scale(1,1); } 62%,86% { transform: scale(1.03,.96); } }
+@keyframes r3ShrugL { 0%,52%,96%,100% { transform: rotate(0); } 62%,86% { transform: rotate(42deg); } }
+@keyframes r3ShrugR { 0%,52%,96%,100% { transform: rotate(0); } 62%,86% { transform: rotate(-42deg); } }
+@keyframes r3Bob { 0%,50%,100% { transform: translateY(0) rotate(-1.5deg); } 25%,75% { transform: translateY(-3.5px) rotate(1.5deg); } }
+@keyframes r3WalkHead { 0%,100% { transform: translateY(0); } 50% { transform: translateY(1.4px); } }
+@keyframes r3Step { 0%,100% { transform: rotate(-20deg) translateY(-1px); } 50% { transform: rotate(20deg) translateY(-1px); } 25%,75% { transform: rotate(0) translateY(-3px); } }
+@keyframes r3Swing { 0%,100% { transform: rotate(-18deg); } 50% { transform: rotate(18deg); } }
+@keyframes r3Poke {
+  0% { transform: translateY(0) scale(1,1); animation-timing-function: cubic-bezier(.2,.7,.4,1); }
+  12% { transform: translateY(0) scale(1.12,.86); animation-timing-function: cubic-bezier(.15,.75,.35,1); }
+  40% { transform: translateY(-18px) scale(.92,1.09) rotate(-5deg); animation-timing-function: cubic-bezier(.6,0,.85,.35); }
+  68% { transform: translateY(0) scale(1.1,.9); animation-timing-function: cubic-bezier(.34,1.56,.64,1); }
+  100% { transform: translateY(0) scale(1,1); } }
+@keyframes r3Fade { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes r3Drip { 0% { transform: translateY(-2px); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(9px); opacity: 0; } }
+@keyframes r3Tw { 0%,100% { transform: scale(.3) rotate(0); opacity: .2; } 50% { transform: scale(1.1) rotate(45deg); opacity: 1; } }
+@keyframes r3Conf { 0%,100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+@media (prefers-reduced-motion: reduce) { .r3, .r3 * { animation: none !important; } }
+.fl-wordmark { font-family: 'Nunito', 'Outfit', system-ui, sans-serif; font-weight: 900; letter-spacing: -0.02em; line-height: 1; color: #FFB020; display: inline-flex; align-items: flex-end; text-transform: none; }
+.fl-wordmark .fl-wm-fin { color: #FFF4DA; }
+.fl-wordmark .fl-wm-i { position: relative; display: inline-block; }
+.fl-wordmark .fl-wm-i svg { position: absolute; left: 50%; top: -0.04em; width: 0.42em; height: 0.42em; transform: translateX(-46%); overflow: visible; }
+`;
+
+
+if (typeof document !== 'undefined' && !document.getElementById('rly-css')) {
+  const st = document.createElement('style'); st.id = 'rly-css'; st.textContent = RLY3_CSS; document.head.appendChild(st);
+  if (!document.getElementById('rly-font')) {
+    const lk = document.createElement('link'); lk.id = 'rly-font'; lk.rel = 'stylesheet';
+    lk.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap'; document.head.appendChild(lk);
+  }
+}
+let rlyCounter = 0;
+
+// Mascotte Rally: stessa API del vecchio BullMascot (size, mood, className). Toccandolo salta e sbuffa.
+const BullMascot = ({ size = 80, mood = 'neutral', className = '', animate = true }) => {
+  const uidRef = useRef(null);
+  if (uidRef.current === null) uidRef.current = 'r' + (++rlyCounter);
+  const [poke, setPoke] = useState(0);
+  useEffect(() => { if (!poke) return; const t = setTimeout(() => setPoke(0), 750); return () => clearTimeout(t); }, [poke]);
+  return React.createElement('span', {
+    className: 'inline-block align-middle ' + className,
+    style: { width: size, height: size * 170 / 160, lineHeight: 0, cursor: 'pointer', WebkitTapHighlightColor: 'transparent' },
+    role: 'img', 'aria-label': 'Rally, la mascotte di FinLearn',
+    onClick: (e) => { e.stopPropagation(); setPoke(Date.now()); },
+    dangerouslySetInnerHTML: { __html: rly3SVG(mood, size, uidRef.current, { static: !animate, poke: !!poke }) }
+  });
+};
+const RallyMascot = BullMascot;
+
+// Logo: marchio (busto di Rally su navy) + wordmark "finlearn" con la i a freccia di rialzo
+const FinLearnMark = ({ size = 44, className = '' }) => {
+  const uidRef = useRef(null);
+  if (uidRef.current === null) uidRef.current = 'mk' + (++rlyCounter);
+  return React.createElement('span', {
+    className: 'inline-block align-middle ' + className,
+    style: { width: size, height: size, lineHeight: 0, borderRadius: size * 0.24, overflow: 'hidden', boxShadow: '0 0 0 1px rgba(255,176,32,.25)' },
+    dangerouslySetInnerHTML: { __html: rly3MarkSVG(size, { uid: uidRef.current }) }
+  });
+};
+const FL_ARROW_SVG = '<svg viewBox="0 0 20 20" aria-hidden="true"><polyline points="3,15 8,9 11,12 16,5" fill="none" stroke="#22C55E" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.6 2.2 L11.6 4.2 L17 9.4 Z" fill="#22C55E" stroke="#22C55E" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+const FinLearnWordmark = ({ size = 32, className = '', light = false }) =>
+  React.createElement('span', {
+    className: 'fl-wordmark ' + className, 'aria-label': 'FinLearn',
+    style: { fontSize: size },
+    dangerouslySetInnerHTML: { __html: `<span class="fl-wm-fin" ${light ? 'style="color:#16203A"' : ''}>f<span class="fl-wm-i">ı${FL_ARROW_SVG}</span>n</span>learn` }
+  });
+
 
 // Level Icons - Professional rank badges
 const RookieIcon = ({
@@ -1980,10 +1247,10 @@ function SplashScreen({
     className: "fl-float drop-shadow-2xl"
   }, /*#__PURE__*/React.createElement(BullMascot, {
     size: 128,
-    mood: "celebrating"
+    mood: phase >= 2 ? "celebrating" : "walking"
   }))), /*#__PURE__*/React.createElement("h1", {
-    className: `fl-display fl-gold-text text-6xl font-bold mt-7 transition-all duration-500 ${phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`
-  }, "FINLEARN"), /*#__PURE__*/React.createElement("div", {
+    className: `mt-7 transition-all duration-500 ${phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`
+  }, React.createElement(FinLearnWordmark, { size: 60 })), /*#__PURE__*/React.createElement("div", {
     className: `flex items-center gap-2 mt-4 transition-all duration-500 ${phase >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`
   }, /*#__PURE__*/React.createElement("span", {
     className: "h-px w-8",
@@ -2126,8 +1393,8 @@ function LoadingScreen() {
     size: 84,
     mood: "happy"
   })), /*#__PURE__*/React.createElement("div", {
-    className: "fl-display fl-gold-text text-3xl font-bold mt-3"
-  }, "FINLEARN"), /*#__PURE__*/React.createElement("div", {
+    className: "mt-3"
+  }, React.createElement(FinLearnWordmark, { size: 34 })), /*#__PURE__*/React.createElement("div", {
     className: "flex items-center justify-center gap-1.5 mt-4"
   }, [0, 1, 2].map(i => /*#__PURE__*/React.createElement("span", {
     key: i,
@@ -2265,8 +1532,8 @@ function AuthScreen({
     size: 80,
     mood: "happy"
   })), /*#__PURE__*/React.createElement("h1", {
-    className: "fl-display fl-gold-text text-4xl font-bold"
-  }, "FINLEARN"), /*#__PURE__*/React.createElement("div", {
+    className: ""
+  }, React.createElement(FinLearnWordmark, { size: 46 })), /*#__PURE__*/React.createElement("div", {
     className: "flex items-center justify-center gap-2 mt-2"
   }, /*#__PURE__*/React.createElement("span", {
     className: "h-px w-6",
@@ -5890,11 +5157,11 @@ function TICalculator({
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-center justify-between mb-3"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "text-amber-400 font-black tracking-widest",
+    className: "",
     style: {
       fontSize: 12
     }
-  }, "FINLEARN"), /*#__PURE__*/React.createElement("div", {
+  }, React.createElement(FinLearnWordmark, { size: 15 })), /*#__PURE__*/React.createElement("div", {
     className: "text-zinc-500 font-semibold",
     style: {
       fontSize: 10
@@ -9527,8 +8794,8 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       className: "drop-shadow-lg"
     }));
   })(), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
-    className: "fl-display fl-gold-text text-xl font-bold leading-none"
-  }, "FINLEARN"), /*#__PURE__*/React.createElement("p", {
+    className: "leading-none"
+  }, React.createElement(FinLearnWordmark, { size: 26, light: theme !== 'dark' })), /*#__PURE__*/React.createElement("p", {
     className: "fl-mono text-amber-500/80 text-[11px] font-semibold mt-1 tracking-wide"
   }, getLevelInfo(stats.xp).name.toUpperCase(), " \xB7 ", stats.xp.toLocaleString(), " XP"))), /*#__PURE__*/React.createElement("div", {
     className: "flex gap-2"
