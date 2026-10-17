@@ -588,11 +588,92 @@ const FL_HARMONY_CSS = `
     html.fl-dark .border-b.bg-white { border-color: var(--fl-line) !important; }
     body, button, input, textarea { font-family: 'Nunito', system-ui, sans-serif; }
 `;
+
+const FL_FIG_CSS = `
+    /* ===== Tema "Figurine" (chiaro): inchiostro nero, bordi spessi, ombre piene, colori pieni. Icone e mascotte invariate. ===== */
+    html.fl-fig { --ink: #1A1A1A; --fg-bg: #F4F6FA; --pop: #FFD43B; --mint: #7EE0B5; --sky: #9CC8FF; --rose: #FFB4C8;
+      background: var(--fg-bg); color-scheme: light; }
+    html.fl-fig body { background: var(--fg-bg) !important; color: var(--ink); }
+    html.fl-fig body, html.fl-fig button, html.fl-fig input, html.fl-fig textarea,
+    html.fl-fig .fl-display, html.fl-fig .fl-mono { font-family: 'Bricolage Grotesque', 'Nunito', system-ui, sans-serif !important; }
+    html.fl-fig .fl-display, html.fl-fig h1, html.fl-fig h2 { letter-spacing: -0.015em; }
+    html.fl-fig .fl-grid-bg { display: none; }
+    html.fl-fig .fl-gold-text { background: none; -webkit-text-fill-color: currentColor; color: var(--ink); animation: none; }
+    html.fl-fig .fl-sweep::after { display: none; }
+
+    /* superfici: bianco, bordo inchiostro 2.5px, ombra piena */
+    html.fl-fig .fl-glass { background: #fff !important; backdrop-filter: none; -webkit-backdrop-filter: none; border: 2.5px solid var(--ink) !important; }
+    html.fl-fig [style*="border: 1px solid rgb(26, 26, 26)"], html.fl-fig [style*="border-color: rgb(26, 26, 26)"],
+    html.fl-fig .border.border-slate-200, html.fl-fig .border.border-slate-100, html.fl-fig .border-2.border-slate-200 {
+      border: 2.5px solid var(--ink) !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig .border-slate-200, html.fl-fig .border-slate-100, html.fl-fig .border-slate-300 { border-color: var(--ink) !important; }
+    html.fl-fig .border-b, html.fl-fig .border-t { border-color: var(--ink) !important; }
+    html.fl-fig .shadow-lg, html.fl-fig .shadow-xl, html.fl-fig .shadow-2xl, html.fl-fig .shadow-md { --tw-shadow: 4px 4px 0 var(--ink) !important; --tw-shadow-colored: 4px 4px 0 var(--ink) !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig .fl-card-hover:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--ink) !important; }
+    html.fl-fig .fl-card-hover:active:not(:disabled), html.fl-fig button:active:not(:disabled) { transform: translate(2px,2px); }
+
+    /* blocchi colorati a gradiente -> colore pieno con bordo inchiostro */
+    html.fl-fig .bg-gradient-to-r.rounded-2xl, html.fl-fig .bg-gradient-to-br.rounded-2xl, html.fl-fig .bg-gradient-to-r.rounded-3xl, html.fl-fig .bg-gradient-to-br.rounded-3xl,
+    html.fl-fig .bg-gradient-to-r.rounded-xl, html.fl-fig .bg-gradient-to-br.rounded-xl {
+      border: 2.5px solid var(--ink) !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig .from-amber-400, html.fl-fig .from-amber-500, html.fl-fig .from-amber-600, html.fl-fig .from-orange-400, html.fl-fig .from-orange-500, html.fl-fig .from-orange-600, html.fl-fig .from-yellow-400 { background: var(--pop) !important; }
+    html.fl-fig .from-emerald-400, html.fl-fig .from-emerald-500, html.fl-fig .from-emerald-600, html.fl-fig .from-teal-400, html.fl-fig .from-teal-500, html.fl-fig .from-green-500 { background: var(--mint) !important; }
+    html.fl-fig .from-blue-400, html.fl-fig .from-blue-500, html.fl-fig .from-cyan-400, html.fl-fig .from-indigo-500, html.fl-fig .from-sky-400, html.fl-fig .from-sky-500 { background: var(--sky) !important; }
+    html.fl-fig .from-purple-400, html.fl-fig .from-purple-500, html.fl-fig .from-pink-500, html.fl-fig .from-rose-400, html.fl-fig .from-rose-500 { background: var(--rose) !important; }
+    html.fl-fig .from-slate-300, html.fl-fig .from-slate-400, html.fl-fig .from-slate-600 { background: #E3E6EE !important; }
+    html.fl-fig .from-amber-50, html.fl-fig .from-orange-50, html.fl-fig .from-slate-100 { background: #FFFFFF !important; }
+    html.fl-fig .from-slate-700, html.fl-fig .from-slate-800, html.fl-fig .from-slate-900 { background: var(--ink) !important; }
+    html.fl-fig [class*="bg-gradient-to"].text-white, html.fl-fig [class*="bg-gradient-to"] .text-white, html.fl-fig [class*="bg-gradient-to"] .text-white\\/80, html.fl-fig [class*="bg-gradient-to"] .text-white\\/90,
+    html.fl-fig [class*="bg-gradient-to"] .text-white\\/70, html.fl-fig [class*="bg-gradient-to"] .text-white\\/60 { color: var(--ink) !important; }
+    html.fl-fig .from-slate-700.text-white, html.fl-fig .from-slate-800.text-white, html.fl-fig .from-slate-900.text-white,
+    html.fl-fig .from-slate-700 .text-white, html.fl-fig .from-slate-800 .text-white, html.fl-fig .from-slate-900 .text-white { color: #FFFFFF !important; }
+
+    /* pulsanti a gradiente inline (oro/arancio) -> giallo pieno, testo nero */
+    html.fl-fig [style*="linear-gradient"][style*="rgb(217, 119, 6)"], html.fl-fig [style*="linear-gradient"][style*="rgb(180, 83, 9)"],
+    html.fl-fig [style*="linear-gradient"][style*="rgb(251, 191, 36)"], html.fl-fig [style*="linear-gradient"][style*="rgb(245, 158, 11)"] {
+      background: var(--pop) !important; color: var(--ink) !important; }
+    html.fl-fig :not(.rounded-full)[style*="linear-gradient"][style*="rgb(217, 119, 6)"], html.fl-fig :not(.rounded-full)[style*="linear-gradient"][style*="rgb(180, 83, 9)"],
+    html.fl-fig :not(.rounded-full)[style*="linear-gradient"][style*="rgb(251, 191, 36)"] { border: 2.5px solid var(--ink) !important; box-shadow: 3px 3px 0 var(--ink) !important; }
+    html.fl-fig [style*="linear-gradient"][style*="rgb(217, 119, 6)"] *, html.fl-fig [style*="linear-gradient"][style*="rgb(180, 83, 9)"] *, html.fl-fig [style*="linear-gradient"][style*="rgb(251, 191, 36)"] * { color: var(--ink) !important; }
+    html.fl-fig .sticky.fl-glass { border-width: 0 0 2.5px 0 !important; border-radius: 0 !important; }
+    html.fl-fig [style*="border-bottom-width: 1px; border-color: rgb(26, 26, 26)"] { border-width: 0 0 2.5px 0 !important; border-style: solid !important; box-shadow: none !important; }
+    html.fl-fig .sticky.top-0 { border-width: 0 0 2.5px 0 !important; border-style: solid !important; border-color: var(--ink) !important; border-radius: 0 !important; box-shadow: none !important; background: #FFFFFF !important; }
+    html.fl-fig .bg-amber-500, html.fl-fig .bg-amber-400, html.fl-fig .bg-orange-500 { background-color: var(--pop) !important; color: var(--ink) !important; }
+    html.fl-fig .bg-emerald-500 { background-color: var(--mint) !important; color: var(--ink) !important; }
+
+    /* testi oro poco leggibili su bianco -> inchiostro / ambra scuro */
+    html.fl-fig [style*="color: rgb(245, 208, 97)"], html.fl-fig [style*="color: rgb(232, 185, 49)"], html.fl-fig [style*="color: rgb(255, 176, 32)"] { color: var(--ink) !important; }
+    html.fl-fig .text-amber-400, html.fl-fig .text-amber-500, html.fl-fig .text-amber-600 { color: var(--ink) !important; }
+    html.fl-fig [style*="border: 1px solid rgb(245, 158, 11)"], html.fl-fig [style*="rgba(251, 191, 36, 0.3)"] { border: 2.5px solid var(--ink) !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig [style*="border: 1px solid rgb(245, 158, 11)"] > button { background: var(--pop); border-bottom: 2.5px solid var(--ink); }
+    html.fl-fig .text-slate-400 { color: #5B6170 !important; }
+    html.fl-fig .text-slate-500 { color: #4A4F5A !important; }
+
+    /* barra di navigazione */
+    html.fl-fig .fixed.bottom-0 .fl-glass { border-radius: 20px !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig .fixed.bottom-0 .fl-glass button span.absolute { background: var(--pop) !important; box-shadow: inset 0 0 0 2px var(--ink) !important; }
+    html.fl-fig .fixed.bottom-0 .fl-glass button { color: #4A4F5A !important; }
+    html.fl-fig .fixed.bottom-0 .fl-glass button:has(span.absolute) { color: var(--ink) !important; }
+
+    /* variabili usate da LosQuestion e tabelle */
+    html.fl-fig { --fl-s1: #FFFFFF; --fl-s2: #FFFFFF; --fl-line: #1A1A1A; --fl-fg: #1A1A1A; }
+    html.fl-fig .rounded-2xl[style*="var(--fl-line"] { border: 2.5px solid var(--ink) !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig [style*="rgba(232, 185, 49, 0.3)"] { border: 2.5px solid var(--ink) !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig .border-amber-200, html.fl-fig .border-amber-300, html.fl-fig .border-orange-200, html.fl-fig .border-emerald-200, html.fl-fig .border-rose-300 { border: 2.5px solid var(--ink) !important; box-shadow: 4px 4px 0 var(--ink) !important; }
+    html.fl-fig .text-amber-700, html.fl-fig .text-amber-800, html.fl-fig .text-orange-900, html.fl-fig .text-orange-700 { color: var(--ink) !important; }
+
+    /* testo di studio e formule */
+    html.fl-fig .fl-rich .fl-strong { color: var(--ink); background: #FFE066; padding: 0 2px; border-radius: 3px; }
+    html.fl-fig .fl-tex-d { background: #fff; border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+    html.fl-fig .fl-table-wrap { border: 2px solid var(--ink); }
+    html.fl-fig .fl-table th { background: var(--pop); }
+    html.fl-fig .fl-table td { border-top-color: #D5D9E2; }
+`;
 if (typeof document !== 'undefined' && !document.getElementById('rly-css')) {
-  const st = document.createElement('style'); st.id = 'rly-css'; st.textContent = RLY3_CSS + FL_HARMONY_CSS + FL_RICH_CSS; document.head.appendChild(st);
+  const st = document.createElement('style'); st.id = 'rly-css'; st.textContent = RLY3_CSS + FL_HARMONY_CSS + FL_RICH_CSS + FL_FIG_CSS; document.head.appendChild(st);
   if (!document.getElementById('rly-font')) {
     const lk = document.createElement('link'); lk.id = 'rly-font'; lk.rel = 'stylesheet';
-    lk.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap'; document.head.appendChild(lk);
+    lk.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&display=swap'; document.head.appendChild(lk);
   }
 }
 let rlyCounter = 0;
@@ -6131,10 +6212,12 @@ function MainApp({
   // Theme state con persistenza
   const [theme, setTheme] = useState(() => {
     try {
+      // Restyling "Figurine" (ott 2026): il tema chiaro diventa quello di partenza, una volta sola
+      if (!localStorage.getItem('finlearn_fig')) { localStorage.setItem('finlearn_fig', '1'); localStorage.setItem('finlearn_theme', 'light'); return 'light'; }
       const saved = localStorage.getItem('finlearn_theme');
-      return saved || 'dark';
+      return saved || 'light';
     } catch {
-      return 'dark';
+      return 'light';
     }
   });
 
@@ -6142,7 +6225,10 @@ function MainApp({
   useEffect(() => {
     try { localStorage.setItem('finlearn_theme', theme); } catch {}
     document.documentElement.classList.toggle('fl-dark', theme === 'dark');
+    document.documentElement.classList.toggle('fl-fig', theme !== 'dark');
   }, [theme]);
+  // la schermata di accesso resta col suo stile: togli la skin quando MainApp si smonta (logout)
+  useEffect(() => () => document.documentElement.classList.remove('fl-fig'), []);
 
   // Theme colors helper
   const th = theme === 'dark' ? {
@@ -6161,17 +6247,17 @@ function MainApp({
     chatBubbleAi: 'rgba(13, 20, 38, 0.8)',
     chatBubbleUser: '#f59e0b'
   } : {
-    bg: '#f8fafc',
+    bg: '#F4F6FA',
     bgSecondary: '#ffffff',
     card: '#ffffff',
-    cardBorder: '#e2e8f0',
-    text: '#0f172a',
-    textMuted: '#64748b',
-    textSecondary: '#475569',
+    cardBorder: '#1A1A1A',
+    text: '#151515',
+    textMuted: '#4A4F5A',
+    textSecondary: '#2E333D',
     inputBg: '#ffffff',
-    inputBorder: '#cbd5e1',
+    inputBorder: '#1A1A1A',
     navBg: '#ffffff',
-    navBorder: '#e2e8f0',
+    navBorder: '#1A1A1A',
     overlay: 'rgba(255, 255, 255, 0.95)',
     chatBubbleAi: '#ffffff',
     chatBubbleUser: '#f59e0b'

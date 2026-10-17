@@ -30,8 +30,14 @@
   }
   </script>
 
+  <script>
+    // Tema Figurine (chiaro) di default; "scuro" resta selezionabile dal Profilo
+    try { var t = localStorage.getItem('finlearn_fig') ? (localStorage.getItem('finlearn_theme') || 'light') : 'light';
+      if (t !== 'dark') document.querySelector('meta[name=theme-color]').setAttribute('content', '#F4F6FA'); } catch (e) {}
+  </script>
   <style>
     html, body { margin: 0; padding: 0; background: #0b1322; }
+    html.fl-fig, html.fl-fig body { background: #F4F6FA; }
     body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
            overscroll-behavior-y: none; -webkit-user-select: none; user-select: none;
            -webkit-touch-callout: none; touch-action: manipulation;
