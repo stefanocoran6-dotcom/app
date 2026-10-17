@@ -1118,7 +1118,7 @@ const flModLabel = m => `${m.id.startsWith('pm-') ? 'R' : 'R'}${m.number}`;
 // testo semplice per l'AI Coach (toglie markdown e LaTeX più pesante)
 const flPlain = t => String(t || '').replace(/\$\$([\s\S]*?)\$\$/g, ' $1 ').replace(/\\\(|\\\)/g, '').replace(/\*\*/g, '').replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\[a-zA-Z]+/g, ' ').replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();
 
-function QuizRun({ items, timed, pal, onClose, onOpenLOS, onCalc, onAskAI, onAgain }) {
+function QuizRun({ items, timed, pal, onClose, onOpenLOS, onCalc, onAskAI, onAgain, overlays }) {
   const [i, setI] = useState(0);
   const [sel, setSel] = useState(null);
   const [res, setRes] = useState([]);
@@ -1209,10 +1209,10 @@ function QuizRun({ items, timed, pal, onClose, onOpenLOS, onCalc, onAskAI, onAga
         !done && iconBtn('Calcolatrice', onCalc, React.createElement(Calculator, { size: 20 }), pal.sky)),
       !done && React.createElement('div', { style: { maxWidth: 560, width: '100%', margin: '0 auto', display: 'grid', gridTemplateColumns: `repeat(${items.length}, 1fr)`, gap: 3 } },
         items.map((x, k) => { const r = res[k]; return React.createElement('span', { key: k, style: { height: 8, border: `2px solid ${ink}`, borderRadius: 99, background: r ? (r.ok ? pal.mint : pal.rose) : k === i ? pal.sky : 'transparent' } }); }))),
-    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '14px 16px 40px' } }, body));
+    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '14px 16px 40px' } }, body), overlays);
 }
 
-function QuizHub({ theme, onOpenLOS, onCalc, onAskAI, onFullExam, onTraining }) {
+function QuizHub({ theme, onOpenLOS, onCalc, onAskAI, onFullExam, onTraining, onRunning, overlays }) {
   const dark = theme === 'dark'; const pal = flAlbumPal(dark);
   const pool = albumIndex().filter(x => x.los.question);
   const topics = Object.entries(CFA_CURRICULUM).filter(([tk]) => pool.some(x => x.tk === tk));
@@ -1223,6 +1223,8 @@ function QuizHub({ theme, onOpenLOS, onCalc, onAskAI, onFullExam, onTraining }) 
   const [n, setN] = useState(() => load('finlearn_quiz_n', 10));
   const [timed, setTimed] = useState(() => load('finlearn_quiz_timed', true));
   const [run, setRun] = useState(null);
+  useEffect(() => { onRunning && onRunning(!!run); }, [run]);
+  useEffect(() => () => { onRunning && onRunning(false); }, []);
   useEffect(() => { try { localStorage.setItem('finlearn_quiz_mode', JSON.stringify(mode)); localStorage.setItem('finlearn_quiz_subj', JSON.stringify(subj)); localStorage.setItem('finlearn_quiz_offmods', JSON.stringify(offMods)); localStorage.setItem('finlearn_quiz_n', JSON.stringify(n)); localStorage.setItem('finlearn_quiz_timed', JSON.stringify(timed)); } catch (e) {} }, [mode, subj, offMods, n, timed]);
   const album = albumLoad(); const st = qStatsLoad();
   const inScope = pool.filter(x => subj.includes(x.tk) && !offMods.includes(x.mod.id));
@@ -1285,7 +1287,7 @@ function QuizHub({ theme, onOpenLOS, onCalc, onAskAI, onFullExam, onTraining }) 
             React.createElement(Trophy, { size: 22 }), React.createElement('span', { style: { fontWeight: 800, fontSize: 15 } }, 'Esame completo'), React.createElement('span', { style: { fontWeight: 600, fontSize: 12, color: pal.muted } }, '180 domande · 4h 30min')),
           React.createElement('button', { onClick: onTraining, style: { textAlign: 'left', border: `2.5px solid ${ink}`, borderRadius: 16, background: pal.card, color: pal.fg, boxShadow: `3px 3px 0 ${ink}`, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 4 } },
             React.createElement(Brain, { size: 22 }), React.createElement('span', { style: { fontWeight: 800, fontSize: 15 } }, 'Allenamento AI'), React.createElement('span', { style: { fontWeight: 600, fontSize: 12, color: pal.muted } }, 'domande generate dall\'AI'))))),
-    run && React.createElement(QuizRun, { key: run.map(x => x.key).join(','), items: run, timed, pal, onClose: () => setRun(null), onOpenLOS, onCalc, onAskAI, onAgain: list => setRun(flShuffle(list)) }));
+    run && React.createElement(QuizRun, { key: run.map(x => x.key).join(','), items: run, timed, pal, onClose: () => setRun(null), onOpenLOS, onCalc, onAskAI, overlays, onAgain: list => setRun(flShuffle(list)) }));
 }
 
 // ========== HOME "IL TUO GIORNO" ==========
@@ -1336,6 +1338,42 @@ function HomeDay({ losProgress, theme, onOpenLOS }) {
         [[sum('los'), 'LOS nuove'], [sum('rev'), 'ravvivate'], [qn ? `${Math.round(qok / qn * 100)}%` : '—', 'giuste nei quiz']].map(([v, l]) =>
           React.createElement('div', { key: l, style: { border: `2px solid ${ink}`, borderRadius: 12, padding: '6px 8px', display: 'flex', flexDirection: 'column' } },
             React.createElement('span', { style: { fontWeight: 800, fontSize: 20 } }, v), React.createElement('span', { style: { fontWeight: 600, fontSize: 11 } }, l))))));
+}
+
+// Chat AI dentro il quiz: pannello che sale da sotto, il quiz resta in pausa dietro (stile figurine)
+function QuizAISheet({ chat, msg, setMsg, typing, error, sendMsg, chatEndRef, engine, setEngine, onClose, currentQuestion }) {
+  let theme = 'light'; try { theme = localStorage.getItem('finlearn_theme') || 'light'; } catch (e) {}
+  const pal = flAlbumPal(theme === 'dark'); const ink = pal.ink;
+  const q = currentQuestion || {};
+  const quick = ['Spiegamela più semplice', 'Rifammi i conti passo per passo', 'Un trucco per ricordarla', 'Dammi una domanda simile'];
+  const engines = [['claude', 'Claude'], ['device', 'Sul telefono'], ['ollama', 'Ollama']];
+  return React.createElement('div', { role: 'dialog', 'aria-label': 'AI Coach', style: { position: 'fixed', inset: 0, zIndex: 70, background: 'rgba(26,26,26,.62)', display: 'flex', flexDirection: 'column' } },
+    React.createElement('button', { onClick: onClose, 'aria-label': 'Torna al quiz', style: { flex: 'none', height: 56, border: 0, background: 'transparent', color: '#FFFFFF', fontWeight: 700, fontSize: 13, textAlign: 'left', padding: '0 16px', fontFamily: 'inherit' } }, 'Quiz in pausa · tocca per tornare'),
+    React.createElement('div', { style: { flex: 1, minHeight: 0, background: pal.bg, borderTop: `2.5px solid ${ink}`, borderRadius: '24px 24px 0 0', display: 'flex', flexDirection: 'column', overflow: 'hidden', maxWidth: 640, width: '100%', margin: '0 auto' } },
+      React.createElement('div', { style: { background: pal.card, borderBottom: `2.5px solid ${ink}`, padding: '8px 14px 10px', display: 'flex', flexDirection: 'column', gap: 8, color: pal.fg } },
+        React.createElement('div', { style: { display: 'flex', justifyContent: 'center' } }, React.createElement('span', { style: { width: 44, height: 5, borderRadius: 99, background: pal.empty, display: 'block' } })),
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+          React.createElement(BullMascot, { size: 40, mood: typing ? 'thinking' : 'happy' }),
+          React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+            React.createElement('div', { style: { fontWeight: 800, fontSize: 16 } }, 'AI Coach'),
+            React.createElement('div', { style: { fontWeight: 600, fontSize: 12, color: pal.muted } }, 'conosce la domanda e la tua risposta')),
+          React.createElement('button', { onClick: onClose, style: { height: 38, padding: '0 12px', border: `2.5px solid ${ink}`, borderRadius: 12, background: pal.card, color: pal.fg, fontWeight: 800, fontSize: 13, flex: 'none' } }, 'Torna al quiz')),
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' } },
+          q.topic && React.createElement('span', { style: { border: `2px solid ${ink}`, borderRadius: 10, background: pal.mint, color: '#1A1A1A', padding: '1px 9px', fontWeight: 800, fontSize: 12 } }, `${String(q.topic).split(' (')[0]}${q.picked ? ` · hai scelto ${q.picked}, giusta ${q.correct}` : ''}`),
+          React.createElement('span', { style: { flex: 1 } }),
+          engines.map(([id, label]) => React.createElement('button', { key: id, onClick: () => setEngine(id), 'aria-pressed': engine === id, style: { border: `1.5px solid ${engine === id ? ink : 'transparent'}`, borderRadius: 8, background: engine === id ? pal.sky : 'transparent', color: engine === id ? '#1A1A1A' : pal.muted, padding: '1px 6px', fontWeight: 700, fontSize: 11 } }, label)))),
+      React.createElement('div', { style: { flex: 1, minHeight: 0, overflowY: 'auto', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 } },
+        chat.map((m, k) => m.role === 'user'
+          ? React.createElement('div', { key: k, style: { alignSelf: 'flex-end', maxWidth: '82%', border: `2.5px solid ${ink}`, borderRadius: '16px 16px 4px 16px', background: pal.sky, color: '#1A1A1A', padding: '8px 12px', fontWeight: 600, fontSize: 14, whiteSpace: 'pre-wrap' } }, m.content)
+          : React.createElement('div', { key: k, style: { alignSelf: 'flex-start', maxWidth: '90%', border: `2.5px solid ${ink}`, borderRadius: '16px 16px 16px 4px', background: pal.card, color: pal.fg, boxShadow: `3px 3px 0 ${ink}`, padding: '10px 12px', fontSize: 14 } }, React.createElement(RichText, { text: m.content, className: 'text-sm' }))),
+        typing && React.createElement('div', { style: { alignSelf: 'flex-start', border: `2.5px solid ${ink}`, borderRadius: '16px 16px 16px 4px', background: pal.card, color: pal.muted, padding: '8px 12px', fontWeight: 700, fontSize: 13 } }, 'Sto pensando…'),
+        error && React.createElement('div', { style: { border: `2px solid #FF5A5F`, borderRadius: 12, background: 'rgba(255,90,95,.1)', color: pal.fg, padding: '8px 10px', fontSize: 13, fontWeight: 600 } }, error),
+        React.createElement('div', { ref: chatEndRef })),
+      React.createElement('div', { style: { padding: '8px 14px 0', display: 'flex', gap: 6, overflowX: 'auto', flex: 'none' } },
+        quick.map(t => React.createElement('button', { key: t, onClick: () => sendMsg(t), disabled: typing, style: { flex: 'none', border: `2px solid ${ink}`, borderRadius: 999, background: pal.card, color: pal.fg, padding: '5px 10px', fontWeight: 700, fontSize: 12, opacity: typing ? 0.5 : 1 } }, t))),
+      React.createElement('div', { style: { padding: '10px 14px calc(14px + env(safe-area-inset-bottom))', display: 'flex', gap: 8, flex: 'none' } },
+        React.createElement('input', { 'aria-label': 'Scrivi all\'AI Coach', value: msg, onChange: e => setMsg(e.target.value), onKeyDown: e => e.key === 'Enter' && !e.shiftKey && sendMsg(), disabled: typing, placeholder: 'Chiedi qualcosa su questa domanda…', style: { flex: 1, minWidth: 0, height: 46, border: `2.5px solid ${ink}`, borderRadius: 14, padding: '0 12px', font: 'inherit', fontSize: 16, background: pal.card, color: pal.fg } }),
+        React.createElement('button', { onClick: sendMsg, disabled: !msg.trim() || typing, 'aria-label': 'Invia', style: { width: 46, height: 46, flex: 'none', border: `2.5px solid ${ink}`, borderRadius: 14, background: pal.fg === '#1A1A1A' ? '#1A1A1A' : pal.sky, color: pal.fg === '#1A1A1A' ? '#FFFFFF' : '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: !msg.trim() || typing ? 0.5 : 1 } }, React.createElement(Send, { size: 18 })))));
 }
 
 // Level Icons - Professional rank badges
@@ -6298,7 +6336,8 @@ function AiChatModal({
   chatId,
   chats,
   setChats,
-  currentQuestion
+  currentQuestion,
+  variant
 }) {
   const [msg, setMsg] = useState('');
   const [typing, setTyping] = useState(false);
@@ -6509,6 +6548,7 @@ IMPORTANTE: Se l'utente chiede aiuto su questa domanda, guida il ragionamento se
       setTyping(false);
     }
   };
+  if (variant === 'quiz') return React.createElement(QuizAISheet, { chat, msg, setMsg, typing, error, sendMsg, chatEndRef, engine, setEngine, onClose, currentQuestion });
   return /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 bg-black/50 z-50 flex items-end justify-center",
     onClick: onClose
@@ -6810,6 +6850,7 @@ function MainApp({
   const [section, setSection] = useState('home');
   const [showCalc, setShowCalc] = useState(false);
   const [quizAI, setQuizAI] = useState(null);
+  const [quizRunning, setQuizRunning] = useState(false);
   // minuti di studio per la home: conta un minuto ogni 60 s con l'app in primo piano
   useEffect(() => { const h = setInterval(() => { try { if (document.visibilityState === 'visible') flActLog('min'); } catch (e) {} }, 60000); return () => clearInterval(h); }, []);
   const [showAiChat, setShowAiChat] = useState(false);
@@ -9664,7 +9705,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     className: "fixed inset-0 fl-grid-bg opacity-40 pointer-events-none"
   }), /*#__PURE__*/React.createElement("div", {
     className: "relative z-10"
-  }, section === 'quiz' && React.createElement(QuizHub, { theme, onOpenLOS: openLOSFromAlbum, onCalc: () => setShowCalc(true), onAskAI: q => { setQuizAI(q); openQuizChat(q); }, onTraining: () => isPro ? setShowMockExamSetup(true) : setShowProModal(true), onFullExam: () => { const questions = generateFullMockExam(); setMockExamState({ active: true, loading: false, questions, currentIndex: 0, answers: [], timeRemaining: CFA_FULL_EXAM_CONFIG.timeMinutes * 60, sessionTopic: 'full', examConfig: { type: 'full', numQuestions: 180 }, results: null, error: null, flagged: [], isFullExam: true }); } }), section === 'home' && /*#__PURE__*/React.createElement("div", {
+  }, section === 'quiz' && React.createElement(QuizHub, { theme, onRunning: setQuizRunning, overlays: React.createElement(React.Fragment, null, showCalc && React.createElement(TICalculator, { onClose: () => setShowCalc(false) }), quizAI && quizChatId && React.createElement(AiChatModal, { variant: 'quiz', onClose: () => { setQuizAI(null); closeQuizChat(); }, chatId: quizChatId, chats: chats, setChats: setChats, currentQuestion: quizAI })), onOpenLOS: openLOSFromAlbum, onCalc: () => setShowCalc(true), onAskAI: q => { setQuizAI(q); openQuizChat(q); }, onTraining: () => isPro ? setShowMockExamSetup(true) : setShowProModal(true), onFullExam: () => { const questions = generateFullMockExam(); setMockExamState({ active: true, loading: false, questions, currentIndex: 0, answers: [], timeRemaining: CFA_FULL_EXAM_CONFIG.timeMinutes * 60, sessionTopic: 'full', examConfig: { type: 'full', numQuestions: 180 }, results: null, error: null, flagged: [], isFullExam: true }); } }), section === 'home' && /*#__PURE__*/React.createElement("div", {
     className: "min-h-screen"
   }, /*#__PURE__*/React.createElement("div", {
     className: "relative overflow-hidden"
@@ -10949,7 +10990,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }), /*#__PURE__*/React.createElement("span", {
       className: `relative text-[10px] tracking-wide ${isActive ? 'font-bold' : 'font-medium'}`
     }, label));
-  }))), quizAI && quizChatId && React.createElement(AiChatModal, { onClose: () => { setQuizAI(null); closeQuizChat(); }, chatId: quizChatId, chats: chats, setChats: setChats, currentQuestion: quizAI }), showCalc && /*#__PURE__*/React.createElement(TICalculator, {
+  }))), quizAI && quizChatId && !quizRunning && React.createElement(AiChatModal, { variant: 'quiz', onClose: () => { setQuizAI(null); closeQuizChat(); }, chatId: quizChatId, chats: chats, setChats: setChats, currentQuestion: quizAI }), showCalc && !quizRunning && /*#__PURE__*/React.createElement(TICalculator, {
     onClose: () => setShowCalc(false)
   }), showProModal && /*#__PURE__*/React.createElement(ProModal, {
     onClose: () => setShowProModal(false),
