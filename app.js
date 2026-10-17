@@ -989,7 +989,7 @@ function AlbumReview({ items, pal, onClose, onOpenLOS }) {
     }
   }
   return React.createElement('div', { role: 'dialog', 'aria-label': 'Ripasso dell\'album', style: { position: 'fixed', inset: 0, zIndex: 60, background: pal.bg, overflowY: 'auto' }, className: 'fl-album-layer' },
-    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '16px 16px 40px', display: 'flex', flexDirection: 'column', gap: 14 } },
+    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: 'calc(16px + env(safe-area-inset-top)) 16px 40px', display: 'flex', flexDirection: 'column', gap: 14 } },
       React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
         React.createElement('button', { onClick: onClose, 'aria-label': 'Chiudi', style: { width: 44, height: 44, border: `2.5px solid ${pal.ink}`, borderRadius: 12, background: pal.card, color: pal.fg, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, React.createElement(X, { size: 20 })),
         React.createElement('div', { style: { flex: 1, display: 'grid', gridTemplateColumns: `repeat(${items.length}, 1fr)`, gap: 4 } },
@@ -1002,7 +1002,7 @@ function AlbumPages({ topicKey, pal, now, album, onClose, onOpenLOS }) {
   const all = albumIndex().filter(x => x.tk === topicKey);
   const img = String(t.icon || '').startsWith('data:');
   return React.createElement('div', { role: 'dialog', 'aria-label': `Album ${t.name}`, className: 'fl-album-layer', style: { position: 'fixed', inset: 0, zIndex: 60, background: pal.bg, overflowY: 'auto' } },
-    React.createElement('div', { style: { position: 'sticky', top: 0, zIndex: 2, background: pal.mint, borderBottom: `2.5px solid ${pal.ink}`, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 10, color: '#1A1A1A' } },
+    React.createElement('div', { style: { position: 'sticky', top: 0, zIndex: 2, background: pal.mint, borderBottom: `2.5px solid ${pal.ink}`, padding: 'calc(14px + env(safe-area-inset-top)) 16px 14px', display: 'flex', alignItems: 'center', gap: 10, color: '#1A1A1A' } },
       React.createElement('button', { onClick: onClose, 'aria-label': 'Indietro', style: { width: 44, height: 44, border: '2.5px solid #1A1A1A', borderRadius: 12, background: '#FFFFFF', color: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center' } }, React.createElement(ChevronLeft, { size: 22 })),
       React.createElement('div', { style: { flex: 1 } },
         React.createElement('div', { style: { fontWeight: 800, fontSize: 20, lineHeight: 1.1 } }, `Album ${t.name}`),
@@ -1201,7 +1201,7 @@ function QuizRun({ items, timed, pal, onClose, onOpenLOS, onCalc, onAskAI, onAga
       answered && React.createElement('button', { onClick: next, style: big(pal.fg === '#1A1A1A' ? '#1A1A1A' : pal.sky, { color: pal.fg === '#1A1A1A' ? '#FFFFFF' : '#1A1A1A', boxShadow: 'none' }) }, i < items.length - 1 ? `Domanda ${i + 2}` : 'Vedi l\'esito'));
   }
   return React.createElement('div', { role: 'dialog', 'aria-label': 'Quiz', style: { position: 'fixed', inset: 0, zIndex: 45, background: pal.bg, overflowY: 'auto' } },
-    React.createElement('div', { style: { position: 'sticky', top: 0, zIndex: 2, background: pal.card, borderBottom: `2.5px solid ${ink}`, padding: '12px 12px 10px', display: 'flex', flexDirection: 'column', gap: 8 } },
+    React.createElement('div', { style: { position: 'sticky', top: 0, zIndex: 2, background: pal.card, borderBottom: `2.5px solid ${ink}`, padding: 'calc(12px + env(safe-area-inset-top)) 12px 10px', display: 'flex', flexDirection: 'column', gap: 8 } },
       React.createElement('div', { style: { maxWidth: 560, width: '100%', margin: '0 auto', display: 'flex', alignItems: 'center', gap: 8 } },
         iconBtn('Esci dal quiz', onClose, React.createElement(X, { size: 19 })),
         React.createElement('span', { style: { flex: 1, fontWeight: 800, fontSize: 15, color: pal.fg } }, done ? 'Esito' : `Domanda ${i + 1} di ${items.length}`),
@@ -1348,7 +1348,7 @@ function QuizAISheet({ chat, msg, setMsg, typing, error, sendMsg, chatEndRef, en
   const quick = ['Spiegamela più semplice', 'Rifammi i conti passo per passo', 'Un trucco per ricordarla', 'Dammi una domanda simile'];
   const engines = [['claude', 'Claude'], ['device', 'Sul telefono'], ['ollama', 'Ollama']];
   return React.createElement('div', { role: 'dialog', 'aria-label': 'AI Coach', style: { position: 'fixed', inset: 0, zIndex: 70, background: 'rgba(26,26,26,.62)', display: 'flex', flexDirection: 'column' } },
-    React.createElement('button', { onClick: onClose, 'aria-label': 'Torna al quiz', style: { flex: 'none', height: 56, border: 0, background: 'transparent', color: '#FFFFFF', fontWeight: 700, fontSize: 13, textAlign: 'left', padding: '0 16px', fontFamily: 'inherit' } }, 'Quiz in pausa · tocca per tornare'),
+    React.createElement('button', { onClick: onClose, 'aria-label': 'Torna al quiz', style: { flex: 'none', height: 'calc(56px + env(safe-area-inset-top))', paddingTop: 'env(safe-area-inset-top)', border: 0, background: 'transparent', color: '#FFFFFF', fontWeight: 700, fontSize: 13, textAlign: 'left', padding: '0 16px', fontFamily: 'inherit' } }, 'Quiz in pausa · tocca per tornare'),
     React.createElement('div', { style: { flex: 1, minHeight: 0, background: pal.bg, borderTop: `2.5px solid ${ink}`, borderRadius: '24px 24px 0 0', display: 'flex', flexDirection: 'column', overflow: 'hidden', maxWidth: 640, width: '100%', margin: '0 auto' } },
       React.createElement('div', { style: { background: pal.card, borderBottom: `2.5px solid ${ink}`, padding: '8px 14px 10px', display: 'flex', flexDirection: 'column', gap: 8, color: pal.fg } },
         React.createElement('div', { style: { display: 'flex', justifyContent: 'center' } }, React.createElement('span', { style: { width: 44, height: 5, borderRadius: 99, background: pal.empty, display: 'block' } })),
@@ -1374,6 +1374,80 @@ function QuizAISheet({ chat, msg, setMsg, typing, error, sendMsg, chatEndRef, en
       React.createElement('div', { style: { padding: '10px 14px calc(14px + env(safe-area-inset-bottom))', display: 'flex', gap: 8, flex: 'none' } },
         React.createElement('input', { 'aria-label': 'Scrivi all\'AI Coach', value: msg, onChange: e => setMsg(e.target.value), onKeyDown: e => e.key === 'Enter' && !e.shiftKey && sendMsg(), disabled: typing, placeholder: 'Chiedi qualcosa su questa domanda…', style: { flex: 1, minWidth: 0, height: 46, border: `2.5px solid ${ink}`, borderRadius: 14, padding: '0 12px', font: 'inherit', fontSize: 16, background: pal.card, color: pal.fg } }),
         React.createElement('button', { onClick: sendMsg, disabled: !msg.trim() || typing, 'aria-label': 'Invia', style: { width: 46, height: 46, flex: 'none', border: `2.5px solid ${ink}`, borderRadius: 14, background: pal.fg === '#1A1A1A' ? '#1A1A1A' : pal.sky, color: pal.fg === '#1A1A1A' ? '#FFFFFF' : '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: !msg.trim() || typing ? 0.5 : 1 } }, React.createElement(Send, { size: 18 })))));
+}
+
+// ========== AI COACH (pagina) ==========
+const FL_AI_QUICK = ['Spiegami il residual income da zero', 'Differenza tra FCFF e FCFE', 'Interrogami sul Reading 26 con domande A/B/C', 'Come si calcola il VaR parametrico?', 'Un trucco per ricordare la duration'];
+function AiPageChat({ chat, msg, setMsg, typing, error, sendMsg, chatEndRef, engine, setEngine }) {
+  let theme = 'light'; try { theme = localStorage.getItem('finlearn_theme') || 'light'; } catch (e) {}
+  const pal = flAlbumPal(theme === 'dark'); const ink = pal.ink;
+  const engines = [['claude', 'Claude'], ['device', 'Sul telefono'], ['ollama', 'Ollama']];
+  const followUps = ['Più semplice', 'Fammi un esempio con i numeri', 'Interrogami su questo', 'Un trucco per ricordarlo'];
+  return React.createElement(React.Fragment, null,
+    React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10, paddingBottom: 210 } },
+      chat.map((m, k) => m.role === 'user'
+        ? React.createElement('div', { key: k, style: { alignSelf: 'flex-end', maxWidth: '84%', border: `2.5px solid ${ink}`, borderRadius: '16px 16px 4px 16px', background: pal.sky, color: '#1A1A1A', padding: '8px 12px', fontWeight: 600, fontSize: 15, whiteSpace: 'pre-wrap' } }, m.content)
+        : React.createElement('div', { key: k, style: { alignSelf: 'flex-start', maxWidth: '92%', display: 'flex', gap: 8, alignItems: 'flex-end' } },
+            k === chat.length - 1 && React.createElement('span', { style: { flex: 'none' } }, React.createElement(BullMascot, { size: 34, mood: 'happy' })),
+            React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: '16px 16px 16px 4px', background: pal.card, color: pal.fg, boxShadow: `3px 3px 0 ${ink}`, padding: '10px 12px', fontSize: 15 } }, React.createElement(RichText, { text: m.content, className: 'text-sm' })))),
+      typing && React.createElement('div', { style: { alignSelf: 'flex-start', display: 'flex', gap: 8, alignItems: 'center' } }, React.createElement(BullMascot, { size: 34, mood: 'thinking' }), React.createElement('span', { style: { border: `2.5px solid ${ink}`, borderRadius: 14, background: pal.card, color: pal.muted, padding: '6px 12px', fontWeight: 700, fontSize: 13 } }, 'Sto pensando…')),
+      error && React.createElement('div', { style: { border: '2px solid #FF5A5F', borderRadius: 12, background: 'rgba(255,90,95,.1)', color: pal.fg, padding: '8px 10px', fontSize: 13, fontWeight: 600 } }, error),
+      React.createElement('div', { ref: chatEndRef })),
+    React.createElement('div', { style: { position: 'fixed', left: 0, right: 0, bottom: 'calc(94px + env(safe-area-inset-bottom))', zIndex: 39, padding: '0 16px', pointerEvents: 'none' } },
+      React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', pointerEvents: 'auto', border: `2.5px solid ${ink}`, borderRadius: 20, background: pal.card, boxShadow: `4px 4px 0 ${ink}`, padding: 8, display: 'flex', flexDirection: 'column', gap: 8 } },
+        React.createElement('div', { style: { display: 'flex', gap: 6, overflowX: 'auto' } },
+          (chat.some(m => m.role === 'user') ? followUps : FL_AI_QUICK).map(t => React.createElement('button', { key: t, onClick: () => sendMsg(t), disabled: typing, style: { flex: 'none', border: `2px solid ${ink}`, borderRadius: 999, background: pal.bg, color: pal.fg, padding: '4px 10px', fontWeight: 700, fontSize: 12, opacity: typing ? 0.5 : 1 } }, t))),
+        React.createElement('div', { style: { display: 'flex', gap: 8 } },
+          React.createElement('input', { 'aria-label': 'Scrivi all\'AI Coach', value: msg, onChange: e => setMsg(e.target.value), onKeyDown: e => e.key === 'Enter' && !e.shiftKey && sendMsg(), disabled: typing, placeholder: 'Chiedimi qualsiasi cosa…', style: { flex: 1, minWidth: 0, height: 44, border: `2.5px solid ${ink}`, borderRadius: 14, padding: '0 12px', font: 'inherit', fontSize: 16, background: pal.bg, color: pal.fg } }),
+          React.createElement('button', { onClick: sendMsg, disabled: !msg.trim() || typing, 'aria-label': 'Invia', style: { width: 44, height: 44, flex: 'none', border: `2.5px solid ${ink}`, borderRadius: 14, background: pal.fg === '#1A1A1A' ? '#1A1A1A' : pal.sky, color: pal.fg === '#1A1A1A' ? '#FFFFFF' : '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: !msg.trim() || typing ? 0.5 : 1 } }, React.createElement(Send, { size: 18 }))),
+        React.createElement('div', { style: { display: 'flex', gap: 4, alignItems: 'center', fontSize: 11, fontWeight: 700, color: pal.muted } }, 'Motore:',
+          engines.map(([id, label]) => React.createElement('button', { key: id, onClick: () => setEngine(id), 'aria-pressed': engine === id, style: { border: `1.5px solid ${engine === id ? ink : 'transparent'}`, borderRadius: 8, background: engine === id ? pal.sky : 'transparent', color: engine === id ? '#1A1A1A' : pal.muted, padding: '1px 6px', fontWeight: 700, fontSize: 11 } }, label))))));
+}
+
+function AiCoachPage({ chats, setChats, activeChatId, setActiveChatId, deleteChat, theme, userName }) {
+  const dark = theme === 'dark'; const pal = flAlbumPal(dark); const ink = pal.ink;
+  const [showHist, setShowHist] = useState(false);
+  const [pending, setPending] = useState(null);
+  const active = chats.find(c => c.id === activeChatId);
+  const newChat = (first) => {
+    const c = { id: `chat_${Date.now()}`, title: first ? first.slice(0, 40) : 'Nuova conversazione', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+      messages: [{ role: 'assistant', content: `Ciao${userName ? ` ${userName.split(' ')[0]}` : ''}! Sono il tuo AI Coach. Chiedimi un concetto da spiegare da zero, un esercizio o una domanda d'esame.`, timestamp: new Date().toISOString() }] };
+    setChats(prev => [c, ...prev].slice(0, 50)); setActiveChatId(c.id); setPending(first ? { id: c.id, text: first } : null); setShowHist(false);
+  };
+  const iconBtn = (label, onClick, child, badge) => React.createElement('button', { 'aria-label': label, onClick, style: { position: 'relative', width: 44, height: 44, flex: 'none', border: `2.5px solid ${ink}`, borderRadius: 12, background: pal.card, color: pal.fg, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, child,
+    badge ? React.createElement('span', { style: { position: 'absolute', top: -8, right: -8, minWidth: 20, height: 20, borderRadius: 99, border: `2px solid ${ink}`, background: pal.sky, color: '#1A1A1A', fontSize: 11, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px' } }, badge) : null);
+  const fmt = d => { try { return new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
+  return React.createElement('div', { className: 'min-h-screen', style: { color: pal.fg } },
+    React.createElement('div', { style: { position: 'sticky', top: 0, zIndex: 20, background: pal.card, borderBottom: `2.5px solid ${ink}`, padding: 'calc(12px + env(safe-area-inset-top)) 16px 12px' } },
+      React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10 } },
+        React.createElement(BullMascot, { size: 44, mood: 'happy' }),
+        React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+          React.createElement('div', { style: { fontWeight: 800, fontSize: 20, lineHeight: 1.1 } }, 'AI Coach'),
+          React.createElement('div', { style: { fontWeight: 600, fontSize: 12, color: pal.muted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, active && active.messages.some(m => m.role === 'user') ? active.title : 'il tuo tutor per il CFA')),
+        iconBtn('Conversazioni', () => setShowHist(true), React.createElement(Clock, { size: 20 }), chats.length || null),
+        iconBtn('Nuova conversazione', () => newChat(), React.createElement('svg', { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.6, strokeLinecap: 'round', 'aria-hidden': true }, React.createElement('path', { d: 'M12 5v14M5 12h14' }))))),
+    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '16px 16px 0' } },
+      active
+        ? React.createElement(AiChatModal, { key: active.id, variant: 'page', chatId: active.id, chats, setChats, onClose: () => {}, initialMessage: pending && pending.id === active.id ? pending.text : null, onInitialSent: () => setPending(null) })
+        : React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center', textAlign: 'center', paddingTop: 12, paddingBottom: 120 } },
+            React.createElement(BullMascot, { size: 120, mood: 'happy' }),
+            React.createElement('div', { style: { fontWeight: 800, fontSize: 24, letterSpacing: '-0.01em' } }, 'Cosa vuoi capire oggi?'),
+            React.createElement('div', { style: { fontWeight: 600, fontSize: 14, color: pal.muted, maxWidth: 320 } }, 'Concetti spiegati da zero, esercizi passo per passo, domande in stile item set.'),
+            React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, width: '100%' } },
+              FL_AI_QUICK.map((t, k) => React.createElement('button', { key: t, onClick: () => newChat(t), style: { textAlign: 'left', border: `2.5px solid ${ink}`, borderRadius: 16, background: [pal.sky, pal.mint, pal.rose, pal.card, pal.card][k], color: k < 3 ? '#1A1A1A' : pal.fg, boxShadow: `3px 3px 0 ${ink}`, padding: '12px 14px', fontWeight: 800, fontSize: 15 } }, t))),
+            React.createElement('button', { onClick: () => newChat(), style: { height: 48, padding: '0 20px', border: `2.5px solid ${ink}`, borderRadius: 14, background: dark ? pal.sky : '#1A1A1A', color: dark ? '#1A1A1A' : '#FFFFFF', fontWeight: 800, fontSize: 15 } }, 'Scrivi tu la domanda'))),
+    showHist && React.createElement('div', { role: 'dialog', 'aria-label': 'Conversazioni', style: { position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(26,26,26,.55)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }, onClick: () => setShowHist(false) },
+      React.createElement('div', { onClick: e => e.stopPropagation(), style: { maxHeight: '75vh', background: pal.bg, borderTop: `2.5px solid ${ink}`, borderRadius: '24px 24px 0 0', padding: '12px 16px calc(20px + env(safe-area-inset-bottom))', overflowY: 'auto', maxWidth: 640, width: '100%', margin: '0 auto', boxSizing: 'border-box' } },
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', marginBottom: 10, color: pal.fg } },
+          React.createElement('span', { style: { flex: 1, fontWeight: 800, fontSize: 18 } }, 'Conversazioni'),
+          React.createElement('button', { onClick: () => setShowHist(false), 'aria-label': 'Chiudi', style: { width: 40, height: 40, border: `2.5px solid ${ink}`, borderRadius: 12, background: pal.card, color: pal.fg, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, React.createElement(X, { size: 18 }))),
+        chats.length === 0 && React.createElement('div', { style: { color: pal.muted, fontWeight: 600, fontSize: 14 } }, 'Ancora nessuna conversazione.'),
+        React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 8 } },
+          chats.map(c => React.createElement('div', { key: c.id, style: { display: 'flex', alignItems: 'center', gap: 8, border: `2.5px solid ${ink}`, borderRadius: 14, background: c.id === activeChatId ? pal.sky : pal.card, color: c.id === activeChatId ? '#1A1A1A' : pal.fg, padding: '8px 10px' } },
+            React.createElement('button', { onClick: () => { setActiveChatId(c.id); setShowHist(false); }, style: { flex: 1, minWidth: 0, textAlign: 'left', background: 'transparent', border: 0, color: 'inherit', padding: 0 } },
+              React.createElement('div', { style: { fontWeight: 800, fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, (c.isQuizChat ? 'Quiz · ' : '') + (c.title || 'Conversazione')),
+              React.createElement('div', { style: { fontWeight: 600, fontSize: 12, opacity: 0.75 } }, `${fmt(c.updatedAt || c.createdAt)} · ${c.messages.filter(m => m.role === 'user').length} domande`)),
+            React.createElement('button', { onClick: e => deleteChat(c.id, e), 'aria-label': 'Elimina conversazione', style: { width: 36, height: 36, flex: 'none', border: `2px solid ${ink}`, borderRadius: 10, background: 'transparent', color: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center' } }, React.createElement(X, { size: 16 }))))))));
 }
 
 // Level Icons - Professional rank badges
@@ -6337,7 +6411,9 @@ function AiChatModal({
   chats,
   setChats,
   currentQuestion,
-  variant
+  variant,
+  initialMessage,
+  onInitialSent
 }) {
   const [msg, setMsg] = useState('');
   const [typing, setTyping] = useState(false);
@@ -6512,6 +6588,7 @@ IMPORTANTE: Se l'utente chiede aiuto su questa domanda, guida il ragionamento se
         return {
           ...c,
           messages: [...c.messages, userMessage],
+          title: !c.messages.some(m => m.role === 'user') && (!c.title || c.title === 'Nuova conversazione') ? text.slice(0, 40) : c.title,
           updatedAt: new Date().toISOString()
         };
       }
@@ -6549,6 +6626,8 @@ IMPORTANTE: Se l'utente chiede aiuto su questa domanda, guida il ragionamento se
     }
   };
   if (variant === 'quiz') return React.createElement(QuizAISheet, { chat, msg, setMsg, typing, error, sendMsg, chatEndRef, engine, setEngine, onClose, currentQuestion });
+  useEffect(() => { if (initialMessage) { sendMsg(initialMessage); onInitialSent && onInitialSent(); } }, []);
+  if (variant === 'page') return React.createElement(AiPageChat, { chat, msg, setMsg, typing, error, sendMsg, chatEndRef, engine, setEngine });
   return /*#__PURE__*/React.createElement("div", {
     className: "fixed inset-0 bg-black/50 z-50 flex items-end justify-center",
     onClick: onClose
@@ -10425,200 +10504,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
   }, "Q", i + 1, ": ", q.q), /*#__PURE__*/React.createElement("button", {
     onClick: () => startSingleQuiz(q),
     className: "px-4 py-2 bg-amber-500 text-white rounded-lg font-semibold"
-  }, "Start \u2192")))))))), section === 'ai' && /*#__PURE__*/React.createElement("div", {
-    className: "min-h-screen flex flex-col",
-    style: {
-      backgroundColor: 'transparent'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "fl-glass",
-    style: {
-      borderBottomWidth: 1,
-      borderColor: th.cardBorder
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "max-w-xl mx-auto px-4 py-4 flex items-center justify-between"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-3"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-10 h-10 rounded-2xl flex items-center justify-center fl-float",
-    style: {
-      background: 'linear-gradient(135deg, #f5d061, #d97706)'
-    }
-  }, /*#__PURE__*/React.createElement(BullMascot, {
-    size: 32,
-    mood: "happy"
-  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
-    className: "fl-display font-bold text-lg",
-    style: {
-      color: th.text
-    }
-  }, "AI Coach"), /*#__PURE__*/React.createElement("p", {
-    className: "text-xs",
-    style: {
-      color: th.textMuted
-    }
-  }, "Il tuo tutor finanziario"))), /*#__PURE__*/React.createElement("div", {
-    className: "flex gap-2"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setShowChatHistory(true),
-    className: "p-2 rounded-lg relative transition",
-    style: {
-      backgroundColor: theme === 'dark' ? th.bgSecondary : '#f1f5f9'
-    },
-    title: "Cronologia chat"
-  }, /*#__PURE__*/React.createElement(Clock, {
-    size: 20,
-    style: {
-      color: th.textMuted
-    }
-  }), chats.length > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "absolute -top-1 -right-1 w-5 h-5 bg-amber-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
-  }, chats.length)), /*#__PURE__*/React.createElement("button", {
-    onClick: createNewChat,
-    className: "p-2 bg-amber-100 hover:bg-amber-200 rounded-lg",
-    title: "Nuova chat"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "text-amber-600 text-xl font-bold"
-  }, "+"))))), !activeChatId && chats.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "flex-1 flex flex-col items-center justify-center p-8"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-24 h-24 mb-6"
-  }, /*#__PURE__*/React.createElement(BullMascot, {
-    size: 96,
-    mood: "celebrating"
-  })), /*#__PURE__*/React.createElement("h2", {
-    className: "text-xl font-bold mb-2",
-    style: {
-      color: th.text
-    }
-  }, "Benvenuto in AI Coach!"), /*#__PURE__*/React.createElement("p", {
-    className: "text-center mb-6",
-    style: {
-      color: th.textMuted
-    }
-  }, "Il tuo tutor finanziario personale per la preparazione CFA"), /*#__PURE__*/React.createElement("button", {
-    onClick: createNewChat,
-    className: "px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition"
-  }, "Inizia una conversazione")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "flex-1 overflow-y-auto max-w-xl mx-auto w-full px-4 py-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "space-y-3"
-  }, chat.map((m, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    className: `flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`
-  }, /*#__PURE__*/React.createElement("div", {
-    className: `max-w-[85%] rounded-2xl p-4 ${m.role === 'user' ? 'bg-amber-500 text-white' : ''}`,
-    style: m.role !== 'user' ? {
-      backgroundColor: th.card,
-      borderWidth: 1,
-      borderColor: th.cardBorder,
-      color: th.text
-    } : {}
-  }, m.content))), typing && /*#__PURE__*/React.createElement("div", {
-    className: "flex justify-start"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "rounded-2xl p-4",
-    style: {
-      backgroundColor: th.card,
-      borderWidth: 1,
-      borderColor: th.cardBorder
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex gap-1"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-2 h-2 bg-amber-400 rounded-full animate-bounce"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "w-2 h-2 bg-amber-400 rounded-full animate-bounce",
-    style: {
-      animationDelay: '0.1s'
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "w-2 h-2 bg-amber-400 rounded-full animate-bounce",
-    style: {
-      animationDelay: '0.2s'
-    }
-  })))))), /*#__PURE__*/React.createElement("div", {
-    className: "p-4",
-    style: {
-      backgroundColor: th.card,
-      borderTopWidth: 1,
-      borderColor: th.cardBorder
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "max-w-xl mx-auto flex gap-2"
-  }, /*#__PURE__*/React.createElement("input", {
-    value: msg,
-    onChange: e => setMsg(e.target.value),
-    onKeyDown: e => e.key === 'Enter' && sendMsg(),
-    placeholder: "Chiedimi qualcosa...",
-    className: "flex-1 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-amber-300",
-    style: {
-      backgroundColor: theme === 'dark' ? th.bgSecondary : '#f1f5f9',
-      color: th.text
-    }
-  }), /*#__PURE__*/React.createElement("button", {
-    onClick: sendMsg,
-    disabled: !msg.trim(),
-    className: `px-4 py-3 rounded-xl transition-all ${msg.trim() ? 'bg-amber-500 text-white' : ''}`,
-    style: !msg.trim() ? {
-      backgroundColor: theme === 'dark' ? th.bgSecondary : '#e2e8f0',
-      color: th.textMuted
-    } : {}
-  }, /*#__PURE__*/React.createElement(Send, {
-    size: 20
-  }))))), showChatHistory && /*#__PURE__*/React.createElement("div", {
-    className: "fixed inset-0 z-50 flex"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "absolute inset-0 bg-black/50",
-    onClick: () => setShowChatHistory(false)
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "relative ml-auto w-80 max-w-full bg-white h-full shadow-2xl flex flex-col"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "p-4 border-b flex items-center justify-between bg-gradient-to-r from-amber-50 to-orange-50"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
-    className: "font-bold text-slate-800"
-  }, "Cronologia"), /*#__PURE__*/React.createElement("p", {
-    className: "text-xs text-slate-500"
-  }, chats.length, " conversazioni")), /*#__PURE__*/React.createElement("button", {
-    onClick: () => setShowChatHistory(false),
-    className: "p-2 hover:bg-white/50 rounded-lg"
-  }, /*#__PURE__*/React.createElement(X, {
-    size: 20,
-    className: "text-slate-500"
-  }))), /*#__PURE__*/React.createElement("div", {
-    className: "flex-1 overflow-y-auto"
-  }, chats.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "text-center text-slate-400 py-12"
-  }, /*#__PURE__*/React.createElement(MessageSquare, {
-    size: 40,
-    className: "mx-auto mb-3 opacity-50"
-  }), /*#__PURE__*/React.createElement("p", null, "Nessuna conversazione")) : /*#__PURE__*/React.createElement("div", {
-    className: "p-2 space-y-1"
-  }, chats.map(c => /*#__PURE__*/React.createElement("div", {
-    key: c.id,
-    onClick: () => selectChat(c.id),
-    className: `p-3 rounded-xl cursor-pointer group transition-all ${c.id === activeChatId ? 'bg-amber-100 border border-amber-300' : 'hover:bg-slate-50'}`
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex justify-between items-start gap-2"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex-1 min-w-0"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: `font-medium truncate text-sm flex items-center gap-1.5 ${c.id === activeChatId ? 'text-amber-700' : 'text-slate-700'}`
-  }, c.isQuizChat ? /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCDD") : /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCAC"), c.title), /*#__PURE__*/React.createElement("div", {
-    className: "text-xs text-slate-400 mt-1 ml-5"
-  }, new Date(c.updatedAt).toLocaleDateString('it'), " \u2022 ", c.messages?.length || 0, " msg")), /*#__PURE__*/React.createElement("button", {
-    onClick: e => deleteChat(c.id, e),
-    className: "opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-100 rounded-lg transition"
-  }, /*#__PURE__*/React.createElement(X, {
-    size: 14,
-    className: "text-red-500"
-  }))))))), /*#__PURE__*/React.createElement("div", {
-    className: "p-3 border-t bg-slate-50"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: createNewChat,
-    className: "w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl transition"
-  }, "+ Nuova Conversazione"))))), section === 'profile' && /*#__PURE__*/React.createElement("div", {
+  }, "Start \u2192")))))))), section === 'ai' && React.createElement(AiCoachPage, { chats, setChats, activeChatId, setActiveChatId, deleteChat, theme, userName: user?.displayName }), section === 'profile' && /*#__PURE__*/React.createElement("div", {
     className: "min-h-screen",
     style: {
       background: 'transparent'
