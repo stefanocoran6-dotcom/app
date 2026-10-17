@@ -842,6 +842,250 @@ const flFx = {
   }
 };
 
+// ========== ALBUM CHE SBIADISCE ==========
+// Ogni LOS completata diventa una figurina. Se non la ripassi entro la scadenza sbiadisce;
+// la ravvivi rispondendo alla sua domanda d'esame (o ripassando i punti chiave se non ha domanda).
+// Ripetizione dilazionata: giusta -> intervallo successivo (1, 3, 7, 16, 35, 80 giorni); sbagliata -> si riparte da 1 giorno.
+const FL_ALBUM_KEY = 'finlearn_album';
+const FL_DAY = 864e5;
+const FL_STEPS = [1, 3, 7, 16, 35, 80];
+const albumLoad = () => { try { return JSON.parse(localStorage.getItem(FL_ALBUM_KEY) || '{}'); } catch (e) { return {}; } };
+const albumSave = a => { try { localStorage.setItem(FL_ALBUM_KEY, JSON.stringify(a)); } catch (e) {} try { window.dispatchEvent(new Event('fl-album')); } catch (e) {} };
+function albumLearn(key) {
+  const a = albumLoad(); if (a[key]) return;
+  const now = Date.now(); a[key] = { t: now, step: 0, due: now + FL_DAY }; albumSave(a);
+}
+function albumReview(key, ok) {
+  const a = albumLoad(); const now = Date.now();
+  const s = a[key] || { t: now, step: 0 };
+  s.step = ok ? Math.min((s.step || 0) + 1, FL_STEPS.length - 1) : 0;
+  s.due = now + FL_STEPS[s.step] * FL_DAY; s.last = now; a[key] = s; albumSave(a);
+}
+// freschezza 1 = a colori; scende verso 0.25 man mano che si supera la scadenza
+function albumFresh(s, now) {
+  if (!s) return 0;
+  if (now < s.due) return 1;
+  const over = (now - s.due) / (FL_STEPS[s.step || 0] * FL_DAY);
+  return Math.max(0.25, 1 - 0.75 * Math.min(1, 0.2 + over));
+}
+const FL_GENERIC_ICONS = ['✏️', '🧮', '🪜', '2️⃣', '3️⃣', '➡️', '📘', '👍', '👎', '⚠️'];
+// "Calcolare e interpretare il valore intrinseco..." -> "Valore intrinseco..." (via il verbo d'apertura della LOS)
+const flShortTitle = t => {
+  const r = String(t || '').replace(/^((calcolare|spiegare|descrivere|confrontare|valutare|definire|identificare|interpretare|stimare|discutere|distinguere|analizzare|giustificare|dimostrare|formulare|elencare|riconoscere|determinare)(,| e| o)?\s+)+/i, '')
+    .replace(/^(il|lo|la|i|gli|le|un|una|uno|come|se|quando|perché|l')\s*/i, '');
+  return r.charAt(0).toUpperCase() + r.slice(1);
+};
+function albumIndex() {
+  const out = [];
+  Object.entries(CFA_CURRICULUM).forEach(([tk, t]) => (t.modules || []).forEach(m => (m.los || []).forEach((l, i) => out.push({
+    key: `${m.id}-${l.id}`, tk, topic: t, mod: m, los: l, idx: i,
+    code: (l.code || `LOS ${m.number}${l.id}`).replace(/^LOS\s*/, ''),
+    icon: ((l.content && l.content.sections) || []).map(x => x.icon).find(ic => ic && !FL_GENERIC_ICONS.includes(ic)) || '📗',
+    short: flShortTitle(l.title)
+  }))));
+  return out;
+}
+// prima volta: le LOS già completate entrano nell'album, con scadenze sparse sulla settimana (non tutte domani)
+function albumMigrate(losProgress) {
+  try {
+    if (localStorage.getItem('finlearn_album_v1')) return;
+    const a = albumLoad(); const now = Date.now();
+    (losProgress || []).forEach((k, i) => { if (!a[k]) a[k] = { t: now, step: 0, due: now + (1 + i % 7) * FL_DAY }; });
+    localStorage.setItem('finlearn_album_v1', '1'); albumSave(a);
+  } catch (e) {}
+}
+const flAlbumPal = dark => ({
+  bg: dark ? '#0B1322' : '#F4F6FA', ink: dark ? '#3A4D74' : '#1A1A1A', fg: dark ? '#F3EEE4' : '#1A1A1A', muted: dark ? '#9AA6BF' : '#4A4F5A',
+  card: dark ? '#111C33' : '#FFFFFF', paper: dark ? '#16243F' : '#EAF2FF', empty: dark ? '#3A4D74' : '#9AA0AB',
+  sky: '#8EC5FF', mint: '#7EE0B5', rose: '#FFB4C8'
+});
+const flRadius = r => ({ borderRadius: r });
+
+function AlbumSticker({ it, st, now, pal, onClick, w = '100%', h = 118, tilt = 0 }) {
+  const learned = !!st;
+  if (!learned) {
+    return React.createElement('button', {
+      onClick, 'aria-label': `LOS ${it.code} da conquistare`,
+      style: { width: w, height: h, border: `2.5px dashed ${pal.empty}`, borderRadius: 14, background: 'transparent', color: pal.empty, fontWeight: 800, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+    }, it.code);
+  }
+  const f = albumFresh(st, now);
+  const img = String(it.topic.icon || '').startsWith('data:');
+  return React.createElement('button', {
+    onClick, 'aria-label': `LOS ${it.code}${f < 1 ? ', da ravvivare' : ''}`,
+    style: { width: w, height: h, padding: 0, border: `2.5px solid ${pal.ink}`, borderRadius: 14, background: pal.card, color: pal.fg, overflow: 'hidden', display: 'flex', flexDirection: 'column', textAlign: 'left',
+      boxShadow: f === 1 ? `3px 3px 0 ${pal.ink}` : 'none', opacity: f === 1 ? 1 : 0.35 + 0.5 * f, filter: f === 1 ? 'none' : `grayscale(${(1 - f).toFixed(2)})`, transform: f === 1 && tilt ? `rotate(${tilt}deg)` : 'none', transition: 'opacity .4s, filter .4s' }
+  },
+    React.createElement('span', { style: { flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: `2px solid ${pal.ink}`, fontSize: 28, background: `repeating-linear-gradient(45deg, ${pal.paper} 0 8px, ${pal.card} 8px 16px)` } },
+      img && it.icon === '📗' ? React.createElement('img', { src: it.topic.icon, alt: '', style: { width: 40, height: 40, objectFit: 'contain' } }) : it.icon),
+    React.createElement('span', { style: { flex: 'none', margin: '4px 7px', height: 28, fontWeight: 700, fontSize: 12, lineHeight: '14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' } },
+      React.createElement('b', null, it.code), ' · ', it.short));
+}
+
+function AlbumReview({ items, pal, onClose, onOpenLOS }) {
+  const [i, setI] = useState(0);
+  const [sel, setSel] = useState(null);
+  const [reveal, setReveal] = useState(false);
+  const [results, setResults] = useState([]);
+  const done = i >= items.length;
+  const it = items[i];
+  const record = (ok, el) => {
+    albumReview(it.key, ok);
+    setResults(r => [...r, { key: it.key, ok }]);
+    if (ok) flFx.correct(el); else flFx.wrong(el);
+  };
+  const next = () => { setSel(null); setReveal(false); setI(i + 1); };
+  useEffect(() => { if (done && results.some(r => r.ok)) setTimeout(() => flfxBurst(window.innerWidth / 2, window.innerHeight / 3, 36), 150); }, [done]);
+  const L = ['A', 'B', 'C', 'D'];
+  const btn = (bg, extra = {}) => ({ height: 52, border: `2.5px solid ${pal.ink}`, borderRadius: 16, background: bg, color: '#1A1A1A', fontWeight: 800, fontSize: 16, boxShadow: `3px 3px 0 ${pal.ink}`, ...extra });
+  let body;
+  if (done) {
+    const ok = results.filter(r => r.ok).length;
+    body = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, textAlign: 'center', paddingTop: 20 } },
+      React.createElement(BullMascot, { size: 120, mood: ok === results.length ? 'celebrating' : 'happy' }),
+      React.createElement('h2', { style: { margin: 0, fontSize: 28, fontWeight: 800, color: pal.fg } }, ok === results.length ? 'Album di nuovo a colori!' : `${ok} su ${results.length} ravvivate`),
+      React.createElement('p', { style: { margin: 0, fontSize: 14, fontWeight: 600, color: pal.muted, maxWidth: 300 } },
+        ok === results.length ? 'Le rivedrai più avanti, a intervalli sempre più lunghi.' : 'Quelle sbagliate restano sbiadite e tornano domani. Se vuoi, ripassa la teoria.'),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, width: '100%', maxWidth: 340, marginTop: 6 } },
+        items.map((x, k) => React.createElement(AlbumSticker, { key: x.key, it: x, st: albumLoad()[x.key], now: Date.now(), pal, h: 104, tilt: k % 2 ? 1.5 : -1.5, onClick: () => { onClose(); onOpenLOS(x); } }))),
+      React.createElement('button', { onClick: onClose, style: btn(pal.sky, { width: '100%', maxWidth: 340, marginTop: 10 }) }, 'Torna all\'album'));
+  } else {
+    const q = it.los.question;
+    const head = React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' } },
+      React.createElement('span', { style: { border: `2px solid ${pal.ink}`, borderRadius: 10, background: pal.rose, color: '#1A1A1A', padding: '2px 10px', fontWeight: 800, fontSize: 13 } }, `${it.topic.name} · LOS ${it.code}`),
+      React.createElement('span', { style: { fontWeight: 700, fontSize: 12, color: pal.muted } }, 'sta sbiadendo'));
+    const title = React.createElement('div', { style: { fontWeight: 800, fontSize: 18, lineHeight: 1.25, color: pal.fg } }, it.los.title);
+    if (q) {
+      const answered = sel !== null;
+      body = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } }, head, title,
+        React.createElement('div', { lang: 'en', style: { border: `2.5px solid ${pal.ink}`, borderRadius: 18, background: pal.card, color: pal.fg, boxShadow: `4px 4px 0 ${pal.ink}`, padding: 14, display: 'flex', flexDirection: 'column', gap: 10 } },
+          React.createElement('div', { style: { fontSize: 15, fontWeight: 600 } }, React.createElement(RichText, { text: q.q })),
+          q.options.map((o, k) => {
+            const isAns = k === q.ans; let bg = pal.card;
+            if (answered && isAns) bg = 'rgba(34,197,94,.18)'; else if (answered && k === sel) bg = 'rgba(255,90,95,.16)';
+            return React.createElement('button', {
+              key: k, disabled: answered,
+              onClick: e => { setSel(k); record(k === q.ans, e.currentTarget); },
+              style: { textAlign: 'left', border: `2.5px solid ${answered && isAns ? '#22C55E' : answered && k === sel ? '#FF5A5F' : pal.ink}`, borderRadius: 14, background: bg, color: pal.fg, padding: '10px 12px', display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontWeight: 600 }
+            }, React.createElement('span', { style: { flex: 'none', width: 28, height: 28, border: `2px solid ${pal.ink}`, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 } }, L[k]),
+              React.createElement('span', { style: { paddingTop: 3 } }, React.createElement(RichText, { text: o })));
+          })),
+        answered && React.createElement('div', { style: { border: `2.5px solid ${pal.ink}`, borderRadius: 16, background: sel === q.ans ? 'rgba(34,197,94,.10)' : 'rgba(255,90,95,.08)', color: pal.fg, padding: 12, fontSize: 14 } },
+          React.createElement('div', { style: { fontWeight: 800, marginBottom: 4 } }, sel === q.ans ? 'Figurina ravvivata' : `Risposta giusta: ${L[q.ans]}. Torna domani.`),
+          React.createElement(RichText, { text: q.exp, className: 'text-sm' })),
+        answered && React.createElement('div', { style: { display: 'flex', gap: 10 } },
+          sel !== q.ans && React.createElement('button', { onClick: () => { onClose(); onOpenLOS(it); }, style: btn(pal.card, { color: pal.fg, padding: '0 14px', fontSize: 14 }) }, 'Rivedi la teoria'),
+          React.createElement('button', { onClick: next, style: btn(pal.sky, { flex: 1 }) }, i < items.length - 1 ? 'Avanti' : 'Fine')));
+    } else {
+      body = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } }, head, title,
+        React.createElement('div', { style: { fontSize: 14, fontWeight: 600, color: pal.muted } }, 'Questa LOS non ha una domanda d\'esame: prova a ricordare i punti chiave, poi controlla.'),
+        reveal ? React.createElement('div', { style: { border: `2.5px solid ${pal.ink}`, borderRadius: 18, background: pal.card, color: pal.fg, boxShadow: `4px 4px 0 ${pal.ink}`, padding: 14, display: 'flex', flexDirection: 'column', gap: 8 } },
+          (it.los.keyPoints || []).map((p, k) => React.createElement('div', { key: k, style: { fontSize: 14, fontWeight: 600, display: 'flex', gap: 8 } }, React.createElement('span', null, '•'), React.createElement('span', null, p))))
+          : React.createElement('button', { onClick: () => setReveal(true), style: btn(pal.card, { color: pal.fg }) }, 'Mostra i punti chiave'),
+        reveal && !results.find(r => r.key === it.key) && React.createElement('div', { style: { display: 'flex', gap: 10 } },
+          React.createElement('button', { onClick: e => record(false, e.currentTarget), style: btn(pal.card, { flex: 1, color: pal.fg }) }, 'Non li ricordavo'),
+          React.createElement('button', { onClick: e => record(true, e.currentTarget), style: btn(pal.mint, { flex: 1 }) }, 'Me li ricordavo')),
+        results.find(r => r.key === it.key) && React.createElement('button', { onClick: next, style: btn(pal.sky) }, i < items.length - 1 ? 'Avanti' : 'Fine'));
+    }
+  }
+  return React.createElement('div', { role: 'dialog', 'aria-label': 'Ripasso dell\'album', style: { position: 'fixed', inset: 0, zIndex: 60, background: pal.bg, overflowY: 'auto' }, className: 'fl-album-layer' },
+    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '16px 16px 40px', display: 'flex', flexDirection: 'column', gap: 14 } },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+        React.createElement('button', { onClick: onClose, 'aria-label': 'Chiudi', style: { width: 44, height: 44, border: `2.5px solid ${pal.ink}`, borderRadius: 12, background: pal.card, color: pal.fg, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, React.createElement(X, { size: 20 })),
+        React.createElement('div', { style: { flex: 1, display: 'grid', gridTemplateColumns: `repeat(${items.length}, 1fr)`, gap: 4 } },
+          items.map((x, k) => { const r = results[k]; return React.createElement('span', { key: k, style: { height: 12, border: `2px solid ${pal.ink}`, borderRadius: 99, background: r ? (r.ok ? pal.mint : pal.rose) : k === i ? pal.sky : 'transparent' } }); }))),
+      body));
+}
+
+function AlbumPages({ topicKey, pal, now, album, onClose, onOpenLOS }) {
+  const t = CFA_CURRICULUM[topicKey];
+  const all = albumIndex().filter(x => x.tk === topicKey);
+  const img = String(t.icon || '').startsWith('data:');
+  return React.createElement('div', { role: 'dialog', 'aria-label': `Album ${t.name}`, className: 'fl-album-layer', style: { position: 'fixed', inset: 0, zIndex: 60, background: pal.bg, overflowY: 'auto' } },
+    React.createElement('div', { style: { position: 'sticky', top: 0, zIndex: 2, background: pal.mint, borderBottom: `2.5px solid ${pal.ink}`, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 10, color: '#1A1A1A' } },
+      React.createElement('button', { onClick: onClose, 'aria-label': 'Indietro', style: { width: 44, height: 44, border: '2.5px solid #1A1A1A', borderRadius: 12, background: '#FFFFFF', color: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center' } }, React.createElement(ChevronLeft, { size: 22 })),
+      React.createElement('div', { style: { flex: 1 } },
+        React.createElement('div', { style: { fontWeight: 800, fontSize: 20, lineHeight: 1.1 } }, `Album ${t.name}`),
+        React.createElement('div', { style: { fontWeight: 700, fontSize: 12 } }, `${all.filter(x => album[x.key]).length} / ${all.length} figurine`)),
+      img ? React.createElement('img', { src: t.icon, alt: '', style: { width: 44, height: 40, objectFit: 'contain' } }) : React.createElement('span', { style: { fontSize: 28 } }, t.icon)),
+    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '16px 16px 60px', display: 'flex', flexDirection: 'column', gap: 22 } },
+      t.modules.map(m => {
+        const items = all.filter(x => x.mod.id === m.id);
+        const got = items.filter(x => album[x.key]).length;
+        const faded = items.filter(x => album[x.key] && albumFresh(album[x.key], now) < 1).length;
+        return React.createElement('section', { key: m.id, style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+          React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8, color: pal.fg } },
+            React.createElement('h3', { style: { margin: 0, fontWeight: 800, fontSize: 17, lineHeight: 1.2 } }, `${m.id.startsWith('pm-') ? 'R' : 'LM'}${m.number} · ${m.title}`),
+            React.createElement('span', { style: { flex: 'none', fontWeight: 700, fontSize: 12, color: pal.muted } }, `${got}/${items.length}${faded ? ` · ${faded} sbiadite` : ''}`)),
+          React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 } },
+            items.map((x, k) => React.createElement(AlbumSticker, { key: x.key, it: x, st: album[x.key], now, pal, tilt: [-1.5, 1, -0.5, 1.5][k % 4], onClick: () => { onClose(); onOpenLOS(x); } }))));
+      })));
+}
+
+function AlbumHome({ losProgress, theme, onOpenLOS }) {
+  const dark = theme === 'dark';
+  const pal = flAlbumPal(dark);
+  const [, force] = useState(0);
+  const [review, setReview] = useState(null);
+  const [pages, setPages] = useState(null);
+  useEffect(() => { albumMigrate(losProgress); const h = () => force(n => n + 1); window.addEventListener('fl-album', h); return () => window.removeEventListener('fl-album', h); }, []);
+  const album = albumLoad(); const now = Date.now();
+  const idx = albumIndex();
+  const learned = idx.filter(x => album[x.key]);
+  const fading = learned.filter(x => now >= album[x.key].due).sort((a, b) => albumFresh(album[a.key], now) - albumFresh(album[b.key], now));
+  // prossima da conquistare: dopo l'ultima figurina presa, nello stesso modulo/materia
+  const lastKey = Object.entries(album).sort((a, b) => b[1].t - a[1].t)[0];
+  const last = lastKey && idx.find(x => x.key === lastKey[0]);
+  const pool = last ? [...idx.filter(x => x.tk === last.tk && x.mod.id === last.mod.id), ...idx.filter(x => x.tk === last.tk), ...idx] : [...idx.filter(x => x.tk === 'equityValuation'), ...idx];
+  const nextUp = pool.find(x => !album[x.key]);
+  const nextDue = learned.length && !fading.length ? Math.ceil((Math.min(...learned.map(x => album[x.key].due)) - now) / FL_DAY) : null;
+  const card = (extra = {}) => ({ border: `2.5px solid ${pal.ink}`, borderRadius: 20, background: pal.card, boxShadow: `4px 4px 0 ${pal.ink}`, padding: '12px 14px', color: pal.fg, ...extra });
+  const btnS = (bg, extra = {}) => ({ height: 48, border: `2.5px solid ${pal.ink}`, borderRadius: 14, background: bg, boxShadow: `3px 3px 0 ${pal.ink}`, color: '#1A1A1A', fontWeight: 800, fontSize: 15, ...extra });
+  const topics = Object.entries(CFA_CURRICULUM).filter(([, t]) => t.modules && t.modules.some(m => m.los && m.los.length)).sort((a, b) => {
+    const order = ['equityValuation', 'portfolioManagement']; const ia = order.indexOf(a[0]), ib = order.indexOf(b[0]); return (ia < 0 ? 9 : ia) - (ib < 0 ? 9 : ib);
+  });
+  const tileBg = [pal.mint, pal.rose, pal.sky, '#FFD43B'];
+  const reviewSet = fading.slice(0, 5);
+  return React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 8 } },
+    React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: pal.fg } },
+      React.createElement('div', null,
+        React.createElement('div', { style: { fontWeight: 600, fontSize: 14, color: pal.muted } }, 'Il tuo album CFA L2'),
+        React.createElement('div', { style: { fontWeight: 800, fontSize: 30, letterSpacing: '-0.02em', lineHeight: 1.05 } }, `${learned.length} / ${idx.length} figurine`)),
+      React.createElement(BullMascot, { size: 54, mood: fading.length ? 'thinking' : 'happy' })),
+
+    React.createElement('div', { style: card({ display: 'flex', flexDirection: 'column', gap: 10 }) },
+      React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 } },
+        React.createElement('span', { style: { fontWeight: 800, fontSize: 17 } }, fading.length ? 'Stanno sbiadendo' : 'Tutto a colori'),
+        React.createElement('span', { style: { fontWeight: 700, fontSize: 12, color: pal.muted } }, fading.length ? `${fading.length} da ravvivare` : learned.length ? (nextDue <= 1 ? 'il prossimo ripasso è domani' : `prossimo ripasso tra ${nextDue} giorni`) : 'completa una LOS per la prima figurina')),
+      fading.length ? React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 } },
+        fading.slice(0, 3).map(x => React.createElement(AlbumSticker, { key: x.key, it: x, st: album[x.key], now, pal, h: 104, onClick: () => setReview([x]) }))) : null,
+      fading.length ? React.createElement('button', { onClick: () => setReview(reviewSet), style: btnS(pal.sky) }, `Ravviva ${reviewSet.length === 1 ? 'la figurina' : `queste ${reviewSet.length}`} · ~${Math.max(2, Math.round(reviewSet.length * 1.5))} min`) : null),
+
+    nextUp && React.createElement('div', { style: card({ display: 'flex', gap: 12, alignItems: 'center' }) },
+      React.createElement('div', { style: { flex: 'none', width: 84, height: 108, border: `2.5px dashed ${pal.ink}`, borderRadius: 14, background: `repeating-linear-gradient(45deg, ${pal.card} 0 8px, ${pal.paper} 8px 16px)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 28, color: pal.empty } }, '?'),
+      React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 } },
+        React.createElement('span', { style: { fontWeight: 700, fontSize: 12, letterSpacing: '0.06em', color: pal.muted } }, 'PROSSIMA DA CONQUISTARE'),
+        React.createElement('span', { style: { fontWeight: 800, fontSize: 15, lineHeight: 1.25, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' } }, `LOS ${nextUp.code} · ${nextUp.los.title}`),
+        React.createElement('button', { onClick: () => onOpenLOS(nextUp), style: { alignSelf: 'flex-start', height: 40, padding: '0 16px', border: `2.5px solid ${pal.ink}`, borderRadius: 12, background: dark ? pal.sky : '#1A1A1A', color: dark ? '#1A1A1A' : '#FFFFFF', fontWeight: 800, fontSize: 14 } }, 'Studiala'))),
+
+    React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 } },
+      topics.map(([tk, t], k) => {
+        const all = idx.filter(x => x.tk === tk); const got = all.filter(x => album[x.key]).length;
+        const faded = all.filter(x => album[x.key] && now >= album[x.key].due).length;
+        const img = String(t.icon || '').startsWith('data:');
+        return React.createElement('button', { key: tk, onClick: () => setPages(tk), style: { textAlign: 'left', border: `2.5px solid ${pal.ink}`, borderRadius: 16, background: tileBg[k % tileBg.length], boxShadow: `3px 3px 0 ${pal.ink}`, color: '#1A1A1A', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 6 } },
+          React.createElement('span', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 } },
+            React.createElement('span', { style: { fontWeight: 800, fontSize: 15, lineHeight: 1.1 } }, t.name),
+            img ? React.createElement('img', { src: t.icon, alt: '', style: { width: 30, height: 28, objectFit: 'contain', flex: 'none' } }) : React.createElement('span', { style: { fontSize: 20 } }, t.icon)),
+          React.createElement('span', { style: { display: 'block', height: 10, border: '2px solid #1A1A1A', borderRadius: 99, background: '#FFFFFF', overflow: 'hidden' } },
+            React.createElement('span', { style: { display: 'block', height: '100%', width: `${all.length ? got / all.length * 100 : 0}%`, background: '#1A1A1A' } })),
+          React.createElement('span', { style: { fontWeight: 700, fontSize: 12 } }, `${got} / ${all.length}${faded ? ` · ${faded} sbiadite` : ''}`));
+      })),
+
+    review && React.createElement(AlbumReview, { items: review, pal, onClose: () => setReview(null), onOpenLOS }),
+    pages && React.createElement(AlbumPages, { topicKey: pages, pal, now, album, onClose: () => setPages(null), onOpenLOS }));
+}
+
 // Level Icons - Professional rank badges
 const RookieIcon = ({
   size = 40,
@@ -6337,6 +6581,12 @@ function MainApp({
   useEffect(() => {
     localStorage.setItem('finlearn_los_progress', JSON.stringify(losProgress));
   }, [losProgress]);
+  // dall'album: apre la LOS nel lettore di Studia
+  const openLOSFromAlbum = it => {
+    setSection('library'); setStudyMode('curriculum'); setTopic(null);
+    setCfaTopic(CFA_CURRICULUM[it.tk]); setCfaModule(it.mod); setCfaLOS({ ...it.los, index: it.idx }); setExpandedSection(0);
+    try { window.scrollTo(0, 0); } catch (e) {}
+  };
 
   // Theme state con persistenza
   const [theme, setTheme] = useState(() => {
@@ -9198,112 +9448,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     size: 15
   }), stats.coins))))), /*#__PURE__*/React.createElement("div", {
     className: "max-w-xl mx-auto px-4 py-6"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "fl-fade-up relative overflow-hidden rounded-3xl p-5 text-white mb-6 fl-sweep",
-    style: {
-      background: 'linear-gradient(125deg, #b45309 0%, #f59e0b 45%, #d97706 100%)',
-      boxShadow: '0 20px 50px -20px rgba(245,158,11,.55)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "absolute -top-4 -right-4 w-32 h-32 opacity-25 fl-float"
-  }, /*#__PURE__*/React.createElement(BullMascot, {
-    size: 120,
-    mood: "happy"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "relative"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center justify-between mb-3"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "font-bold flex items-center gap-2 text-[15px]"
-  }, /*#__PURE__*/React.createElement(Target, {
-    size: 18
-  }), "Il tuo progresso"), /*#__PURE__*/React.createElement("span", {
-    className: "fl-mono bg-black/25 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-sm"
-  }, completed.length, "/", lessons.length)), /*#__PURE__*/React.createElement("div", {
-    className: "h-2.5 bg-black/25 rounded-full overflow-hidden"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "h-full bg-white rounded-full transition-all duration-700 relative",
-    style: {
-      width: `${completed.length / lessons.length * 100}%`
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-pulse"
-  }))), /*#__PURE__*/React.createElement("p", {
-    className: "text-amber-50/90 text-xs mt-2.5 font-medium"
-  }, completed.length === 0 ? "Inizia il tuo viaggio verso il CFA Level II" : completed.length === lessons.length ? "Hai completato tutto! 🏆" : `Ancora ${lessons.length - completed.length} lezioni da completare`))), /*#__PURE__*/React.createElement("h2", {
-    className: "fl-display font-bold mb-4 flex items-center gap-2 text-sm tracking-wide uppercase",
-    style: {
-      color: th.text
-    }
-  }, /*#__PURE__*/React.createElement(BookOpen, {
-    size: 18,
-    className: "text-amber-500"
-  }), "Il tuo percorso"), /*#__PURE__*/React.createElement("div", {
-    className: "space-y-3"
-  }, lessons.map((l, i) => {
-    const done = completed.includes(l.id);
-    const active = l.id === activeLesson;
-    const locked = l.id > activeLesson;
-
-    // Get questions for this lesson
-    const getLessonQuestions = lessonId => {
-      if (lessonId === 1) return topics.bonds.questions; // 30 domande obbligazioni
-      return []; // Altri topic non ancora implementati
-    };
-    const handleLessonClick = () => {
-      if (locked) return;
-      const questions = getLessonQuestions(l.id);
-      if (questions.length > 0) {
-        startFullQuiz(questions);
-      }
-    };
-    return /*#__PURE__*/React.createElement("button", {
-      key: l.id,
-      onClick: handleLessonClick,
-      disabled: locked,
-      className: `fl-card-hover fl-fade-up w-full flex items-center gap-4 p-4 rounded-2xl border transition-all ${done ? 'bg-emerald-500/10 border-emerald-500/40' : active ? 'border-amber-500/60' : locked ? 'opacity-50' : ''} ${active ? 'fl-glass' : ''}`,
-      style: {
-        animationDelay: `${i * 60}ms`,
-        backgroundColor: done ? undefined : active ? undefined : th.card,
-        borderColor: done ? undefined : active ? undefined : th.cardBorder,
-        boxShadow: active ? '0 0 0 1px rgba(232,185,49,.3), 0 14px 32px -16px rgba(232,185,49,.5)' : undefined
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      className: `w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${done ? 'bg-emerald-500' : active ? '' : ''}`,
-      style: {
-        background: !done && active ? 'linear-gradient(135deg, #f5d061, #d97706)' : !done && !active ? theme === 'dark' ? 'rgba(5,8,16,0.6)' : '#e2e8f0' : undefined
-      }
-    }, done ? /*#__PURE__*/React.createElement(Check, {
-      className: "text-white",
-      size: 28
-    }) : locked ? /*#__PURE__*/React.createElement(Lock, {
-      style: {
-        color: th.textMuted
-      },
-      size: 24
-    }) : l.icon), /*#__PURE__*/React.createElement("div", {
-      className: "flex-1 text-left"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "font-bold",
-      style: {
-        color: done ? '#34d399' : active ? th.text : th.textMuted
-      }
-    }, l.name), /*#__PURE__*/React.createElement("p", {
-      className: "fl-mono text-xs font-semibold mt-0.5",
-      style: {
-        color: done ? '#34d399' : active ? '#f5d061' : th.textMuted
-      }
-    }, done ? '✓ COMPLETATO' : active ? `${getLessonQuestions(l.id).length} DOMANDE →` : 'BLOCCATO')), (active || done) && /*#__PURE__*/React.createElement("div", {
-      className: "w-10 h-10 rounded-2xl flex items-center justify-center",
-      style: {
-        background: done ? '#10b981' : 'linear-gradient(135deg, #f5d061, #d97706)'
-      }
-    }, /*#__PURE__*/React.createElement(Play, {
-      className: "text-white ml-0.5",
-      size: 18,
-      fill: "white"
-    })));
-  })), /*#__PURE__*/React.createElement("div", {
+  }, React.createElement(AlbumHome, { losProgress, theme, onOpenLOS: openLOSFromAlbum }), /*#__PURE__*/React.createElement("div", {
     className: "mt-8"
   }, /*#__PURE__*/React.createElement("div", {
     className: "flex items-center justify-between mb-4"
@@ -9968,6 +10113,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
         flFx.losDone({ code: cfaLOS.code || `LOS ${cfaModule.number}${cfaLOS.id}`, title: cfaLOS.title, icon: String(cfaTopic?.icon || '').startsWith('data:') ? cfaTopic.icon : cfaLOS.content?.sections?.[0]?.icon,
           reading: (cfaModule.id.startsWith('pm-') ? 'R' : 'LM') + cfaModule.number, done: doneN, total: cfaModule.los.length });
         setLosProgress([...losProgress, id]);
+        albumLearn(id);
       }
       if (cfaLOS.index < cfaModule.los.length - 1) {
         setCfaLOS({
