@@ -853,13 +853,13 @@ const albumLoad = () => { try { return JSON.parse(localStorage.getItem(FL_ALBUM_
 const albumSave = a => { try { localStorage.setItem(FL_ALBUM_KEY, JSON.stringify(a)); } catch (e) {} try { window.dispatchEvent(new Event('fl-album')); } catch (e) {} };
 function albumLearn(key) {
   const a = albumLoad(); if (a[key]) return;
-  const now = Date.now(); a[key] = { t: now, step: 0, due: now + FL_DAY }; albumSave(a);
+  const now = Date.now(); a[key] = { t: now, step: 0, due: now + FL_DAY }; albumSave(a); flActLog('los');
 }
 function albumReview(key, ok) {
   const a = albumLoad(); const now = Date.now();
   const s = a[key] || { t: now, step: 0 };
   s.step = ok ? Math.min((s.step || 0) + 1, FL_STEPS.length - 1) : 0;
-  s.due = now + FL_STEPS[s.step] * FL_DAY; s.last = now; a[key] = s; albumSave(a);
+  s.due = now + FL_STEPS[s.step] * FL_DAY; s.last = now; a[key] = s; albumSave(a); flActLog('rev');
 }
 // freschezza 1 = a colori; scende verso 0.25 man mano che si supera la scadenza
 function albumFresh(s, now) {
@@ -1084,6 +1084,258 @@ function AlbumHome({ losProgress, theme, onOpenLOS }) {
 
     review && React.createElement(AlbumReview, { items: review, pal, onClose: () => setReview(null), onOpenLOS }),
     pages && React.createElement(AlbumPages, { topicKey: pages, pal, now, album, onClose: () => setPages(null), onOpenLOS }));
+}
+
+// ========== ATTIVITÀ (per la home "Il tuo giorno") ==========
+// Diario locale per giorno: minuti di app aperta, LOS nuove, figurine ravvivate, risposte ai quiz.
+const FL_ACT_KEY = 'finlearn_activity';
+const flDayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const flActLoad = () => { try { return JSON.parse(localStorage.getItem(FL_ACT_KEY) || '{}'); } catch (e) { return {}; } };
+function flActLog(field, n = 1) {
+  try {
+    const a = flActLoad(); const k = flDayKey(); a[k] = a[k] || {}; a[k][field] = (a[k][field] || 0) + n;
+    const keys = Object.keys(a).sort(); while (keys.length > 120) delete a[keys.shift()];
+    localStorage.setItem(FL_ACT_KEY, JSON.stringify(a)); window.dispatchEvent(new Event('fl-activity'));
+  } catch (e) {}
+}
+const flStudied = d => !!d && ((d.min || 0) >= 3 || (d.los || 0) + (d.rev || 0) + (d.qn || 0) > 0);
+function flWeek() {
+  const a = flActLoad(); const now = new Date(); const dow = (now.getDay() + 6) % 7; // 0 = lunedì
+  const days = [];
+  for (let i = 0; i < 7; i++) { const d = new Date(now); d.setDate(now.getDate() - dow + i); days.push({ key: flDayKey(d), label: ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'][i], today: i === dow, future: i > dow, ...(a[flDayKey(d)] || {}) }); }
+  return days;
+}
+
+// ========== QUIZ ==========
+const FL_QSTAT_KEY = 'finlearn_quiz_stats';
+const qStatsLoad = () => { try { return JSON.parse(localStorage.getItem(FL_QSTAT_KEY) || '{}'); } catch (e) { return {}; } };
+function qStatsRecord(key, ok) {
+  try { const s = qStatsLoad(); const r = s[key] || { n: 0, ok: 0 }; r.n++; if (ok) r.ok++; r.last = ok ? 1 : 0; s[key] = r; localStorage.setItem(FL_QSTAT_KEY, JSON.stringify(s)); } catch (e) {}
+  flActLog('qn'); if (ok) flActLog('qok');
+}
+const flShuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const flModLabel = m => `${m.id.startsWith('pm-') ? 'R' : 'R'}${m.number}`;
+// testo semplice per l'AI Coach (toglie markdown e LaTeX più pesante)
+const flPlain = t => String(t || '').replace(/\$\$([\s\S]*?)\$\$/g, ' $1 ').replace(/\\\(|\\\)/g, '').replace(/\*\*/g, '').replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\[a-zA-Z]+/g, ' ').replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();
+
+function QuizRun({ items, timed, pal, onClose, onOpenLOS, onCalc, onAskAI, onAgain }) {
+  const [i, setI] = useState(0);
+  const [sel, setSel] = useState(null);
+  const [res, setRes] = useState([]);
+  const [left, setLeft] = useState(timed ? items.length * 90 : null);
+  const [t0] = useState(Date.now());
+  const [end, setEnd] = useState(null);
+  const done = end !== null;
+  useEffect(() => {
+    if (!timed || done) return;
+    const h = setInterval(() => setLeft(s => { if (s <= 1) { clearInterval(h); setEnd(Date.now()); return 0; } return s - 1; }), 1000);
+    return () => clearInterval(h);
+  }, [timed, done]);
+  useEffect(() => { if (done && res.length && res.filter(r => r.ok).length / items.length >= 0.7) setTimeout(() => flfxBurst(window.innerWidth / 2, 180, 40), 200); }, [done]);
+  const it = items[i]; const q = it && it.los.question; const L = ['A', 'B', 'C', 'D'];
+  const answer = (k, el) => {
+    if (sel !== null || done) return;
+    setSel(k); const ok = k === q.ans;
+    setRes(r => [...r, { it, ok, sel: k }]);
+    qStatsRecord(it.key, ok);
+    if (albumLoad()[it.key]) albumReview(it.key, ok);
+    if (ok) flFx.correct(el); else flFx.wrong(el);
+  };
+  const next = () => { if (i < items.length - 1) { setI(i + 1); setSel(null); } else setEnd(Date.now()); };
+  const mmss = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  const ink = pal.ink;
+  const chip = (bg, txt) => React.createElement('span', { style: { border: `2px solid ${ink}`, borderRadius: 10, background: bg, color: '#1A1A1A', padding: '1px 9px', fontWeight: 800, fontSize: 12 } }, txt);
+  const big = (bg, extra = {}) => ({ height: 50, border: `2.5px solid ${ink}`, borderRadius: 16, background: bg, color: '#1A1A1A', fontWeight: 800, fontSize: 15, boxShadow: `3px 3px 0 ${ink}`, ...extra });
+  const iconBtn = (label, onClick, children, bg) => React.createElement('button', { 'aria-label': label, onClick, style: { width: 42, height: 42, flex: 'none', border: `2.5px solid ${ink}`, borderRadius: 12, background: bg || pal.card, color: pal.fg, display: 'flex', alignItems: 'center', justifyContent: 'center' } }, children);
+  let body;
+  if (done) {
+    const ok = res.filter(r => r.ok).length; const secs = Math.round((end - t0) / 1000);
+    const wrong = res.filter(r => !r.ok);
+    const byMod = {}; res.forEach(r => { const k = flModLabel(r.it.mod); byMod[k] = byMod[k] || { ok: 0, n: 0 }; byMod[k].n++; if (r.ok) byMod[k].ok++; });
+    body = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 14 } },
+      React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: 20, background: pal.sky, color: '#1A1A1A', boxShadow: `4px 4px 0 ${ink}`, padding: 14, display: 'flex', alignItems: 'center', gap: 12 } },
+        React.createElement(BullMascot, { size: 84, mood: ok / Math.max(1, items.length) >= 0.7 ? 'celebrating' : 'thinking' }),
+        React.createElement('div', null,
+          React.createElement('div', { style: { fontWeight: 800, fontSize: 44, lineHeight: 1 } }, `${ok}/${items.length}`),
+          React.createElement('div', { style: { fontWeight: 700, fontSize: 13 } }, `${mmss(secs)}${timed ? ` su ${mmss(items.length * 90)}` : ''}${res.length < items.length ? ` · ${items.length - res.length} senza risposta` : ''}`))),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: `repeat(${Math.min(items.length, 10)}, 1fr)`, gap: 4 } },
+        items.map((x, k) => { const r = res[k]; return React.createElement('span', { key: k, style: { height: 28, border: `2px solid ${ink}`, borderRadius: 7, background: r ? (r.ok ? pal.mint : pal.rose) : 'transparent', color: '#1A1A1A', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11 } }, k + 1); })),
+      wrong.length > 0 && React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: pal.card, color: pal.fg, boxShadow: `4px 4px 0 ${ink}`, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 } },
+        React.createElement('div', { style: { fontWeight: 800, fontSize: 16 } }, 'Da rivedere'),
+        wrong.map(r => React.createElement('div', { key: r.it.key, style: { display: 'flex', alignItems: 'center', gap: 10 } },
+          chip(pal.rose, r.it.code),
+          React.createElement('span', { style: { flex: 1, fontWeight: 700, fontSize: 14, lineHeight: 1.25 } }, r.it.short),
+          React.createElement('button', { onClick: () => { onClose(); onOpenLOS(r.it); }, style: { flex: 'none', height: 32, padding: '0 10px', border: `2px solid ${ink}`, borderRadius: 10, background: pal.card, color: pal.fg, fontWeight: 800, fontSize: 12 } }, 'Teoria')))),
+      React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: pal.card, color: pal.fg, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6 } },
+        React.createElement('div', { style: { fontWeight: 800, fontSize: 16 } }, 'Per reading'),
+        Object.entries(byMod).map(([k, v]) => React.createElement('div', { key: k, style: { display: 'grid', gridTemplateColumns: '44px 1fr 40px', gap: 8, alignItems: 'center', fontSize: 12, fontWeight: 700 } },
+          React.createElement('span', null, k),
+          React.createElement('span', { style: { display: 'block', height: 10, border: `2px solid ${ink}`, borderRadius: 99, overflow: 'hidden' } }, React.createElement('span', { style: { display: 'block', height: '100%', width: `${v.ok / v.n * 100}%`, background: v.ok / v.n >= 0.7 ? pal.mint : v.ok / v.n >= 0.5 ? '#FFD43B' : pal.rose } })),
+          React.createElement('span', null, `${v.ok}/${v.n}`)))),
+      wrong.length > 0 && React.createElement('button', { onClick: () => onAgain(wrong.map(r => r.it)), style: big(pal.rose) }, `Rifai solo ${wrong.length === 1 ? 'la sbagliata' : `le ${wrong.length} sbagliate`}`),
+      React.createElement('button', { onClick: onClose, style: big(pal.card, { color: pal.fg }) }, 'Nuovo quiz'));
+  } else {
+    const answered = sel !== null;
+    body = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } },
+      React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' } },
+        chip(it.tk === 'portfolioManagement' ? pal.rose : pal.mint, `${it.topic.name.split(' ')[0]} · LOS ${it.code}`)),
+      React.createElement('div', { lang: 'en', style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: pal.card, color: pal.fg, boxShadow: `4px 4px 0 ${ink}`, padding: '12px 14px', fontSize: 15, fontWeight: 600 } }, React.createElement(RichText, { text: q.q })),
+      q.options.map((o, k) => {
+        const isAns = k === q.ans;
+        const border = answered && isAns ? '#22C55E' : answered && k === sel ? '#FF5A5F' : answered ? pal.empty : ink;
+        const bg = answered && isAns ? 'rgba(34,197,94,.15)' : answered && k === sel ? 'rgba(255,90,95,.12)' : pal.card;
+        return React.createElement('button', { key: `${i}-${k}`, lang: 'en', disabled: answered, onClick: e => answer(k, e.currentTarget),
+          style: { textAlign: 'left', border: `2.5px solid ${border}`, borderRadius: 14, background: bg, color: pal.fg, padding: '10px 12px', display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontWeight: 600, opacity: answered && !isAns && k !== sel ? 0.6 : 1 } },
+          React.createElement('span', { style: { flex: 'none', width: 28, height: 28, border: `2px solid ${ink}`, borderRadius: 8, background: answered && isAns ? pal.mint : answered && k === sel ? pal.rose : 'transparent', color: answered && (isAns || k === sel) ? '#1A1A1A' : pal.fg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 } }, L[k]),
+          React.createElement('span', { style: { paddingTop: 3, flex: 1 } }, React.createElement(RichText, { text: o })),
+          answered && k === sel && !isAns ? React.createElement('span', { style: { fontSize: 11, fontWeight: 800, paddingTop: 5 } }, 'la tua') : null);
+      }),
+      answered && React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: pal.card, color: pal.fg, boxShadow: `4px 4px 0 ${ink}`, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 6 } },
+        React.createElement('div', { style: { fontWeight: 800, fontSize: 15 } }, sel === q.ans ? 'Esatto!' : `La giusta è la ${L[q.ans]}`),
+        React.createElement(RichText, { text: q.exp, className: 'text-sm' }),
+        albumLoad()[it.key] && React.createElement('div', { style: { fontWeight: 700, fontSize: 12, color: pal.muted } }, sel === q.ans ? `Figurina ${it.code} ravvivata` : `La figurina ${it.code} resta sbiadita e torna domani`)),
+      answered && React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 } },
+        React.createElement('button', { onClick: () => onAskAI({ picked: L[sel], correct: L[q.ans], q: flPlain(q.q), opts: q.options.map(flPlain), topic: `${it.topic.name} · LOS ${it.code} (lo studente ha già risposto ${L[sel]}; la risposta corretta è ${L[q.ans]}: puoi spiegarla apertamente)` }), style: big(pal.rose, { height: 46, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }) },
+          React.createElement(Sparkles, { size: 17 }), 'Chiedi all\'AI'),
+        React.createElement('button', { onClick: () => { onClose(); onOpenLOS(it); }, style: big(pal.card, { height: 46, fontSize: 14, color: pal.fg }) }, 'Rivedi la teoria')),
+      answered && React.createElement('button', { onClick: next, style: big(pal.fg === '#1A1A1A' ? '#1A1A1A' : pal.sky, { color: pal.fg === '#1A1A1A' ? '#FFFFFF' : '#1A1A1A', boxShadow: 'none' }) }, i < items.length - 1 ? `Domanda ${i + 2}` : 'Vedi l\'esito'));
+  }
+  return React.createElement('div', { role: 'dialog', 'aria-label': 'Quiz', style: { position: 'fixed', inset: 0, zIndex: 45, background: pal.bg, overflowY: 'auto' } },
+    React.createElement('div', { style: { position: 'sticky', top: 0, zIndex: 2, background: pal.card, borderBottom: `2.5px solid ${ink}`, padding: '12px 12px 10px', display: 'flex', flexDirection: 'column', gap: 8 } },
+      React.createElement('div', { style: { maxWidth: 560, width: '100%', margin: '0 auto', display: 'flex', alignItems: 'center', gap: 8 } },
+        iconBtn('Esci dal quiz', onClose, React.createElement(X, { size: 19 })),
+        React.createElement('span', { style: { flex: 1, fontWeight: 800, fontSize: 15, color: pal.fg } }, done ? 'Esito' : `Domanda ${i + 1} di ${items.length}`),
+        timed && !done && React.createElement('span', { style: { border: `2.5px solid ${ink}`, borderRadius: 12, background: left < 60 ? pal.rose : '#FFD43B', color: '#1A1A1A', padding: '4px 9px', fontWeight: 800, fontSize: 15, display: 'flex', alignItems: 'center', gap: 5 } }, React.createElement(Clock, { size: 15 }), mmss(left)),
+        !done && iconBtn('Calcolatrice', onCalc, React.createElement(Calculator, { size: 20 }), pal.sky)),
+      !done && React.createElement('div', { style: { maxWidth: 560, width: '100%', margin: '0 auto', display: 'grid', gridTemplateColumns: `repeat(${items.length}, 1fr)`, gap: 3 } },
+        items.map((x, k) => { const r = res[k]; return React.createElement('span', { key: k, style: { height: 8, border: `2px solid ${ink}`, borderRadius: 99, background: r ? (r.ok ? pal.mint : pal.rose) : k === i ? pal.sky : 'transparent' } }); }))),
+    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '14px 16px 40px' } }, body));
+}
+
+function QuizHub({ theme, onOpenLOS, onCalc, onAskAI, onFullExam, onTraining }) {
+  const dark = theme === 'dark'; const pal = flAlbumPal(dark);
+  const pool = albumIndex().filter(x => x.los.question);
+  const topics = Object.entries(CFA_CURRICULUM).filter(([tk]) => pool.some(x => x.tk === tk));
+  const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
+  const [mode, setMode] = useState(() => load('finlearn_quiz_mode', 'all'));
+  const [subj, setSubj] = useState(() => load('finlearn_quiz_subj', topics.map(([tk]) => tk)));
+  const [offMods, setOffMods] = useState(() => load('finlearn_quiz_offmods', []));
+  const [n, setN] = useState(() => load('finlearn_quiz_n', 10));
+  const [timed, setTimed] = useState(() => load('finlearn_quiz_timed', true));
+  const [run, setRun] = useState(null);
+  useEffect(() => { try { localStorage.setItem('finlearn_quiz_mode', JSON.stringify(mode)); localStorage.setItem('finlearn_quiz_subj', JSON.stringify(subj)); localStorage.setItem('finlearn_quiz_offmods', JSON.stringify(offMods)); localStorage.setItem('finlearn_quiz_n', JSON.stringify(n)); localStorage.setItem('finlearn_quiz_timed', JSON.stringify(timed)); } catch (e) {} }, [mode, subj, offMods, n, timed]);
+  const album = albumLoad(); const st = qStatsLoad();
+  const inScope = pool.filter(x => subj.includes(x.tk) && !offMods.includes(x.mod.id));
+  const byMode = { all: inScope, studied: inScope.filter(x => album[x.key]), wrong: inScope.filter(x => st[x.key] && st[x.key].last === 0) };
+  const chosen = byMode[mode] || inScope;
+  const count = Math.min(n, chosen.length);
+  const ink = pal.ink;
+  const start = list => setRun(flShuffle(list).slice(0, Math.min(n, list.length)));
+  const pill = (on, label, onClick, extra = {}) => React.createElement('button', { onClick, 'aria-pressed': on, style: { height: 36, padding: '0 12px', border: `${on ? 2.5 : 2}px solid ${ink}`, borderRadius: 12, background: on ? pal.sky : pal.card, color: on ? '#1A1A1A' : pal.fg, boxShadow: on ? `2px 2px 0 ${ink}` : 'none', fontWeight: on ? 800 : 700, fontSize: 13, ...extra } }, label);
+  const section = (title, child) => React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 8 } }, React.createElement('span', { style: { fontWeight: 800, fontSize: 14, color: pal.fg } }, title), child);
+  const tileBg = { equityValuation: pal.mint, portfolioManagement: pal.rose };
+  // dove sbagli di più: per reading, solo con almeno 2 risposte
+  const weak = [];
+  topics.forEach(([tk, t]) => t.modules.forEach(m => { let a = 0, ok = 0; m.los.forEach(l => { const s = st[`${m.id}-${l.id}`]; if (s) { a += s.n; ok += s.ok; } }); if (a >= 2) weak.push({ label: flModLabel(m), title: m.title, pct: ok / a, a }); }));
+  weak.sort((x, y) => x.pct - y.pct);
+  return React.createElement('div', { className: 'min-h-screen pb-28' },
+    React.createElement('div', { style: { maxWidth: 560, margin: '0 auto', padding: '20px 16px 0', display: 'flex', flexDirection: 'column', gap: 16, color: pal.fg } },
+      React.createElement('div', null,
+        React.createElement('h1', { style: { margin: 0, fontSize: 30, fontWeight: 800, letterSpacing: '-0.02em' } }, 'Quiz'),
+        React.createElement('div', { style: { fontWeight: 600, fontSize: 13, color: pal.muted } }, 'Domande d\'esame in inglese, come al CFA')),
+      section('Quali domande', React.createElement('div', { style: { display: 'flex', gap: 6, flexWrap: 'wrap' } },
+        pill(mode === 'all', `Tutte · ${byMode.all.length}`, () => setMode('all')),
+        pill(mode === 'studied', `Solo studiate · ${byMode.studied.length}`, () => setMode('studied')),
+        pill(mode === 'wrong', `Sbagliate · ${byMode.wrong.length}`, () => setMode('wrong')))),
+      section('Materie', React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+        topics.map(([tk, t]) => {
+          const on = subj.includes(tk); const img = String(t.icon || '').startsWith('data:');
+          const qn = pool.filter(x => x.tk === tk).length;
+          return React.createElement('div', { key: tk, style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: on ? (tileBg[tk] || pal.sky) : pal.card, color: on ? '#1A1A1A' : pal.fg, boxShadow: on ? `3px 3px 0 ${ink}` : 'none', padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8 } },
+            React.createElement('button', { onClick: () => setSubj(on ? subj.filter(x => x !== tk) : [...subj, tk]), 'aria-pressed': on, style: { display: 'flex', alignItems: 'center', gap: 8, background: 'transparent', border: 0, padding: 0, color: 'inherit', textAlign: 'left' } },
+              React.createElement('span', { style: { width: 22, height: 22, flex: 'none', border: `2.5px solid ${on ? '#1A1A1A' : ink}`, borderRadius: 6, background: on ? '#1A1A1A' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' } }, on && React.createElement(Check, { size: 14, color: '#FFFFFF', strokeWidth: 3.4 })),
+              React.createElement('span', { style: { flex: 1, fontWeight: 800, fontSize: 15 } }, t.name),
+              img ? React.createElement('img', { src: t.icon, alt: '', style: { width: 28, height: 26, objectFit: 'contain' } }) : React.createElement('span', { style: { fontSize: 18 } }, t.icon),
+              React.createElement('span', { style: { fontWeight: 700, fontSize: 12 } }, qn)),
+            on && React.createElement('div', { style: { display: 'flex', gap: 5, flexWrap: 'wrap' } },
+              t.modules.filter(m => pool.some(x => x.mod.id === m.id)).map(m => {
+                const mOn = !offMods.includes(m.id);
+                return React.createElement('button', { key: m.id, 'aria-pressed': mOn, title: m.title, onClick: () => setOffMods(mOn ? [...offMods, m.id] : offMods.filter(x => x !== m.id)),
+                  style: { border: `2px ${mOn ? 'solid' : 'dashed'} #1A1A1A`, borderRadius: 9, background: mOn ? '#FFFFFF' : 'transparent', color: '#1A1A1A', padding: '2px 9px', fontWeight: mOn ? 800 : 700, fontSize: 12, opacity: mOn ? 1 : 0.6 } }, flModLabel(m));
+              })));
+        }))),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 } },
+        section('Quante', React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', border: `2.5px solid ${ink}`, borderRadius: 12, overflow: 'hidden', background: pal.card } },
+          [5, 10, 20].map((v, k) => React.createElement('button', { key: v, onClick: () => setN(v), 'aria-pressed': n === v, style: { padding: '8px 0', border: 0, borderRight: k < 2 ? `2px solid ${ink}` : 0, background: n === v ? pal.sky : 'transparent', color: n === v ? '#1A1A1A' : pal.fg, fontWeight: n === v ? 800 : 700, fontSize: 14 } }, v)))),
+        section('Tempo d\'esame', React.createElement('button', { onClick: () => setTimed(!timed), 'aria-pressed': timed, style: { border: `2.5px solid ${ink}`, borderRadius: 12, background: pal.card, color: pal.fg, padding: '6px 8px', display: 'flex', alignItems: 'center', gap: 8, textAlign: 'left' } },
+          React.createElement('span', { style: { width: 40, height: 22, flex: 'none', border: `2px solid ${ink}`, borderRadius: 99, background: timed ? pal.mint : 'transparent', position: 'relative' } }, React.createElement('span', { style: { position: 'absolute', top: 2, left: timed ? 20 : 2, width: 14, height: 14, borderRadius: '50%', background: dark ? '#F3EEE4' : '#1A1A1A', transition: 'left .2s' } })),
+          React.createElement('span', { style: { fontWeight: 700, fontSize: 12, lineHeight: 1.1 } }, '1:30 a domanda')))),
+      React.createElement('button', { disabled: !count, onClick: () => start(chosen), style: { height: 56, border: `2.5px solid ${ink}`, borderRadius: 16, background: count ? (dark ? pal.sky : '#1A1A1A') : pal.card, color: count ? (dark ? '#1A1A1A' : '#FFFFFF') : pal.muted, fontWeight: 800, fontSize: 17, boxShadow: count ? `4px 4px 0 ${dark ? ink : pal.sky}` : 'none' } },
+        count ? `Inizia · ${count} domand${count === 1 ? 'a' : 'e'}${timed ? ` · ${Math.floor(count * 90 / 60)}:${String(count * 90 % 60).padStart(2, '0')}` : ''}` : (mode === 'wrong' ? 'Nessuna sbagliata da rifare' : mode === 'studied' ? 'Completa qualche LOS per sbloccarle' : 'Scegli almeno una materia')),
+      weak.length > 0 && React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: pal.card, boxShadow: `3px 3px 0 ${ink}`, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 6 } },
+        React.createElement('span', { style: { fontWeight: 800, fontSize: 14 } }, 'Dove sbagli di più'),
+        weak.slice(0, 4).map(w => React.createElement('div', { key: w.label, title: w.title, style: { display: 'grid', gridTemplateColumns: '44px 1fr 40px', gap: 8, alignItems: 'center', fontSize: 12, fontWeight: 700 } },
+          React.createElement('span', null, w.label),
+          React.createElement('span', { style: { display: 'block', height: 10, border: `2px solid ${ink}`, borderRadius: 99, overflow: 'hidden' } }, React.createElement('span', { style: { display: 'block', height: '100%', width: `${w.pct * 100}%`, background: w.pct >= 0.7 ? pal.mint : w.pct >= 0.5 ? '#FFD43B' : pal.rose } })),
+          React.createElement('span', null, `${Math.round(w.pct * 100)}%`)))),
+      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10, marginTop: 4 } },
+        React.createElement('span', { style: { fontWeight: 800, fontSize: 14 } }, 'Simulazioni'),
+        React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 } },
+          React.createElement('button', { onClick: onFullExam, style: { textAlign: 'left', border: `2.5px solid ${ink}`, borderRadius: 16, background: pal.card, color: pal.fg, boxShadow: `3px 3px 0 ${ink}`, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 4 } },
+            React.createElement(Trophy, { size: 22 }), React.createElement('span', { style: { fontWeight: 800, fontSize: 15 } }, 'Esame completo'), React.createElement('span', { style: { fontWeight: 600, fontSize: 12, color: pal.muted } }, '180 domande · 4h 30min')),
+          React.createElement('button', { onClick: onTraining, style: { textAlign: 'left', border: `2.5px solid ${ink}`, borderRadius: 16, background: pal.card, color: pal.fg, boxShadow: `3px 3px 0 ${ink}`, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 4 } },
+            React.createElement(Brain, { size: 22 }), React.createElement('span', { style: { fontWeight: 800, fontSize: 15 } }, 'Allenamento AI'), React.createElement('span', { style: { fontWeight: 600, fontSize: 12, color: pal.muted } }, 'domande generate dall\'AI'))))),
+    run && React.createElement(QuizRun, { key: run.map(x => x.key).join(','), items: run, timed, pal, onClose: () => setRun(null), onOpenLOS, onCalc, onAskAI, onAgain: list => setRun(flShuffle(list)) }));
+}
+
+// ========== HOME "IL TUO GIORNO" ==========
+function HomeDay({ losProgress, theme, onOpenLOS }) {
+  const dark = theme === 'dark'; const pal = flAlbumPal(dark);
+  const [, force] = useState(0);
+  const [editDate, setEditDate] = useState(false);
+  useEffect(() => { const h = () => force(x => x + 1); window.addEventListener('fl-activity', h); window.addEventListener('fl-album', h); return () => { window.removeEventListener('fl-activity', h); window.removeEventListener('fl-album', h); }; }, []);
+  let exam = null; try { exam = localStorage.getItem('finlearn_exam_date'); } catch (e) {}
+  const now = new Date();
+  const daysLeft = exam ? Math.ceil((new Date(exam + 'T09:00:00') - now) / FL_DAY) : null;
+  const week = flWeek(); const goal = 5;
+  const studiedDays = week.filter(d => flStudied(d)).length;
+  const maxMin = Math.max(30, ...week.map(d => d.min || 0));
+  const sum = f => week.reduce((s, d) => s + (d[f] || 0), 0);
+  const qn = sum('qn'), qok = sum('qok');
+  const ink = pal.ink;
+  const card = (extra = {}) => ({ border: `2.5px solid ${ink}`, borderRadius: 20, background: pal.card, color: pal.fg, boxShadow: `4px 4px 0 ${ink}`, padding: '12px 14px', ...extra });
+  const dateStr = now.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+  return React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 16 } },
+    React.createElement('div', { style: { color: pal.fg } },
+      React.createElement('div', { style: { fontWeight: 600, fontSize: 14, color: pal.muted } }, dateStr.charAt(0).toUpperCase() + dateStr.slice(1)),
+      React.createElement('div', { style: { fontWeight: 800, fontSize: 30, letterSpacing: '-0.02em', lineHeight: 1.05 } }, 'Ciao Stefano')),
+    React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 } },
+      React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: dark ? pal.sky : '#1A1A1A', color: dark ? '#1A1A1A' : '#FFFFFF', boxShadow: `4px 4px 0 ${dark ? ink : pal.sky}`, padding: 12, display: 'flex', flexDirection: 'column', gap: 2 } },
+        React.createElement('span', { style: { fontWeight: 700, fontSize: 12, opacity: 0.85 } }, 'Esame CFA L2'),
+        editDate || !exam
+          ? React.createElement('label', { style: { display: 'flex', flexDirection: 'column', gap: 4, fontWeight: 700, fontSize: 12 } }, 'Data dell\'esame',
+              React.createElement('input', { type: 'date', defaultValue: exam || '', onChange: e => { try { if (e.target.value) { localStorage.setItem('finlearn_exam_date', e.target.value); setEditDate(false); force(x => x + 1); } } catch (er) {} }, style: { font: 'inherit', fontSize: 14, padding: '4px 6px', borderRadius: 8, border: '2px solid currentColor', background: 'transparent', color: 'inherit', colorScheme: dark ? 'light' : 'dark' } }))
+          : React.createElement('button', { onClick: () => setEditDate(true), 'aria-label': 'Cambia la data dell\'esame', style: { background: 'transparent', border: 0, padding: 0, color: 'inherit', textAlign: 'left' } },
+              React.createElement('div', { style: { fontWeight: 800, fontSize: 34, lineHeight: 1 } }, daysLeft > 0 ? daysLeft : daysLeft === 0 ? 'Oggi' : '—'),
+              React.createElement('div', { style: { fontWeight: 700, fontSize: 12 } }, daysLeft > 0 ? (daysLeft === 1 ? 'giorno' : 'giorni') : daysLeft === 0 ? 'in bocca al lupo' : 'esame passato · tocca per cambiare'))),
+      React.createElement('div', { style: { border: `2.5px solid ${ink}`, borderRadius: 18, background: pal.card, color: pal.fg, boxShadow: `4px 4px 0 ${ink}`, padding: 12, display: 'flex', alignItems: 'center', gap: 10 } },
+        React.createElement('div', { style: { width: 56, height: 56, flex: 'none', borderRadius: '50%', border: `2.5px solid ${ink}`, background: `conic-gradient(${pal.sky} 0 ${Math.min(1, studiedDays / goal) * 100}%, ${dark ? '#22324F' : '#EEF0F4'} 0 100%)`, display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+          React.createElement('span', { style: { width: 38, height: 38, borderRadius: '50%', border: `2px solid ${ink}`, background: pal.card, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13 } }, `${studiedDays}/${goal}`)),
+        React.createElement('span', { style: { fontWeight: 700, fontSize: 13, lineHeight: 1.2 } }, studiedDays >= goal ? 'obiettivo della settimana raggiunto' : 'giorni di studio questa settimana'))),
+    React.createElement(AlbumHome, { losProgress, theme, onOpenLOS }),
+    React.createElement('div', { style: card({ display: 'flex', flexDirection: 'column', gap: 10 }) },
+      React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' } },
+        React.createElement('span', { style: { fontWeight: 800, fontSize: 17 } }, 'La tua settimana'),
+        React.createElement('span', { style: { fontWeight: 700, fontSize: 12, color: pal.muted } }, 'minuti al giorno')),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, alignItems: 'end', height: 84 } },
+        week.map(d => { const m = d.min || 0; const h = d.future || !m ? 10 : Math.max(14, m / maxMin * 100);
+          return React.createElement('span', { key: d.key, title: `${m} min`, style: { display: 'block', height: `${h}%`, border: `${d.today ? 2.5 : 2}px ${d.future || !m ? 'dashed' : 'solid'} ${d.future || !m ? pal.empty : ink}`, borderRadius: 6, background: d.future || !m ? 'transparent' : d.today ? pal.sky : pal.mint } }); })),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, textAlign: 'center', fontWeight: 700, fontSize: 11, color: pal.muted } },
+        week.map(d => React.createElement('span', { key: d.key, style: d.today ? { color: pal.fg, fontWeight: 800 } : null }, d.today ? 'oggi' : d.label))),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 } },
+        [[sum('los'), 'LOS nuove'], [sum('rev'), 'ravvivate'], [qn ? `${Math.round(qok / qn * 100)}%` : '—', 'giuste nei quiz']].map(([v, l]) =>
+          React.createElement('div', { key: l, style: { border: `2px solid ${ink}`, borderRadius: 12, padding: '6px 8px', display: 'flex', flexDirection: 'column' } },
+            React.createElement('span', { style: { fontWeight: 800, fontSize: 20 } }, v), React.createElement('span', { style: { fontWeight: 600, fontSize: 11 } }, l))))));
 }
 
 // Level Icons - Professional rank badges
@@ -6206,11 +6458,12 @@ IMPORTANTE: Se l'utente chiede aiuto su questa domanda, guida il ragionamento se
     const last = Array.isArray(gen) ? gen[gen.length - 1]?.content : String(gen || '');
     return last || 'Risposta vuota dal modello on-device.';
   };
-  const sendMsg = async () => {
-    if (!msg.trim() || typing) return;
+  const sendMsg = async preset => {
+    const text = (typeof preset === 'string' ? preset : msg).trim();
+    if (!text || typing) return;
     const userMessage = {
       role: 'user',
-      content: msg.trim(),
+      content: text,
       timestamp: new Date().toISOString()
     };
 
@@ -6225,7 +6478,7 @@ IMPORTANTE: Se l'utente chiede aiuto su questa domanda, guida il ragionamento se
       }
       return c;
     }));
-    const currentMsg = msg;
+    const currentMsg = text;
     const currentHistory = [...chat];
     setMsg('');
     setTyping(true);
@@ -6443,7 +6696,14 @@ IMPORTANTE: Se l'utente chiede aiuto su questa domanda, guida il ragionamento se
     ref: chatEndRef
   })), /*#__PURE__*/React.createElement("div", {
     className: "p-4 border-t border-slate-200"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, currentQuestion && React.createElement("div", {
+    className: "flex gap-2 flex-wrap mb-3"
+  }, ['Spiegamela più semplice', 'Rifammi i conti passo per passo', 'Un trucco per ricordarla', 'Dammi una domanda simile'].map(t => React.createElement("button", {
+    key: t,
+    onClick: () => sendMsg(t),
+    disabled: typing,
+    className: "px-3 py-1.5 rounded-full text-xs font-bold border border-slate-200 bg-white text-slate-700 disabled:opacity-50"
+  }, t))), /*#__PURE__*/React.createElement("div", {
     className: "flex gap-2"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
@@ -6549,6 +6809,9 @@ function MainApp({
 }) {
   const [section, setSection] = useState('home');
   const [showCalc, setShowCalc] = useState(false);
+  const [quizAI, setQuizAI] = useState(null);
+  // minuti di studio per la home: conta un minuto ogni 60 s con l'app in primo piano
+  useEffect(() => { const h = setInterval(() => { try { if (document.visibilityState === 'visible') flActLog('min'); } catch (e) {} }, 60000); return () => clearInterval(h); }, []);
   const [showAiChat, setShowAiChat] = useState(false);
   const [completed, setCompleted] = useState(userData?.completedLessons || []);
   const [activeLesson, setActiveLesson] = useState(userData?.activeLesson || 1);
@@ -8685,7 +8948,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       quizQuestion: question.q,
       messages: [{
         role: 'assistant',
-        content: `🐂 Stai lavorando su:\n\n"${question.q}"\n\nCome posso aiutarti? Posso spiegarti i concetti senza darti la risposta!`,
+        content: question.picked ? `Domanda: "${question.q}"\n\nHai risposto ${question.picked}, la giusta è ${question.correct}. Cosa vuoi capire? Posso spiegarti il perché, rifare i conti o darti un trucco per ricordarla.` : `🐂 Stai lavorando su:\n\n"${question.q}"\n\nCome posso aiutarti? Posso spiegarti i concetti senza darti la risposta!`,
         timestamp: new Date().toISOString()
       }]
     };
@@ -9401,7 +9664,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     className: "fixed inset-0 fl-grid-bg opacity-40 pointer-events-none"
   }), /*#__PURE__*/React.createElement("div", {
     className: "relative z-10"
-  }, section === 'home' && /*#__PURE__*/React.createElement("div", {
+  }, section === 'quiz' && React.createElement(QuizHub, { theme, onOpenLOS: openLOSFromAlbum, onCalc: () => setShowCalc(true), onAskAI: q => { setQuizAI(q); openQuizChat(q); }, onTraining: () => isPro ? setShowMockExamSetup(true) : setShowProModal(true), onFullExam: () => { const questions = generateFullMockExam(); setMockExamState({ active: true, loading: false, questions, currentIndex: 0, answers: [], timeRemaining: CFA_FULL_EXAM_CONFIG.timeMinutes * 60, sessionTopic: 'full', examConfig: { type: 'full', numQuestions: 180 }, results: null, error: null, flagged: [], isFullExam: true }); } }), section === 'home' && /*#__PURE__*/React.createElement("div", {
     className: "min-h-screen"
   }, /*#__PURE__*/React.createElement("div", {
     className: "relative overflow-hidden"
@@ -9448,210 +9711,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     size: 15
   }), stats.coins))))), /*#__PURE__*/React.createElement("div", {
     className: "max-w-xl mx-auto px-4 py-6"
-  }, React.createElement(AlbumHome, { losProgress, theme, onOpenLOS: openLOSFromAlbum }), /*#__PURE__*/React.createElement("div", {
-    className: "mt-8"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center justify-between mb-4"
-  }, /*#__PURE__*/React.createElement("h2", {
-    className: "font-bold flex items-center gap-2",
-    style: {
-      color: th.text
-    }
-  }, /*#__PURE__*/React.createElement(TrophyIconSVG, {
-    size: 24
-  }), " Arena delle simulazioni"), /*#__PURE__*/React.createElement("div", {
-    className: "text-xs px-3 py-1 rounded-full",
-    style: {
-      backgroundColor: theme === 'dark' ? 'rgba(51,65,85,0.5)' : '#f1f5f9',
-      color: th.textMuted
-    }
-  }, "Reset tra ", getDaysUntilReset(), " giorni")), /*#__PURE__*/React.createElement("div", {
-    className: "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl overflow-hidden shadow-xl mb-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: `bg-gradient-to-r ${getUserLeague(stats.xp).color} p-4`
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center justify-between"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-3"
-  }, (() => {
-    const level = getLevelInfo(stats.xp);
-    return /*#__PURE__*/React.createElement(level.Icon, {
-      size: 48,
-      className: "drop-shadow-lg"
-    });
-  })(), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "text-white/80 text-xs"
-  }, "La tua posizione"), /*#__PURE__*/React.createElement("div", {
-    className: "text-white font-black text-xl"
-  }, "#", getUserRank()))), /*#__PURE__*/React.createElement("div", {
-    className: "text-right"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "text-white/80 text-xs"
-  }, "Lega ", getUserLeague(stats.xp).name), /*#__PURE__*/React.createElement("div", {
-    className: "text-white font-bold text-lg"
-  }, stats.xp, " XP")))), /*#__PURE__*/React.createElement("div", {
-    className: "p-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "text-slate-400 text-xs font-semibold mb-3 flex items-center gap-2"
-  }, /*#__PURE__*/React.createElement(Flame, {
-    size: 14,
-    className: "text-orange-400"
-  }), "CLASSIFICA SETTIMANALE"), /*#__PURE__*/React.createElement("div", {
-    className: "space-y-2"
-  }, leaderboard.slice(0, 5).map((player, idx) => {
-    const isUser = player.xp <= stats.xp && (idx === 0 || leaderboard[idx - 1].xp > stats.xp);
-    const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : null;
-    return /*#__PURE__*/React.createElement("div", {
-      key: player.id,
-      className: `flex items-center gap-3 p-2 rounded-xl transition-all ${isUser ? 'bg-amber-500/20 border border-amber-500/30' : 'hover:bg-white/5'}`
-    }, /*#__PURE__*/React.createElement("div", {
-      className: `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${idx === 0 ? 'bg-amber-400 text-amber-900' : idx === 1 ? 'bg-slate-300 text-slate-700' : idx === 2 ? 'bg-orange-400 text-orange-900' : 'bg-slate-700 text-slate-300'}`
-    }, medal || idx + 1), /*#__PURE__*/React.createElement("div", {
-      className: "w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center text-xl"
-    }, player.avatar), /*#__PURE__*/React.createElement("div", {
-      className: "flex-1"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "text-white font-semibold text-sm"
-    }, player.name), /*#__PURE__*/React.createElement("div", {
-      className: "text-slate-500 text-xs"
-    }, player.xp.toLocaleString(), " XP")), /*#__PURE__*/React.createElement("div", {
-      className: `text-xs font-bold ${player.change > 0 ? 'text-emerald-400' : player.change < 0 ? 'text-rose-400' : 'text-slate-500'}`
-    }, player.change > 0 ? `↑${player.change}` : player.change < 0 ? `↓${Math.abs(player.change)}` : '−'));
-  })), getUserRank() > 5 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "text-center text-slate-600 py-2"
-  }, "\u2022 \u2022 \u2022"), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-3 p-2 rounded-xl bg-amber-500/20 border border-amber-500/30"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm bg-slate-700 text-slate-300"
-  }, getUserRank()), /*#__PURE__*/React.createElement("div", {
-    className: "w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center text-xl"
-  }, stats.xp >= 2000 ? '🌳' : stats.xp >= 500 ? '🌿' : '🌱'), /*#__PURE__*/React.createElement("div", {
-    className: "flex-1"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "text-white font-semibold text-sm"
-  }, "Tu"), /*#__PURE__*/React.createElement("div", {
-    className: "text-slate-500 text-xs"
-  }, stats.xp.toLocaleString(), " XP")), /*#__PURE__*/React.createElement("div", {
-    className: "text-amber-400 text-xs font-bold"
-  }, "\u2B50 TU"))))), /*#__PURE__*/React.createElement("div", {
-    onClick: () => isPro ? setShowMockExamSetup(true) : setShowProModal(true),
-    className: `relative overflow-hidden rounded-2xl border-2 transition-all cursor-pointer ${isPro ? 'bg-gradient-to-br from-amber-50 to-orange-50 border-amber-300 hover:border-amber-400 hover:shadow-lg' : 'bg-gradient-to-br from-slate-100 to-slate-50 border-slate-200 hover:border-slate-300'}`
-  }, !isPro && /*#__PURE__*/React.createElement("div", {
-    className: "absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"
-  }, /*#__PURE__*/React.createElement(Lock, {
-    size: 12
-  }), "PRO"), /*#__PURE__*/React.createElement("div", {
-    className: "absolute top-3 right-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"
-  }, /*#__PURE__*/React.createElement(Award, {
-    size: 12
-  }), "UFFICIALE"), /*#__PURE__*/React.createElement("div", {
-    className: "p-5"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-start gap-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-emerald-400 to-teal-500 shadow-lg shadow-teal-500/30"
-  }, /*#__PURE__*/React.createElement(Trophy, {
-    size: 32,
-    className: "text-white"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "flex-1"
-  }, /*#__PURE__*/React.createElement("h3", {
-    className: "font-bold text-lg text-slate-800 pr-20"
-  }, "Esame completo"), /*#__PURE__*/React.createElement("p", {
-    className: "text-sm mt-1 text-slate-600"
-  }, "180 domande \u2022 4h 30min \u2022 come all'esame vero"), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-2 mt-3 flex-wrap"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700"
-  }, /*#__PURE__*/React.createElement(Zap, {
-    size: 12
-  }), "+1000 XP"), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-purple-100 text-purple-700"
-  }, /*#__PURE__*/React.createElement(Target, {
-    size: 12
-  }), "Classifica")))), /*#__PURE__*/React.createElement("button", {
-    onClick: e => {
-      e.stopPropagation();
-      const questions = generateFullMockExam();
-      setMockExamState({
-        active: true,
-        loading: false,
-        questions,
-        currentIndex: 0,
-        answers: [],
-        timeRemaining: CFA_FULL_EXAM_CONFIG.timeMinutes * 60,
-        sessionTopic: 'full',
-        examConfig: {
-          type: 'full',
-          numQuestions: 180
-        },
-        results: null,
-        error: null,
-        flagged: [],
-        isFullExam: true
-      });
-    },
-    className: "w-full mt-4 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 shadow-lg shadow-teal-500/20"
-  }, "Inizia la simulazione (180 domande)"))), /*#__PURE__*/React.createElement("div", {
-    className: "relative overflow-hidden rounded-2xl border-2 transition-all cursor-pointer bg-gradient-to-br from-amber-50 to-orange-50 border-amber-300 hover:border-amber-400 hover:shadow-lg mt-4",
-    onClick: () => setShowMockExamSetup(true)
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "absolute top-3 right-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg"
-  }, /*#__PURE__*/React.createElement(BookOpen, {
-    size: 12
-  }), "ALLENAMENTO"), /*#__PURE__*/React.createElement("div", {
-    className: "p-5"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-start gap-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-orange-500/30"
-  }, /*#__PURE__*/React.createElement(BullMascot, {
-    size: 48,
-    mood: "happy"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "flex-1"
-  }, /*#__PURE__*/React.createElement("h3", {
-    className: "font-bold text-lg text-slate-800 pr-20"
-  }, "Allenamento"), /*#__PURE__*/React.createElement("p", {
-    className: "text-sm mt-1 text-slate-600"
-  }, "Scegli argomenti e numero di domande"), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-3 mt-3"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full bg-emerald-100 text-emerald-700"
-  }, /*#__PURE__*/React.createElement(Zap, {
-    size: 12
-  }), "+500 XP")))), /*#__PURE__*/React.createElement("button", {
-    onClick: e => {
-      e.stopPropagation();
-      setShowMockExamSetup(true);
-    },
-    className: "w-full mt-4 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-orange-500/20"
-  }, "Configura l'allenamento"))), /*#__PURE__*/React.createElement("div", {
-    className: "mt-4 bg-white rounded-xl p-4 border border-slate-200"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2"
-  }, /*#__PURE__*/React.createElement(Zap, {
-    size: 16,
-    className: "text-amber-500"
-  }), "Come guadagnare XP"), /*#__PURE__*/React.createElement("div", {
-    className: "grid grid-cols-2 gap-2 text-xs"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-2 text-slate-600"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "w-2 h-2 bg-emerald-400 rounded-full"
-  }), "Quiz completato: +20"), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-2 text-slate-600"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "w-2 h-2 bg-emerald-400 rounded-full"
-  }), "Risposta corretta: +10"), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-2 text-slate-600"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "w-2 h-2 bg-amber-400 rounded-full"
-  }), "Streak bonus: +10/livello"), /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-2 text-slate-600"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "w-2 h-2 bg-purple-400 rounded-full"
-  }), "Mock Exam: +500 \uD83D\uDC51")))))), section === 'library' && /*#__PURE__*/React.createElement("div", {
+  }, React.createElement(HomeDay, { losProgress, theme, onOpenLOS: openLOSFromAlbum }))), section === 'library' && /*#__PURE__*/React.createElement("div", {
     className: "min-h-screen pb-24",
     style: {
       backgroundColor: 'transparent'
@@ -10852,6 +10912,10 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     icon: BookOpen,
     label: 'Studia'
   }, {
+    id: 'quiz',
+    icon: Zap,
+    label: 'Quiz'
+  }, {
     id: 'ai',
     icon: MessageSquare,
     label: 'AI Coach'
@@ -10868,7 +10932,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     return /*#__PURE__*/React.createElement("button", {
       key: id,
       onClick: () => setSection(id),
-      className: "relative flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all",
+      className: "relative flex flex-col items-center gap-1 py-2 px-2.5 rounded-xl transition-all",
       style: {
         color: isActive ? '#f5d061' : th.textMuted
       }
@@ -10885,7 +10949,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }), /*#__PURE__*/React.createElement("span", {
       className: `relative text-[10px] tracking-wide ${isActive ? 'font-bold' : 'font-medium'}`
     }, label));
-  }))), showCalc && /*#__PURE__*/React.createElement(TICalculator, {
+  }))), quizAI && quizChatId && React.createElement(AiChatModal, { onClose: () => { setQuizAI(null); closeQuizChat(); }, chatId: quizChatId, chats: chats, setChats: setChats, currentQuestion: quizAI }), showCalc && /*#__PURE__*/React.createElement(TICalculator, {
     onClose: () => setShowCalc(false)
   }), showProModal && /*#__PURE__*/React.createElement(ProModal, {
     onClose: () => setShowProModal(false),

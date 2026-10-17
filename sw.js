@@ -1,4 +1,4 @@
-const CACHE = 'finlearn-v28';
+const CACHE = 'finlearn-v29';
 const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg'];
 
 self.addEventListener('install', (e) => {
