@@ -9372,82 +9372,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }))
   }), studyMode === 'curriculum' && /*#__PURE__*/React.createElement(React.Fragment, null, !cfaTopic && !cfaModule && !cfaLOS && /*#__PURE__*/React.createElement("div", {
     className: "space-y-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "rounded-2xl p-5",
-    style: {
-      backgroundColor: th.card,
-      border: `1px solid ${th.cardBorder}`
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-4 mb-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"
-  }, /*#__PURE__*/React.createElement(Target, {
-    className: "text-white",
-    size: 28
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "flex-1"
-  }, /*#__PURE__*/React.createElement("h2", {
-    className: "font-bold",
-    style: {
-      color: th.text
-    }
-  }, "I tuoi progressi"), /*#__PURE__*/React.createElement("p", {
-    className: "text-sm",
-    style: {
-      color: th.textMuted
-    }
-  }, losProgress.length, "/", TOTAL_CFA_LOS, " LOS completati")), /*#__PURE__*/React.createElement("span", {
-    className: "text-2xl font-black text-amber-500"
-  }, Math.round(losProgress.length / TOTAL_CFA_LOS * 100), "%")), /*#__PURE__*/React.createElement("div", {
-    className: "h-2.5 rounded-full overflow-hidden",
-    style: {
-      backgroundColor: theme === 'dark' ? '#334155' : '#e2e8f0'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "h-full bg-gradient-to-r from-amber-500 to-orange-500",
-    style: {
-      width: `${losProgress.length / TOTAL_CFA_LOS * 100}%`
-    }
-  }))), /*#__PURE__*/React.createElement("button", {
-    onClick: () => setEqOpen(true),
-    className: "fl-card-hover fl-sweep w-full relative overflow-hidden rounded-2xl p-5 text-left text-white",
-    style: {
-      background: 'linear-gradient(125deg, #b45309 0%, #f59e0b 50%, #d97706 100%)',
-      boxShadow: '0 16px 40px -16px rgba(245,158,11,.55)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "flex items-center gap-4"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "w-14 h-14 rounded-2xl bg-white/90 flex items-center justify-center overflow-hidden p-1.5"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: EQ_LOGO,
-    alt: "",
-    className: "w-full h-auto select-none",
-    draggable: false
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "flex-1"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "fl-mono font-bold",
-    style: {
-      fontSize: 9,
-      letterSpacing: '0.2em',
-      color: 'rgba(255,243,196,.9)'
-    }
-  }, "\u26A1 RIPASSO RAPIDO"), /*#__PURE__*/React.createElement("h3", {
-    className: "fl-display font-bold",
-    style: {
-      fontSize: 18
-    }
-  }, "Equity Valuation"), /*#__PURE__*/React.createElement("p", {
-    className: "text-amber-50/90 font-medium",
-    style: {
-      fontSize: 12
-    }
-  }, "Reading 22\u201327 \xB7 formulario + 180 flashcard + 65 quiz")), /*#__PURE__*/React.createElement(ChevronRight, {
-    size: 22,
-    className: "text-white/80"
-  }))), /*#__PURE__*/React.createElement("h3", {
+  }, /*#__PURE__*/React.createElement("h3", {
     className: "font-bold flex items-center gap-2",
     style: {
       color: th.text
@@ -9494,6 +9419,43 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       color: th.textMuted
     }
   })))), /*#__PURE__*/React.createElement("div", {
+    className: "rounded-2xl p-5",
+    style: {
+      backgroundColor: th.card,
+      border: `1px solid ${th.cardBorder}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center gap-4 mb-4"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center"
+  }, /*#__PURE__*/React.createElement(Target, {
+    className: "text-white",
+    size: 28
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "flex-1"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "font-bold",
+    style: {
+      color: th.text
+    }
+  }, "I tuoi progressi"), /*#__PURE__*/React.createElement("p", {
+    className: "text-sm",
+    style: {
+      color: th.textMuted
+    }
+  }, losProgress.length, "/", TOTAL_CFA_LOS, " LOS completati")), /*#__PURE__*/React.createElement("span", {
+    className: "text-2xl font-black text-amber-500"
+  }, Math.round(losProgress.length / TOTAL_CFA_LOS * 100), "%")), /*#__PURE__*/React.createElement("div", {
+    className: "h-2.5 rounded-full overflow-hidden",
+    style: {
+      backgroundColor: theme === 'dark' ? '#334155' : '#e2e8f0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-full bg-gradient-to-r from-amber-500 to-orange-500",
+    style: {
+      width: `${losProgress.length / TOTAL_CFA_LOS * 100}%`
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
     className: "rounded-2xl p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10",
     style: {
       border: '1px solid rgba(251,191,36,0.3)'
