@@ -714,6 +714,134 @@ const FinLearnWordmark = ({ size = 32, className = '', light = false }) =>
   });
 
 
+// ========== EFFETTI DI FINE ESERCIZIO (stile figurine) ==========
+// Funzioni imperative: creano nodi sul body e li tolgono da sole, senza toccare lo stato React.
+const FL_FX_CSS = `
+.flfx-layer { position: fixed; inset: 0; pointer-events: none; z-index: 99; overflow: hidden; }
+.flfx-bit { position: absolute; left: 0; top: 0; border: 2px solid #1A1A1A; will-change: transform, opacity; }
+.flfx-sticker { position: absolute; left: 0; top: 0; padding: 6px 14px; border: 2.5px solid #1A1A1A; border-radius: 14px; background: #fff; color: #1A1A1A;
+  font: 800 18px/1.1 'Bricolage Grotesque', 'Nunito', system-ui, sans-serif; box-shadow: 3px 3px 0 #1A1A1A; white-space: nowrap; will-change: transform, opacity; }
+.flfx-sticker small { display: block; font-size: 11px; font-weight: 700; opacity: .75; margin-top: 1px; }
+@keyframes flfxPop { 0% { transform: scale(1); } 35% { transform: scale(1.045) rotate(-.6deg); } 70% { transform: scale(.99); } 100% { transform: none; } }
+@keyframes flfxShake { 0%,100% { transform: none; } 15% { transform: translateX(-9px) rotate(-1deg); } 30% { transform: translateX(8px) rotate(1deg); } 45% { transform: translateX(-6px); } 60% { transform: translateX(5px); } 75% { transform: translateX(-2px); } }
+.flfx-pop { animation: flfxPop .45s cubic-bezier(.34,1.56,.64,1); }
+.flfx-shake { animation: flfxShake .5s cubic-bezier(.36,.07,.19,.97); }
+.flfx-cover { position: fixed; inset: 0; z-index: 95; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+  background: rgba(244,246,250,.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); cursor: pointer; opacity: 0; transition: opacity .25s ease; }
+html.fl-dark .flfx-cover { background: rgba(7,11,20,.82); }
+.flfx-cover.in { opacity: 1; }
+.flfx-stage { perspective: 900px; position: relative; }
+.flfx-card { width: 250px; border: 3px solid #1A1A1A; border-radius: 22px; background: #fff; color: #1A1A1A; box-shadow: 7px 7px 0 #1A1A1A; overflow: hidden; position: relative;
+  font-family: 'Bricolage Grotesque', 'Nunito', system-ui, sans-serif; transform-style: preserve-3d; }
+.flfx-card-head { background: #8EC5FF; border-bottom: 3px solid #1A1A1A; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 12px; letter-spacing: .08em; }
+.flfx-card-icon { height: 118px; display: flex; align-items: center; justify-content: center; font-size: 64px; background: repeating-linear-gradient(45deg, #F4F6FA 0 10px, #EAF2FF 10px 20px); border-bottom: 3px solid #1A1A1A; }
+.flfx-card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.flfx-card-code { align-self: flex-start; background: #1A1A1A; color: #fff; border-radius: 8px; padding: 2px 9px; font-weight: 800; font-size: 13px; }
+.flfx-card-title { font-weight: 800; font-size: 17px; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.flfx-card-foot { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 12px; color: #4A4F5A; padding-top: 4px; }
+.flfx-meter { flex: 1; height: 9px; border: 2px solid #1A1A1A; border-radius: 99px; margin-right: 10px; background: #fff; overflow: hidden; }
+.flfx-meter i { display: block; height: 100%; background: #7EE0B5; border-right: 2px solid #1A1A1A; transition: width .9s cubic-bezier(.22,1,.36,1) .55s; }
+.flfx-shine { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.75) 50%, transparent 65%); transform: translateX(-120%); pointer-events: none; }
+.flfx-mascot { position: absolute; right: -58px; bottom: -78px; line-height: 0; transform-origin: 50% 100%; }
+.flfx-hint { font: 700 13px 'Bricolage Grotesque', 'Nunito', system-ui, sans-serif; color: #4A4F5A; }
+html.fl-dark .flfx-hint { color: #C9D1E0; }
+@media (prefers-reduced-motion: reduce) { .flfx-pop, .flfx-shake { animation: none; } }
+`;
+if (typeof document !== 'undefined' && !document.getElementById('flfx-css')) {
+  const st = document.createElement('style'); st.id = 'flfx-css'; st.textContent = FL_FX_CSS; document.head.appendChild(st);
+}
+const FLFX_COLORS = ['#8EC5FF', '#7EE0B5', '#FFB4C8', '#FFD43B', '#C4B5FD'];
+const flfxReduced = () => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+const flfxBuzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+const flfxRetrigger = (el, cls) => { if (!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 600); };
+function flfxCenter(el) {
+  if (el && el.getBoundingClientRect) { const r = el.getBoundingClientRect(); if (r.width) return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
+  return { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+}
+// coriandoli-figurina: rettangolini, pallini e stelline con il bordo nero, sparati verso l'alto e poi giù per gravità
+function flfxBurst(x, y, n = 26, layer) {
+  const own = !layer; layer = layer || document.body.appendChild(Object.assign(document.createElement('div'), { className: 'flfx-layer' }));
+  for (let i = 0; i < n; i++) {
+    const b = document.createElement('div'); b.className = 'flfx-bit';
+    const kind = i % 3, size = 10 + Math.random() * 9;
+    b.style.background = FLFX_COLORS[i % FLFX_COLORS.length];
+    b.style.width = (kind === 0 ? size * 1.5 : size) + 'px'; b.style.height = size + 'px';
+    b.style.borderRadius = kind === 1 ? '50%' : '3px';
+    if (kind === 2) { b.style.clipPath = 'polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)'; b.style.border = 'none'; b.style.width = b.style.height = size * 1.6 + 'px'; }
+    layer.appendChild(b);
+    const ang = -Math.PI / 2 + (Math.random() - .5) * Math.PI * 1.35, v = 150 + Math.random() * 190;
+    const dx = Math.cos(ang) * v, dy = Math.sin(ang) * v, rot = (Math.random() - .5) * 720;
+    b.animate([
+      { transform: `translate(${x}px,${y}px) rotate(0) scale(.4)`, opacity: 1 },
+      { transform: `translate(${x + dx * .7}px,${y + dy * .7}px) rotate(${rot * .5}deg) scale(1)`, opacity: 1, offset: .35 },
+      { transform: `translate(${x + dx}px,${y + dy + 260}px) rotate(${rot}deg) scale(.9)`, opacity: 0 }
+    ], { duration: 1100 + Math.random() * 500, easing: 'cubic-bezier(.2,.7,.4,1)', fill: 'forwards' });
+  }
+  if (own) setTimeout(() => layer.remove(), 1800);
+}
+function flfxSticker(x, y, text, sub) {
+  const layer = document.body.appendChild(Object.assign(document.createElement('div'), { className: 'flfx-layer' }));
+  const s = document.createElement('div'); s.className = 'flfx-sticker';
+  s.textContent = text; if (sub) { const sm = document.createElement('small'); sm.textContent = sub; s.appendChild(sm); }
+  layer.appendChild(s);
+  const w = s.offsetWidth, h = s.offsetHeight, rot = -8 + Math.random() * 6;
+  const cx = Math.min(Math.max(x - w / 2, 12), window.innerWidth - w - 12), cy = y - h / 2 - 34;
+  s.animate([
+    { transform: `translate(${cx}px,${cy + 10}px) rotate(${rot - 10}deg) scale(.2)`, opacity: 0 },
+    { transform: `translate(${cx}px,${cy - 6}px) rotate(${rot}deg) scale(1.12)`, opacity: 1, offset: .22 },
+    { transform: `translate(${cx}px,${cy - 10}px) rotate(${rot}deg) scale(1)`, opacity: 1, offset: .7 },
+    { transform: `translate(${cx}px,${cy - 44}px) rotate(${rot}deg) scale(.96)`, opacity: 0 }
+  ], { duration: 1300, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'forwards' });
+  setTimeout(() => layer.remove(), 1400);
+}
+const FLFX_OK = ['Esatto!', 'Perfetto!', 'Ottimo!', 'Bravo!', 'Centrato!'];
+const flFx = {
+  correct(el, sub) {
+    flfxBuzz(18);
+    const card = el && el.closest ? (el.closest('.rounded-2xl') || el) : null; flfxRetrigger(card, 'flfx-pop');
+    if (flfxReduced()) return;
+    const { x, y } = flfxCenter(el); flfxBurst(x, y); flfxSticker(x, y, FLFX_OK[Math.floor(Math.random() * FLFX_OK.length)], sub);
+  },
+  wrong(el) {
+    flfxBuzz([30, 40, 30]);
+    const card = el && el.closest ? (el.closest('.rounded-2xl') || el) : null; flfxRetrigger(card, 'flfx-shake');
+  },
+  // figurina della LOS appena completata: si gira, si "incolla", la mascotte festeggia. Tocca per chiudere (o si chiude da sola).
+  losDone({ code, title, icon, reading, done, total }) {
+    flfxBuzz([20, 60, 35]);
+    const cover = document.createElement('div'); cover.className = 'flfx-cover'; cover.setAttribute('role', 'dialog'); cover.setAttribute('aria-label', 'LOS completato');
+    const pct = total ? Math.round(done / total * 100) : 100;
+    const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    cover.innerHTML = `<div class="flfx-stage"><div class="flfx-card">
+        <div class="flfx-card-head"><span>FIGURINA SBLOCCATA</span><span>${esc(reading)}</span></div>
+        <div class="flfx-card-icon">${String(icon || '').startsWith('data:') ? `<img src="${esc(icon)}" alt="" style="width:100px;height:100px;object-fit:contain">` : esc(icon || '📗')}</div>
+        <div class="flfx-card-body"><span class="flfx-card-code">${esc(code)}</span><div class="flfx-card-title">${esc(title)}</div>
+          <div class="flfx-card-foot"><span class="flfx-meter"><i style="width:${Math.max(0, pct - Math.round(100 / Math.max(total, 1)))}%"></i></span><span>${done}/${total}</span></div></div>
+        <div class="flfx-shine"></div></div>
+        <div class="flfx-mascot">${typeof rly3SVG === 'function' ? rly3SVG('celebrating', 96, 'fx' + Date.now(), {}) : ''}</div></div>
+      <div class="flfx-hint">Tocca per continuare</div>`;
+    document.body.appendChild(cover);
+    const card = cover.querySelector('.flfx-card'), mascot = cover.querySelector('.flfx-mascot'), meter = cover.querySelector('.flfx-meter i');
+    let closed = false;
+    const close = () => { if (closed) return; closed = true; cover.classList.remove('in'); setTimeout(() => cover.remove(), 260); };
+    cover.addEventListener('click', close); setTimeout(close, 3400);
+    requestAnimationFrame(() => {
+      cover.classList.add('in');
+      requestAnimationFrame(() => { meter.style.width = pct + '%'; });
+      if (flfxReduced()) return;
+      card.animate([
+        { transform: 'rotateY(180deg) rotate(-14deg) scale(.5)', opacity: 0 },
+        { transform: 'rotateY(70deg) rotate(-8deg) scale(.95)', opacity: 1, offset: .45 },
+        { transform: 'rotateY(0) rotate(-3deg) scale(1.12)', offset: .75 },
+        { transform: 'rotateY(0) rotate(-3deg) scale(1)' }
+      ], { duration: 720, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' });
+      cover.querySelector('.flfx-shine').animate([{ transform: 'translateX(-120%)' }, { transform: 'translateX(120%)' }], { duration: 900, delay: 650, easing: 'ease-in-out', fill: 'forwards' });
+      mascot.animate([{ transform: 'translateY(60px) scale(.6)', opacity: 0 }, { transform: 'translateY(-8px) scale(1.05)', opacity: 1, offset: .7 }, { transform: 'none', opacity: 1 }], { duration: 520, delay: 520, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'both' });
+      setTimeout(() => { const r = card.getBoundingClientRect(); flfxBurst(r.left + r.width / 2, r.top + 30, 36); }, 560);
+    });
+  }
+};
+
 // Level Icons - Professional rank badges
 const RookieIcon = ({
   size = 40,
@@ -1927,7 +2055,7 @@ function LosQuestion({ q }) {
       let st = { background: 'var(--fl-s2, #f8fafc)', border: '2px solid var(--fl-line, #e2e8f0)' };
       if (answered && i === q.ans) st = { background: 'rgba(34,197,94,.14)', border: '2px solid #22C55E' };
       else if (answered && i === sel) st = { background: 'rgba(255,90,95,.12)', border: '2px solid #FF5A5F' };
-      return React.createElement('button', { key: i, disabled: answered, onClick: () => setSel(i), className: 'w-full text-left rounded-xl p-3 flex items-start gap-3 transition', style: st, lang: 'en' },
+      return React.createElement('button', { key: i, disabled: answered, onClick: (e) => { setSel(i); if (i === q.ans) flFx.correct(e.currentTarget); else flFx.wrong(e.currentTarget); }, className: 'w-full text-left rounded-xl p-3 flex items-start gap-3 transition', style: st, lang: 'en' },
         React.createElement('span', { className: 'w-7 h-7 rounded-lg flex items-center justify-center font-black shrink-0', style: { background: answered && i === q.ans ? '#22C55E' : answered && i === sel ? '#FF5A5F' : 'rgba(255,176,32,.16)', color: answered && (i === q.ans || i === sel) ? '#fff' : '#FFB020' } }, L[i]),
         React.createElement('span', { className: 'text-sm pt-0.5' }, o));
     })),
@@ -8107,10 +8235,13 @@ Generate exactly ${numQuestions} questions now:`;
         isCorrect
       }
     }));
+    const optEl = document.querySelector('[data-quiz-opt="' + selected + '"]') || document.activeElement;
     if (isCorrect) {
+      flFx.correct(optEl, streak >= 1 ? `Serie x${streak + 1}` : undefined);
       setStreak(s => s + 1);
       setQuizCorrect(c => c + 1);
     } else {
+      flFx.wrong(optEl);
       setStreak(0);
     }
   };
@@ -8542,6 +8673,7 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
       } else if (selected === i) style = 'border-amber-500 bg-amber-50';
       return /*#__PURE__*/React.createElement("button", {
         key: i,
+        'data-quiz-opt': i,
         onClick: () => !answered && setSelected(i),
         disabled: answered,
         className: `fl-opt-in w-full p-4 rounded-xl border-2 text-left transition-all ${style}`,
@@ -9831,7 +9963,12 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
   }), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       const id = `${cfaModule.id}-${cfaLOS.id}`;
-      if (!losProgress.includes(id)) setLosProgress([...losProgress, id]);
+      if (!losProgress.includes(id)) {
+        const doneN = cfaModule.los.filter(l => losProgress.includes(`${cfaModule.id}-${l.id}`)).length + 1;
+        flFx.losDone({ code: cfaLOS.code || `LOS ${cfaModule.number}${cfaLOS.id}`, title: cfaLOS.title, icon: String(cfaTopic?.icon || '').startsWith('data:') ? cfaTopic.icon : cfaLOS.content?.sections?.[0]?.icon,
+          reading: (cfaModule.id.startsWith('pm-') ? 'R' : 'LM') + cfaModule.number, done: doneN, total: cfaModule.los.length });
+        setLosProgress([...losProgress, id]);
+      }
       if (cfaLOS.index < cfaModule.los.length - 1) {
         setCfaLOS({
           ...cfaModule.los[cfaLOS.index + 1],
