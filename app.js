@@ -1310,7 +1310,9 @@ function SplashScreen({
   }, /*#__PURE__*/React.createElement("div", {
     className: `transition-all duration-700 ${phase >= 1 ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`
   }, /*#__PURE__*/React.createElement("div", {
-    className: "fl-float drop-shadow-2xl"
+    className: "fl-float drop-shadow-2xl",
+    // area extra per il filtro: su iOS Safari un elemento con drop-shadow ritaglia ciò che esce dai suoi bordi (corna durante il salto)
+    style: { padding: '28px 16px 8px', margin: '-28px -16px -8px' }
   }, /*#__PURE__*/React.createElement(BullMascot, {
     size: 128,
     mood: phase >= 2 ? "celebrating" : "walking"
