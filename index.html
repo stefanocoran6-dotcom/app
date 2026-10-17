@@ -42,6 +42,7 @@
     :root { --sat: env(safe-area-inset-top, 0px); }
     html.fl-ios-app { --sat: max(env(safe-area-inset-top, 0px), 47px); }
     .fixed.inset-0.z-50.overflow-y-auto { padding-top: var(--sat); }
+    html.fl-locked body { padding-top: 0; }
     body { padding-top: var(--sat); padding-bottom: env(safe-area-inset-bottom);
            overscroll-behavior-y: none; -webkit-user-select: none; user-select: none;
            -webkit-touch-callout: none; touch-action: manipulation;
