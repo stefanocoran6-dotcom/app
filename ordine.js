@@ -45,7 +45,16 @@ const ROOM = { home: AZ, allenati: MENTA, sfide: PESCA, coach: LILLA, profilo: R
 
 const ORD_CSS = `
 .o-app{position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;max-width:520px;z-index:40;overflow:hidden;background:#fff;color:${INK};
-  font-family:'Bricolage Grotesque','Nunito',system-ui,sans-serif;font-size:16px;line-height:1.35;font-weight:600;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;font-variant-numeric:tabular-nums;font-optical-sizing:auto}
+  font-family:'Bricolage Grotesque','Nunito',system-ui,sans-serif;font-size:16px;line-height:1.35;font-weight:600;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;font-variant-numeric:tabular-nums;font-optical-sizing:auto;
+  --otop:calc(var(--sat, 0px) + 9px)}
+/* iPhone, app installata: sotto l'orologio il sistema sfuma i contenuti per una ventina di punti, quindi testi e pulsanti partono più in basso */
+html.fl-ios-app .o-app{--otop:calc(var(--sat, 0px) + 24px)}
+/* iPhone, app installata: l'altezza dichiarata è più corta dello schermo (manca in fondo una fascia alta quanto la barra di stato).
+   ordFit() misura lo schermo vero e qui l'app viene stesa fino in fondo, dentro una pagina alta quanto lo schermo. */
+html.fl-ord-fit,html.fl-ord-fit body{min-height:var(--ord-h)}
+html.fl-ord-fit{overscroll-behavior:none}
+html.fl-ord-fit .o-app{position:absolute;bottom:auto;height:var(--ord-h)}
+html.fl-ord-fit .fixed.inset-0{bottom:calc(-1 * var(--ord-gap, 0px))!important}
 :where(.o-app) *,:where(.o-app) *::before,:where(.o-app) *::after{box-sizing:border-box}
 :where(.o-app) h1,:where(.o-app) h2,:where(.o-app) h3,:where(.o-app) p,:where(.o-app) ul{margin:0;padding:0}
 :where(.o-app) button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;touch-action:manipulation;border-radius:0}
@@ -57,7 +66,7 @@ html.fl-fig .o-app button:active:not(:disabled){transform:none}
 .o-scr{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff}
 .o-scroll{flex:1 1 0;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;scrollbar-width:none}
 .o-scroll::-webkit-scrollbar{display:none}
-.o-top{padding-top:calc(var(--sat, 0px) + 9px)}
+.o-top{padding-top:var(--otop)}
 .o-pad{padding-left:20px;padding-right:20px}
 .o-foot{flex:none;padding:12px 20px max(22px,calc(env(safe-area-inset-bottom) + 6px));background:#fff}
 .o-h1{font-size:42px;line-height:42px;font-weight:800;letter-spacing:-.02em}
@@ -130,6 +139,7 @@ html .o-app .o-rich .fl-table th{background:${AZ};text-align:left;padding:8px 10
 html .o-app .o-rich .fl-table td{padding:7px 10px;border-top:2px solid ${SEP};white-space:nowrap}
 html .o-app .o-rich .fl-table td:first-child,html .o-app .o-rich .fl-table th:first-child{white-space:normal;min-width:132px}
 html .o-app .o-coach button{text-align:center}
+html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(safe-area-inset-bottom) + 66px) - var(--ord-gap, 0px))!important}
 .o-rich.sm{font-size:15px;line-height:22px;font-weight:600}
 .o-rich.q{font-size:17px;line-height:25px;font-weight:700}
 .o-ovl{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(26,26,26,.45)}
@@ -161,6 +171,28 @@ function ordInjectCss() {
     lk.href = 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600;700&family=Nunito:wght@900&display=swap';
     document.head.appendChild(lk);
   }
+}
+
+// Misura se in fondo allo schermo resta una fascia scoperta (iPhone, app aperta dalla schermata Home) e in quel caso
+// stende l'app sull'altezza vera dello schermo. Una volta trovata la misura resta valida finché l'app è aperta.
+let ordFitDone = false;
+function ordFit() {
+  try {
+    if (ordFitDone || typeof document === 'undefined' || !document.body) return;
+    if (window.navigator.standalone !== true || window.innerHeight < window.innerWidth) return;
+    const p = document.createElement('div'); p.style.cssText = 'position:fixed;top:0;bottom:0;left:0;width:1px;visibility:hidden;pointer-events:none';
+    document.body.appendChild(p); const h = p.getBoundingClientRect().height; p.remove();
+    const full = Math.max(window.screen.height, window.screen.width), gap = Math.round(full - h);
+    if (h > 300 && gap > 20 && gap < 110) { const de = document.documentElement; de.style.setProperty('--ord-h', full + 'px'); de.style.setProperty('--ord-gap', gap + 'px'); de.classList.add('fl-ord-fit'); ordFitDone = true; }
+  } catch (e) {}
+}
+function ordFitOff() { try { const de = document.documentElement; de.classList.remove('fl-ord-fit'); de.style.removeProperty('--ord-h'); de.style.removeProperty('--ord-gap'); ordFitDone = false; } catch (e) {} }
+function useOrdFit() {
+  useEffect(() => {
+    ordFit(); const t1 = setTimeout(ordFit, 250), t2 = setTimeout(ordFit, 1200);
+    window.addEventListener('resize', ordFit); window.addEventListener('pageshow', ordFit);
+    return () => { clearTimeout(t1); clearTimeout(t2); window.removeEventListener('resize', ordFit); window.removeEventListener('pageshow', ordFit); ordFitOff(); };
+  }, []);
 }
 
 // ---- memoria locale della nuova grafica (una sola chiave, il resto usa le chiavi storiche dell'app) ----
@@ -507,7 +539,7 @@ function BSheet({ children, onClose, bg = '#fff', dim = true, label }) {
 function Room({ color, tab, go, head, rally, children, tabs = true, headH = 160, scrollRef }) {
   return html`<div class="o-scr" style=${{ background: color }}>
     <div class="o-scroll" ref=${scrollRef}><div class="o-col" style="min-height:100%">
-      <div class="o-top" style=${{ position: 'relative', flex: 'none', minHeight: `calc(var(--sat, 0px) + ${headH + 9}px)` }}>
+      <div class="o-top" style=${{ position: 'relative', flex: 'none', minHeight: `calc(var(--otop) + ${headH}px)` }}>
         ${rally}
         <div class="o-pad" style="position:relative;padding-bottom:18px">${head}</div>
       </div>
@@ -562,7 +594,7 @@ function HomeScreen({ nav }) {
   const pill = isExam ? (ed != null && ed >= 0 ? (ed === 0 ? 'Esame oggi' : `Esame tra ${plural(ed, 'giorno', 'giorni')}`) : 'Metti la data dell\'esame') : (streak > 1 ? `${streak} giorni di fila` : 'Giorno ' + Math.max(1, streak));
   const others = startedCourses().filter(c => c !== cur);
   return html`<${Room} color=${AZ} tab="home" go=${nav.tab}
-    rally=${html`<${Rally} pose="saluta" alt="Rally saluta" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 13px)"/>`}
+    rally=${html`<${Rally} pose="saluta" alt="Rally saluta" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div style="position:absolute;right:20px;top:0"><${StatPill} streak=${streak} xp=${xp}/></div>
       <div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px">
         <h1 class="o-h1" style=${name.length > 9 ? { fontSize: 32, lineHeight: '34px' } : null}>Ciao${name ? html`,<br/>${name}` : '!'}</h1>
@@ -574,7 +606,7 @@ function HomeScreen({ nav }) {
           <span class="o-grow" style="font-size:16px;line-height:20px;font-weight:800">${cur.name}</span><span style="font-size:14px;line-height:20px;font-weight:800">${pct}%</span></span>
         <span style="display:block;width:100%"><${Bar} pct=${pct} label=${`Percorso completato al ${pct}%`}/></span>
       </button>
-      ${next ? html`<div class="o-col" style="gap:4px"><div class="o-big" style="overflow-wrap:anywhere">${next.title}</div>
+      ${next ? html`<div class="o-col" style="gap:4px"><div class="o-big" style=${Object.assign({ overflowWrap: 'anywhere', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }, next.title.length > 44 ? { fontSize: 22, lineHeight: '27px', letterSpacing: '-.01em' } : null)}>${next.title}</div>
           <div class="o-body o-mut">${doneCount(cur.lessons) ? 'Prossima lezione' : 'Prima lezione'} di ${next.unit.name}, ${next.minutes} minuti</div></div>
         <${Btn} onClick=${() => nav.go('lezione', { key: next.key })}>${doneCount(cur.lessons) ? 'Riprendi la lezione' : 'Inizia la prima lezione'}<//>`
       : html`<div class="o-col" style="gap:4px"><div class="o-big">Percorso completato</div><div class="o-body o-mut">Hai preso tutte le figurine. Tienile vive con il ripasso.</div></div>
@@ -601,7 +633,7 @@ function HomeEmpty({ nav }) {
   const first = rec.lessons[0], name = userName();
   const start = () => { s2set(x => ({ cur: rec.id, started: Array.from(new Set([...(x.started || []), rec.id])) })); nav.go('lezione', { key: first.key }); };
   return html`<${Room} color=${AZ} tab="home" go=${nav.tab}
-    rally=${html`<${Rally} pose="saluta" alt="Rally saluta" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 13px)"/>`}
+    rally=${html`<${Rally} pose="saluta" alt="Rally saluta" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">Ciao${name ? html`,<br/>${name}` : '!'}</h1><${Pill}>Giorno 1<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:16px">
       <div class="o-rowf" style="gap:14px;align-items:flex-start"><span class="o-ibox" style="width:56px;height:56px;border-width:2.5px;border-radius:16px;font-size:26px;background:${AZ};box-shadow:3px 3px 0 ${INK};transform:rotate(-4deg)">${rec.badge}</span>
@@ -635,7 +667,7 @@ function PercorsoScreen({ nav, course, unit }) {
   const line = solid => html`<span aria-hidden="true" style=${solid ? { position: 'absolute', left: 22, top: 44, bottom: -12, width: 4, background: INK } : { position: 'absolute', left: 22, top: 46, bottom: -10, width: 0, borderLeft: `4px dotted ${INK}` }}></span>`;
   const subOf = l => { const st = stickerState(l, album, now); return st === 'sbiadisce' ? 'Sta sbiadendo, ripassala' : st === 'dorata' ? 'Figurina dorata' : 'Figurina presa'; };
   return html`<${Room} color=${c.color || AZ} tab="home" go=${nav.tab} headH=${156} scrollRef=${scrollRef}
-    rally=${html`<${Rally} pose="indica" w=${206} alt="Rally indica la prossima lezione" style="position:absolute;right:-20px;top:calc(var(--sat, 0px) + 15px)"/>`}
+    rally=${html`<${Rally} pose="indica" w=${206} alt="Rally indica la prossima lezione" style="position:absolute;right:-20px;top:calc(var(--otop) + 6px)"/>`}
     head=${html`<div class="o-rowf" style="height:44px;gap:12px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Torna a Impara"/><span style="font-size:15px;line-height:20px;font-weight:800">${c.name}</span></div>
       <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:12px;max-width:225px">
         <h1 class="o-h1m" style=${u.name.length > 14 ? { fontSize: 26, lineHeight: '28px' } : null}>${u.name}</h1>
@@ -651,7 +683,7 @@ function PercorsoScreen({ nav, course, unit }) {
               if (isCur) return html`<div key=${l.key} ref=${curRef} style="position:relative;display:flex;align-items:flex-start;gap:14px;padding:8px 0">${!last && line(false)}
                 <span style="width:48px;flex:none;display:flex;justify-content:center;padding-top:14px;position:relative"><span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:${AZ};border:2.5px solid ${INK};border-radius:50%;box-shadow:0 0 0 5px #fff">${PathIco('M8 5l11 7-11 7z', 20, 2, INK, INK)}</span></span>
                 <div class="o-grow o-col" style="gap:12px;padding:14px 16px 16px;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:4px 4px 0 ${INK}">
-                  <div class="o-col" style="gap:2px"><span style="font-size:20px;line-height:24px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere">${l.title}</span><span class="o-lab" style="font-weight:600">Lezione ${k + 1}, ${l.minutes} minuti</span></div>
+                  <div class="o-col" style="gap:2px"><span style="font-size:20px;line-height:24px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden">${l.title}</span><span class="o-lab" style="font-weight:600">Lezione ${k + 1}, ${l.minutes} minuti</span></div>
                   <${Btn} cls="sm" onClick=${() => nav.go('lezione', { key: l.key })}>Inizia<//></div></div>`;
               return html`<button key=${l.key} type="button" onClick=${() => nav.go('lezione', { key: l.key })} style="position:relative;min-height:56px;display:flex;align-items:center;gap:14px;padding:6px 0;width:100%">${!last && line(done)}
                 <span style="width:48px;flex:none;display:flex;justify-content:center;position:relative">${done
@@ -848,7 +880,7 @@ function LessonDone({ nav, l, done, steps, res }) {
   return html`<div class="o-scr" style="background:repeating-conic-gradient(from 5deg at 50% 190px, #A9D3FF 0deg 10deg, ${AZ} 10deg 20deg)">
     <div class="o-scroll"><div class="o-col" style="min-height:100%;align-items:center;position:relative;padding:0 20px">
       ${conf.map(([x, y, bg, rot, round], k) => html`<span key=${k} aria-hidden="true" style=${Object.assign({ position: 'absolute', top: y, background: bg, border: `2px solid ${INK}` }, x >= 0 ? { left: x } : { right: -x }, round ? { width: 13, height: 13, borderRadius: '50%' } : { width: 10, height: 18, borderRadius: 3, transform: `rotate(${rot}deg)` })}></span>`)}
-      <${Rally} pose="festa-grad" w=${300} alt="Rally festeggia con il cappello da laureato" style="margin-top:calc(var(--sat, 0px) - 8px);position:relative"/>
+      <${Rally} pose="festa-grad" w=${300} alt="Rally festeggia con il cappello da laureato" style="margin-top:calc(var(--otop) - 17px);position:relative"/>
       <h1 class="o-pop" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.02em;text-align:center;margin-top:-18px;position:relative">Lezione finita!</h1>
       <p style="font-size:16px;line-height:22px;font-weight:600;text-align:center;margin-top:6px">${done.first ? 'Hai una figurina nuova nel tuo album.' : 'Figurina ravvivata: resta a colori più a lungo.'}</p>
       <div style="display:flex;align-items:flex-start;justify-content:center;gap:20px;margin-top:26px;width:100%">
@@ -901,7 +933,7 @@ function AllenatiScreen({ nav }) {
   const weak = topicScores(cur)[0], mock = s2get().tests['mock:cfa2'];
   const mins = Math.max(2, Math.round(due.reduce((n, l) => n + (lessonQuestions(l).length ? 1.5 : 0.7), 0)));
   return html`<${Room} color=${MENTA} tab="allenati" go=${nav.tab}
-    rally=${html`<${Rally} pose="allena" alt="Rally con la fascia in fronte" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 13px)"/>`}
+    rally=${html`<${Rally} pose="allena" alt="Rally con la fascia in fronte" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div style="margin-top:-2px"><${AllenaSwitch} on="allenati" nav=${nav}/></div>
       <div class="o-col" style="align-items:flex-start;gap:14px;margin-top:10px;max-width:210px"><h1 class="o-h1">Allenati</h1><${Pill}>${streak > 0 ? `${plural(streak, 'giorno', 'giorni')} di fila` : 'Comincia oggi'}<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px">
@@ -937,7 +969,7 @@ function TestScreen({ nav }) {
   const sug = suggestedTest(c), secs = testableSections(c), passed = secs.filter(x => tests['unit:' + x.id] && tests['unit:' + x.id].passedEver).length;
   const qn = sug ? Math.min(10, allQuestions(sug.lessons).length) : 0;
   return html`<${Room} color=${MENTA} tab="allenati" go=${nav.tab} headH=${176}
-    rally=${html`<${Rally} pose="allena2" alt="Rally pronto per il test" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 22px)"/>`}
+    rally=${html`<${Rally} pose="allena2" alt="Rally pronto per il test" style="position:absolute;right:-10px;top:calc(var(--otop) + 13px)"/>`}
     head=${html`<div style="margin-top:-2px"><${AllenaSwitch} on="test" nav=${nav}/></div>
       <div class="o-col" style="align-items:flex-start;gap:14px;margin-top:14px;max-width:200px"><h1 class="o-h1m">Mettiti alla prova</h1><${Pill}>${last ? `Ultimo test: ${last.ok} su ${last.n}` : 'Nessun test, per ora'}<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px">
@@ -1027,7 +1059,7 @@ function TestDone({ nav, test, res, result }) {
   const r = result, t = test, pct = Math.round(r.ok / r.n * 100), wrong = t.qs.map((q, k) => k).filter(k => !(res[k] && res[k].ok));
   const byLesson = t.kind === 'unit';
   return html`<${Room} color=${MENTA} tabs=${false} headH=${150}
-    rally=${html`<${Rally} pose=${r.passed ? 'festa-grad' : 'triste'} w=${r.passed ? 210 : 196} alt="" style=${{ position: 'absolute', right: -8, top: `calc(var(--sat, 0px) + ${r.passed ? 0 : 14}px)` }}/>`}
+    rally=${html`<${Rally} pose=${r.passed ? 'festa-grad' : 'triste'} w=${r.passed ? 210 : 196} alt="" style=${{ position: 'absolute', right: -8, top: `calc(var(--otop) + ${r.passed ? -9 : 5}px)` }}/>`}
     head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:6px;max-width:205px"><h1 class="o-h1m">${t.kind === 'level' ? 'Test finito' : r.passed ? 'Verifica superata' : 'Non ancora superata'}</h1>
       ${r.passed && t.kind === 'unit' ? html`<${Pill} bg=${GIALLO}>Figurine dorate<//>` : html`<${Pill}>${r.passed ? `+50 XP` : 'Si riprova quando vuoi'}<//>`}</div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:16px">
@@ -1142,7 +1174,7 @@ function WeakScreen({ nav }) {
   const col = s => s >= 80 ? MENTA : s >= 55 ? GIALLO : ROSA;
   const train = () => { if (!pro) return nav.go('pro', { why: 'deboli' }); nav.go('pratica', { mode: 'weak', section: weak.id }); };
   return html`<${Room} color=${MENTA} tabs=${false} headH=${168}
-    rally=${html`<${Rally} pose="allena2" alt="" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 18px)"/>`}
+    rally=${html`<${Rally} pose="allena2" alt="" style="position:absolute;right:-10px;top:calc(var(--otop) + 9px)"/>`}
     head=${html`<div class="o-rowf" style="height:44px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Indietro"/></div>
       <div class="o-col" style="align-items:flex-start;gap:14px;margin-top:22px;max-width:210px"><h1 class="o-h1m">Punti deboli</h1><${Pill} bg=${pro ? '#fff' : GIALLO}>${pro ? 'Dalle tue risposte' : 'Solo con Pro'}<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px">
@@ -1185,7 +1217,7 @@ function SfideScreen({ nav }) {
   const ord = n => `${n}°`;
   const init = (userName() || 'T')[0].toUpperCase();
   return html`<${Room} color=${PESCA} tab="sfide" go=${nav.tab}
-    rally=${html`<${Rally} pose="sfida" alt="Rally con la maschera" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 13px)"/>`}
+    rally=${html`<${Rally} pose="sfida" alt="Rally con la maschera" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">Sfide</h1><${Pill}>Sei ${ord(me.pos)} in lega<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px;align-items:center;text-align:center">
       <div class="o-rowf" style="gap:14px;align-items:flex-start">
@@ -1227,7 +1259,7 @@ function DuelRun({ nav, rival }) {
   const left = Math.max(0, Math.ceil(lim - el)), a = mine.filter(Boolean).length, b = his.filter(Boolean).length;
   const dot = (v, k) => html`<i key=${k} style=${{ width: 12, height: 12, borderRadius: '50%', border: `2px solid ${INK}`, background: v === true ? INK : v === false ? '#fff' : 'transparent', borderStyle: v == null ? 'dashed' : 'solid' }}></i>`;
   return html`<${Flow} bg="#fff" top=${html`<div style="flex:none;background:${PESCA};border-bottom:2.5px solid ${INK};padding-bottom:58px;position:relative">
-      <${Rally} pose="sfida" w=${110} alt="" style="position:absolute;right:6px;top:calc(var(--sat, 0px) + 2px)"/>
+      <${Rally} pose="sfida" w=${110} alt="" style="position:absolute;right:6px;top:calc(var(--otop) - 7px)"/>
       <${TopBar} onClose=${nav.back} title=${'Sfida con ' + rival}/></div>
     <div class="o-pad" style="flex:none;margin-top:-46px;position:relative"><div class="o-card s" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:12px 16px">
       <span class="o-col" style="align-items:center;gap:2px"><${Avatar} ch=${init} bg=${PESCA}/><span class="o-s">Tu</span><span style="font-size:30px;line-height:32px;font-weight:800">${a}</span></span>
@@ -1247,7 +1279,7 @@ function DuelDone({ nav, rival, a, b, xp }) {
   const [msg, setMsg] = useState(false);
   const lg = league(), win = a > b, draw = a === b, init = (userName() || 'T')[0].toUpperCase();
   return html`<div class="o-scr" style="background:repeating-conic-gradient(from 5deg at 50% 200px, #FFD7BA 0deg 10deg, ${PESCA} 10deg 20deg)"><div class="o-scroll"><div class="o-col o-pad" style="min-height:100%;align-items:center">
-    <div style="width:240px;height:240px;flex:none;margin-top:calc(var(--sat, 0px) + 30px);background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
+    <div style="width:240px;height:240px;flex:none;margin-top:calc(var(--otop) + 21px);background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
       <${Rally} pose=${win ? 'festeggia' : draw ? 'occhiolino' : 'triste'} w=${228} alt="" style="margin-bottom:-18px"/></div>
     <h1 class="o-pop" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.02em;margin-top:22px">${win ? 'Hai vinto!' : draw ? 'Pareggio' : 'Stavolta no'}</h1>
     <div class="o-rowf" style="gap:12px;margin-top:18px;padding:12px 20px;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:5px 5px 0 ${INK};transform:rotate(-2deg)">
@@ -1276,7 +1308,7 @@ function CoachScreen({ nav }) {
   };
   const fmt = d => { try { return new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
   return html`<${Room} color=${LILLA} tab="coach" go=${nav.tab} headH=${140}
-    rally=${html`<${Rally} pose="coach" alt="Rally con le cuffie" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 13px)"/>`}
+    rally=${html`<${Rally} pose="coach" alt="Rally con le cuffie" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">AI Coach</h1>
       <div class="o-rowf" style="gap:8px"><button type="button" onClick=${() => newChat()} aria-label="Nuova conversazione"><${Pill}>${active ? 'Nuova chat' : 'Chiedimi tutto'}<//></button>
         ${chats.length > 0 && html`<button type="button" class="o-ib" style="width:34px;height:34px;border-radius:11px" onClick=${() => setHist(true)} aria-label="Conversazioni">${Ico(History, 17, 2.4)}</button>`}</div></div>`}>
@@ -1301,7 +1333,7 @@ function ProfiloScreen({ nav }) {
   const name = userName() || 'Profilo', lg = league();
   const cells = Array.from({ length: 8 }, (_, k) => recent[k] || null);
   return html`<${Room} color=${ROSA} tab="profilo" go=${nav.tab} headH=${140}
-    rally=${html`<${Rally} pose="moneta" alt="Rally con una moneta" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 13px)"/>`}
+    rally=${html`<${Rally} pose="moneta" alt="Rally con una moneta" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1" style=${name.length > 8 ? { fontSize: 34, lineHeight: '36px' } : null}>${name}</h1><${Pill}>${lg.name}<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px">
       <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><span style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">Il tuo album</span><span class="o-lab">${have.length} figurine su ${all.length}</span></div>
@@ -1328,7 +1360,7 @@ function AlbumScreen({ nav }) {
   const g = groups.find(x => x.id === gid) || groups[0], due = dueLessons();
   const leg = [[AZ, 'solid', 'Viva'], [T_GR, 'solid', 'Sbiadisce'], [GIALLO, 'solid', 'Dorata'], ['transparent', 'dashed', 'Manca']];
   return html`<${Room} color=${ROSA} tabs=${false} headH=${150}
-    rally=${html`<${Rally} pose="moneta" w=${200} alt="" style="position:absolute;right:-10px;top:calc(var(--sat, 0px) + 13px)"/>`}
+    rally=${html`<${Rally} pose="moneta" w=${200} alt="" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div class="o-rowf" style="height:44px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Indietro"/></div>
       <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:14px;max-width:210px"><h1 class="o-h1">Album</h1><${Pill}>${have} figurine su ${all.length}<//></div>`}>
     <${Sheet} pad=${false} style=${{ paddingTop: 18 }}>
@@ -1451,7 +1483,7 @@ function CourseSheetScreen({ nav, course }) {
   const mins = c.lessons.reduce((n, l) => n + l.minutes, 0), started = doneCount(c.lessons) > 0, nx = nextLesson(c);
   const go = () => { s2set(x => ({ cur: c.id, started: Array.from(new Set([...(x.started || []), c.id])) })); if (nx) nav.replace('lezione', { key: nx.key }); else nav.replace('percorso', { course: c.id }); };
   return html`<${Room} color=${c.color || AZ} tabs=${false} headH=${176}
-    rally=${html`<${Rally} pose="insegna" alt="" style="position:absolute;right:-14px;top:calc(var(--sat, 0px) + 36px)"/>`}
+    rally=${html`<${Rally} pose="insegna" alt="" style="position:absolute;right:-14px;top:calc(var(--otop) + 27px)"/>`}
     head=${html`<div class="o-rowf" style="height:44px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Indietro"/></div>
       <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:22px;max-width:190px"><h1 class="o-h1m">${c.name}</h1><${Pill}>${c.tagline}<//></div>`}>
     <${Sheet} pad=${false} style=${{ paddingTop: 24 }}>
@@ -1485,7 +1517,7 @@ function SaveScreen({ nav }) {
   const l = allStickers().find(x => isDone(x.key));
   const link = async p => { setBusy(true); setErr(null); try { await K.upgradeGuest(p); if (p.name) s2set({ name: firstName(p.name) }); nav.back(); } catch (e) { setErr((e && e.message) || 'Non ha funzionato, riprova.'); setBusy(false); } };
   return html`<div class="o-scr" style="background:${AZ}">
-    <div style="position:relative;flex:none;height:calc(var(--sat, 0px) + 236px)">
+    <div style="position:relative;flex:none;height:calc(var(--otop) + 227px)">
       <div class="o-top o-pad"><${IBtn} d=${D_X} onClick=${nav.back} label="Chiudi"/></div>
       <${Rally} pose="telefono" w=${214} alt="Rally con il telefono" style="position:absolute;left:50%;margin-left:-150px;bottom:-34px"/>
       ${l && html`<div class="o-col" style="position:absolute;left:50%;margin-left:44px;bottom:26px;width:104px;padding:6px 6px 10px;gap:6px;background:#fff;border:2.5px solid ${INK};border-radius:16px;box-shadow:4px 4px 0 ${INK};transform:rotate(6deg)">
@@ -1595,6 +1627,7 @@ export function OrdineWelcome({ auth, onAuth }) {
   const [step, setStep] = useState('welcome'), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10);
   const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [mode, setMode] = useState('in');
   ordInjectCss();
+  useOrdFit();
   const enter = async fn => { setBusy(true); setErr(null); try { const r = await fn(); onAuth(r.user, r.data); } catch (e) { setErr((e && e.message) || 'Non ha funzionato, riprova.'); setBusy(false); } };
   const create = () => { s2set(s => ({ onboard: { goal, start, t: Date.now() }, settings: Object.assign({}, s.settings, { goalMin: mins }) })); enter(() => auth.guest()); };
   let body;
@@ -1662,6 +1695,7 @@ export function OrdineApp({ kit }) {
   K = Object.assign({}, kit, { isPro: !!kit.isPro || !!s.pro });
   ordInjectCss();
   kit.useFlScreenLock();
+  useOrdFit();
   const [tab, setTab] = useState('home'), [sub, setSub] = useState('allenati'), [stack, setStack] = useState([]);
   const [calc, setCalc] = useState(false), [ai, setAi] = useState(null), [toast, setToast] = useState(null);
   const nav = useMemo(() => ({
