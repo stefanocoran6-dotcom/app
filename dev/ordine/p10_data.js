@@ -7,13 +7,44 @@
 const BASI = {
   id: 'basi', name: 'Basi della finanza', badge: '€', color: AZ, group: 'basi', ready: true, pace: 48,
   tagline: 'Per chi parte da zero',
-  learn: ['Come lavorano interessi, inflazione e tempo', 'Cosa sono azioni, obbligazioni, fondi ed ETF', 'Quanto pesano rischio, costi e debiti', 'Come si leggono un bilancio e le notizie di economia'],
+  learn: ['Come lavorano interessi, inflazione e tempo', 'Come tenere in ordine entrate, uscite e risparmio', 'Quanto costano i debiti e come proteggersi da imprevisti e truffe', 'Cosa sono azioni, obbligazioni, fondi ed ETF, e come si investe un po\' alla volta', 'Quali errori fa la nostra testa quando investe', 'Come si leggono un bilancio e le notizie di economia'],
   units: BASI_UNITS.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
 };
 // Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
+// La chiave è la parola in minuscolo, come compare in grassetto nelle lezioni; le forme diverse (singolare, plurale) stanno in GLOSS_ALIAS.
 const GLOSS_DEF = {
-  capitale: ['Capitale', 'La somma che ti viene prestata, senza contare gli interessi. È il debito vero e proprio da restituire.'],
-  interessi: ['Interessi', 'Il compenso che paghi a chi ti presta dei soldi, per il tempo in cui li tieni. Si calcolano come percentuale di quello che devi ancora.'],
+  // ---- i soldi nel tempo ----
+  'mezzo di scambio': ['Mezzo di scambio', 'Uno dei tre lavori dei soldi: li dai in cambio di quello che ti serve, senza dover barattare una cosa con un\'altra.'],
+  'unità di conto': ['Unità di conto', 'Uno dei tre lavori dei soldi: fanno da metro per misurare e confrontare i prezzi.'],
+  'riserva di valore': ['Riserva di valore', 'Uno dei tre lavori dei soldi: conservano valore nel tempo, così puoi guadagnare oggi e spendere più avanti.'],
+  investimenti: ['Investimenti', 'Usare dei soldi oggi per averne di più in futuro, accettando un rischio: per esempio comprando azioni, obbligazioni o quote di un fondo.'],
+  capitale: ['Capitale', 'La somma di partenza, senza contare gli interessi: quella che presti, depositi o investi, oppure quella che ti viene prestata e che devi restituire.'],
+  interessi: ['Interessi', 'Il compenso per l\'uso dei soldi nel tempo. Li ricevi quando presti o depositi dei soldi, li paghi quando li prendi in prestito. Si calcolano come percentuale della somma.'],
+  tasso: ['Tasso', 'L\'interesse espresso in percentuale della somma, di solito per un anno. Un tasso del 5% l\'anno vuol dire 5 € di interesse ogni 100 €, ogni anno.'],
+  'interesse semplice': ['Interesse semplice', 'Interesse calcolato sempre e solo sul capitale di partenza. Gli interessi sono uguali ogni anno.'],
+  montante: ['Montante', 'La cifra finale: il capitale di partenza più gli interessi maturati.'],
+  'interesse composto': ['Interesse composto', 'Interesse calcolato sul capitale più gli interessi già maturati. Gli interessi producono altri interessi, e la cifra cresce sempre più in fretta.'],
+  inflazione: ['Inflazione', 'L\'aumento generale dei prezzi nel tempo. Con un\'inflazione del 3% l\'anno, quello che oggi costa 100 € tra un anno costa in media 103 €.'],
+  paniere: ['Paniere', 'L\'elenco di beni e servizi che rappresenta la spesa tipica delle famiglie. Si usa per misurare di quanto salgono i prezzi.'],
+  'potere d\'acquisto': ['Potere d\'acquisto', 'Quante cose puoi comprare con una certa cifra. Se i prezzi salgono e la cifra resta ferma, il potere d\'acquisto scende.'],
+  'tasso nominale': ['Tasso nominale', 'Il tasso scritto sul contratto: dice di quanto cresce la cifra, senza tenere conto dell\'inflazione.'],
+  'tasso reale': ['Tasso reale', 'Il tasso al netto dell\'inflazione: dice di quanto cresce davvero quello che puoi comprare. Vale circa tasso nominale meno inflazione.'],
+  // ---- entrate e uscite ----
+  entrate: ['Entrate', 'I soldi che ti arrivano in un periodo: stipendio, pensione, affitti incassati.'],
+  uscite: ['Uscite', 'I soldi che spendi in un periodo, dalle bollette al caffè.'],
+  saldo: ['Saldo', 'La differenza tra entrate e uscite. Se è positivo ti avanza qualcosa, se è negativo hai speso più di quanto hai guadagnato.'],
+  'spese fisse': ['Spese fisse', 'Le spese che tornano ogni mese con la stessa cifra o quasi, come affitto, bollette e abbonamenti.'],
+  'spese variabili': ['Spese variabili', 'Le spese che cambiano da un mese all\'altro e dipendono da quello che fai, come la spesa, le cene fuori e i vestiti.'],
+  risparmio: ['Risparmio', 'La parte delle entrate che non spendi e metti da parte.'],
+  budget: ['Budget', 'Un piano che decide prima come userai i soldi del mese: quanto alle spese e quanto al risparmio.'],
+  bisogni: ['Bisogni', 'Le spese di cui non puoi fare a meno: casa, bollette, cibo, trasporti per andare al lavoro.'],
+  desideri: ['Desideri', 'Le spese che rendono la vita più piacevole ma che potresti ridurre: cene fuori, viaggi, abbonamenti.'],
+  'fondo di emergenza': ['Fondo di emergenza', 'Una somma tenuta da parte solo per gli imprevisti, di solito pari a 3-6 mesi di spese, su un conto da cui puoi ritirarla subito.'],
+  liquido: ['Liquido', 'Si dice di soldi o investimenti che puoi usare in poco tempo e senza perderci. Il conto corrente è liquido, una casa no.'],
+  'liquidità': ['Liquidità', 'Quanto in fretta puoi trasformare qualcosa in denaro senza perderci. Si chiamano liquidità anche i soldi pronti da usare.'],
+  'conto corrente': ['Conto corrente', 'Il conto di tutti i giorni: serve per incassare lo stipendio e per pagare. Rende poco o niente.'],
+  'conto deposito': ['Conto deposito', 'Un conto fatto per lasciare ferma una somma in cambio di un interesse. Può essere libero, se ritiri quando vuoi, oppure vincolato per un certo tempo.'],
+  // ---- debiti e prestiti ----
   rata: ['Rata', 'La cifra che versi a ogni scadenza per restituire un prestito. Dentro ci sono una parte di interessi e una parte di capitale.'],
   'quota interessi': ['Quota interessi', 'La parte della rata che paga gli interessi di quel periodo. Non fa scendere il debito.'],
   'quota capitale': ['Quota capitale', 'La parte della rata che restituisce un pezzo del prestito. È quella che fa scendere il debito.'],
@@ -26,9 +57,74 @@ const GLOSS_DEF = {
   'tasso fisso': ['Tasso fisso', 'Un tasso che resta uguale per tutta la durata del prestito. Anche la rata non cambia.'],
   'tasso variabile': ['Tasso variabile', 'Un tasso che segue un tasso di riferimento del mercato: quando quello sale o scende, cambia anche la tua rata.'],
   spread: ['Spread', 'La maggiorazione fissa che la banca aggiunge al tasso di riferimento. È il suo guadagno sul prestito.'],
-  revolving: ['Carta revolving', 'Una carta di credito che ti fa restituire le spese a rate, pagando interessi sul debito che resta. Il tasso è spesso alto.']
+  revolving: ['Carta revolving', 'Una carta di credito che ti fa restituire le spese a rate, pagando interessi sul debito che resta. Il tasso è spesso alto.'],
+  // ---- proteggersi ----
+  assicurazione: ['Assicurazione', 'Un accordo in cui paghi una cifra piccola e certa a una compagnia, che in cambio ti risarcisce se subisci un danno previsto dal contratto.'],
+  premio: ['Premio', 'Il prezzo dell\'assicurazione: la cifra che paghi alla compagnia, di solito una volta l\'anno.'],
+  indennizzo: ['Indennizzo', 'La somma che la compagnia di assicurazione ti paga quando subisci un danno coperto dalla polizza.'],
+  polizza: ['Polizza', 'Il contratto di assicurazione. Dice che cosa è coperto, quanto paghi e quanto ricevi in caso di danno.'],
+  esclusioni: ['Esclusioni', 'I casi in cui la polizza non paga, scritti nel contratto. Sono la parte da leggere con più attenzione.'],
+  franchigia: ['Franchigia', 'La parte fissa di ogni danno che resta a carico tuo. Con una franchigia di 500 €, su un danno di 3.000 € la compagnia ne paga 2.500.'],
+  scoperto: ['Scoperto', 'La parte di ogni danno che resta a carico tuo, espressa in percentuale. Con uno scoperto del 10%, su un danno di 3.000 € paghi tu 300 €.'],
+  massimale: ['Massimale', 'La cifra più alta che la compagnia paga per un danno. La parte che supera il massimale resta a carico tuo.'],
+  'responsabilità civile': ['Responsabilità civile', 'L\'obbligo di risarcire i danni che fai ad altre persone o alle loro cose. L\'assicurazione che la copre si indica con la sigla RC.'],
+  'rc auto': ['RC auto', 'L\'assicurazione obbligatoria per chi guida: paga i danni che fai agli altri con il tuo veicolo.'],
+  'schema ponzi': ['Schema Ponzi', 'Una truffa in cui non esiste nessun investimento: i guadagni pagati ai primi arrivati sono i soldi versati da chi entra dopo. Quando i nuovi arrivi finiscono, crolla.'],
+  // ---- gli strumenti ----
+  azioni: ['Azioni', 'Quote di proprietà di un\'azienda. Rendono con i dividendi e con l\'aumento del prezzo, ma niente è garantito.'],
+  dividendo: ['Dividendo', 'La parte di utile che un\'azienda distribuisce ai suoi soci, cioè a chi possiede le azioni.'],
+  obbligazioni: ['Obbligazioni', 'Prestiti fatti a un\'azienda o a uno Stato. In cambio ricevi interessi a scadenze fisse, le cedole, e il rimborso del capitale alla scadenza.'],
+  cedola: ['Cedola', 'L\'interesse che un\'obbligazione paga a scadenze fisse, per esempio una volta l\'anno.'],
+  rimborso: ['Rimborso', 'La restituzione del capitale prestato, alla scadenza dell\'obbligazione.'],
+  'fondo comune': ['Fondo comune', 'Uno strumento che raccoglie i soldi di tanti risparmiatori e li investe in molti titoli insieme. Chi partecipa possiede quote del fondo.'],
+  quote: ['Quote', 'Le parti uguali in cui è diviso un fondo. Chi investe in un fondo compra quote, e il valore di ogni quota cambia nel tempo.'],
+  etf: ['ETF', 'Un fondo che si compra e si vende in borsa come un\'azione. Di solito replica un indice, cioè un paniere di titoli scelto con una regola fissa, e costa poco.'],
+  // ---- rischio, tempo e costi ----
+  rischio: ['Rischio', 'La possibilità che il risultato sia diverso da quello atteso, in meglio o in peggio. Più è alto, più i risultati possono allontanarsi dalla media.'],
+  diversificare: ['Diversificare', 'Dividere i soldi tra tanti investimenti diversi, così il guaio di uno solo pesa poco sul totale.'],
+  'orizzonte temporale': ['Orizzonte temporale', 'Il tempo che passa prima che i soldi investiti ti servano. Più è lungo, più oscillazioni puoi sopportare.'],
+  lordo: ['Lordo', 'Prima di togliere costi e tasse.'],
+  netto: ['Netto', 'Quello che resta dopo aver tolto costi e tasse.'],
+  // ---- investire passo passo ----
+  pic: ['PIC', 'Piano di investimento del capitale: investi una somma in una volta sola.'],
+  pac: ['PAC', 'Piano di accumulo del capitale: investi una cifra fissa a scadenze regolari, di solito ogni mese.'],
+  'prezzo medio di carico': ['Prezzo medio di carico', 'Quanto ti è costata in media ogni quota o azione: il totale versato diviso il numero di quote che possiedi. È il tuo punto di pareggio.'],
+  'asset allocation': ['Asset allocation', 'Come dividi i tuoi soldi tra tipi diversi di investimento, per esempio quanta parte in azioni e quanta in obbligazioni.'],
+  ribilanciare: ['Ribilanciare', 'Riportare il portafoglio alla divisione che avevi scelto, vendendo un po\' di quello che è salito e comprando quello che è rimasto indietro.'],
+  // ---- la testa dell'investitore ----
+  'avversione alle perdite': ['Avversione alle perdite', 'La tendenza a soffrire per una perdita più di quanto si gode per un guadagno della stessa misura: circa il doppio.'],
+  fomo: ['FOMO', 'Dall\'inglese fear of missing out: la paura di restare fuori da un guadagno che gli altri stanno facendo.'],
+  'effetto gregge': ['Effetto gregge', 'La tendenza a fare una cosa perché la fanno tutti, senza chiedersi se ha senso.'],
+  bolla: ['Bolla', 'Una fase in cui i prezzi salgono molto più del valore reale di quello che si compra, spinti dall\'entusiasmo. Finisce con un calo brusco.'],
+  'eccesso di fiducia': ['Eccesso di fiducia', 'La tendenza a credersi più bravi o più informati della media. Negli investimenti porta a rischiare troppo e a comprare e vendere troppo spesso.'],
+  commissione: ['Commissione', 'Il compenso che paghi a un intermediario per un servizio, per esempio a ogni acquisto o vendita di titoli.'],
+  // ---- leggere un'azienda ----
+  'stato patrimoniale': ['Stato patrimoniale', 'Il documento che fotografa un\'azienda in un giorno preciso: che cosa possiede, che cosa deve ad altri e che cosa resta ai soci.'],
+  'attività': ['Attività', 'Quello che un\'azienda possiede: cassa, magazzino, impianti, crediti verso i clienti.'],
+  'passività': ['Passività', 'Quello che un\'azienda deve ad altri: debiti con banche, fornitori, fisco.'],
+  'patrimonio netto': ['Patrimonio netto', 'Quello che resta ai soci di un\'azienda una volta pagati tutti i debiti: attività meno passività.'],
+  'conto economico': ['Conto economico', 'Il documento che racconta un periodo, di solito un anno: quanto l\'azienda ha incassato, quanto ha speso e quanto le è rimasto.'],
+  ricavi: ['Ricavi', 'Quello che un\'azienda incassa vendendo i suoi prodotti o servizi.'],
+  costi: ['Costi', 'Quello che si spende per ottenere qualcosa. Per un\'azienda sono materie prime, stipendi, affitti; per chi investe sono commissioni e spese di gestione.'],
+  utile: ['Utile', 'Quello che resta a un\'azienda dopo aver tolto i costi dai ricavi.'],
+  'margine lordo': ['Margine lordo', 'I ricavi meno il costo dei prodotti venduti. Dice quanto resta prima di pagare stipendi, affitti e le altre spese di struttura.'],
+  'risultato operativo': ['Risultato operativo', 'Quello che l\'azienda guadagna dalla sua attività, prima di pagare interessi e imposte.'],
+  'utile netto': ['Utile netto', 'Quello che resta all\'azienda dopo aver tolto tutto: costi, interessi e imposte.'],
+  'margine netto': ['Margine netto', 'L\'utile netto diviso i ricavi: quanti centesimi restano all\'azienda per ogni euro venduto.'],
+  competenza: ['Competenza', 'La regola per cui ricavi e costi si registrano quando nascono, non quando i soldi entrano o escono.'],
+  ammortamento: ['Ammortamento', 'La quota del costo di un bene che dura più anni, come un macchinario, contata in ogni anno in cui viene usato.'],
+  'rendiconto finanziario': ['Rendiconto finanziario', 'Il documento che mostra i movimenti di cassa veri di un\'azienda: i soldi entrati e quelli usciti.'],
+  'p/e': ['P/E', 'Il rapporto tra il prezzo di un\'azione e l\'utile per azione: quanti euro paghi per ogni euro di utile annuo.'],
+  // ---- l'economia intorno ----
+  'banca centrale': ['Banca centrale', 'L\'istituzione che gestisce la moneta di un Paese o di un\'area, come la BCE per l\'euro. Decide i tassi di riferimento per tenere stabili i prezzi.'],
+  'tassi di riferimento': ['Tassi di riferimento', 'I tassi decisi dalla banca centrale. Da questi dipendono, a cascata, i tassi di mutui, prestiti e conti deposito.'],
+  'tasso di cambio': ['Tasso di cambio', 'Il prezzo di una moneta espresso in un\'altra. Se il cambio euro/dollaro è 1,10, con 1 € compri 1,10 $.'],
+  'rischio di cambio': ['Rischio di cambio', 'Il rischio di guadagnare o perdere perché cambia il valore della moneta in cui hai investito.'],
+  pil: ['PIL', 'Prodotto interno lordo: il valore di tutti i beni e i servizi prodotti in un Paese in un anno. È il termometro dell\'economia.'],
+  recessione: ['Recessione', 'Una fase in cui l\'economia si restringe. La regola pratica: il PIL scende per due trimestri consecutivi.']
 };
-const GLOSS_ALIAS = { interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile' };
+const GLOSS_ALIAS = { interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile', 'interessi sugli interessi': 'interesse composto', azione: 'azioni', obbligazione: 'obbligazioni',
+  rc: 'responsabilità civile', 'prezzo/utili': 'p/e', esclusione: 'esclusioni', quota: 'quote', 'schema di ponzi': 'schema ponzi', investimento: 'investimenti', commissioni: 'commissione', 'spesa fissa': 'spese fisse', 'spesa variabile': 'spese variabili' };
 const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?()«»“”]/g, '').replace(/\s+/g, ' ').trim(); return GLOSS_DEF[k] ? k : GLOSS_ALIAS[k] || null; };
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
 

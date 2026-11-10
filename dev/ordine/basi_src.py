@@ -1,4 +1,4 @@
-# Contenuti del percorso "Basi della finanza": 24 lezioni in 6 unità. Scrive basi.json, che build.sh inserisce in ordine.js.
+# Contenuti del percorso "Basi della finanza": 40 lezioni in 10 unità. Scrive basi.json, che build.sh inserisce in ordine.js.
 # Ogni lezione: pagine (titolo + testo), una frase "In breve", esercizi (scelta tra tre risposte, oppure abbina le coppie).
 # Le lezioni a passi corti (LF) alternano pagine brevi e cose da fare: stima, leve, metti a posto, metti in ordine, calcola.
 # Nel testo: **grassetto**, righe che iniziano con "• ", tabelle con |, formule tra $$ ... $$ (su una riga a sé) o \( ... \).
@@ -45,89 +45,205 @@ def LF(key, sym, title, minutes, flow, note):         # lezione a passi: domande
         else: fl.append(s)
     return dict(key=key, sym=sym, title=title, minutes=minutes, flow=fl, note=note, ex=ex, pages=[])
 
-U1 = dict(id='basi-u1', sid='basi-s1', name='I soldi nel tempo', lessons=[
-  L('basi-1-1', '€', 'A cosa servono i soldi', 4, [
-    ('Tre lavori in uno', r'''
-I soldi fanno tre lavori.
+# colori fissi nei disegni: interessi, costi e perdite in pesca; capitale e quello che resta in azzurro; risparmio e guadagni in menta
+INT, CAP, OK = 'pesca', 'az', 'menta'
 
-• **Mezzo di scambio**: li dai in cambio di quello che ti serve, senza dover barattare.
-• **Unità di conto**: sono il metro con cui confronti i prezzi. Un caffè costa 1,30 €, un libro 18 €.
-• **Riserva di valore**: li metti da parte oggi per spenderli domani.'''),
-    ('Il terzo lavoro è il più fragile', r'''
-Come riserva di valore i soldi non sono perfetti: se i prezzi salgono, con la stessa cifra compri meno cose.
+# Unità 1, a passi corti come "Debiti e prestiti": è la prima che vede chi arriva da fuori, quindi ogni parola nuova è spiegata quando compare.
+U1 = dict(id='basi-u1', sid='basi-tempo', name='I soldi nel tempo', lessons=[
+  LF('basi-1-1', '€', 'A cosa servono i soldi', 5, [
+    G("Metti 100 € in un cassetto. Oggi un caffè al bar costa 1 €. Tra vent'anni, immagina, ne costa 2. Quanti caffè compri tra vent'anni con quei 100 €?",
+      "Oggi con 100 € compri 100 caffè. Se il prezzo raddoppia, gli stessi 100 € ne comprano **50**. La banconota nel cassetto non è cambiata: è cambiato quello che ci puoi fare. I soldi fanno tre lavori, e questo è il più delicato.",
+      lo=0, hi=100, step=5, truth=50, near=5, unit='caffè'),
+    P('Tre lavori in uno', r'''
+**I soldi in sé non valgono nulla: valgono per quello che ti permettono di fare.**
 
-È il motivo per cui esistono **interessi** e **investimenti**: servono a far sì che i soldi messi da parte non perdano terreno.''')],
-    "I soldi servono per pagare, per misurare i prezzi e per conservare valore. Il terzo lavoro è quello che l'inflazione mette alla prova.",
-    [Q('Metti 500 € in un cassetto per comprare una bici tra un anno. Quale lavoro stai chiedendo ai soldi?', ['Mezzo di scambio', 'Unità di conto', 'Riserva di valore'], 2,
-       'Li stai conservando per spenderli più avanti: è la funzione di **riserva di valore**. Diventeranno mezzo di scambio solo il giorno in cui paghi la bici.')]),
-  L('basi-1-2', '%', 'Interesse semplice', 4, [
-    ('Il prezzo del tempo', r'''
-Se presti dei soldi, chi li riceve ti paga un compenso: l'**interesse**. Si misura con un **tasso**, cioè una percentuale all'anno.
+Fanno tre lavori diversi.
 
-Con l'**interesse semplice** il tasso si applica sempre e solo alla cifra di partenza, il **capitale**.'''),
-    ('Un esempio', r'''
-Presti 1.000 € al 5% l'anno per 3 anni.
+• **Mezzo di scambio.** Li dai in cambio di quello che ti serve. Senza soldi dovresti barattare: il panettiere che vuole un paio di scarpe dovrebbe trovare un calzolaio che ha voglia di pane.
+• **Unità di conto.** Sono il metro con cui si misurano i prezzi. Un caffè costa 1,30 €, un libro 18 €: puoi confrontarli perché usano la stessa misura.
+• **Riserva di valore.** Ti permettono di spostare il valore nel tempo: guadagni oggi, spendi domani.
 
-• Ogni anno maturi 1.000 × 5% = **50 €**.
-• In 3 anni: 50 × 3 = **150 €** di interessi.
-• Alla fine hai 1.000 + 150 = **1.150 €**.
+I primi due lavori li vedi ogni giorno, quando paghi e quando guardi un prezzo. Il terzo si vede solo con il passare degli anni.'''),
+    BK('Quale lavoro stanno facendo i soldi?', ['Mezzo di scambio', 'Unità di conto', 'Riserva di valore'], [
+      ('Paghi la spesa alla cassa', 0, 'Dai soldi in cambio di cose: è lo scambio.'),
+      ('Confronti il prezzo di due telefoni', 1, 'Usi i soldi come metro per misurare.'),
+      ('Metti da parte 200 € per le vacanze', 2, 'Sposti valore da oggi a domani.'),
+      ('Ricevi lo stipendio per il tuo lavoro', 0, 'Scambi il tuo lavoro con dei soldi.'),
+      ("Leggi che un'auto costa 15.000 €", 1, 'Il prezzo è una misura espressa in soldi.'),
+      ('Tieni 1.000 € sul conto per gli imprevisti', 2, 'Li conservi per usarli più avanti.')]),
+    P('Il lavoro più fragile', r'''
+Dei tre lavori, il terzo è quello che i soldi fanno peggio.
+
+Come mezzo di scambio e come unità di conto funzionano sempre. Come riserva di valore hanno un nemico: i prezzi che salgono.
+
+Torna ai 100 € nel cassetto.
+
+[fig]
+
+Dopo vent'anni la banconota è la stessa, ma compra la metà. Tenere i soldi fermi sembra la scelta più sicura, perché la cifra non scende mai. In realtà è una perdita lenta, che non si vede.
+
+Tutto il resto di questo percorso parte da qui. Gli **interessi** e gli **investimenti** esistono per questo: far sì che i soldi messi da parte non perdano terreno, e se possibile ne guadagnino.''',
+      fig=F([('Oggi, con il caffè a 1 €', '100 caffè', [(100, 'Quello che comprano 100 €', CAP)]),
+             ("Tra vent'anni, con il caffè a 2 €", '50 caffè', [(50, 'Quello che comprano gli stessi 100 €', INT)])])),
+    Q('Metti 500 € in un cassetto per comprare una bici tra un anno. Quale lavoro stai chiedendo ai soldi?', ['Mezzo di scambio', 'Unità di conto', 'Riserva di valore'], 2,
+      'Li stai conservando per spenderli più avanti: è la funzione di **riserva di valore**. Diventeranno mezzo di scambio solo il giorno in cui paghi la bici.'),
+    Q('Perché i soldi tenuti per molti anni in un cassetto non sono una riserva di valore perfetta?', ['Perché le banconote scadono', 'Perché se i prezzi salgono comprano meno cose', 'Perché la banca li tassa'], 1,
+      'La cifra resta la stessa, ma se nel frattempo i prezzi salgono con quella cifra compri **meno cose**. Le banconote non scadono, e nel cassetto la banca non c\'entra.'),
+  ], 'I soldi servono per pagare, per misurare i prezzi e per conservare valore. Il terzo lavoro è il più fragile: se i prezzi salgono, i soldi fermi comprano meno.'),
+
+  LF('basi-1-2', '%', 'Interesse semplice', 6, [
+    G("Presti 1.000 € a un amico per 3 anni. Vi accordate così: ogni anno ti paga il 5% della cifra prestata, e alla fine ti restituisce i 1.000 €. Quanto incassi in più, in tutto?",
+      "Il 5% di 1.000 € è 50 € l'anno. In tre anni: 50 × 3 = **150 €**. Quel compenso ha un nome, interesse, e il modo in cui lo avete calcolato si chiama interesse semplice.",
+      lo=0, hi=500, step=10, truth=150, near=15),
+    P('Il prezzo del tempo', r'''
+**Chi presta dei soldi rinuncia a usarli per un po'. L'interesse è il compenso per quella rinuncia.**
+
+Quando presti 1.000 € a qualcuno, per tutta la durata del prestito quei soldi non sono a tua disposizione, e corri il rischio che non tornino. In cambio chiedi un compenso: l'**interesse**.
+
+L'interesse si misura con un **tasso**: una percentuale della cifra prestata, di solito riferita a un anno. Un tasso del 5% l'anno vuol dire 5 € di interesse per ogni 100 € prestati, per ogni anno.
+
+La cifra prestata si chiama **capitale**.
+
+Funziona nei due sensi. Quando depositi soldi in banca sei tu che presti, e gli interessi li ricevi. Quando chiedi un prestito, li paghi.'''),
+    P('Sempre sulla cifra di partenza', r'''
+Con l'**interesse semplice** il tasso si applica sempre e solo al capitale di partenza. Per questo gli interessi sono uguali ogni anno.
+
+Ecco i 1.000 € prestati al 5% l'anno per 3 anni:
+
+[fig]
+
+Alla fine hai 1.000 + 150 = **1.150 €**. La cifra finale, capitale più interessi, si chiama **montante**.
+
+Il conto si può scrivere in una riga:
 
 $$I = C \times i \times t$$
 
-Dove \(C\) è il capitale, \(i\) il tasso annuo e \(t\) gli anni.''')],
-    'Interesse semplice: capitale × tasso × anni. Gli interessi sono uguali ogni anno.',
-    [Q("Presti 2.000 € al 3% l'anno, a interesse semplice, per 4 anni. Quanti interessi maturi in tutto?", ['60 €', '240 €', '251 €'], 1,
-       "Ogni anno: 2.000 × 3% = 60 €. In 4 anni: 60 × 4 = **240 €**. La risposta 60 € è un solo anno; 251 € è l'interesse composto, che vediamo nella prossima lezione.")]),
-  L('basi-1-3', '%%', "L'interesse composto", 5, [
-    ("L'interesse composto", "Ogni anno gli interessi si sommano al capitale. L'anno dopo fruttano anche loro.", 'compound'),
-    ('La formula', r'''
+Dove \(I\) sono gli interessi, \(C\) il capitale, \(i\) il tasso annuo e \(t\) il numero di anni. Qui: 1.000 × 5% × 3 = 150 €.''',
+      fig=F([('Dopo 3 anni', '1.150 €', [(1000, 'Capitale', CAP, '1.000 €'), (50, 'Anno 1', INT, '50 €'), (50, 'Anno 2', INT, '50 €'), (50, 'Anno 3', INT, '50 €')])],
+            cap='Tre pezzi di interessi tutti uguali, perché si calcolano sempre sui 1.000 € di partenza.')),
+    N("Presti 2.000 € al 3% l'anno, a interesse semplice. Quanti interessi maturi in un anno?", 60, '€',
+      "2.000 × 3% = **60 €**. Con l'interesse semplice saranno 60 € anche il secondo anno, il terzo e tutti gli altri."),
+    N("Stesso prestito: 2.000 € al 3% l'anno, a interesse semplice, per 4 anni. Qual è il montante alla fine?", 2240, '€',
+      "Interessi: 60 € l'anno per 4 anni = 240 €. Montante: 2.000 + 240 = **2.240 €**."),
+    M(('Capitale', 'La cifra prestata o depositata'), ('Interesse', 'Il compenso per chi presta'), ('Tasso', "L'interesse in percentuale, per un anno"), ('Montante', 'Capitale più interessi')),
+    Q("Depositi 5.000 € al 2% l'anno, a interesse semplice, per 3 anni. Quanti interessi maturi in tutto?", ['100 €', '300 €', '306 €'], 1,
+      "Ogni anno: 5.000 × 2% = 100 €. In 3 anni: 100 × 3 = **300 €**. La risposta 100 € è un solo anno; 306 € è quello che darebbe l'interesse composto, che vediamo nella prossima lezione."),
+    Q("Che cosa dice un tasso del 4% l'anno?", ['Che il prestito dura 4 anni', "Che ogni anno l'interesse è 4 € per ogni 100 € di capitale", 'Che alla fine si restituiscono 4 € in tutto'], 1,
+      "Il tasso è l'interesse in percentuale del capitale, per un anno: al 4%, **4 € ogni 100 €, ogni anno**. Su 1.000 € sono 40 € l'anno."),
+  ], 'Interesse semplice: capitale × tasso × anni. Gli interessi sono uguali ogni anno.'),
+
+  LF('basi-1-3', '%%', "L'interesse composto", 7, [
+    G("Metti 1.000 € al 5% l'anno e non li tocchi per 30 anni. Ogni anno gli interessi restano lì e fruttano anche loro. Quanto trovi alla fine?",
+      "Con l'interesse semplice avresti 1.000 + 50 × 30 = 2.500 €. Lasciando lavorare anche gli interessi arrivi a circa **4.322 €**. La differenza, più di 1.800 €, sono interessi guadagnati su altri interessi.",
+      lo=1000, hi=8000, step=100, truth=4322, near=300),
+    P('Interessi sugli interessi', r'''
+**Con l'interesse composto gli interessi non restano da parte: si aggiungono al capitale e cominciano a rendere anche loro.**
+
+Parti da 1.000 € al 5% l'anno.
+
+• **Anno 1**: 5% di 1.000 € = 50 €. Hai 1.050 €.
+• **Anno 2**: il 5% si calcola su 1.050 €, non più su 1.000. Sono 52,50 €. Hai 1.102,50 €.
+• **Anno 3**: 5% di 1.102,50 € = 55,13 €. Hai 1.157,63 €.
+
+[fig]
+
+Ogni anno gli interessi sono un po' più alti dell'anno prima, perché si calcolano su una cifra che cresce. All'inizio la differenza con l'interesse semplice è di pochi euro. Con il passare del tempo diventa enorme.''',
+      fig=F([("Interessi dell'anno 1", '50,00 €', [(50, 'Sul capitale di partenza', INT)]),
+             ("Interessi dell'anno 2", '52,50 €', [(50, 'Sul capitale di partenza', INT), (2.5, 'Sugli interessi di prima', CAP)]),
+             ("Interessi dell'anno 3", '55,13 €', [(50, 'Sul capitale di partenza', INT), (5.13, 'Sugli interessi di prima', CAP)])])),
+    P('Guardalo crescere', "Muovi il cursore degli anni. Le colonne mostrano tre pezzi: i tuoi soldi, gli interessi sui tuoi soldi e gli interessi sugli interessi. Guarda quale dei tre cresce di più quando gli anni aumentano.", widget='compound'),
+    P('Conta più il tempo della cifra', r'''
 Dopo \(t\) anni al tasso \(i\) il capitale \(C\) diventa:
 
 $$M = C \times (1 + i)^t$$
 
-Con 1.000 € al 5%:
+Al 5% ogni anno la cifra si moltiplica per 1,05. Dopo due anni l'hai moltiplicata due volte, dopo trent'anni trenta volte.
 
-• dopo 1 anno: 1.000 × 1,05 = **1.050 €**
-• dopo 2 anni: 1.050 × 1,05 = **1.102,50 €**
-• dopo 20 anni: 1.000 × 1,05²⁰ = **2.653 €**
+Ecco 1.000 € al 5% l'anno, con l'interesse semplice e con quello composto:
 
-A interesse semplice dopo 20 anni avresti 2.000 €: i 653 € in più sono **interessi sugli interessi**.''')],
-    "Conta più il tempo della cifra di partenza: gli interessi sugli interessi crescono piano all'inizio e in fretta dopo.",
-    [Q("Metti 1.000 € al 5% l'anno. Quanto hai dopo 2 anni?", ['1.100,00 €', '1.102,50 €', '1.050,00 €'], 1,
-       'Il primo anno arrivi a 1.050 €. Nel secondo anno il 5% si calcola su 1.050 €: sono 52,50 €, non 50. Totale **1.102,50 €**. Chi risponde 1.100 € ha contato il 5% due volte sui 1.000 € di partenza.'),
-     Q("Metti 2.000 € al 4% l'anno con l'interesse composto. Quanto hai dopo 3 anni?", ['2.240,00 €', '2.163,20 €', '2.249,73 €'], 2, r'''
+| Dopo | Semplice | Composto |
+|---|---|---|
+| 1 anno | 1.050 € | 1.050 € |
+| 10 anni | 1.500 € | 1.629 € |
+| 20 anni | 2.000 € | 2.653 € |
+| 30 anni | 2.500 € | 4.322 € |
+
+Nei primi anni le due colonne quasi coincidono. Poi quella di destra scappa via. Per questo chi comincia presto con poco spesso supera chi comincia tardi con molto.'''),
+    N("Metti 2.000 € al 10% l'anno con l'interesse composto. Quanto hai dopo 2 anni?", 2420, '€',
+      "Primo anno: 2.000 × 1,10 = 2.200 €. Secondo anno: 2.200 × 1,10 = **2.420 €**. Con l'interesse semplice saresti a 2.400 €: i 20 € in più sono gli interessi maturati sugli interessi del primo anno."),
+    Q("Metti 1.000 € al 5% l'anno. Quanto hai dopo 2 anni?", ['1.100,00 €', '1.102,50 €', '1.050,00 €'], 1,
+      'Il primo anno arrivi a 1.050 €. Nel secondo anno il 5% si calcola su 1.050 €: sono 52,50 €, non 50. Totale **1.102,50 €**. Chi risponde 1.100 € ha contato il 5% due volte sui 1.000 € di partenza.'),
+    Q("Metti 2.000 € al 4% l'anno con l'interesse composto. Quanto hai dopo 3 anni?", ['2.240,00 €', '2.163,20 €', '2.249,73 €'], 2, r'''
 | Anno | Conto | Fine anno |
 |---|---|---|
 | 1 | 2.000,00 × 1,04 | 2.080,00 |
 | 2 | 2.080,00 × 1,04 | 2.163,20 |
 | 3 | 2.163,20 × 1,04 | 2.249,73 |
 
-L'errore tipico è contare il 4% ogni anno sui 2.000 € di partenza: così arrivi a 2.240 €.''')]),
-  L('basi-1-4', '↑', "L'inflazione", 4, [
-    ('I prezzi che salgono', r'''
-L'**inflazione** è l'aumento generale dei prezzi nel tempo. Se è al 3% l'anno, quello che oggi costa 100 € tra un anno costa in media 103 €.
+L'errore tipico è contare il 4% ogni anno sui 2.000 € di partenza: così arrivi a 2.240 €.'''),
+  ], "Conta più il tempo della cifra di partenza: gli interessi sugli interessi crescono piano all'inizio e in fretta dopo."),
 
-I tuoi soldi non cambiano numero, ma comprano meno cose: scende il **potere d'acquisto**.'''),
-    ('Un esempio', r'''
-Hai 1.000 € fermi sul conto, che rende lo 0%. L'inflazione è al 3%.
+  LF('basi-1-4', '↑', "L'inflazione", 7, [
+    G("Hai 1.000 € fermi in un cassetto. I prezzi salgono del 3% l'anno. Tra 10 anni, quanto comprano quei 1.000 €, misurati con i prezzi di oggi?",
+      "Tra dieci anni quello che oggi costa 1.000 € costerà circa 1.344 €. I tuoi 1.000 € compreranno quindi quello che oggi compri con circa **744 €**. La cifra nel cassetto è la stessa: è il suo valore che è sceso di un quarto.",
+      lo=0, hi=1000, step=10, truth=744, near=30),
+    P('I prezzi che salgono', r'''
+**L'inflazione è l'aumento generale dei prezzi nel tempo.**
 
-• Tra un anno hai ancora 1.000 €.
-• Ma per comprare le stesse cose ne servono 1.030.
-• Il tuo potere d'acquisto è sceso di circa il **3%**.
+Generale vuol dire che non riguarda un solo prodotto. Se sale solo il prezzo delle pesche perché il raccolto è andato male, non è inflazione. Lo è quando sale, in media, il costo di tutto quello che una famiglia compra: cibo, bollette, affitti, trasporti.
 
-In 10 anni, a questo ritmo, 1.000 € comprano quello che oggi compri con circa 744 €.''')],
-    "Con l'inflazione i soldi fermi perdono potere d'acquisto, anche se la cifra sul conto non scende.",
-    [Q("L'inflazione è al 3% l'anno e il tuo conto rende l'1%. Dopo un anno, che cosa è successo al tuo potere d'acquisto?", ["È salito dell'1%", 'È rimasto uguale', 'È sceso di circa il 2%'], 2,
-       "Il conto è cresciuto dell'1%, ma i prezzi del 3%: in termini reali hai perso circa il **2%** (per la precisione 1,01 / 1,03 − 1 = −1,94%).")]),
-  L('basi-1-5', 'r', 'Tasso reale', 4, [
-    ('Nominale e reale', r'''
-Il tasso che leggi sul contratto è il **tasso nominale**. Quello che conta per quanto puoi comprare è il **tasso reale**, cioè il nominale ripulito dall'inflazione.
+Si misura in percentuale all'anno. Un'inflazione del 3% vuol dire che quello che oggi costa 100 €, tra un anno costa in media 103 €.
 
-Per cifre piccole basta una sottrazione:
+Per misurarla si usa un **paniere**: un elenco di beni e servizi che rappresenta la spesa tipica delle famiglie. Ogni mese si guarda quanto costa riempirlo e lo si confronta con un anno prima.'''),
+    P("Il potere d'acquisto", r'''
+Quello che conta dei tuoi soldi non è la cifra, ma che cosa ci puoi comprare. Si chiama **potere d'acquisto**.
 
-$$\text{reale} \approx \text{nominale} - \text{inflazione}$$'''),
-    ('Il conto esatto', r'''
-La formula precisa divide invece di sottrarre:
+Quando i prezzi salgono e la tua cifra resta ferma, il potere d'acquisto scende. Ecco i 1.000 € del cassetto, con l'inflazione al 3% l'anno:
+
+[fig]
+
+Nel cassetto ci sono sempre 1.000 €. Nessuno te li ha tolti. Eppure dopo dieci anni è come se ne avessi 744, e dopo venti 554.
+
+Per questo tenere tutto fermo non è una scelta senza rischi: è la scelta di perdere poco alla volta, con certezza.''',
+      fig=F([('Oggi', '1.000 €', [(1000, "Potere d'acquisto", CAP)]),
+             ('Tra 10 anni', '744 €', [(744, "Potere d'acquisto", CAP), (256, 'Perso', INT)]),
+             ('Tra 20 anni', '554 €', [(554, "Potere d'acquisto", CAP), (446, 'Perso', INT)])], cap="Con l'inflazione al 3% l'anno, misurando tutto con i prezzi di oggi.")),
+    LV("Quanto pesa l'inflazione", 'Hai 1.000 € fermi. Muovi inflazione e anni e guarda quanto comprano, con i prezzi di oggi.', 'inflazione', dict(C=1000),
+      [dict(id='infl', label='Inflazione', min=1, max=8, step=0.5, start=2, unit='%', dec=1), dict(id='anni', label='Anni', min=1, max=40, step=1, start=5, unit='anni')],
+      [dict(label='Trova quando 1.000 € comprano meno di 750 €', cond=[['reale', '<', 750]], hint="Puoi alzare l'inflazione, oppure far passare più anni."),
+       dict(label="Ora dimezza il potere d'acquisto con l'inflazione al 2%", cond=[['reale', '<=', 500], ['infl', '<=', 2]], hint="Riporta l'inflazione al 2% e allunga gli anni: serve molto tempo.")],
+      "Anche un'inflazione bassa, lasciata lavorare per decenni, dimezza il valore dei soldi fermi. Al 2% servono circa 35 anni, al 6% ne bastano 12."),
+    N("Oggi la tua spesa settimanale costa 200 €. Con un'inflazione del 5%, quanto costerà la stessa spesa tra un anno?", 210, '€',
+      '200 × 1,05 = **210 €**: 10 € in più per comprare le stesse cose.'),
+    Q("L'inflazione è al 3% l'anno e il tuo conto rende l'1%. Dopo un anno, che cosa è successo al tuo potere d'acquisto?", ["È salito dell'1%", 'È rimasto uguale', 'È sceso di circa il 2%'], 2,
+      "Il conto è cresciuto dell'1%, ma i prezzi del 3%: in termini reali hai perso circa il **2%** (per la precisione 1,01 / 1,03 − 1 = −1,94%)."),
+    Q("Che cosa misura l'inflazione?", ["L'aumento medio dei prezzi di tutto quello che le famiglie comprano", "L'aumento del prezzo di un solo prodotto", 'Quanto rende un conto in banca'], 0,
+      "L'inflazione guarda l'insieme dei prezzi, attraverso un paniere di beni e servizi. Se sale un solo prodotto e gli altri restano fermi, non è inflazione."),
+  ], "Con l'inflazione i soldi fermi perdono potere d'acquisto, anche se la cifra sul conto non scende."),
+
+  LF('basi-1-5', 'r', 'Tasso reale', 6, [
+    G("La banca A ti offre il 2% l'anno in un periodo in cui i prezzi salgono dell'1%. La banca B ti offre il 5% in un periodo in cui i prezzi salgono del 6%. In quale caso, a fine anno, puoi comprare più cose di prima?",
+      "Con A i tuoi soldi crescono del 2% e i prezzi dell'1%: alla fine compri circa l'1% in più. Con B crescono del 5%, ma i prezzi del 6%: compri circa l'1% in meno, anche se sul conto vedi una cifra più alta. Conta il tasso tolta l'inflazione: si chiama tasso reale.",
+      options=['Con la banca A', 'Con la banca B', 'In tutti e due i casi'], ans=0),
+    P('Nominale e reale', r'''
+**Un tasso di interesse da solo non dice se stai guadagnando: bisogna confrontarlo con l'inflazione.**
+
+Il tasso che leggi sul contratto si chiama **tasso nominale**: dice di quanto cresce la cifra.
+
+Il **tasso reale** dice invece di quanto cresce il tuo potere d'acquisto, cioè quello che puoi comprare. È il tasso nominale ripulito dall'inflazione.
+
+Per i conti di tutti i giorni basta una sottrazione:
+
+$$\text{reale} \approx \text{nominale} - \text{inflazione}$$
+
+[fig]
+
+Se il tasso reale è positivo, a fine anno puoi comprare più cose. Se è negativo ne puoi comprare meno, anche se la cifra sul conto è salita.''',
+      fig=F([('Banca A: il conto rende', '2%', [(2, 'Tasso nominale', CAP)]), ('Banca A: i prezzi salgono', '1%', [(1, 'Inflazione', INT)]),
+             ('Banca B: il conto rende', '5%', [(5, 'Tasso nominale', CAP)]), ('Banca B: i prezzi salgono', '6%', [(6, 'Inflazione', INT)])],
+            cap='Con A il tasso batte i prezzi: reale circa +1%. Con B perdono i tuoi soldi: reale circa −1%.')),
+    P('Il conto esatto', r'''
+La sottrazione è una buona approssimazione. Il conto preciso divide invece di sottrarre:
 
 $$1 + r = \frac{1 + n}{1 + \pi}$$
 
@@ -138,10 +254,23 @@ Con un nominale del 5% e un'inflazione del 2%:
 • approssimato: 5% − 2% = **3%**
 • esatto: 1,05 / 1,02 − 1 = **2,94%**
 
-Più i tassi sono alti, più la differenza tra i due conti si allarga.''')],
-    'Tasso reale ≈ tasso nominale − inflazione. Se il reale è negativo, stai perdendo potere d\'acquisto.',
-    [Q("Un titolo rende il 4% l'anno e l'inflazione è al 6%. Quanto vale all'incirca il tasso reale?", ['−2%', '+2%', '+10%'], 0,
-       'Reale ≈ 4% − 6% = **−2%**. Il titolo ti paga, ma meno di quanto salgono i prezzi: in termini reali perdi.')]),
+Perché si divide? In un anno 100 € diventano 105 €, ma quello che costava 100 € ora ne costa 102. Con 105 € compri 105 / 102 = 1,0294 volte quello che compravi prima.
+
+Con tassi bassi i due conti quasi coincidono. Più i tassi sono alti, più la differenza si allarga.'''),
+    N("Un conto deposito rende il 3,5% l'anno e l'inflazione è al 2%. Quanto vale all'incirca il tasso reale? Usa la sottrazione.", 1.5, '%',
+      '3,5% − 2% = **1,5%**. Il conto esatto dà 1,035 / 1,02 − 1 = 1,47%.', tol=0.05, dec=1),
+    BK("Il tuo potere d'acquisto sale o scende?", ['Sale', 'Scende'], [
+      ('Tasso 4%, inflazione 1%', 0, 'Reale circa 4% − 1% = +3%.'),
+      ('Tasso 2%, inflazione 5%', 1, 'Reale circa 2% − 5% = −3%.'),
+      ('Tasso 0%, inflazione 2%', 1, "I soldi fermi perdono circa il 2% l'anno."),
+      ('Tasso 6%, inflazione 3%', 0, 'Reale circa 6% − 3% = +3%.'),
+      ('Tasso 7%, inflazione 9%', 1, "Un tasso alto non basta, se l'inflazione è più alta."),
+      ('Tasso 1%, inflazione 0%', 0, 'Senza inflazione tutto il tasso è guadagno reale.')]),
+    Q("Un titolo rende il 4% l'anno e l'inflazione è al 6%. Quanto vale all'incirca il tasso reale?", ['−2%', '+2%', '+10%'], 0,
+      'Reale ≈ 4% − 6% = **−2%**. Il titolo ti paga, ma meno di quanto salgono i prezzi: in termini reali perdi.'),
+    Q('Il tuo stipendio aumenta del 3% in un anno in cui i prezzi salgono del 3%. Che cosa è successo a quello che puoi comprare?', ['È aumentato del 3%', 'È rimasto più o meno uguale', 'È diminuito del 3%'], 1,
+      'Stipendio e prezzi sono saliti allo stesso ritmo: il tuo potere d\'acquisto è rimasto **dov\'era**. Lo stesso ragionamento del tasso reale vale per stipendi, affitti e pensioni.'),
+  ], "Tasso reale ≈ tasso nominale − inflazione. Se il reale è negativo, stai perdendo potere d'acquisto."),
 ])
 
 # Le unità cambiate rispetto alla prima versione hanno un nome di sezione nuovo: così una verifica già superata sulla vecchia unità non vale per quella nuova.
@@ -293,7 +422,6 @@ La differenza è di circa **21.800 €**, più del doppio della cifra investita.
 
 # Unità pilota a passi corti: ogni lezione alterna spiegazioni vere (scritte per chi parte da zero, con un disegno accanto) e cose da fare.
 # Ogni lezione segue una situazione di vita reale dall'inizio alla fine: la stima d'apertura fa la domanda, l'ultima pagina la chiude.
-INT, CAP = 'pesca', 'az'   # colori fissi nei disegni: interessi e costi in pesca, capitale in azzurro
 U4 = dict(id='basi-u4', sid='basi-debiti', name='Debiti e prestiti', lessons=[
   LF('basi-4-1', 'P', 'Come funziona un prestito', 7, [
     G("Ti servono 3.310 € per una moto usata. La banca te li presta al 10% l'anno e tu li restituisci in 3 rate annuali uguali. Quanti interessi le paghi in tutto?",
@@ -657,7 +785,771 @@ Nessuno sa con certezza in che fase siamo finché non è passata. Per questo con
        "Abbassano i tassi, per rendere il credito meno caro e far ripartire consumi e investimenti.")]),
 ])
 
-UNITS = [U1, U2, U3, U4, U5, U6]
+# ---- Unità nuove, tutte a passi corti e scritte per chi parte da zero ----
+# Colori dei disegni in queste unità: bisogni e spese fisse in azzurro, desideri e spese variabili in giallo, risparmio in menta.
+U7 = dict(id='basi-u7', sid='basi-budget', name='Entrate e uscite', lessons=[
+  LF('basi-7-1', '+/−', 'Dove vanno i tuoi soldi', 6, [
+    G("Giulia, nei giorni di lavoro, prende un caffè e un panino al bar: 6 € al giorno, per circa 220 giorni l'anno. Quanto spende in un anno?",
+      "6 € × 220 giorni = **1.320 €**: quasi un mese del suo stipendio, che è di 1.600 €. Non è un invito a rinunciare al caffè. È il motivo per cui conviene sapere dove vanno i soldi: le cifre piccole che si ripetono sono quelle che si vedono meno.",
+      lo=0, hi=3000, step=20, truth=1320, near=150),
+    P('Entrate, uscite, saldo', r'''
+**Per decidere dove mandare i tuoi soldi devi prima sapere dove vanno adesso.**
+
+I soldi che ti arrivano in un mese si chiamano **entrate**: lo stipendio che ricevi sul conto, una pensione, un affitto che incassi.
+
+I soldi che escono si chiamano **uscite**: tutto quello che paghi, dall'affitto al caffè.
+
+La differenza tra le due è il **saldo** del mese:
+
+$$\text{saldo} = \text{entrate} - \text{uscite}$$
+
+Giulia guadagna 1.600 € al mese e ne spende 1.600: il suo saldo è zero. Non ha debiti, ma non mette da parte niente, e non saprebbe dire dove sono finiti.'''),
+    P('Spese fisse e spese variabili', r'''
+Le uscite non sono tutte uguali. Conviene dividerle in due gruppi.
+
+Le **spese fisse** tornano ogni mese con la stessa cifra, o quasi, e non le decidi di volta in volta: l'affitto, le bollette, l'abbonamento del telefono, la rata dell'auto.
+
+Le **spese variabili** cambiano da un mese all'altro e dipendono da quello che fai: la spesa al supermercato, le cene fuori, i vestiti, la benzina.
+
+Ecco il mese di Giulia:
+
+[fig]
+
+Le spese fisse si cambiano di rado, ma quando ci riesci il risparmio si ripete ogni mese senza fatica. Quelle variabili si cambiano subito, ma vanno tenute d'occhio ogni volta.''',
+      fig=F([('Le uscite di Giulia', '1.600 €', [(900, 'Spese fisse', CAP, '900 €'), (700, 'Spese variabili', 'giallo', '700 €')])])),
+    BK('Spesa fissa o variabile?', ['Spesa fissa', 'Spesa variabile'], [
+      ('Affitto', 0, 'È la stessa cifra ogni mese e non la decidi di volta in volta.'),
+      ('Cena al ristorante', 1, "Dipende da quante volte esci: cambia da un mese all'altro."),
+      ('Abbonamento del telefono', 0, 'Si rinnova ogni mese con la stessa cifra.'),
+      ('Vestiti', 1, 'Li compri quando decidi tu, e la cifra cambia ogni volta.'),
+      ("Rata dell'auto", 0, 'È fissata dal contratto: uguale ogni mese.'),
+      ('Benzina', 1, 'Dipende da quanti chilometri fai.'),
+      ('Abbonamento alla palestra', 0, 'Lo paghi ogni mese, che tu ci vada oppure no.')]),
+    N(r'''
+Il mese di Luca:
+
+• stipendio: 1.900 €
+• spese fisse: 1.050 €
+• spese variabili: 620 €
+
+Quanto vale il suo saldo del mese?''', 230, '€',
+      'Uscite: 1.050 + 620 = 1.670 €. Saldo: 1.900 − 1.670 = **230 €**. È quello che Luca può mettere da parte.'),
+    P('Che cosa ti dice il saldo', r'''
+Il saldo è il primo numero da guardare.
+
+• Se è **positivo** ti avanza qualcosa: è la base del tuo **risparmio**.
+• Se è **zero** arrivi a fine mese giusto giusto, e basta un imprevisto per andare sotto.
+• Se è **negativo** stai spendendo più di quello che guadagni: la differenza la paghi con i risparmi di prima, oppure con un debito.
+
+Per conoscere il tuo saldo vero basta un mese di attenzione: segna ogni uscita, anche piccola, poi dividile in fisse e variabili.
+
+Torniamo a Giulia. Caffè e panino le costano 1.320 € l'anno, cioè 110 € al mese. Se metà dei giorni facesse a meno del bar, spenderebbe 55 € in meno al mese: il suo saldo passerebbe da zero a **+55 €**, senza cambiare stipendio.'''),
+    Q('In un mese entrano 2.000 € ed escono 2.150 €. Che cosa è successo?', ['Hai risparmiato 150 €', 'Il saldo è zero', 'Hai speso 150 € più di quanto hai guadagnato'], 2,
+      '2.000 − 2.150 = **−150 €**. Il saldo è negativo: quei 150 € li hai presi dai risparmi di prima, oppure da un debito.'),
+    Q('Quale di queste è una spesa fissa?', ['La spesa al supermercato', "L'abbonamento a internet di casa", 'Un regalo di compleanno'], 1,
+      "L'abbonamento a internet torna ogni mese con la stessa cifra: è una **spesa fissa**. La spesa al supermercato e i regali cambiano di volta in volta: sono spese variabili."),
+  ], 'Saldo = entrate − uscite. Le spese fisse tornano uguali ogni mese, quelle variabili dipendono da quello che fai.'),
+
+  LF('basi-7-2', 'BUD', 'Un budget in tre parti', 7, [
+    G("Una regola semplice dice di dividere lo stipendio in tre parti: metà per quello che ti serve, il 30% per quello che ti piace, il 20% da mettere da parte. Con 1.600 € al mese, quanto finisce da parte ogni mese?",
+      "Il 20% di 1.600 € è **320 €** al mese, cioè 3.840 € in un anno. Vediamo come si costruisce un piano così, e che cosa fare quando i conti non tornano.",
+      lo=0, hi=800, step=10, truth=320, near=30),
+    P('Un piano per i tuoi soldi', r'''
+**Un budget è un piano: decidi prima dove andranno i soldi del mese, invece di scoprirlo alla fine.**
+
+Un modo semplice per farlo è la regola **50/30/20**. Dividi le entrate in tre parti:
+
+• il 50% ai **bisogni**: quello di cui non puoi fare a meno, come casa, bollette, cibo, trasporti per andare al lavoro;
+• il 30% ai **desideri**: quello che rende la vita più piacevole ma che potresti ridurre, come cene fuori, viaggi, abbonamenti;
+• il 20% al **risparmio**.
+
+Con i 1.600 € di Giulia:
+
+[fig]
+
+Non è una legge. È un punto di partenza per vedere se il tuo mese è in equilibrio.''',
+      fig=F([('Lo stipendio di Giulia', '1.600 €', [(800, 'Bisogni', CAP, '800 €'), (480, 'Desideri', 'giallo', '480 €'), (320, 'Risparmio', OK, '320 €')])])),
+    BK('Bisogno o desiderio?', ['Bisogno', 'Desiderio'], [
+      ('Affitto di casa', 0, 'Un tetto serve: è un bisogno.'),
+      ('Bolletta della luce', 0, 'In casa non se ne può fare a meno: è un bisogno.'),
+      ('Abbonamento a una piattaforma di film', 1, 'Fa piacere, ma se serve si può tagliare.'),
+      ('Spesa al supermercato', 0, 'Mangiare è un bisogno. Il ristorante, invece, è un desiderio.'),
+      ('Weekend al mare', 1, 'È un piacere: si può rimandare o ridurre.'),
+      ('Abbonamento del treno per andare al lavoro', 0, 'Ti serve per guadagnare lo stipendio.'),
+      ('Telefono nuovo, con il vecchio che funziona', 1, 'Finché il vecchio funziona, cambiarlo è una scelta.')],
+      after='Il confine non è sempre netto: la spesa è un bisogno, ma nel carrello finiscono anche desideri. Conta essere onesti con sé stessi.'),
+    P('Quando i conti non tornano', r'''
+Nella realtà le tre parti raramente escono giuste al primo colpo. Il mese vero di Giulia è questo:
+
+[fig]
+
+I bisogni le prendono 950 € invece di 800, i desideri 600 € invece di 480. Per il risparmio restano 50 €.
+
+Ha due strade, e può usarle insieme:
+
+• ridurre i **desideri**, che è la via più veloce;
+• ridurre i **bisogni**, che è più lenta ma dura nel tempo: una casa meno cara, una tariffa di luce o telefono più bassa.
+
+C'è poi un trucco che funziona: mettere da parte il risparmio **appena arriva lo stipendio**, con un bonifico automatico, e vivere con quello che resta. Così il risparmio non dipende da quanto avanza a fine mese.''',
+      fig=F([('Il mese vero di Giulia', '1.600 €', [(950, 'Bisogni', CAP, '950 €'), (600, 'Desideri', 'giallo', '600 €'), (50, 'Risparmio', OK, '50 €')])])),
+    LV('Rimetti in equilibrio il mese', 'Giulia guadagna 1.600 € al mese. Muovi bisogni e desideri e guarda quanto resta da mettere da parte.', 'budget', dict(entrate=1600),
+      [dict(id='bisogni', label='Bisogni', min=700, max=1100, step=10, start=950, unit='€'), dict(id='desideri', label='Desideri', min=100, max=700, step=10, start=600, unit='€')],
+      [dict(label='Porta il risparmio ad almeno 320 € al mese', cond=[['risparmio', '>=', 320]], hint='Il modo più veloce è abbassare i desideri.'),
+       dict(label='Ora arriva a 320 € lasciando ai desideri almeno 450 €', cond=[['risparmio', '>=', 320], ['desideri', '>=', 450]], hint='Se i desideri non scendono, devono scendere i bisogni: prova ad abbassarli.')],
+      'Tagliare solo i desideri funziona, ma lascia poco spazio per vivere. Abbassare anche una spesa fissa, come affitto o tariffe, libera soldi ogni mese senza rinunce continue.'),
+    N('Marco guadagna 2.200 € al mese e vuole seguire la regola 50/30/20. Quanto può destinare, al massimo, ai desideri?', 660, '€',
+      'Il 30% di 2.200 € è 2.200 × 0,30 = **660 €**. Ai bisogni vanno 1.100 € e al risparmio 440 €.'),
+    Q('Guadagni 1.800 € al mese. Con la regola 50/30/20, quanto metti da parte?', ['180 €', '360 €', '540 €'], 1,
+      'Il 20% di 1.800 € è 1.800 × 0,20 = **360 €**. 540 € è il 30%, la parte dei desideri.'),
+    Q('Perché conviene mettere da parte il risparmio appena arriva lo stipendio?', ['Perché così non dipende da quanto avanza a fine mese', 'Perché la banca paga più interessi', 'Perché le spese fisse diminuiscono'], 0,
+      "Se aspetti la fine del mese risparmi solo quello che è avanzato, e spesso non avanza niente. Mettendolo da parte subito, il risparmio diventa la prima spesa del mese, non l'ultima."),
+  ], 'Un budget decide prima dove vanno i soldi. Regola di partenza: 50% bisogni, 30% desideri, 20% risparmio, messo da parte per primo.'),
+
+  LF('basi-7-3', 'SOS', 'Il fondo di emergenza', 6, [
+    G('Paolo spende 1.400 € al mese e vuole mettere da parte una riserva che copra 3 mesi di spese, per gli imprevisti. Risparmia 150 € al mese. Quanti mesi gli servono per arrivarci?',
+      'Gli servono 1.400 × 3 = 4.200 €. Con 150 € al mese: 4.200 / 150 = **28 mesi**, più di due anni. Sembra tanto, ma ogni mese che passa Paolo è un po\' più al sicuro. Quella riserva ha un nome: fondo di emergenza.',
+      lo=0, hi=60, step=1, truth=28, near=3, unit='mesi'),
+    P('A che cosa serve', r'''
+**Il fondo di emergenza è una somma tenuta da parte solo per gli imprevisti.**
+
+Gli imprevisti non sono rari, sono solo difficili da prevedere: la caldaia che si rompe, l'auto dal meccanico, una spesa dal dentista, un periodo senza lavoro.
+
+Senza un fondo hai due sole strade. Puoi chiedere un prestito, che costa interessi. Oppure puoi vendere in fretta quello che hai, magari nel momento sbagliato.
+
+Con un fondo l'imprevisto resta un fastidio, non diventa un debito.
+
+Per questo il **fondo di emergenza** viene prima degli investimenti: è quello che ti permette di lasciarli lavorare in pace.'''),
+    P('Quanto deve essere grande', r'''
+La misura non è una cifra uguale per tutti: dipende da quanto spendi.
+
+La regola più usata è tenere da parte da **3 a 6 mesi di spese**. Di spese, non di stipendio: conta quanto ti serve per vivere.
+
+Paolo spende 1.400 € al mese:
+
+[fig]
+
+Quando basta il minimo e quando serve di più?
+
+• Verso i **3 mesi** se hai un lavoro stabile e nessuno che dipende da te.
+• Verso i **6 mesi**, o anche di più, se il tuo reddito è irregolare, se lavori in proprio o se hai una famiglia a carico.''',
+      fig=F([('3 mesi di spese', '4.200 €', [(4200, 'Fondo minimo', OK)]), ('6 mesi di spese', '8.400 €', [(8400, 'Fondo più prudente', CAP)])])),
+    N('Chiara spende 1.650 € al mese e vuole un fondo di emergenza che copra 4 mesi. Quanto deve mettere da parte?', 6600, '€',
+      '1.650 × 4 = **6.600 €**.'),
+    P('Dove tenerlo', r'''
+Il fondo di emergenza ha un solo compito: esserci quando serve. Deve avere due qualità.
+
+• Deve essere **liquido**: lo devi poter usare in pochi giorni, senza penali.
+• Deve essere **stabile**: non deve poter scendere di valore proprio quando ti serve.
+
+Per questo non va in azioni, che possono perdere molto in pochi mesi, e nemmeno in un investimento vincolato che non puoi toccare.
+
+Sta bene su un conto corrente separato da quello di tutti i giorni, oppure su un **conto deposito** da cui puoi ritirare i soldi quando vuoi.
+
+Renderà poco, ed è giusto così: non è lì per guadagnare, è lì per proteggerti. E dopo averlo usato, la prima cosa da fare è ricostruirlo.'''),
+    BK('È una spesa da fondo di emergenza?', ['Sì, è un imprevisto', 'No, si può programmare'], [
+      ("L'auto si rompe e ti serve per lavorare", 0, 'È improvvisa e non si può rimandare: è proprio il caso del fondo.'),
+      ('Le vacanze estive', 1, "Sai già che arrivano: si mettono da parte un po' al mese."),
+      ('Una cura dal dentista che non può aspettare', 0, 'È urgente e non era prevista.'),
+      ('I regali di Natale', 1, 'Natale arriva ogni anno alla stessa data: non è un imprevisto.'),
+      ('Due mesi senza stipendio', 0, 'È il caso più importante: il fondo paga le spese finché il reddito non torna.'),
+      ('Il telefono nuovo appena uscito', 1, 'È un desiderio: si compra con i soldi dei desideri, non con il fondo.'),
+      ("L'assicurazione dell'auto, che scade ogni anno", 1, 'È una spesa che conosci già: va messa nel budget.')],
+      after='Il fondo serve per quello che è insieme urgente, necessario e imprevisto. Le spese che conosci già vanno nel budget.'),
+    Q('Dario spende 1.200 € al mese, ha un lavoro stabile e nessuno a carico. Qual è una misura ragionevole per il suo fondo di emergenza?', ['1.200 €', '3.600 €', '36.000 €'], 1,
+      'Con un lavoro stabile può bastare il minimo della regola: 3 mesi di spese, cioè 1.200 × 3 = **3.600 €**. Un solo mese è poco. 36.000 € sono due anni e mezzo di spese: troppi soldi fermi.'),
+    Q('Dove ha più senso tenere il fondo di emergenza?', ['In azioni, così cresce', 'In un investimento vincolato per 5 anni', 'Su un conto da cui puoi ritirare subito'], 2,
+      'Deve essere liquido e stabile: un conto da cui ritiri quando vuoi. Le azioni possono scendere proprio quando ti servono i soldi, e un vincolo di 5 anni te li blocca.'),
+  ], 'Fondo di emergenza: da 3 a 6 mesi di spese, su un conto liquido e stabile. Viene prima degli investimenti.'),
+
+  LF('basi-7-4', 'META', 'Un obiettivo, una cifra, una data', 7, [
+    G("Elena vuole comprare un'auto usata tra 2 anni: le servono 6.000 €. Parte da zero e tiene i soldi su un conto che non rende nulla. Quanto deve mettere da parte ogni mese?",
+      '6.000 € in 24 mesi: 6.000 / 24 = **250 €** al mese. Un obiettivo diventa un piano quando ha una cifra e una data.',
+      lo=0, hi=600, step=10, truth=250, near=20),
+    P('Dal desiderio al piano', r'''
+**Un obiettivo vago resta un desiderio. Con una cifra e una data diventa un piano.**
+
+«Vorrei mettere via qualcosa per l'auto» non ti dice che cosa fare domani. «Mi servono 6.000 € tra 24 mesi» sì: basta una divisione.
+
+$$\text{risparmio al mese} = \frac{\text{cifra}}{\text{mesi}}$$
+
+Per Elena: 6.000 / 24 = **250 €** al mese.
+
+[fig]
+
+Se 250 € al mese sono troppi, le leve sono solo tre: una cifra più bassa, una data più lontana, oppure un budget rivisto per liberare più soldi ogni mese.''',
+      fig=F([('Il piano di Elena', '6.000 €', [(3000, 'Primo anno', OK, '3.000 €'), (3000, 'Secondo anno', CAP, '3.000 €')])], cap='250 € al mese per 24 mesi.')),
+    LV("Sposta la data o la cifra", "A Elena servono 6.000 € per l'auto. Muovi quanto mette da parte ogni mese e per quanti mesi.", 'obiettivo', dict(cifra=6000),
+      [dict(id='rata', label='Risparmio al mese', min=50, max=500, step=10, start=100, unit='€'), dict(id='mesi', label='Durata', min=6, max=48, step=1, start=12, unit='mesi')],
+      [dict(label='Arriva ai 6.000 € che servono', cond=[['messo', '>=', 6000]], hint='Puoi alzare il risparmio al mese, allungare la durata, o tutte e due le cose.'),
+       dict(label='Ora arrivaci mettendo da parte al massimo 150 € al mese', cond=[['messo', '>=', 6000], ['rata', '<=', 150]], hint='Con 150 € al mese serve più tempo: allunga la durata.')],
+      "Con 150 € al mese servono 40 mesi invece di 24. Meno metti da parte ogni mese, più si allontana la data: decidere quale delle due cose conta di più tocca a te."),
+    N('Vuoi fare un viaggio tra 10 mesi e ti servono 1.800 €. Quanto devi mettere da parte ogni mese?', 180, '€',
+      '1.800 / 10 = **180 €** al mese.'),
+    P('Obiettivi vicini e obiettivi lontani', r'''
+Non tutti gli obiettivi si trattano allo stesso modo. Conta quanto tempo manca.
+
+• **Entro 2 o 3 anni**, come un'auto o un viaggio: i soldi devono restare al sicuro, su un conto. Non c'è tempo per recuperare un calo.
+• **Tra molti anni**, come la pensione: i soldi si possono investire, perché il tempo lavora per te.
+
+Sui tempi lunghi una parte della cifra finale non la versi tu: la producono i rendimenti, grazie all'interesse composto.
+
+Ecco 250 € al mese per 20 anni, investiti al 4% l'anno. Ipotesi: rendimento costante, versamenti a fine mese.
+
+[fig]
+
+Hai versato 60.000 €, ma ti ritrovi con circa 91.000 €. Nella realtà il rendimento cambia ogni anno, e può anche essere negativo: per questo si investono solo i soldi che non servono presto.''',
+      fig=F([('Dopo 20 anni', '90.960 €', [(60000, 'Versato da te', OK, '60.000 €'), (30960, 'Rendimenti', CAP, '30.960 €')])])),
+    M(('Entrate', 'I soldi che ti arrivano in un mese'), ('Saldo', 'Entrate meno uscite'), ('Budget', 'Il piano di come userai i soldi'), ('Fondo di emergenza', 'I soldi tenuti da parte per gli imprevisti')),
+    Q('Ti servono 3.000 € tra 15 mesi. Quanto devi mettere da parte ogni mese, senza contare interessi?', ['150 €', '200 €', '250 €'], 1,
+      '3.000 / 15 = **200 €** al mese.'),
+    Q("Hai due obiettivi: un'auto tra 18 mesi e la pensione tra 30 anni. Quali soldi ha senso investire in strumenti che oscillano?", ["Quelli per l'auto", 'Tutti e due allo stesso modo', 'Quelli per la pensione'], 2,
+      "Con 30 anni davanti c'è il tempo di recuperare i cali e di far lavorare l'interesse composto. I soldi per l'auto servono tra 18 mesi: devono restare al sicuro."),
+  ], 'Un obiettivo ha una cifra e una data: cifra diviso mesi dà il risparmio al mese. Vicino: soldi al sicuro. Lontano: si può investire.'),
+])
+
+U8 = dict(id='basi-u8', sid='basi-protezione', name='Proteggersi', lessons=[
+  LF('basi-8-1', 'AS', "Come funziona un'assicurazione", 6, [
+    G("In un paese ci sono 1.000 famiglie. Ogni anno, in media, 2 case subiscono un incendio che fa 100.000 € di danni. Se tutte le famiglie si dividono il costo dei danni, quanto paga ciascuna in un anno?",
+      "I danni dell'anno sono 2 × 100.000 = 200.000 €. Divisi per 1.000 famiglie fanno **200 €** a testa. Con 200 € l'anno nessuno rischia più di perderne 100.000: è l'idea che sta dietro a ogni assicurazione.",
+      lo=0, hi=1000, step=10, truth=200, near=30),
+    P('Tanti pagano poco, pochi ricevono molto', r'''
+**Assicurarsi vuol dire pagare una cifra piccola e certa per non rischiare una perdita grande e incerta.**
+
+Un incendio in casa è raro, ma se capita a te costa una cifra che da solo non riusciresti a pagare. Nessuno sa a chi toccherà. Si sa però, con buona precisione, quanti saranno in tutto: su 1.000 case, circa 2 l'anno.
+
+Una compagnia di **assicurazione** raccoglie da tutti una cifra ogni anno, il **premio**, e con quei soldi paga i danni di chi è stato colpito. La somma che riceve chi ha subito il danno si chiama **indennizzo**.
+
+[fig]
+
+Il premio è più alto della semplice divisione dei danni, perché la compagnia deve coprire i suoi costi e avere un guadagno.''',
+      fig=F([('Il premio di ogni famiglia', '260 €', [(200, 'Danni attesi', CAP, '200 €'), (60, 'Costi e guadagno della compagnia', INT, '60 €')])], cap='Un esempio: le cifre vere cambiano da una polizza all\'altra.')),
+    P('Il contratto si chiama polizza', r'''
+Il contratto che firmi con la compagnia si chiama **polizza**. Dentro c'è scritto:
+
+• che cosa è coperto: per esempio incendio e allagamento, ma non il furto;
+• quanto paghi: il premio, di solito una volta l'anno;
+• quanto ricevi al massimo se succede il danno;
+• che cosa resta fuori, cioè le **esclusioni**: i casi in cui la compagnia non paga.
+
+Le esclusioni sono la parte da leggere con più attenzione. Una polizza può costare poco anche perché copre poco.
+
+Se l'anno passa senza danni, il premio non torna indietro. Non sono soldi buttati: hai comprato un anno di protezione, e con il tuo premio la compagnia ha pagato chi il danno lo ha avuto.'''),
+    N("Un'assicurazione copre 5.000 auto. Ogni anno, in media, 100 di queste hanno un incidente che fa 3.000 € di danni. Quanto dovrebbe pagare ogni auto, solo per coprire i danni?", 60, '€',
+      "Danni dell'anno: 100 × 3.000 = 300.000 €. Divisi per 5.000 auto: 300.000 / 5.000 = **60 €**. Il premio vero sarà più alto, perché comprende i costi e il guadagno della compagnia."),
+    M(('Premio', 'Quello che paghi alla compagnia'), ('Indennizzo', 'Quello che ricevi se subisci il danno'), ('Polizza', 'Il contratto di assicurazione'), ('Esclusioni', 'I casi in cui la compagnia non paga')),
+    Q("Paghi 300 € di premio per assicurare la casa e durante l'anno non succede nulla. Che fine fanno i 300 €?", ['Ti vengono restituiti', "Valgono come premio dell'anno dopo", "Restano alla compagnia: hai pagato un anno di protezione"], 2,
+      "Il premio paga la protezione dell'anno, che tu abbia un danno oppure no. Con i premi di chi non ha avuto danni la compagnia paga chi li ha avuti."),
+    Q("Perché il premio è più alto della media dei danni divisa tra gli assicurati?", ['Perché comprende i costi e il guadagno della compagnia', 'Perché i danni sono sempre più del previsto', 'Perché lo decide lo Stato'], 0,
+      "Oltre a pagare i danni, la compagnia ha uffici, personale e un guadagno da ottenere. Nell'esempio della lezione: 200 € di danni attesi più 60 € di costi e guadagno."),
+  ], "Con l'assicurazione tanti pagano un premio piccolo e certo, e chi subisce il danno riceve l'indennizzo. Leggi sempre che cosa è escluso."),
+
+  LF('basi-8-2', 'FR', 'Franchigia e massimale', 7, [
+    G("Anna ha assicurato la casa. Nel contratto c'è scritto che i primi 500 € di ogni danno li paga lei. Un tubo si rompe e l'acqua fa 3.000 € di danni. Quanto le rimborsa l'assicurazione?",
+      "I primi 500 € restano a carico di Anna: l'assicurazione paga 3.000 − 500 = **2.500 €**. Quella parte a carico tuo si chiama franchigia. Insieme al massimale, che vediamo tra poco, decide quanto vale davvero una polizza.",
+      lo=0, hi=3000, step=50, truth=2500, near=100),
+    P('La parte che paghi tu', r'''
+**Quasi nessuna polizza paga tutto il danno: una parte resta a te.**
+
+La **franchigia** è una cifra fissa che resta a carico tuo a ogni danno. Con una franchigia di 500 €:
+
+[fig]
+
+A che cosa serve? Toglie di mezzo i danni piccoli, che alla compagnia costerebbero più tempo che soldi. In cambio il premio scende: più alta è la franchigia, meno costa la polizza.
+
+A volte al posto della franchigia c'è lo **scoperto**: funziona allo stesso modo, ma è una percentuale del danno invece di una cifra fissa.''',
+      fig=F([('Danno di 3.000 €', None, [(500, 'Franchigia: paghi tu', INT, '500 €'), (2500, "Paga l'assicurazione", CAP, '2.500 €')]),
+             ('Danno di 400 €', None, [(400, 'Più piccolo della franchigia: paghi tutto tu', INT, '400 €')])])),
+    N('Polizza con franchigia di 250 €. Hai un danno di 1.900 €. Quanto ti rimborsa la compagnia?', 1650, '€',
+      '1.900 − 250 = **1.650 €**. I primi 250 € restano a carico tuo.'),
+    P('Il tetto: il massimale', r'''
+All'altro estremo c'è il **massimale**: la cifra più alta che la compagnia paga, qualunque sia il danno.
+
+La polizza di Anna ha un massimale di 50.000 €. Se un incendio facesse 80.000 € di danni, la compagnia si fermerebbe a 50.000.
+
+[fig]
+
+Per questo il massimale va scelto guardando al danno peggiore che può capitare, non a quello più probabile. Una polizza con un massimale basso costa meno, ma ti lascia scoperto proprio nel caso per cui ti eri assicurato.
+
+In breve: i danni piccoli li paghi tu per via della franchigia. Di quelli enormi paghi tu la parte che supera il massimale. In mezzo paga la compagnia.''',
+      fig=F([('Incendio da 80.000 €', None, [(50000, "Paga l'assicurazione, fino al massimale", CAP, '50.000 €'), (30000, 'Resta a te', INT, '30.000 €')])])),
+    N('Polizza con massimale di 100.000 € e nessuna franchigia. Il danno è di 130.000 €. Quanto resta a carico tuo?', 30000, '€',
+      'La compagnia paga fino al massimale: 100.000 €. A te restano 130.000 − 100.000 = **30.000 €**.'),
+    BK('Franchigia 500 €, massimale 50.000 €: chi paga?', ['Paghi tu', "Paga l'assicurazione"], [
+      ('Un danno di 300 €', 0, 'È più piccolo della franchigia: resta tutto a te.'),
+      ('I primi 500 € di un danno di 4.000 €', 0, 'È la franchigia.'),
+      ('Gli altri 3.500 € di quel danno', 1, 'Tolta la franchigia, il resto lo paga la compagnia.'),
+      ('La parte oltre i 50.000 € di un danno enorme', 0, 'Oltre il massimale la compagnia non paga.'),
+      ('Un danno di 20.000 €, tolta la franchigia', 1, 'Sta tra la franchigia e il massimale: paga la compagnia.')]),
+    Q('A parità di tutto il resto, che cosa succede al premio se scegli una franchigia più alta?', ['Scende', 'Sale', 'Non cambia'], 0,
+      'Con una franchigia più alta ti fai carico di una parte più grande dei danni. La compagnia rischia meno e chiede un premio più **basso**.'),
+    Q('Hai una polizza con franchigia di 1.000 € e subisci un danno di 800 €. Quanto ricevi?', ['800 €', '200 €', 'Niente'], 2,
+      'Il danno è più piccolo della franchigia: resta tutto a carico tuo. La compagnia comincia a pagare solo sopra i 1.000 €.'),
+  ], 'Franchigia: la parte di ogni danno che paghi tu. Massimale: il tetto oltre cui la compagnia non paga. Insieme dicono quanto vale una polizza.'),
+
+  LF('basi-8-3', 'RC', 'Che cosa assicurare davvero', 6, [
+    G("Hai 400 € l'anno da spendere in assicurazioni. Quale di questi rischi ha più senso coprire per primo?",
+      "Si assicura prima quello che ti rovinerebbe, non quello che ti darebbe solo fastidio. Uno schermo rotto si paga con il fondo di emergenza. Un danno grave fatto a un'altra persona può costare più di quanto guadagni in molti anni.",
+      options=['Lo schermo del telefono che si rompe', "Un danno grave fatto a un'altra persona", 'Il ritardo di un volo'], ans=1),
+    P('Grande e raro, piccolo e frequente', r'''
+**La domanda giusta non è quanto è probabile, ma: che cosa succede a me se capita?**
+
+Ogni rischio sta in una di queste due caselle.
+
+• **Danni piccoli**, anche se frequenti: il telefono rotto, la lavatrice da cambiare, una multa. Danno fastidio, ma li puoi pagare con il budget o con il fondo di emergenza. Assicurarli conviene poco: in media i premi che paghi superano i rimborsi che ricevi, e quel danno potevi sostenerlo da solo.
+• **Danni grandi**, anche se rari: la casa distrutta, un danno grave fatto a un'altra persona, una malattia che ti impedisce a lungo di lavorare. Da solo non li puoi pagare. È per questi che l'assicurazione esiste.
+
+[fig]
+
+Fondo di emergenza e assicurazione lavorano insieme: il primo copre i danni piccoli, la seconda quelli che il fondo non potrebbe mai coprire.''',
+      fig=F([('Schermo del telefono', '200 €', [(200, 'Lo copre il fondo di emergenza', OK)]), ("Danno grave a un'altra persona", '300.000 €', [(300000, "Serve un'assicurazione", CAP)])],
+            cap='Cifre di esempio. La barra corta è già più lunga del vero: in scala non si vedrebbe.')),
+    P('I danni fatti agli altri', r'''
+C'è un rischio che molti dimenticano: fare un danno a qualcun altro.
+
+Se per colpa tua una persona si fa male o una cosa si rompe, la legge ti obbliga a risarcire. Questo obbligo si chiama **responsabilità civile**, e l'assicurazione che lo copre si indica spesso con la sigla RC.
+
+Per chi guida è così importante che la legge la rende obbligatoria: senza la **RC auto** non puoi circolare. Un incidente grave può costare centinaia di migliaia di euro, e senza polizza dovresti pagarli tu.
+
+Esiste anche fuori dall'auto. Una polizza di responsabilità civile per la vita di tutti i giorni copre, per esempio, il vaso che cade dal tuo balcone o il danno fatto andando in bicicletta. Di solito costa poco, perché sono casi rari, ma copre cifre molto alte.'''),
+    BK('Assicurazione o fondo di emergenza?', ['Assicurazione', 'Fondo di emergenza'], [
+      ("L'incendio della casa", 0, 'È un danno enorme, che da solo non potresti pagare.'),
+      ('La lavatrice da sostituire', 1, 'Costa qualche centinaio di euro: è il lavoro del fondo di emergenza.'),
+      ("Un danno grave fatto a un'altra persona", 0, 'Può costare cifre altissime: serve la responsabilità civile.'),
+      ('Lo schermo del telefono rotto', 1, 'È una spesa piccola: si paga con i soldi da parte.'),
+      ('Una malattia che ti impedisce di lavorare per anni', 0, 'Perdere il reddito a lungo è uno dei rischi più grandi.'),
+      ('Una gomma bucata', 1, 'È un fastidio da poche decine di euro.')]),
+    OR('Che cosa viene prima?', ['Le assicurazioni obbligatorie per legge', 'I rischi che ti rovinerebbero', 'I danni piccoli, se proprio vuoi'],
+      x='Tocca le voci dalla più importante alla meno importante.',
+      after='Prima quello che la legge impone, poi quello che non potresti mai pagare da solo. I danni piccoli vengono per ultimi, e spesso conviene lasciarli al fondo di emergenza.'),
+    Q('Quale rischio ha più senso assicurare?', ['Un danno raro ma enorme', 'Un danno frequente ma piccolo', 'Un danno piccolo e raro'], 0,
+      "L'assicurazione serve per le perdite che da solo non potresti sostenere. I danni piccoli si pagano con il fondo di emergenza."),
+    Q('Perché di solito non conviene assicurare un oggetto da 150 €?', ['Perché quella perdita la puoi sostenere da solo, e in media i premi superano i rimborsi', 'Perché è vietato', 'Perché le compagnie non pagano mai'], 0,
+      'Una perdita da 150 € dà fastidio ma non ti mette in difficoltà. E siccome il premio comprende costi e guadagno della compagnia, in media paghi più di quanto ricevi.'),
+  ], 'Si assicura quello che ti rovinerebbe, non quello che ti dà fastidio. I danni piccoli li copre il fondo di emergenza.'),
+
+  LF('basi-8-4', '!!', 'Riconoscere una truffa', 7, [
+    G('Ti propongono un investimento che rende il 10% al mese, garantito. Se fosse vero, 1.000 € dopo 5 anni quanto sarebbero diventati?',
+      'Il 10% al mese per 60 mesi fa 1.000 × 1,10⁶⁰, cioè circa **304.000 €**. Nessuna attività vera cresce così, e se esistesse non avrebbe bisogno dei tuoi soldi. Un rendimento così alto, e per di più garantito, è il primo segnale di una truffa.',
+      options=['Circa 6.000 €', 'Circa 60.000 €', 'Più di 300.000 €'], ans=2),
+    P('Alto e garantito non stanno insieme', r'''
+**Chi ti promette guadagni alti e sicuri ti sta nascondendo qualcosa.**
+
+Rendimento e rischio vanno insieme. Un conto deposito paga pochi punti l'anno proprio perché il rischio è basso. Per guadagnare di più bisogna accettare che le cose possano andare male.
+
+Per questo due parole non stanno mai insieme: **alto** e **garantito**.
+
+[fig]
+
+Chi offre il 10% al mese sta offrendo, in un mese solo, più del triplo di quello che un investimento prudente rende in un anno intero. Se fosse vero, le banche farebbero la fila per prestargli soldi a molto meno.''',
+      fig=F([('Un conto deposito, in un anno', '3%', [(3, 'Rendimento', OK)]), ('La proposta, in un mese', '10%', [(10, 'Rendimento promesso', 'rosa')])], cap='Il 3% è un esempio: un conto deposito rende pochi punti l\'anno.')),
+    P('Come funziona uno schema Ponzi', r'''
+La truffa più diffusa ha un nome: **schema Ponzi**. Non c'è nessun investimento. I guadagni pagati ai primi arrivati sono i soldi versati dagli ultimi.
+
+Ecco come gira, con il 10% al mese promesso.
+
+• 100 persone versano 1.000 € a testa. In cassa ci sono 100.000 €.
+• Ogni mese il truffatore paga il 10%, cioè 10.000 €. Li prende dalla cassa.
+• I primi incassano puntuali, si fidano e portano amici. I soldi nuovi coprono i pagamenti.
+• Quando i nuovi arrivi rallentano, la cassa si svuota. I pagamenti si fermano e il capitale non c'è più.
+
+[fig]
+
+Chi entra per primo a volte guadagna davvero, ed è questo che rende lo schema credibile. Ma i soldi che incassa sono quelli persi da chi è arrivato dopo.''',
+      fig=F([('Versati da 100 persone', '100.000 €', [(100000, 'Soldi in cassa', CAP)]), ('Pagati come guadagni in 10 mesi', '100.000 €', [(100000, 'Gli stessi soldi, restituiti a pezzi', INT)])],
+            cap='Senza nuovi arrivi la cassa dura 10 mesi. Poi non resta nulla.')),
+    N('Uno schema promette il 5% al mese. Hanno aderito 200 persone, con 2.000 € a testa. Quanto deve pagare ogni mese il truffatore per mantenere la promessa?', 20000, '€',
+      'In cassa ci sono 200 × 2.000 = 400.000 €. Il 5% di 400.000 € è **20.000 €** al mese. Nessun investimento li produce: escono dalla cassa, cioè dai soldi di chi ha versato.'),
+    P('I segnali da riconoscere', r'''
+Le truffe cambiano forma, ma i segnali sono quasi sempre gli stessi.
+
+• **Rendimenti alti e garantiti**: è il segnale più chiaro.
+• **Fretta**: l'offerta scade oggi, i posti stanno finendo. Serve a non farti ragionare.
+• **Poca chiarezza**: non si capisce da dove vengono i guadagni, e le domande ricevono risposte vaghe.
+• **Premi se porti amici**: i soldi nuovi servono a pagare quelli vecchi.
+• **Nessuna autorizzazione**: per raccogliere risparmi serve un'autorizzazione. In Italia gli elenchi di chi è autorizzato sono pubblici, sui siti di Consob e Banca d'Italia.
+
+Prima di versare un euro fai tre cose: controlla quegli elenchi, chiedi tutto per iscritto e prenditi qualche giorno. Un'offerta seria tra una settimana c'è ancora.'''),
+    BK('Segnale di allarme o cosa normale?', ['Segnale di allarme', 'Cosa normale'], [
+      ('Rendimento garantito del 5% al mese', 0, 'Alto e garantito insieme non esiste.'),
+      ('Ti dicono che il valore può anche scendere', 1, 'È quello che un operatore serio deve dirti: ogni investimento ha un rischio.'),
+      ("L'offerta vale solo se firmi oggi", 0, 'La fretta serve a non farti ragionare.'),
+      ('Ti consegnano un documento con costi e rischi', 1, 'Mettere tutto per iscritto è un segno di serietà.'),
+      ('Guadagni di più se porti altri investitori', 0, 'È il meccanismo che tiene in piedi uno schema Ponzi.'),
+      ("Chi propone è nell'elenco degli operatori autorizzati", 1, 'È il primo controllo da fare, e qui è andato bene.'),
+      ('Non ti spiegano da dove arrivano i guadagni', 0, 'Se non capisci come si guadagna, non investire.')]),
+    Q('In uno schema Ponzi, da dove arrivano i guadagni pagati ai primi investitori?', ['Dai soldi versati da chi entra dopo', 'Dai profitti di un investimento vero', 'Dalla banca centrale'], 0,
+      'Non esiste nessun investimento: i guadagni dei primi sono i **soldi versati dagli ultimi**. Per questo lo schema regge solo finché continuano ad arrivare persone nuove.'),
+    Q('Un conoscente ti propone un investimento sicuro al 4% al mese e ti chiede di decidere entro stasera. Che cosa fai?', ['Verso subito, prima che finiscano i posti', 'Verso solo una piccola cifra, per provare', 'Non verso nulla e controllo se chi propone è autorizzato'], 2,
+      'Rendimento alto, garanzia e fretta sono tre segnali di allarme insieme. Anche una cifra piccola rischia di andare persa, e i primi pagamenti puntuali servono proprio a farti versare di più.'),
+  ], 'Rendimento alto e garantito non esiste. Diffida della fretta, chiedi da dove vengono i guadagni e controlla che chi propone sia autorizzato.'),
+])
+
+# Colori dei disegni in questa unità: azioni in pesca, obbligazioni in azzurro, soldi versati in menta.
+U9 = dict(id='basi-u9', sid='basi-investire', name='Investire passo passo', lessons=[
+  LF('basi-9-1', 'PAC', "Tutto subito o un po' alla volta", 7, [
+    G("Davide investe 200 € al mese per 20 anni in un fondo che rende in media il 5% l'anno. In tutto versa 48.000 €. Quanto si ritrova alla fine?",
+      "Con queste ipotesi arriva a circa **81.000 €**: 48.000 € li ha versati lui, gli altri 33.000 € sono rendimenti. Ipotesi: rendimento costante del 5% l'anno, versamenti a fine mese. Nella realtà il rendimento cambia ogni anno, ma l'idea resta: versare poco per molto tempo funziona.",
+      lo=40000, hi=140000, step=1000, truth=81161, near=6000),
+    P('Due modi di investire', r'''
+**Per investire non serve avere già una grossa cifra: si può cominciare con poco, ogni mese.**
+
+Ci sono due modi di mettere soldi in un investimento.
+
+• Il **PIC**, piano di investimento del capitale: versi una somma in una volta sola. È il caso di chi ha già dei soldi da parte, per esempio un'eredità.
+• Il **PAC**, piano di accumulo del capitale: versi una cifra fissa a scadenze regolari, di solito ogni mese. È il caso di chi investe una parte dello stipendio.
+
+[fig]
+
+Il PAC ha un vantaggio pratico: diventa un'abitudine. Una volta impostato il versamento automatico, investi senza doverci pensare e senza dover decidere ogni volta se è il momento giusto.''',
+      fig=F([('PIC: tutto il primo giorno', '12.000 €', [(12000, 'Un solo versamento', CAP)]),
+             ('PAC: dopo 6 mesi', '6.000 €', [(6000, '6 versamenti da 1.000 €', OK)]),
+             ('PAC: dopo 12 mesi', '12.000 €', [(12000, '12 versamenti da 1.000 €', OK)])])),
+    P('Il tempo fa la parte più grande', r'''
+Torniamo a Davide: 200 € al mese per 20 anni, al 5% l'anno.
+
+[fig]
+
+Ogni versamento comincia a rendere dal giorno in cui entra, e i rendimenti producono altri rendimenti: è l'interesse composto. I primi 200 € lavorano per quasi vent'anni, gli ultimi non hanno ancora avuto il tempo di rendere.
+
+Per questo conta così tanto cominciare presto.
+
+| Durata | Versato | Alla fine |
+|---|---|---|
+| 10 anni | 24.000 € | 30.873 € |
+| 20 anni | 48.000 € | 81.161 € |
+| 30 anni | 72.000 € | 163.075 € |
+
+Da 10 a 20 anni il versato raddoppia, ma la cifra finale fa molto di più. Da 20 a 30 anni aggiungi 24.000 € di versamenti e ne trovi circa 82.000 in più.''',
+      fig=F([('Dopo 20 anni', '81.161 €', [(48000, 'Versato da Davide', OK, '48.000 €'), (33161, 'Rendimenti', CAP, '33.161 €')])])),
+    LV('Costruisci il tuo piano', "Versi ogni mese una cifra e la investi al 5% l'anno. Muovi le leve e guarda quanto avrai alla fine.", 'piano', dict(tasso=5),
+      [dict(id='rata', label='Versamento al mese', min=50, max=500, step=10, start=100, unit='€'), dict(id='anni', label='Durata', min=5, max=40, step=5, start=10, unit='anni')],
+      [dict(label='Arriva ad almeno 100.000 €', cond=[['totale', '>=', 100000]], hint='Prova ad allungare la durata, oppure ad alzare il versamento.'),
+       dict(label='Ora arrivaci versando in tutto meno di 50.000 €', cond=[['totale', '>=', 100000], ['versato', '<', 50000]], hint='Meno soldi versati vuol dire più lavoro lasciato al tempo: allunga la durata e abbassa il versamento.')],
+      'Si può arrivare a 100.000 € versandone meno della metà, ma solo dando al piano molti anni. Chi comincia tardi, per arrivare alla stessa cifra deve versare molto di più.'),
+    N('Investi 150 € al mese con un PAC. Quanto hai versato in tutto dopo 8 anni?', 14400, '€',
+      "150 × 12 = 1.800 € l'anno. In 8 anni: 1.800 × 8 = **14.400 €**. Il valore del tuo investimento sarà diverso, perché dipende dai rendimenti."),
+    Q('Che cosa distingue un PAC da un PIC?', ['Con il PAC versi una cifra fissa a scadenze regolari, con il PIC tutto in una volta', 'Il PAC è garantito, il PIC no', 'Il PAC si può fare solo con le obbligazioni'], 0,
+      'PAC vuol dire versamenti regolari, PIC un versamento unico. Nessuno dei due è garantito: tutti e due investono in strumenti che possono salire e scendere.'),
+    Q('Anna e Bruno versano 200 € al mese nello stesso fondo. Anna comincia a 25 anni, Bruno a 35. Tutti e due smettono a 65. Chi avrà di più?', ['Bruno, perché ha cominciato con più esperienza', 'Anna, perché i suoi soldi hanno lavorato 10 anni in più', 'Avranno la stessa cifra'], 1,
+      'Anna versa per 40 anni, Bruno per 30. Anna ha versato 24.000 € in più, ma soprattutto i suoi primi versamenti hanno avuto dieci anni in più per produrre rendimenti sui rendimenti.'),
+  ], "PIC: tutto in una volta. PAC: una cifra fissa ogni mese. Con il PAC conta soprattutto il tempo: prima cominci, più lavora l'interesse composto."),
+
+  LF('basi-9-2', 'Ø', 'Comprare a prezzi diversi', 7, [
+    G("Investi 100 € al mese in un fondo. Il prezzo di una quota è 10 € il primo mese, 8 € il secondo, 12,50 € il terzo. In quale mese hai comprato più quote?",
+      "Con una cifra fissa compri più quote quando il prezzo è basso: 100 / 8 = **12,5 quote** nel secondo mese, contro 10 nel primo e 8 nel terzo. È un piccolo vantaggio automatico del versare sempre la stessa cifra.",
+      options=['Il primo', 'Il secondo', 'Il terzo'], ans=1),
+    P('Stessa cifra, quote diverse', r'''
+**Con un PAC non compri sempre la stessa quantità: compri sempre per la stessa cifra.**
+
+Un fondo è diviso in **quote**, e il prezzo di una quota cambia nel tempo. Se versi 100 € al mese, quante quote ricevi dipende dal prezzo di quel giorno:
+
+$$\text{quote} = \frac{\text{cifra versata}}{\text{prezzo di una quota}}$$
+
+[fig]
+
+Quando il prezzo scende i tuoi 100 € comprano di più, quando sale comprano di meno. Senza decidere nulla, finisci per comprare più quote a prezzi bassi che a prezzi alti.''',
+      fig=F([('Mese 1: prezzo 10 €', '10 quote', [(10, 'Quote comprate con 100 €', CAP)]),
+             ('Mese 2: prezzo 8 €', '12,5 quote', [(12.5, 'Quote comprate con 100 €', OK)]),
+             ('Mese 3: prezzo 12,50 €', '8 quote', [(8, 'Quote comprate con 100 €', INT)])])),
+    N('In tre mesi hai versato 300 € e hai comprato 10 quote, poi 12,5, poi 8. Quante quote hai in tutto?', 30.5, 'quote',
+      '10 + 12,5 + 8 = **30,5 quote**.', tol=0.01, dec=1),
+    P('Il prezzo medio di carico', r'''
+Quanto ti è costata, in media, ogni quota? Si chiama **prezzo medio di carico**:
+
+$$\text{prezzo medio} = \frac{\text{totale versato}}{\text{quote possedute}}$$
+
+Hai versato 300 € e hai 30,5 quote: 300 / 30,5 = **9,84 €** a quota.
+
+La media dei tre prezzi, invece, è (10 + 8 + 12,50) / 3 = **10,17 €**.
+
+Il tuo costo è più basso della media dei prezzi, proprio perché hai comprato più quote quando costavano meno.
+
+Attenzione a non chiedere al PAC quello che non può dare. Non ti protegge dalle perdite: se il prezzo scende sotto 9,84 € sei in perdita. E se i prezzi salgono sempre, chi ha versato tutto subito ha fatto meglio. Il suo pregio è un altro: ti evita di dover indovinare il momento giusto per entrare.'''),
+    N('Con un PAC hai versato in tutto 1.200 € e possiedi 100 quote. Oggi una quota vale 13 €. Quanto vale il tuo investimento?', 1300, '€',
+      '100 quote × 13 € = **1.300 €**. Il tuo prezzo medio di carico è 1.200 / 100 = 12 €: oggi la quota vale di più, quindi stai guadagnando 100 €.'),
+    BK('Vero o falso sul PAC?', ['Vero', 'Falso'], [
+      ('Con la stessa cifra compri più quote quando il prezzo è basso', 0, 'È una divisione: cifra fissa diviso un prezzo più basso dà più quote.'),
+      ('Un PAC garantisce di non perdere', 1, 'Se il prezzo scende sotto il tuo prezzo medio di carico, sei in perdita.'),
+      ('Ti evita di scegliere il momento giusto per entrare', 0, "Entri un po' alla volta, a prezzi diversi."),
+      ('Se i prezzi salgono sempre, il PAC batte il versamento unico', 1, 'In quel caso chi ha versato tutto subito ha comprato ai prezzi più bassi.'),
+      ('Il prezzo medio di carico è il totale versato diviso le quote', 0, 'È proprio la definizione.')]),
+    Q('Versi 200 € quando la quota costa 20 € e altri 200 € quando costa 10 €. Qual è il tuo prezzo medio di carico?', ['15,00 €', '13,33 €', '10,00 €'], 1,
+      'Quote comprate: 200 / 20 = 10 e 200 / 10 = 20, in tutto 30. Prezzo medio di carico: 400 / 30 = **13,33 €**. Non è 15 €, la media dei due prezzi, perché a 10 € hai comprato il doppio delle quote.'),
+    Q('Hai un prezzo medio di carico di 9,84 € e oggi la quota vale 9 €. Come sta il tuo investimento?', ['In guadagno', 'In pari', 'In perdita'], 2,
+      'Ogni quota ti è costata in media 9,84 € e oggi ne vale 9: sei **in perdita**. Il prezzo medio di carico è il tuo punto di pareggio.'),
+  ], 'Con una cifra fissa compri più quote quando costano meno. Il prezzo medio di carico è il totale versato diviso le quote: è il tuo punto di pareggio.'),
+
+  LF('basi-9-3', '72', 'La regola del 72', 6, [
+    G("Investi 5.000 € e li lasci crescere al 6% l'anno, senza toccarli. Dopo quanti anni saranno diventati 10.000 €?",
+      'Servono circa **12 anni**. C\'è una scorciatoia per saperlo senza calcolatrice: dividi 72 per il tasso. 72 / 6 = 12.',
+      lo=0, hi=40, step=1, truth=12, near=1, unit='anni'),
+    P('Una divisione al posto di una formula', r'''
+**Per sapere in quanti anni i tuoi soldi raddoppiano basta dividere 72 per il tasso.**
+
+$$\text{anni per raddoppiare} \approx \frac{72}{\text{tasso}}$$
+
+Il tasso si scrive come numero: per il 6% metti 6. Funziona grazie all'interesse composto: ogni anno gli interessi si sommano al capitale e l'anno dopo fruttano anche loro.
+
+| Tasso | Regola del 72 | Conto esatto |
+|---|---|---|
+| 2% | 36 anni | 35,0 anni |
+| 4% | 18 anni | 17,7 anni |
+| 6% | 12 anni | 11,9 anni |
+| 8% | 9 anni | 9,0 anni |
+
+È una stima, non un conto preciso, ma per i tassi che si incontrano di solito sbaglia di pochi mesi.
+
+Nota una cosa: passare dal 2% al 4% non accorcia l'attesa di poco. La dimezza.'''),
+    N("Un investimento rende il 3% l'anno. Secondo la regola del 72, in quanti anni raddoppia?", 24, 'anni',
+      '72 / 3 = **24 anni**.'),
+    P('Vale per tutto quello che cresce', r'''
+La stessa regola funziona per qualunque cosa cresca a un ritmo costante. Anche per i prezzi.
+
+Con un'inflazione del 3% l'anno i prezzi raddoppiano in circa 72 / 3 = **24 anni**. Vuol dire che i soldi lasciati fermi, in 24 anni, comprano la metà.
+
+[fig]
+
+E funziona per i debiti. Un debito al 18% l'anno su cui non paghi nulla raddoppia in circa 72 / 18 = **4 anni**.
+
+La regola del 72 serve a questo: a sentire quanto pesa un tasso senza fare conti. Il 2% e il 6% sembrano vicini. Ma uno raddoppia i soldi in 36 anni, l'altro in 12.''',
+      fig=F([('Oggi', '1.000 €', [(1000, 'Quello che comprano 1.000 €', CAP)]), ('Tra 24 anni, con inflazione al 3%', 'circa la metà', [(492, 'Quello che comprano gli stessi 1.000 €', INT)])])),
+    N("Con un'inflazione del 4% l'anno, in quanti anni circa i prezzi raddoppiano?", 18, 'anni',
+      '72 / 4 = **18 anni**. In 18 anni i soldi lasciati fermi comprano circa la metà.'),
+    OR('Dal raddoppio più veloce al più lento', ['Debito sulla carta al 18%', "Investimento all'8%", 'Investimento al 4%', 'Conto deposito al 2%'],
+      x='Tocca le voci da quella che raddoppia prima a quella che raddoppia dopo.', after='72 diviso il tasso: circa 4 anni, 9 anni, 18 anni, 36 anni.'),
+    Q('A quale tasso annuo, circa, i soldi raddoppiano in 10 anni?', ['3,6%', '7,2%', '10%'], 1,
+      'La regola funziona anche al contrario: tasso ≈ 72 / anni = 72 / 10 = **7,2%**.'),
+    Q("Hai 2.000 € investiti all'8% l'anno. Secondo la regola del 72, quanto avrai all'incirca dopo 18 anni?", ['4.000 €', '6.000 €', '8.000 €'], 2,
+      "All'8% i soldi raddoppiano ogni 72 / 8 = 9 anni. In 18 anni raddoppiano due volte: da 2.000 a 4.000, poi a **8.000 €**."),
+  ], 'Anni per raddoppiare ≈ 72 diviso il tasso. Vale per i soldi investiti, per i prezzi e per i debiti.'),
+
+  LF('basi-9-4', '60/40', 'Dividere e riequilibrare', 7, [
+    G("Marta investe 10.000 €: 6.000 € in azioni e 4.000 € in obbligazioni. In un anno le azioni salgono del 30%, le obbligazioni restano ferme. Che percentuale del suo portafoglio è ora in azioni?",
+      "Le azioni valgono 6.000 × 1,30 = 7.800 €, le obbligazioni 4.000 €. In tutto 11.800 €, e le azioni sono 7.800 / 11.800, cioè circa il **66%**. Marta non ha fatto nulla, eppure il suo portafoglio è diventato più rischioso di come lo aveva scelto.",
+      lo=50, hi=100, step=1, truth=66, near=2, unit='%'),
+    P('La scelta che conta di più', r'''
+**Prima di scegliere quali titoli comprare, si decide come dividere i soldi tra azioni e obbligazioni.**
+
+L'insieme dei tuoi investimenti si chiama portafoglio. Il modo in cui lo dividi ha un nome: **asset allocation**. È la scelta che pesa di più su quanto potrà salire e scendere.
+
+• Più **azioni**: più crescita attesa nel lungo periodo, ma cali più forti lungo la strada.
+• Più **obbligazioni**: meno crescita attesa, ma un percorso più tranquillo.
+
+[fig]
+
+Non esiste la divisione giusta per tutti. Dipende da quanto tempo hai prima che i soldi ti servano, e da quanto riesci a sopportare di vederli scendere senza vendere.
+
+Marta ha 15 anni davanti e sceglie 60% azioni e 40% obbligazioni.''',
+      fig=F([('Prudente', None, [(30, 'Azioni', INT, '30%'), (70, 'Obbligazioni', CAP, '70%')]),
+             ('Bilanciato', None, [(60, 'Azioni', INT, '60%'), (40, 'Obbligazioni', CAP, '40%')]),
+             ('Dinamico', None, [(90, 'Azioni', INT, '90%'), (10, 'Obbligazioni', CAP, '10%')])], cap='Tre esempi. I nomi cambiano da un intermediario all\'altro.')),
+    P('Il portafoglio si sposta da solo', r'''
+Una volta scelta, la divisione non resta ferma: la spostano i mercati.
+
+Dopo un anno in cui le azioni salgono del 30% e le obbligazioni restano ferme, il portafoglio di Marta è cambiato:
+
+[fig]
+
+Le azioni sono passate dal 60% al 66%. Se continuassero a salire arriverebbero al 70%, poi all'80%. Marta si ritroverebbe con un portafoglio molto più rischioso di quello che aveva scelto, proprio dopo una lunga salita: cioè quando un calo farebbe più male.''',
+      fig=F([("All'inizio", '10.000 €', [(6000, 'Azioni', INT, '6.000 €'), (4000, 'Obbligazioni', CAP, '4.000 €')]),
+             ('Dopo un anno', '11.800 €', [(7800, 'Azioni', INT, '7.800 €'), (4000, 'Obbligazioni', CAP, '4.000 €')])])),
+    P('Riportarlo dove lo avevi deciso', r'''
+**Ribilanciare** vuol dire riportare il portafoglio alla divisione che avevi scelto.
+
+Marta vuole tornare al 60% di azioni su 11.800 €:
+
+• azioni che dovrebbe avere: 11.800 × 60% = **7.080 €**
+• azioni che ha: 7.800 €
+• da vendere: 7.800 − 7.080 = **720 €**
+
+Con quei 720 € compra obbligazioni, che salgono a 4.720 €: il 40%.
+
+Ha venduto un po' di quello che è salito e comprato quello che è rimasto indietro. È il contrario di quello che verrebbe d'istinto, e per questo conviene farlo con una regola fissa, per esempio una volta l'anno.
+
+Ribilanciare non serve a guadagnare di più: serve a tenere il rischio dove lo avevi deciso. Vendere può far pagare tasse e commissioni, quindi non va fatto troppo spesso.'''),
+    N('Un portafoglio vale 20.000 €: 14.000 € in azioni e 6.000 € in obbligazioni. Vuoi tornare a metà e metà. Quanti euro di azioni devi vendere?', 4000, '€',
+      'Metà di 20.000 € è 10.000 €. Hai 14.000 € di azioni: ne vendi 14.000 − 10.000 = **4.000 €** e con quei soldi compri obbligazioni, che salgono a 10.000 €.'),
+    BK('Più azioni o più obbligazioni?', ['Più azioni', 'Più obbligazioni'], [
+      ('I soldi ti servono tra 25 anni', 0, 'Con tanto tempo davanti puoi sopportare i cali e puntare sulla crescita.'),
+      ('I soldi ti servono tra 3 anni', 1, 'Con poco tempo un calo forte non si recupera: serve un percorso più tranquillo.'),
+      ('Un calo del 20% non ti farebbe dormire', 1, 'Se finiresti per vendere nel momento peggiore, meglio un portafoglio che oscilla meno.'),
+      ('Hai appena cominciato a lavorare e investi per la pensione', 0, 'È il caso tipico di un orizzonte molto lungo.'),
+      ("Vai in pensione l'anno prossimo", 1, 'Tra poco quei soldi ti serviranno per vivere.')]),
+    Q('Hai scelto 50% azioni e 50% obbligazioni. Dopo un anno le azioni sono salite molto e ora sono il 60%. Che cosa vuol dire ribilanciare?', ['Comprare altre azioni, visto che salgono', 'Vendere tutto e ricominciare', 'Vendere una parte di azioni e comprare obbligazioni'], 2,
+      'Ribilanciare riporta il portafoglio alla divisione scelta: si **vende una parte di quello che è salito** e si compra quello che è rimasto indietro, fino a tornare a 50 e 50.'),
+    Q('A che cosa serve, soprattutto, ribilanciare?', ['A tenere il rischio al livello che avevi scelto', 'A fare meglio del mercato', 'A non pagare tasse'], 0,
+      'Serve a non ritrovarsi, dopo una lunga salita, con molte più azioni di quante ne avevi decise. Non promette rendimenti più alti, e vendere può anzi far pagare tasse.'),
+  ], "L'asset allocation è come dividi i soldi tra azioni e obbligazioni. I mercati la spostano: ribilanciare la riporta dove l'avevi decisa."),
+])
+
+U10 = dict(id='basi-u10', sid='basi-testa', name="La testa dell'investitore", lessons=[
+  LF('basi-10-1', '2×', 'Le perdite fanno più male', 6, [
+    G("Un gioco: si lancia una moneta. Se esce testa vinci 150 €, se esce croce perdi 100 €. Se potessi ripeterlo tante volte, quanto guadagneresti in media a ogni lancio?",
+      "Metà delle volte vinci 150 €, metà perdi 100 €: in media 0,5 × 150 − 0,5 × 100 = **+25 €** a lancio. È un gioco che conviene. Eppure, davanti a un solo lancio, molte persone rifiutano: la paura di perdere 100 € pesa più della speranza di vincerne 150.",
+      lo=-100, hi=150, step=5, truth=25, near=10),
+    P('Una perdita pesa circa il doppio', r'''
+**Perdere 100 € fa più male di quanto faccia piacere guadagnarne 100.**
+
+Gli studiosi lo chiamano **avversione alle perdite**. Negli esperimenti, per accettare il rischio di perdere 100 € le persone chiedono in media di poterne vincere circa 200. Una perdita pesa all'incirca il doppio di un guadagno della stessa misura.
+
+[fig]
+
+Non è un difetto da correggere: è il modo in cui siamo fatti. Ma quando si investe porta a decisioni sbagliate, perché i mercati salgono e scendono di continuo, e ogni discesa si fa sentire il doppio di ogni salita.''',
+      fig=F([('Guadagnare 100 €', None, [(1, 'Quanto fa piacere', OK)]), ('Perdere 100 €', None, [(2, 'Quanto fa male', 'rosa')])], cap='Una misura indicativa: cambia da persona a persona.')),
+    P('Che cosa ci fa fare', r'''
+L'avversione alle perdite spinge verso tre errori tipici.
+
+• **Tenere troppo a lungo i titoli in perdita.** Finché non vendi, la perdita sembra non esistere. Così si aspetta di tornare in pari, anche quando le ragioni per cui avevi comprato non ci sono più.
+• **Vendere troppo presto i titoli in guadagno**, per la paura di vedere sparire quel guadagno.
+• **Guardare troppo spesso.** Chi controlla ogni giorno vede molte più giornate negative di chi guarda una volta l'anno, e ogni giornata negativa fa male.
+
+Un'idea aiuta contro tutti e tre: al mercato non interessa a che prezzo hai comprato. La domanda utile non è «quanto sto perdendo?», ma «se oggi avessi questi soldi in mano, comprerei questo titolo?». Se la risposta è no, il prezzo di acquisto non è una ragione per tenerlo.'''),
+    N('Un altro gioco con la moneta: testa vinci 300 €, croce perdi 200 €. Quanto guadagni in media a ogni lancio?', 50, '€',
+      '0,5 × 300 − 0,5 × 200 = 150 − 100 = **+50 €** a lancio. È un gioco favorevole, anche se la possibile perdita di 200 € spaventa.'),
+    BK("È un effetto dell'avversione alle perdite?", ['Sì', 'No'], [
+      ('Non vendo finché non torno in pari', 0, 'Il prezzo di acquisto diventa un traguardo, ma al mercato non interessa.'),
+      ('Vendo subito un titolo salito del 5%, per paura che scenda', 0, 'La paura di perdere un guadagno fa vendere troppo presto.'),
+      ('Controllo il portafoglio dieci volte al giorno', 0, 'Più guardi, più giornate negative vedi, e ognuna pesa il doppio.'),
+      ('Vendo perché ho raggiunto la cifra che mi serviva', 1, 'È una decisione legata al tuo obiettivo, non alla paura.'),
+      ("Ribilancio una volta l'anno, come da piano", 1, 'È una regola decisa prima, a mente fredda.')]),
+    Q("Hai comprato un'azione a 50 € e ora vale 30 €. Nel frattempo l'azienda ha perso i suoi clienti migliori. Qual è il modo più sano di ragionare?", ['Mi chiedo se oggi la comprerei a 30 €', 'Aspetto che torni a 50 €, poi vendo', 'Ne compro altre per abbassare il prezzo medio'], 0,
+      'I 50 € che hai pagato non contano più: conta che cosa vale oggi quel titolo e che cosa ti aspetti per il futuro. Se oggi non la compreresti, il prezzo di acquisto non è un motivo per tenerla.'),
+    Q("Che cosa dice l'avversione alle perdite?", ['Che una perdita pesa più di un guadagno della stessa misura', 'Che chi investe perde sempre', 'Che le perdite si recuperano da sole'], 0,
+      'Perdere 100 € fa male circa il doppio di quanto fa piacere guadagnarne 100. Non dice nulla su come andranno i tuoi investimenti: dice come reagirai tu.'),
+  ], 'Una perdita fa male circa il doppio di quanto fa piacere un guadagno uguale. Decidi guardando avanti, non al prezzo a cui hai comprato.'),
+
+  LF('basi-10-2', 'FOMO', 'Tutti comprano, compro anche io', 7, [
+    G("Un titolo passa da 10 € a 40 € in un anno. Ne parlano tutti, e Luca compra a 40 €. Poi il prezzo torna a 16 €. Quanto ha perso Luca, in percentuale?",
+      "Luca ha comprato a 40 € e si ritrova con 16 €: ha perso 24 € su 40, cioè il **60%**. Chi aveva comprato a 10 € è ancora in guadagno del 60%. Stesso titolo, stessa storia: la differenza l'ha fatta il momento in cui si entra.",
+      lo=0, hi=100, step=1, truth=60, near=3, unit='%'),
+    P('La paura di restare fuori', r'''
+**Quando un prezzo sale e tutti ne parlano, viene voglia di comprare. Spesso è il momento peggiore per farlo.**
+
+Vedere gli altri guadagnare mentre tu resti a guardare crea una spinta molto forte. In inglese ha un nome ormai comune: **FOMO**, cioè fear of missing out, la paura di restare fuori.
+
+Insieme lavora un'altra abitudine: l'**effetto gregge**. Se lo fanno tutti, pensiamo, un motivo ci sarà. Nella vita di tutti i giorni spesso è una buona regola. Nei mercati no, per una ragione semplice: più persone hanno già comprato, più il prezzo è già salito.
+
+[fig]
+
+Quando una notizia è arrivata fino a te, è probabile che sia già dentro il prezzo.''',
+      fig=F([('Un anno prima', '10 €', [(10, 'Prezzo', CAP)]), ('Quando ne parlano tutti', '40 €', [(40, 'Prezzo', 'rosa')]), ('Un anno dopo', '16 €', [(16, 'Prezzo', CAP)])])),
+    P('Come nasce una bolla', r'''
+Quando l'effetto gregge prende tutto un mercato nasce una **bolla**: i prezzi salgono molto più di quanto vale davvero quello che si compra.
+
+Di solito va così.
+
+• Una novità attira l'attenzione, e i primi prezzi salgono per buone ragioni.
+• I guadagni dei primi attirano altri compratori. Il prezzo sale perché si compra, e si compra perché il prezzo sale.
+• Arriva chi compra solo per rivendere a un prezzo più alto. Nessuno guarda più che cosa sta comprando.
+• I compratori nuovi finiscono. Il prezzo smette di salire, qualcuno vende, e la discesa è più veloce della salita.
+
+È successo con i tulipani in Olanda nel Seicento, con le azioni di internet alla fine degli anni Novanta, con le case negli Stati Uniti prima del 2008. Cambia l'oggetto, non il copione.'''),
+    OR('Metti in ordine le fasi di una bolla', ['Una novità attira i primi compratori', 'I prezzi salgono e arrivano tutti gli altri', 'Si compra solo per rivendere a di più', 'I compratori finiscono e il prezzo crolla'],
+      after='Chi entra nella terza fase compra da chi era entrato nella prima.'),
+    N("Compri un titolo a 80 €, nel pieno dell'entusiasmo. Il prezzo scende a 20 €. Di quanto deve salire, in percentuale, per tornare a 80 €?", 300, '%',
+      'Da 20 € a 80 € mancano 60 €: 60 / 20 = **300%**. Il prezzo deve quadruplicare. Dopo un calo del 75% non basta un +75%.'),
+    P('Come difendersi', r'''
+Non serve saper prevedere le bolle. Serve non farsi trascinare.
+
+• **Decidi prima.** Un piano scritto, con quanto investi ogni mese e in che cosa, ti toglie la decisione nel momento in cui sei più emotivo.
+• **Fatti la domanda scomoda.** Sto comprando perché ho capito che cosa compro e quanto vale, oppure perché è salito?
+• **Guarda quanto pesa.** Una piccola parte dei tuoi soldi su un'idea rischiosa è una scelta. Tutti i risparmi no.
+
+Chi investe una cifra fissa ogni mese in un fondo ben diversificato ha già una buona difesa: compra sempre, sia quando tutti sono entusiasti sia quando tutti hanno paura.'''),
+    Q('Un titolo è triplicato in sei mesi e ne parlano tutti. Che cosa dice questo sul suo futuro?', ['Che continuerà a salire', 'Che crollerà di sicuro', 'Niente di certo: dice solo che oggi costa molto di più'], 2,
+      'Una salita passata non promette né altra salita né un crollo. Dice solo che chi compra oggi paga tre volte di più, quindi ha meno margine se le cose vanno male.'),
+    Q('Che cosa distingue una bolla da una normale salita dei prezzi?', ['Nella bolla si compra soprattutto perché il prezzo sale', 'Nella bolla i prezzi salgono lentamente', 'Nella bolla comprano solo i professionisti'], 0,
+      'In una bolla il prezzo sale perché si compra, e si compra perché il prezzo sale. Nessuno guarda più quanto vale davvero quello che sta comprando.'),
+  ], 'Quando tutti comprano, il prezzo è già salito. Decidi con un piano scritto prima, non con la paura di restare fuori.'),
+
+  LF('basi-10-3', '↓↑', 'Vendere nel momento peggiore', 6, [
+    G("Sara ha 10.000 € investiti. Il mercato perde il 30% e lei, presa dalla paura, vende tutto. L'anno dopo il mercato risale del 50%, ma Sara è rimasta fuori. Quanti soldi ha in meno rispetto a chi non ha venduto?",
+      "Chi è rimasto investito ha 10.000 × 0,70 × 1,50 = 10.500 €. Sara ha venduto a 7.000 € e lì è rimasta: ha **3.500 €** in meno. La perdita del 30% era solo sulla carta. Vendendo l'ha resa definitiva.",
+      lo=0, hi=6000, step=100, truth=3500, near=300),
+    P('Una perdita sulla carta', r'''
+**Finché non vendi, un calo è un numero su uno schermo. Diventa una perdita vera nel momento in cui vendi.**
+
+Quando i mercati scendono forte, i telegiornali parlano di crollo e ogni giorno il numero è più basso. La reazione naturale è scappare: vendere tutto per non perdere altro.
+
+Il problema è che i cali forti e le risalite forti stanno spesso vicini. Chi esce dopo il calo si mette al riparo da una discesa che c'è già stata, e si perde la risalita che viene dopo.
+
+[fig]
+
+Per fare meglio di chi resta fermo bisogna indovinare due momenti: quando uscire e quando rientrare. Sbagliarne uno basta a fare peggio.''',
+      fig=F([("All'inizio", '10.000 €', [(10000, 'Tutti e due', CAP)]), ('Chi resta investito', '10.500 €', [(10500, 'Dopo il −30% e il +50%', OK)]), ('Chi vende dopo il calo', '7.000 €', [(7000, 'Fuori dal mercato', 'rosa')])])),
+    P('Perché il tempo aiuta', r'''
+Scendere fa parte del modo in cui le borse funzionano. Nella storia dei grandi mercati azionari i cali del 10% sono arrivati in media ogni anno o due, e quelli del 30% o più circa una volta ogni dieci anni.
+
+Finora i grandi mercati hanno sempre recuperato: a volte in pochi mesi, a volte dopo molti anni. Non è una garanzia per il futuro. Ma per chi ha molto tempo davanti un calo è un tratto di strada, non la fine del viaggio.
+
+Tre cose rendono più facile restare fermi.
+
+• **Investire solo soldi che non ti servono presto.** Chi ne ha bisogno tra un anno è costretto a vendere, a qualunque prezzo.
+• **Avere un fondo di emergenza.** Così un imprevisto non ti obbliga a vendere nel momento sbagliato.
+• **Scegliere una divisione che riesci a sopportare.** Se un −30% non ti farebbe dormire, servono meno azioni.'''),
+    N('Hai 8.000 € investiti. Il mercato scende del 25% e poi risale del 40%. Se non vendi, quanto hai alla fine?', 8400, '€',
+      'Dopo il calo: 8.000 × 0,75 = 6.000 €. Dopo la risalita: 6.000 × 1,40 = **8.400 €**. Un −25% seguito da un +40% non fa +15%: le percentuali si moltiplicano, non si sommano.'),
+    BK('Ti aiuta a non vendere nel panico?', ['Aiuta', 'Non aiuta'], [
+      ('Avere un fondo di emergenza', 0, 'Un imprevisto non ti costringe a vendere.'),
+      ('Controllare i prezzi ogni ora', 1, 'Più guardi, più il calo fa paura.'),
+      ('Aver investito soldi che servono tra 20 anni', 0, 'Con tanto tempo, un calo si può aspettare.'),
+      ('Aver messo tutto in un solo titolo', 1, 'Un titolo solo può non risalire mai: diversificare serve anche a questo.'),
+      ('Avere un piano scritto prima', 0, 'La decisione è già presa, a mente fredda.'),
+      ('Ascoltare chi grida al crollo', 1, 'La paura degli altri è contagiosa.')]),
+    Q('Il tuo fondo diversificato ha perso il 20% e quei soldi ti serviranno tra 25 anni. Che cosa fa di solito chi ha un piano?', ['Vende tutto e aspetta tempi migliori', 'Continua con i versamenti previsti', 'Sposta tutto su un solo titolo che sta salendo'], 1,
+      'Con 25 anni davanti un calo del 20% è un tratto di strada. Chi continua a versare, in quel periodo compra a prezzi più bassi.'),
+    Q('Perché è così difficile guadagnare uscendo dal mercato e rientrando?', ['Perché è vietato', 'Perché i prezzi non cambiano mai', 'Perché bisogna indovinare due momenti: quando uscire e quando rientrare'], 2,
+      'Bisogna azzeccare sia il momento di uscire sia quello di rientrare. Chi esce dopo un calo spesso rientra quando i prezzi sono già risaliti.'),
+  ], 'Un calo diventa una perdita vera solo quando vendi. Tempo, fondo di emergenza e un piano scritto aiutano a restare fermi.'),
+
+  LF('basi-10-4', 'N.1', 'Sentirsi più bravi del mercato', 7, [
+    G("Luca ha 10.000 € investiti e compra e vende spesso: 40 operazioni l'anno, e ognuna gli costa 8 € di commissione. Quanto spende in commissioni in 10 anni?",
+      "40 × 8 = 320 € l'anno, cioè **3.200 €** in dieci anni: quasi un terzo dei 10.000 € di partenza, spesi solo per muoversi. Per andare in pari, ogni anno Luca deve fare il 3,2% meglio di chi sta fermo.",
+      lo=0, hi=6000, step=100, truth=3200, near=300),
+    P('Tutti sopra la media', r'''
+**Quasi tutti pensiamo di essere più bravi della media. Per definizione, non può essere vero per tutti.**
+
+Si chiama **eccesso di fiducia**. Chiedi a un gruppo di persone se guidano meglio della media: la grande maggioranza risponde di sì.
+
+Negli investimenti succede lo stesso, con un'aggravante: il caso si traveste da bravura. Se compri un titolo e sale, pensi di averlo capito. Se scende, è stata sfortuna. Dopo qualche colpo fortunato ti senti esperto e cominci a rischiare di più.
+
+Dall'altra parte di ogni tuo acquisto, però, c'è qualcuno che vende. Spesso è un professionista che fa questo lavoro tutto il giorno, con più informazioni e più strumenti di te. Non è impossibile fare meglio di lui. È solo molto meno probabile di quanto sembra.'''),
+    P('Muoversi costa', r'''
+L'eccesso di fiducia ha un effetto che si può misurare: fa comprare e vendere troppo.
+
+Ogni operazione ha un costo. C'è la **commissione** che paghi all'intermediario. E ci sono le tasse sui guadagni, che paghi ogni volta che vendi in guadagno invece di rimandarle.
+
+Ecco i 10.000 € di Luca e le sue commissioni di dieci anni:
+
+[fig]
+
+Gli studi sui piccoli investitori trovano lo stesso risultato da anni: in media, chi fa più operazioni ottiene di meno. Non perché scelga titoli peggiori, ma perché i costi si mangiano i risultati.
+
+Spesso la mossa che rende di più è non fare nulla.''',
+      fig=F([('Capitale di partenza', '10.000 €', [(10000, 'Soldi investiti', CAP)]), ('Commissioni in 10 anni', '3.200 €', [(3200, "40 operazioni l'anno a 8 €", INT)])])),
+    N("Fai 25 operazioni l'anno e ognuna costa 6 € di commissione. Hai 5.000 € investiti. Quanto pesano le commissioni in un anno, in percentuale del capitale?", 3, '%',
+      "25 × 6 = 150 € l'anno. 150 / 5.000 = **3%**. Prima ancora di guadagnare qualcosa, devi recuperare il 3%."),
+    P('Le regole di chi non si fida di sé', r'''
+I buoni investitori non sono quelli che non hanno queste debolezze. Sono quelli che sanno di averle e si danno delle regole.
+
+• **Scrivi il piano prima**: quanto investi, in che cosa, per quanto tempo.
+• **Rendilo automatico**: un versamento fisso ogni mese decide al posto tuo.
+• **Diversifica**: così non devi avere ragione su un singolo titolo.
+• **Guarda poco**: una o due volte l'anno bastano per ribilanciare.
+• **Tieni basse le spese**: i costi sono l'unica cosa certa di un investimento.
+
+Sono le idee di tutto questo percorso, messe in fila. Nessuna richiede di prevedere il futuro, ed è per questo che funzionano.'''),
+    M(('Avversione alle perdite', 'Una perdita pesa più di un guadagno uguale'), ('Effetto gregge', 'Fare una cosa perché la fanno tutti'), ('FOMO', 'La paura di restare fuori da un guadagno'), ('Eccesso di fiducia', 'Credersi più bravi della media')),
+    Q('Hai indovinato tre titoli di fila. Che cosa dimostra?', ['Che sai prevedere il mercato', 'Poco: tre colpi possono essere fortuna', 'Che conviene puntare tutto sul prossimo'], 1,
+      'Tre risultati sono troppo pochi per distinguere la bravura dalla fortuna. Il rischio è sentirsi esperti e cominciare a puntare cifre più grandi.'),
+    Q("Due investitori hanno lo stesso portafoglio. Uno fa 50 operazioni l'anno, l'altro 2. A parità di rendimento prima dei costi, chi ottiene di più?", ['Chi ne fa 50', 'È uguale', 'Chi ne fa 2'], 2,
+      'Ogni operazione costa una commissione, e spesso anche tasse. A parità di rendimento prima dei costi, a chi si muove meno resta di più.'),
+  ], "Sentirsi più bravi della media fa muovere troppo, e muoversi costa. Un piano scritto, automatico e a basso costo batte quasi sempre l'istinto."),
+])
+
+# Ordine del percorso: prima i soldi di tutti i giorni (tempo, budget, debiti, protezione), poi gli investimenti (strumenti, rischio, come si investe, gli errori della testa), poi aziende ed economia.
+# L'ordine si può cambiare liberamente: i progressi sono legati alle chiavi delle lezioni, non alla posizione.
+UNITS = [U1, U7, U4, U8, U2, U3, U9, U10, U5, U6]
 # ---- controlli di forma ----
 keys = [l['key'] for u in UNITS for l in u['lessons']]
 assert len(keys) == len(set(keys)), 'chiavi doppie'
@@ -673,10 +1565,10 @@ for u in UNITS:
                 if isinstance(s.get(k), str): assert '—' not in s[k] and '"' not in s[k], (l['key'], T, k)
             if T == 'guess' and 'options' in s: assert len(s['options']) == 3 and 0 <= s['ans'] < 3, l['key']
             elif T == 'guess': assert s['min'] < s['truth'] < s['max'] and s['near'] > 0 and (s['max'] - s['min']) % s['step'] == 0, l['key']
-            elif T == 'lever': assert s['model'] in ('mutuo', 'carta') and s['goals'] and all(g['cond'] and g['label'] for g in s['goals']) and all(x['min'] <= x['start'] <= x['max'] for x in s['sliders']), l['key']
+            elif T == 'lever': assert s['model'] in ('mutuo', 'carta', 'piano', 'obiettivo', 'budget', 'inflazione') and s['goals'] and all(g['cond'] and g['label'] for g in s['goals']) and all(x['min'] <= x['start'] <= x['max'] for x in s['sliders']), l['key']
             elif T == 'bucket': assert 2 <= len(s['buckets']) <= 3 and len(s['items']) >= 3 and all(0 <= i[1] < len(s['buckets']) for i in s['items']) and set(i[1] for i in s['items']) == set(range(len(s['buckets']))), l['key']
             elif T == 'order': assert len(s['items']) >= 3 and len(set(s['items'])) == len(s['items']), l['key']
-            elif T == 'num': assert isinstance(s['ans'], (int, float)) and s['tol'] >= 0 and s['unit'] in ('€', '%', ''), l['key']
+            elif T == 'num': assert isinstance(s['ans'], (int, float)) and s['tol'] >= 0 and s['unit'] in ('€', '%', '', 'anni', 'mesi', 'quote'), l['key']
             elif T == 'ex': assert 0 <= s['i'] < len(l['ex']), l['key']
         assert not fl or sorted(s['i'] for s in fl if s['type'] == 'ex') == list(range(len(l['ex']))), l['key']
         for pg in l['pages'] + [s for s in fl if s['type'] == 'page']:

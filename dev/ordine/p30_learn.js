@@ -223,7 +223,7 @@ function CompoundWidget() {
   const C = 1000, i = 0.05, pts = [0, n / 4, n / 2, 3 * n / 4, n];
   const val = t => ({ cap: C, simple: C * i * t, extra: C * Math.pow(1 + i, t) - C - C * i * t });
   const tot = C * Math.pow(1 + i, n), H = 132;
-  const eur = v => fmtInt(v) + ' €';
+  const eur = v => eur0(v);   // stessa scrittura delle lezioni: 2.653 €
   const end = val(n);
   return html`<div class="o-card s o-col" style="padding:16px 18px;gap:10px;margin-top:16px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><span style="font-size:15px;line-height:20px;font-weight:800">1.000 € al 5% l'anno</span>

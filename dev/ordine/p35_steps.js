@@ -80,6 +80,27 @@ const LEVERS = {
       while (B > 0.005 && n < 1200) { const due = B * (1 + j), pay = Math.min(v.rata, due); B = due - pay; tot += pay; n++; } return { mesi: n, interessi: tot - p.debito, base: p.debito, mai: false }; },
     view: o => o.mai ? { lab: 'Tempo per chiudere', big: 'Mai', sideLab: 'Con questa cifra', side: 'paghi solo gli interessi', bar: null, barLab: ['Debito', 'Interessi'] }
       : { lab: 'Tempo per chiudere', big: mesiTxt(o.mesi), sideLab: 'Interessi in tutto', side: eur0(o.interessi), bar: [o.base, o.interessi], barLab: ['Debito', 'Interessi'] }
+  },
+  // versamenti regolari che rendono: leve "rata" (€ al mese) e "anni"; parametro tasso = rendimento annuo in %.
+  // Il tasso è quello di un anno intero (il 5% l'anno resta 5% anche versando ogni mese); versamenti a fine mese.
+  piano: {
+    calc: (v, p) => { const m = v.anni * 12, j = Math.pow(1 + (p.tasso || 0) / 100, 1 / 12) - 1, tot = j > 0 ? v.rata * (Math.pow(1 + j, m) - 1) / j : v.rata * m; return { totale: tot, versato: v.rata * m, interessi: tot - v.rata * m, rata: v.rata, anni: v.anni }; },
+    view: o => ({ lab: 'Quanto avrai', big: eur0(o.totale), sideLab: 'Versato da te', side: eur0(o.versato), bar: [o.versato, o.interessi], barLab: ['Versato', 'Rendimenti'], barCol: [MENTA, AZ] })
+  },
+  // obiettivo di risparmio senza interessi: leve "rata" (€ al mese) e "mesi"; parametro cifra = quanto serve
+  obiettivo: {
+    calc: (v, p) => { const messo = v.rata * v.mesi; return { messo, manca: Math.max(0, p.cifra - messo), rata: v.rata, mesi: v.mesi, cifra: p.cifra }; },
+    view: o => ({ lab: 'Metti da parte', big: eur0(o.messo), sideLab: o.manca > 0 ? 'Ti manca ancora' : 'Obiettivo', side: o.manca > 0 ? eur0(o.manca) : 'raggiunto', bar: [Math.min(o.messo, o.cifra), o.manca], barLab: ['Messo da parte', 'Manca'], barCol: [MENTA, '#fff'] })
+  },
+  // budget del mese: leve "bisogni" e "desideri" (€ al mese); parametro entrate
+  budget: {
+    calc: (v, p) => { const r = p.entrate - v.bisogni - v.desideri; return { risparmio: r, quota: r / p.entrate * 100, bisogni: v.bisogni, desideri: v.desideri, spese: v.bisogni + v.desideri }; },
+    view: o => ({ lab: 'Risparmio al mese', big: eur0(o.risparmio), sideLab: 'Quota delle entrate', side: fmtN(o.quota, 0) + '%', bar: o.risparmio >= 0 ? [o.spese, o.risparmio] : null, barLab: ['Spese', 'Risparmio'], barCol: ['#fff', MENTA] })
+  },
+  // soldi fermi mentre i prezzi salgono: leve "infl" (% annuo) e "anni"; parametro C = cifra ferma
+  inflazione: {
+    calc: (v, p) => { const reale = p.C / Math.pow(1 + v.infl / 100, v.anni); return { reale, perso: (1 - reale / p.C) * 100, persi: p.C - reale, infl: v.infl, anni: v.anni }; },
+    view: o => ({ lab: 'Quello che comprano', big: eur0(o.reale), sideLab: "Potere d'acquisto perso", side: fmtN(o.perso, 0) + '%', bar: [o.reale, o.persi], barLab: ['Resta', 'Perso'], barCol: [AZ, PESCA] })
   }
 };
 // "Muovi le leve": i numeri cambiano sotto il dito; si va avanti quando gli obiettivi sono raggiunti, uno alla volta
@@ -101,8 +122,8 @@ function LeverStep({ st, top, onNext, scrollRef }) {
     <div class="o-card s o-col" style="margin-top:14px;padding:14px 16px 14px;gap:10px" aria-live="polite">
       <div class="o-col"><span class="o-s">${w.lab}</span><span class="o-bign" style="font-size:38px;line-height:44px">${w.big}</span></div>
       <div class="o-rowf" style="justify-content:space-between;gap:12px;padding-top:8px;border-top:2px solid ${SEP}"><span class="o-s">${w.sideLab}</span><span style="font-size:17px;line-height:22px;font-weight:800;text-align:right">${w.side}</span></div>
-      <div class="o-col" style=${{ gap: 4, opacity: w.bar ? 1 : 0.35 }}><div style="display:flex;height:16px;border:2px solid ${INK};border-radius:99px;overflow:hidden;background:${AZ}">
-          ${w.bar && html`<i style=${{ width: w.bar[0] / tot * 100 + '%', background: '#fff', borderRight: `2px solid ${INK}` }}></i>`}</div>
+      <div class="o-col" style=${{ gap: 4, opacity: w.bar ? 1 : 0.35 }}><div style=${{ display: 'flex', height: 16, border: `2px solid ${INK}`, borderRadius: 99, overflow: 'hidden', background: w.barCol ? w.barCol[1] : AZ }}>
+          ${w.bar && html`<i style=${{ width: w.bar[0] / tot * 100 + '%', background: w.barCol ? w.barCol[0] : '#fff', borderRight: w.bar[1] > 0 ? `2px solid ${INK}` : 0 }}></i>`}</div>
         <div class="o-rowf" style="justify-content:space-between"><span class="o-s">${w.barLab[0]}</span><span class="o-s">${w.barLab[1]}</span></div></div>
     </div>
     <div class="o-col" style="gap:12px;margin-top:16px">${st.sliders.map(s => html`<div key=${s.id} class="o-col" style="gap:2px">
