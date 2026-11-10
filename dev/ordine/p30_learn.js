@@ -47,7 +47,7 @@ function HomeScreen({ nav }) {
       : html`<div class="o-col" style="gap:4px"><div class="o-big">Percorso completato</div><div class="o-body o-mut">Hai preso tutte le figurine. Tienile vive con il ripasso.</div></div>
         <${Btn} onClick=${() => nav.tab('allenati')}>Vai al ripasso<//>`}
     </div></div>
-    <div style="height:24px;flex:none"></div>
+    <${NewsTicker} nav=${nav}/>
     <${Sheet}>
       <h2 class="o-h2" style="margin-bottom:4px">Gli argomenti di ${cur.name}</h2>
       ${cur.units.map(u => { const ls = unitLessons(u), d = doneCount(ls); return html`<${Row} key=${u.id} icon=${html`<span style="font-size:15px">${u.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase()}</span>`}
@@ -76,7 +76,7 @@ function HomeEmpty({ nav }) {
       <div class="o-rowf" style="gap:12px;justify-content:space-between;padding:12px 16px;background:${T_GR};border-radius:14px"><span class="o-t">${first.title}</span><span class="o-s" style="flex:none">${first.minutes} minuti</span></div>
       <${Btn} onClick=${start}>Inizia la prima lezione<//>
     </div></div>
-    <div style="height:24px;flex:none"></div>
+    <${NewsTicker} nav=${nav}/>
     <${Sheet}>
       <h2 class="o-h2" style="margin-bottom:4px">Oppure parti da qui</h2>
       ${rec.id !== 'cfa2' && html`<${Row} icon=${Ico(GraduationCap, 22)} ibg=${LILLA} title="Preparare un esame" sub="CFA Level II, domande come all'esame" chev=${true} onClick=${() => nav.go('scheda', { course: 'cfa2' })}/>`}

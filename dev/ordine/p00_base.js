@@ -185,7 +185,19 @@ html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(saf
 .o-up{animation:oUp .26s cubic-bezier(.22,1,.36,1) both}
 .o-fade{animation:oFade .2s ease-out both}
 .o-pop{animation:oPop .32s cubic-bezier(.22,1,.36,1) both}
-@media (prefers-reduced-motion: reduce){.o-in,.o-up,.o-fade,.o-pop,.o-shake{animation:none}.o-figbar{transition:none}}
+.o-ntw{position:relative;z-index:1;flex:none;height:64px;margin:12px 0;overflow:hidden}
+.o-nt{position:absolute;left:-14px;right:-14px;top:9px;height:42px;overflow:hidden;background:${GIALLO};border-top:2.5px solid ${INK};border-bottom:2.5px solid ${INK};box-shadow:0 4px 0 ${INK};transform:rotate(-2deg);white-space:nowrap}
+.o-nt-run{display:inline-flex;align-items:center;height:100%;animation:oNastro 30s linear infinite;will-change:transform}
+.o-nt-g{display:inline-flex;align-items:center;flex:none;padding-left:18px}
+.o-nt-chip{flex:none;margin-right:12px;padding:2px 7px;background:${INK};border-radius:6px;color:${GIALLO};font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-size:10px;line-height:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.o-nt-i{display:inline-flex;align-items:center;gap:12px;flex:none;height:37px;padding-right:12px;font-size:15.5px;line-height:20px;font-weight:800;color:${INK};white-space:nowrap}
+.o-nt-l{display:inline-flex;align-items:center;gap:4px;font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-size:10px;line-height:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+@keyframes oNastro{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.o-hl{background:linear-gradient(transparent 40%,${GIALLO} 40%,${GIALLO} 93%,transparent 93%);padding:0 4px;margin:0 -4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.o-rich.art{font-size:17px;line-height:27px;font-weight:500}
+.o-art-src{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:2px solid ${SEP};color:${INK};text-decoration:none}
+.o-art-src:last-of-type{border-bottom:0}
+@media (prefers-reduced-motion: reduce){.o-in,.o-up,.o-fade,.o-pop,.o-shake{animation:none}.o-figbar{transition:none}.o-nt{overflow-x:auto}.o-nt-run{animation:none}}
 @media (min-width:521px){body{background:#DDE3EC!important}}
 `;
 function ordInjectCss() {

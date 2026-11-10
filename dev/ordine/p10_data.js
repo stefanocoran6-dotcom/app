@@ -121,9 +121,16 @@ const GLOSS_DEF = {
   'tasso di cambio': ['Tasso di cambio', 'Il prezzo di una moneta espresso in un\'altra. Se il cambio euro/dollaro è 1,10, con 1 € compri 1,10 $.'],
   'rischio di cambio': ['Rischio di cambio', 'Il rischio di guadagnare o perdere perché cambia il valore della moneta in cui hai investito.'],
   pil: ['PIL', 'Prodotto interno lordo: il valore di tutti i beni e i servizi prodotti in un Paese in un anno. È il termometro dell\'economia.'],
-  recessione: ['Recessione', 'Una fase in cui l\'economia si restringe. La regola pratica: il PIL scende per due trimestri consecutivi.']
+  recessione: ['Recessione', 'Una fase in cui l\'economia si restringe. La regola pratica: il PIL scende per due trimestri consecutivi.'],
+  // Notizie
+  'indice di borsa': ['Indice di borsa', 'Un numero che riassume l\'andamento di un gruppo di azioni. Se l\'indice sale, in media quelle azioni sono salite.'],
+  'inflazione di fondo': ['Inflazione di fondo', 'L\'inflazione calcolata lasciando fuori le voci che cambiano prezzo più in fretta, come energia e alimentari. Mostra la tendenza di fondo dei prezzi.'],
+  pun: ['PUN', 'Prezzo unico nazionale: il prezzo all\'ingrosso dell\'elettricità in Italia. Molte offerte della luce a prezzo variabile lo seguono.'],
+  megawattora: ['Megawattora', 'Mille chilowattora. Una famiglia consuma in media tra 2 e 3 megawattora di elettricità in un anno.'],
+  fed: ['Fed', 'La Federal Reserve, la banca centrale degli Stati Uniti. Decide i tassi di interesse del dollaro.'],
+  'wall street': ['Wall Street', 'La via di New York dove ha sede la Borsa. Per estensione indica il mercato azionario americano.']
 };
-const GLOSS_ALIAS = { interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile', 'interessi sugli interessi': 'interesse composto', azione: 'azioni', obbligazione: 'obbligazioni',
+const GLOSS_ALIAS = { indice: 'indice di borsa', interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile', 'interessi sugli interessi': 'interesse composto', azione: 'azioni', obbligazione: 'obbligazioni',
   rc: 'responsabilità civile', 'prezzo/utili': 'p/e', esclusione: 'esclusioni', quota: 'quote', 'schema di ponzi': 'schema ponzi', investimento: 'investimenti', commissioni: 'commissione', 'spesa fissa': 'spese fisse', 'spesa variabile': 'spese variabili' };
 const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?()«»“”]/g, '').replace(/\s+/g, ' ').trim(); return GLOSS_DEF[k] ? k : GLOSS_ALIAS[k] || null; };
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));

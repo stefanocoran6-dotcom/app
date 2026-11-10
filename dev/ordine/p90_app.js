@@ -14,6 +14,7 @@ const SCREENS = {
   sfida: p => html`<${DuelRun} ...${p}/>`,
   sfidaFine: p => html`<${DuelDone} ...${p}/>`,
   album: p => html`<${AlbumScreen} ...${p}/>`,
+  articolo: p => html`<${ArticleScreen} ...${p}/>`,
   impostazioni: p => html`<${SettingsScreen} ...${p}/>`,
   pro: p => html`<${ProScreen} ...${p}/>`,
   catalogo: p => html`<${CatalogScreen} ...${p}/>`,
