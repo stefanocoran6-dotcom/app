@@ -59,6 +59,7 @@ export function OrdineApp({ kit }) {
   return html`<${React.Fragment}><div class="o-app">
     ${layer(top < 0, tabScreen, 'tab:' + tab + ':' + sub, false)}
     ${stack.map((e, k) => layer(k === top, SCREENS[e.name] ? SCREENS[e.name](Object.assign({ nav }, e.params)) : null, 'st' + e.id, true))}
+    <${TermHost}/>
     ${toast && html`<div class="o-toast o-fade" role="status">${toast}</div>`}
   </div>
   ${calc && Calc && html`<${Calc} onClose=${() => setCalc(false)}/>`}

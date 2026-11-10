@@ -10,6 +10,28 @@ const BASI = {
   learn: ['Come lavorano interessi, inflazione e tempo', 'Cosa sono azioni, obbligazioni, fondi ed ETF', 'Quanto pesano rischio, costi e debiti', 'Come si leggono un bilancio e le notizie di economia'],
   units: BASI_UNITS.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
 };
+// Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
+const GLOSS_DEF = {
+  capitale: ['Capitale', 'La somma che ti viene prestata, senza contare gli interessi. È il debito vero e proprio da restituire.'],
+  interessi: ['Interessi', 'Il compenso che paghi a chi ti presta dei soldi, per il tempo in cui li tieni. Si calcolano come percentuale di quello che devi ancora.'],
+  rata: ['Rata', 'La cifra che versi a ogni scadenza per restituire un prestito. Dentro ci sono una parte di interessi e una parte di capitale.'],
+  'quota interessi': ['Quota interessi', 'La parte della rata che paga gli interessi di quel periodo. Non fa scendere il debito.'],
+  'quota capitale': ['Quota capitale', 'La parte della rata che restituisce un pezzo del prestito. È quella che fa scendere il debito.'],
+  'debito residuo': ['Debito residuo', 'Quello che devi ancora restituire in questo momento.'],
+  tan: ['TAN', 'Tasso annuo nominale. È il tasso di interesse del prestito, senza contare le spese.'],
+  taeg: ['TAEG', 'Tasso annuo effettivo globale. È quanto costa il prestito in un anno, mettendo insieme interessi e spese obbligatorie. È il numero da confrontare tra offerte diverse.'],
+  spese: ['Spese', 'I costi di un prestito che non sono interessi: aprire la pratica, incassare le rate, le assicurazioni che la banca ti obbliga a fare.'],
+  mutuo: ['Mutuo', 'Il prestito a lunga durata che si chiede per comprare casa. È garantito dalla casa stessa.'],
+  ipoteca: ['Ipoteca', 'La garanzia che dai alla banca quando fai un mutuo: se smetti di pagare, la banca può far vendere la casa per riprendersi i soldi.'],
+  'tasso fisso': ['Tasso fisso', 'Un tasso che resta uguale per tutta la durata del prestito. Anche la rata non cambia.'],
+  'tasso variabile': ['Tasso variabile', 'Un tasso che segue un tasso di riferimento del mercato: quando quello sale o scende, cambia anche la tua rata.'],
+  spread: ['Spread', 'La maggiorazione fissa che la banca aggiunge al tasso di riferimento. È il suo guadagno sul prestito.'],
+  revolving: ['Carta revolving', 'Una carta di credito che ti fa restituire le spese a rate, pagando interessi sul debito che resta. Il tasso è spesso alto.']
+};
+const GLOSS_ALIAS = { interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile' };
+const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?()«»“”]/g, '').replace(/\s+/g, ' ').trim(); return GLOSS_DEF[k] ? k : GLOSS_ALIAS[k] || null; };
+const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
+
 // Percorsi non ancora pronti: compaiono nel catalogo come "in arrivo".
 const COMING = [
   { id: 'risparmio', name: 'Risparmio e budget', group: 'basi', color: MENTA, icon: 'wallet' },
@@ -65,7 +87,7 @@ function lessonSteps(l) {
     // lezione a passi corti: pagine brevi alternate a cose da fare; "In breve" chiude l'ultima pagina
     const qs = lessonQuestions(l), lastPage = l.flow.map(s => s.type).lastIndexOf('page');
     l.flow.forEach((s, i) => {
-      if (s.type === 'page') steps.push({ k: 'page', title: s.t, text: s.x, widget: s.widget, first: !steps.length, note: i === lastPage ? l.note : null });
+      if (s.type === 'page') steps.push({ k: 'page', title: s.t, text: s.x, widget: s.widget, fig: s.fig, first: !steps.length, note: i === lastPage ? l.note : null });
       else if (s.type === 'ex') { const e = l.ex[s.i]; if (e.type === 'match') steps.push({ k: 'match', pairs: e.pairs }); else steps.push({ k: 'q', q: qs[l.ex.slice(0, s.i).filter(x => x.type === 'mcq').length] }); }
       else steps.push(Object.assign({}, s, { k: s.type, n: i }));
     });

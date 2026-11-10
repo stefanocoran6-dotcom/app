@@ -65,9 +65,20 @@ function Opt({ letter, text, state = '', note, onClick, disabled, lang, rich, bi
     <span class="l">${mark}</span><span class="x">${rich ? html`<${Rich} text=${text} cls="sm" bare=${true}/>` : text}${note && wide && html`<span class="n" lang="it" style="display:block;margin-top:2px">${note}</span>`}</span>${note && !wide && html`<span class="n" lang="it">${note}</span>`}</button>`;
 }
 // testo ricco dell'app (grassetti, formule, tabelle) nello stile nuovo
+// parole da toccare: dentro una lezione di base (termStore.on) le parole in grassetto che stanno nel glossario si aprono con un tocco
+const termStore = { cur: null, on: false, subs: new Set() };
+const termOpen = k => { termStore.cur = k; termStore.subs.forEach(f => f()); };
 function Rich({ text, cls = '', lang, bare, style }) {
-  const RT = K && K.RichText;
-  return html`<div class=${bare ? '' : 'o-rich ' + cls} lang=${lang} style=${style}>${RT ? html`<${RT} text=${text}/>` : String(text || '')}</div>`;
+  const RT = K && K.RichText, ref = useRef(null), on = termStore.on;
+  useEffect(() => {
+    const el = ref.current; if (!el || !on) return;
+    // i pezzi di testo vengono riusati da una pagina all'altra: prima tolgo i segni vecchi, poi rimetto quelli giusti
+    el.querySelectorAll('.fl-strong').forEach(x => { const k = glossKey(x.textContent);
+      if (k) { x.classList.add('o-term'); x.setAttribute('role', 'button'); x.setAttribute('tabindex', '0'); x.dataset.term = k; }
+      else if (x.classList.contains('o-term')) { x.classList.remove('o-term'); x.removeAttribute('role'); x.removeAttribute('tabindex'); delete x.dataset.term; } });
+  }, [text, on]);
+  const pick = e => { const t = e.target && e.target.closest ? e.target.closest('.o-term') : null; if (!t) return false; e.stopPropagation(); termOpen(t.dataset.term); return true; };
+  return html`<div ref=${ref} class=${bare ? '' : 'o-rich ' + cls} lang=${lang} style=${style} onClick=${on ? pick : undefined} onKeyDown=${on ? e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); } : undefined}>${RT ? html`<${RT} text=${text}/>` : String(text || '')}</div>`;
 }
 function Sw({ on, onChange, label }) {
   return html`<button type="button" role="switch" aria-checked=${on ? 'true' : 'false'} aria-label=${label} class=${'o-sw' + (on ? ' on' : '')} onClick=${() => onChange(!on)}><i></i></button>`;
@@ -76,6 +87,16 @@ function Sw({ on, onChange, label }) {
 function BSheet({ children, onClose, bg = '#fff', dim = true, label }) {
   return html`<div class="o-ovl o-fade" style=${dim ? null : { background: 'transparent', pointerEvents: 'none' }} onClick=${onClose} role="dialog" aria-label=${label}>
     <div class="o-bs o-up" style=${{ background: bg, pointerEvents: 'auto' }} onClick=${e => e.stopPropagation()}>${children}</div></div>`;
+}
+// il foglio che spiega la parola toccata: sta sopra a tutto, una volta sola nell'app
+function TermHost() {
+  const [, f] = useState(0);
+  useEffect(() => { const g = () => f(x => x + 1); termStore.subs.add(g); return () => { termStore.subs.delete(g); }; }, []);
+  const d = termStore.cur ? GLOSS_DEF[termStore.cur] : null; if (!d) return null;
+  const close = () => termOpen(null);
+  return html`<${BSheet} onClose=${close} label=${'Che cosa vuol dire ' + d[0]}><div class="o-col" style="gap:8px">
+    <span class="o-lab">Che cosa vuol dire</span><h2 style="font-size:26px;line-height:30px;font-weight:800;letter-spacing:-.02em">${d[0]}</h2>
+    <p style="font-size:17px;line-height:25px;font-weight:500">${d[1]}</p><${Btn} cls="lg" style=${{ marginTop: 10 }} onClick=${close}>Ho capito<//></div><//>`;
 }
 // schermata "stanza": testata colorata con Rally, contenuto, barra in basso
 function Room({ color, tab, go, head, rally, children, tabs = true, headH = 160, scrollRef }) {

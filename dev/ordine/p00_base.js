@@ -171,6 +171,10 @@ html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(saf
 .o-chip2{display:block;padding:5px 9px;background:${T_GR};border-radius:10px;font-size:13px;line-height:17px;font-weight:700;text-align:left}
 .o-goal{display:flex;align-items:center;gap:12px;padding:12px 14px;background:${T_GIALLO};border:2.5px solid ${INK};border-radius:18px}
 .o-goal.ok{background:${MENTA}}
+.o-term{text-decoration:underline dotted ${INK};text-decoration-thickness:2px;text-underline-offset:4px;cursor:pointer}
+.o-fig{display:flex;flex-direction:column;gap:14px;margin:16px 0;padding:14px 16px 16px;background:#fff;border:2.5px solid ${INK};border-radius:20px;box-shadow:4px 4px 0 ${INK}}
+.o-figbar{display:flex;height:24px;min-width:26px;border:2.5px solid ${INK};border-radius:99px;overflow:hidden;transition:width .75s cubic-bezier(.2,.8,.2,1)}
+.o-bub{position:relative;margin-bottom:22px;padding:9px 13px;background:#fff;border:2.5px solid ${INK};border-radius:16px 16px 16px 4px;font-size:15px;line-height:19px;font-weight:700}
 @keyframes oShake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 .o-shake{animation:oShake .36s ease-in-out}
 @keyframes oIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -181,7 +185,7 @@ html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(saf
 .o-up{animation:oUp .26s cubic-bezier(.22,1,.36,1) both}
 .o-fade{animation:oFade .2s ease-out both}
 .o-pop{animation:oPop .32s cubic-bezier(.22,1,.36,1) both}
-@media (prefers-reduced-motion: reduce){.o-in,.o-up,.o-fade,.o-pop,.o-shake{animation:none}}
+@media (prefers-reduced-motion: reduce){.o-in,.o-up,.o-fade,.o-pop,.o-shake{animation:none}.o-figbar{transition:none}}
 @media (min-width:521px){body{background:#DDE3EC!important}}
 `;
 function ordInjectCss() {

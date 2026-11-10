@@ -19,6 +19,21 @@ function Slider({ value, min, max, step, onChange, label, disabled }) {
     <button type="button" class="o-stepb" aria-label=${'Più: ' + label} disabled=${!!disabled || value >= max} onClick=${() => set(value + step)}>${PathIco(D_PLUS, 18, 3.2)}</button></div>`;
 }
 
+// figura che accompagna una spiegazione: una o più barre divise in pezzi colorati, con la legenda sotto. Le barre crescono quando la pagina compare.
+const FIG_COL = { az: AZ, pesca: PESCA, menta: MENTA, giallo: GIALLO, lilla: LILLA, rosa: ROSA, bianco: '#fff' };
+function Fig({ fig }) {
+  const [go, setGo] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
+  const sum = r => r.segs.reduce((a, x) => a + x[0], 0), max = Math.max.apply(null, fig.rows.map(sum));
+  const dot = c => html`<i style=${{ width: 12, height: 12, flex: 'none', borderRadius: 4, background: FIG_COL[c] || AZ, border: `2px solid ${INK}` }}></i>`;
+  return html`<figure class="o-fig" role="img" aria-label=${fig.alt || fig.rows.map(r => r.lab + (r.val ? ' ' + r.val : '') + ': ' + r.segs.map(x => x[1] + (x[3] ? ' ' + x[3] : '')).join(', ')).join('. ')}>
+    ${fig.rows.map((r, k) => html`<div key=${k} class="o-col" style="gap:6px">
+      <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style="font-weight:800">${r.lab}</span>${r.val && html`<span class="o-t" style="font-weight:800;white-space:nowrap">${r.val}</span>`}</div>
+      <div class="o-figbar" style=${{ width: (go ? Math.max(8, sum(r) / max * 100) : 0) + '%' }}>${r.segs.map((x, j) => html`<i key=${j} style=${{ flex: x[0] + ' 1 0', background: FIG_COL[x[2]] || AZ, borderLeft: j ? `2.5px solid ${INK}` : 0 }}></i>`)}</div>
+      <div class="o-rowf" style="flex-wrap:wrap;gap:4px 14px">${r.segs.map((x, j) => html`<span key=${j} class="o-s" style=${{ color: INK, display: 'inline-flex', alignItems: 'center', gap: 6 }}>${dot(x[2])}${x[1]}${x[3] ? ' ' + x[3] : ''}</span>`)}</div></div>`)}
+    ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
+}
+
 // "Prima di leggere": una stima (cursore) o una scelta, senza voto. La spiegazione parte da quello che hai risposto.
 function GuessStep({ st, top, onNext, scrollRef }) {
   const choice = Array.isArray(st.options);
@@ -32,7 +47,9 @@ function GuessStep({ st, top, onNext, scrollRef }) {
   const mark = (x, bg, round) => html`<i style=${{ position: 'absolute', top: '50%', left: pos(x) + '%', width: round ? 24 : 20, height: round ? 24 : 20, marginLeft: round ? -12 : -10, marginTop: round ? -12 : -10, background: bg, border: `2.5px solid ${INK}`, borderRadius: round ? '50%' : 5, transform: round ? 'none' : 'rotate(45deg)' }}></i>`;
   const box = (lab, val, bg) => html`<div class="o-col o-grow" style=${{ padding: '10px 12px', border: `2px solid ${INK}`, borderRadius: 14, background: bg }}><span class="o-s" style=${{ color: INK }}>${lab}</span><span style="font-size:26px;line-height:32px;font-weight:800;white-space:nowrap">${val}</span></div>`;
   const body = html`<div class="o-pad" style="padding-top:18px;padding-bottom:24px">
-    <div class="o-col" style="gap:6px"><span class="o-lab">Prima di leggere: secondo te?</span><${Rich} text=${st.q} cls="q"/></div>
+    <div class="o-rowf" style="gap:8px;align-items:flex-end;margin:-4px 0 12px -6px"><${Rally} pose=${!locked ? 'pensa' : right ? 'giusto' : 'insegna'} w=${92} style=${{ flex: 'none' }}/>
+      <span class="o-bub" aria-live="polite">${!locked ? 'Prima di leggere: tu che dici?' : right ? 'Bel colpo!' : 'Guardiamo insieme il conto.'}</span></div>
+    <${Rich} text=${st.q} cls="q"/>
     ${choice ? html`<div class="o-col" style="gap:10px;margin-top:16px">${st.options.map((o, k) => html`<${Opt} key=${k} letter=${L3[k]} text=${o}
         state=${!locked ? (v === k ? 'sel' : '') : k === st.ans ? 'ok' : k === v ? 'sel' : 'dim'} note=${k === v ? 'La tua scelta' : locked && k === st.ans ? 'Quella giusta' : null} disabled=${locked} onClick=${() => setV(k)}/>`)}</div>`
     : !locked ? html`<div class="o-card s o-col" style="margin-top:18px;padding:16px 16px 18px;gap:12px">

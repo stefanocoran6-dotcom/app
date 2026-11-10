@@ -249,6 +249,10 @@ function LessonScreen({ nav, lessonKey }) {
   const [i, setI] = useState(0), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [res, setRes] = useState({}), [tab, setTab] = useState('case');
   const [matched, setMatched] = useState(false), [done, setDone] = useState(null), [left, setLeft] = useState(null);
   const scrollRef = useRef(null);
+  // parole da toccare: solo nelle lezioni di base, e si spengono quando esci dalla lezione
+  termStore.on = !!l && l.kind !== 'los';
+  useEffect(() => () => { termStore.on = false; termOpen(null); }, []);
+  const firstTermPage = useMemo(() => (l && l.kind !== 'los' ? steps.findIndex(s => s.k === 'page' && hasTerms(s.text)) : -1), [lessonKey]);
   useEffect(() => { markSeen(l); }, [lessonKey]);
   useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; setSel(null); setFb(null); setTab('case'); setMatched(false); }, [i]);
   const st = steps[i];
@@ -282,7 +286,8 @@ function LessonScreen({ nav, lessonKey }) {
     body = html`<div class="o-pad" style="position:relative;padding-top:18px;padding-bottom:24px">
       ${st.head && html`<div class="o-lab" style="margin-bottom:4px">${st.head}</div>`}
       <h1 style="font-size:30px;line-height:34px;font-weight:800;letter-spacing:-.02em;text-wrap:balance;overflow-wrap:anywhere">${st.title}</h1>
-      <div style="margin-top:12px"><${Rich} text=${st.text}/></div>
+      <div style="margin-top:12px">${(() => { const parts = st.fig ? String(st.text).split(/\n*\[fig\]\n*/) : [st.text]; return html`<${React.Fragment}><${Rich} text=${parts[0]}/>${st.fig && html`<${Fig} key=${'f' + i} fig=${st.fig}/>`}${parts[1] && html`<${Rich} text=${parts[1]}/>`}<//>`; })()}</div>
+      ${i === firstTermPage && html`<p class="o-s" style="margin-top:14px">Le parole sottolineate si possono toccare: ti dicono che cosa vogliono dire.</p>`}
       ${st.widget === 'compound' && html`<${CompoundWidget}/>`}
       ${st.note && html`<div class="o-note" style="margin-top:18px">In breve: ${st.note}</div>`}
     </div>`;

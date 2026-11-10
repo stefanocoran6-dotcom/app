@@ -11,9 +11,14 @@ def Q(q, options, ans, exp): return dict(type='mcq', q=q, options=options, ans=a
 def M(*pairs): return dict(type='match', pairs=[list(p) for p in pairs])
 
 # ---- lezioni a passi corti: "flow" elenca i passi nell'ordine in cui si vedono ----
-def P(t, x, widget=None):                      # pagina breve
+def P(t, x, widget=None, fig=None):            # pagina di spiegazione; "[fig]" su una riga a sé dice dove va il disegno
     d = dict(type='page', t=t, x=x.strip('\n'))
     if widget: d['widget'] = widget
+    if fig: d['fig'] = fig
+    return d
+def F(rows, cap=None):                         # disegno a barre: righe (etichetta, valore, pezzi); ogni pezzo è (peso, nome, colore, cifra)
+    d = dict(rows=[dict(lab=l, val=v, segs=[list(x) for x in segs]) for (l, v, segs) in rows])
+    if cap: d['cap'] = cap
     return d
 def G(q, after, lo=None, hi=None, step=None, truth=None, near=None, unit='€', options=None, ans=None):   # stima prima di leggere: cursore, oppure scelta tra risposte
     d = dict(type='guess', q=q.strip('\n'), after=after.strip('\n'))
@@ -286,29 +291,47 @@ La differenza è di circa **21.800 €**, più del doppio della cifra investita.
     [Q("Un fondo rende il 7% l'anno prima dei costi e costa l'1,8% l'anno. Quanto ti resta all'incirca?", ['5,2%', '8,8%', '7%'], 0, '7% − 1,8% = **5,2%** circa. I costi si tolgono dal rendimento, non si aggiungono.')]),
 ])
 
-# Unità pilota a passi corti: ogni lezione alterna pagine brevi e cose da fare (stima, leve, metti a posto, calcola).
+# Unità pilota a passi corti: ogni lezione alterna spiegazioni vere (scritte per chi parte da zero, con un disegno accanto) e cose da fare.
+# Ogni lezione segue una situazione di vita reale dall'inizio alla fine: la stima d'apertura fa la domanda, l'ultima pagina la chiude.
+INT, CAP = 'pesca', 'az'   # colori fissi nei disegni: interessi e costi in pesca, capitale in azzurro
 U4 = dict(id='basi-u4', sid='basi-debiti', name='Debiti e prestiti', lessons=[
-  LF('basi-4-1', 'P', 'Come funziona un prestito', 6, [
-    G("Prendi in prestito 3.310 € al 10% l'anno e li restituisci in 3 rate annuali uguali. Quanti interessi paghi in tutto?",
+  LF('basi-4-1', 'P', 'Come funziona un prestito', 7, [
+    G("Ti servono 3.310 € per una moto usata. La banca te li presta al 10% l'anno e tu li restituisci in 3 rate annuali uguali. Quanti interessi le paghi in tutto?",
       "Molti dicono 993 €, cioè il 10% di 3.310 € per tre anni. Ma ogni rata restituisce anche un pezzo del debito, quindi gli interessi si calcolano su una cifra che scende. In tutto sono **683 €**: adesso vediamo da dove escono.",
       lo=0, hi=1500, step=10, truth=683, near=70),
-    P('Capitale, interessi, rata', r'''
-La somma che ricevi è il **capitale**. In cambio paghi gli **interessi**, e di solito restituisci tutto con una **rata** sempre uguale.
+    P('Soldi oggi, restituiti a rate', r'''
+**Chiedere un prestito vuol dire usare oggi soldi che non hai, e restituirli un po' alla volta.**
 
-Ogni rata ha due pezzi:
+La banca ti dà subito i 3.310 € della moto: quella cifra si chiama **capitale**.
 
-• la **quota interessi**, calcolata sul debito che ti resta;
-• la **quota capitale**, che riduce il debito.'''),
+La banca però non lo fa gratis. Per ogni anno in cui tieni i suoi soldi ti chiede un compenso, gli **interessi**: qui il 10% di quello che le devi ancora.
+
+Ogni anno le versi una cifra fissa, la **rata**: 1.331 €. Dentro ci sono due cose diverse:
+
+• una parte paga gli interessi di quell'anno;
+• il resto restituisce un pezzo del capitale.
+
+[fig]
+
+Più capitale restituisci, meno devi alla banca, e meno interessi pagherai l'anno dopo.''',
+      fig=F([('La rata di ogni anno', '1.331 €', [(1, 'Interessi', INT), (3, 'Capitale restituito', CAP)])], cap='Quanto vale ogni pezzo cambia di anno in anno: lo vediamo subito.')),
     P('Il primo anno', r'''
-Il prestito è di 3.310 € al 10% l'anno e la rata è di 1.331 €.
+Facciamo il conto della prima rata.
+
+All'inizio devi alla banca tutti i 3.310 €. Gli interessi del primo anno sono il 10% di quella cifra:
 
 • Interessi: 10% di 3.310 € = **331 €**
-• Quota capitale: 1.331 − 331 = **1.000 €**
-• Debito che resta: 3.310 − 1.000 = **2.310 €**
 
-Della prima rata, circa un quarto se ne va in interessi.'''),
+La rata è di 1.331 €. Tolti gli interessi, quello che avanza restituisce capitale:
+
+• Capitale restituito: 1.331 − 331 = **1.000 €**
+
+[fig]
+
+Dopo la prima rata non devi più 3.310 €, ma 3.310 − 1.000 = **2.310 €**. Gli interessi dell'anno prossimo si calcolano su questa cifra, che è più bassa.''',
+      fig=F([('La prima rata', '1.331 €', [(331, 'Interessi', INT, '331 €'), (1000, 'Capitale restituito', CAP, '1.000 €')])])),
     N(r'''
-Secondo anno. Il debito è sceso a 2.310 € e il tasso è sempre il 10%.
+Secondo anno. Adesso devi alla banca 2.310 €, e il tasso è sempre il 10%.
 
 | Anno | Interessi | Capitale | Debito residuo |
 |---|---|---|---|
@@ -316,9 +339,9 @@ Secondo anno. Il debito è sceso a 2.310 € e il tasso è sempre il 10%.
 | 2 | **?** | | |
 
 Quanti interessi paghi nel secondo anno?''', 231, '€',
-      "10% di 2.310 € = **231 €**. Il resto della rata, 1.331 − 231 = 1.100 €, riduce il debito a 1.210 €."),
+      "10% di 2.310 € = **231 €**. Il resto della rata, 1.331 − 231 = 1.100 €, restituisce capitale: il debito scende a 1.210 €."),
     N(r'''
-Terzo anno. Restano 1.210 € di debito al 10% e la rata è sempre di 1.331 €.
+Terzo anno. Ti restano 1.210 € di debito al 10%, e la rata è sempre di 1.331 €.
 
 | Anno | Interessi | Capitale | Debito residuo |
 |---|---|---|---|
@@ -327,21 +350,24 @@ Terzo anno. Restano 1.210 € di debito al 10% e la rata è sempre di 1.331 €.
 | 3 | 121 | **?** | |
 
 Quanto capitale restituisci con l'ultima rata?''', 1210, '€',
-      "Interessi: 10% di 1.210 € = 121 €. Quota capitale: 1.331 − 121 = **1.210 €**, cioè tutto il debito che restava. Il prestito è chiuso."),
+      "Interessi: 10% di 1.210 € = 121 €. Capitale restituito: 1.331 − 121 = **1.210 €**, cioè tutto il debito che restava. Il prestito è chiuso."),
     P('La rata resta uguale, dentro cambia', r'''
-| Anno | Interessi | Capitale | Debito residuo |
-|---|---|---|---|
-| 1 | 331 | 1.000 | 2.310 |
-| 2 | 231 | 1.100 | 1.210 |
-| 3 | 121 | 1.210 | 0 |
+Ecco le tre rate una sotto l'altra. La cifra è sempre 1.331 €, ma guarda come cambia dentro.
 
-Anno dopo anno gli interessi scendono e la quota capitale sale. In tutto paghi 331 + 231 + 121 = **683 €** di interessi.
+[fig]
 
-La rata che fa tornare i conti si calcola così:
+Anno dopo anno il debito scende, quindi scendono gli interessi e cresce la parte che restituisce capitale.
+
+E i 683 € della domanda iniziale? Sono gli interessi delle tre rate messi insieme: 331 + 231 + 121 = **683 €**. È il prezzo che paghi per avere la moto subito.
+
+Per i curiosi, la rata uguale che fa tornare i conti si trova così:
 
 $$R = C \times \frac{i}{1 - (1 + i)^{-n}}$$
 
-Dove \(R\) è la rata, \(C\) il capitale, \(i\) il tasso per periodo e \(n\) il numero di rate.'''),
+Dove \(R\) è la rata, \(C\) il capitale, \(i\) il tasso per periodo e \(n\) il numero di rate.''',
+      fig=F([('Anno 1', '1.331 €', [(331, 'Interessi', INT, '331 €'), (1000, 'Capitale', CAP, '1.000 €')]),
+             ('Anno 2', '1.331 €', [(231, 'Interessi', INT, '231 €'), (1100, 'Capitale', CAP, '1.100 €')]),
+             ('Anno 3', '1.331 €', [(121, 'Interessi', INT, '121 €'), (1210, 'Capitale', CAP, '1.210 €')])])),
     BK('Con il passare degli anni, sale o scende?', ['Scende', 'Resta uguale', 'Sale'], [
       ('La quota interessi', 0, 'Gli interessi si calcolano sul debito che resta, e il debito cala a ogni rata.'),
       ('La rata', 1, "In questo tipo di prestito la rata è la stessa dalla prima all'ultima."),
@@ -353,15 +379,23 @@ Dove \(R\) è la rata, \(C\) il capitale, \(i\) il tasso per periodo e \(n\) il 
       "All'inizio il debito è al massimo, quindi gli interessi pesano di più e resta meno spazio per il capitale. Nell'esempio della lezione la prima rata ha 331 € di interessi, l'ultima 121 €."),
   ], 'La rata resta uguale, ma dentro cambia: prima più interessi, poi quasi solo capitale.'),
 
-  LF('basi-4-2', 'TAN', 'TAN e TAEG', 5, [
-    G("Due prestiti, stessa cifra e stessa durata. Il prestito A ha un tasso del 5%, il prestito B del 6%. Quale ti costa meno?",
+  LF('basi-4-2', 'TAN', 'TAN e TAEG', 6, [
+    G("Due banche ti offrono lo stesso prestito: stessa cifra, stessa durata. La banca A chiede un tasso del 5%, la banca B del 6%. Quale ti costa meno?",
       "Il tasso da solo non basta: mancano le **spese**. Un prestito al 5% con spese alte può costare più di uno al 6% senza spese. Per questo ogni prestito ha due numeri, il TAN e il TAEG.",
-      options=['Il prestito A', 'Il prestito B', 'Non si può dire'], ans=2),
-    P('Due sigle, due domande', r'''
-• Il **TAN**, tasso annuo nominale, è il puro tasso di interesse: dice quanto costa il denaro.
-• Il **TAEG**, tasso annuo effettivo globale, aggiunge al TAN le spese obbligatorie: dice quanto costa **il prestito**.
+      options=['La banca A', 'La banca B', 'Non si può dire'], ans=2),
+    P('Il tasso non racconta tutto', r'''
+Quando chiedi un prestito paghi due tipi di costi.
 
-Per confrontare due offerte si guarda il TAEG, non il TAN.'''),
+Il primo sono gli **interessi**, cioè il compenso alla banca per i soldi che ti presta. Il tasso che li misura si chiama **TAN**, tasso annuo nominale.
+
+Il secondo sono le **spese**: aprire la pratica, incassare ogni rata, a volte un'assicurazione che la banca ti obbliga a fare. Nel TAN non ci sono.
+
+Per questo esiste un secondo numero, il **TAEG**, tasso annuo effettivo globale: mette insieme interessi e spese obbligatorie e ti dice quanto costa davvero il prestito in un anno.
+
+[fig]
+
+Quando confronti due offerte, guarda il TAEG.''',
+      fig=F([('Quanto ti costa un prestito', None, [(4, 'Interessi: li misura il TAN', INT), (1, 'Spese obbligatorie', 'giallo')])], cap='Il TAEG misura tutta la barra, il TAN solo il primo pezzo.')),
     BK('Entra nel TAEG o resta fuori?', ['Entra nel TAEG', 'Resta fuori'], [
       ('Interessi sul prestito', 0, 'Gli interessi sono il primo pezzo del TAEG: è il TAN.'),
       ('Spese di istruttoria', 0, 'Sono spese obbligatorie per avere il prestito: entrano.'),
@@ -388,21 +422,30 @@ Il TAN dice 6%, ma il prestito costa il 7,5%. Se le spese si pagassero subito, i
       "Conta il TAEG, che comprende le spese: **B** costa il 6,9% contro l'8,2% di A, anche se ha il TAN più alto."),
   ], 'Il TAN è il prezzo del denaro, il TAEG è il prezzo del prestito tutto compreso. Si confronta il TAEG.'),
 
-  LF('basi-4-3', 'M', 'Il mutuo: fisso o variabile', 6, [
-    G("Mutuo di 150.000 € in 25 anni. Se il tasso sale dal 3% al 5%, di quanto aumenta la rata mensile?",
+  LF('basi-4-3', 'M', 'Il mutuo: fisso o variabile', 7, [
+    G("Per comprare casa chiedi un mutuo di 150.000 €, da restituire in 25 anni. Se il tasso passa dal 3% al 5%, di quanto aumenta la rata di ogni mese?",
       "Al 3% la rata è di **711 €**, al 5% di **877 €**: circa **166 € in più ogni mese**, per 25 anni. Sulle durate lunghe anche due punti di tasso pesano molto.",
       lo=0, hi=400, step=5, truth=166, near=20),
-    P('Un prestito lungo, garantito dalla casa', r'''
-Il **mutuo** è un prestito di lunga durata, di solito tra 15 e 30 anni, garantito dalla casa: se smetti di pagare, la banca può rivalersi sull'immobile.
+    P('Un prestito lungo, con la casa in garanzia', r'''
+Il **mutuo** è il prestito che si chiede per comprare casa. La cifra è grande, quindi si restituisce in tanti anni, di solito tra 15 e 30, con una rata ogni mese.
 
-Questa garanzia si chiama **ipoteca**.'''),
+Per prestare così tanto e così a lungo la banca vuole una garanzia: la casa stessa. Se smetti di pagare le rate, può farla vendere e riprendersi i soldi. Questa garanzia si chiama **ipoteca**.
+
+Su tempi così lunghi gli interessi pesano molto. Guarda quanto restituisci in tutto per 150.000 € in 25 anni:
+
+[fig]
+
+Stessa casa, stessa cifra: due punti di tasso in più fanno quasi 50.000 € di interessi in più.''',
+      fig=F([('Con il tasso al 3%', '213.395 €', [(150000, 'Capitale', CAP, '150.000 €'), (63395, 'Interessi', INT, '63.395 €')]),
+             ('Con il tasso al 5%', '263.066 €', [(150000, 'Capitale', CAP, '150.000 €'), (113066, 'Interessi', INT, '113.066 €')])])),
     P('Fisso o variabile', r'''
-Il tasso può essere:
+Quando firmi un mutuo scegli come si comporterà il tasso negli anni.
 
-• **fisso**: resta uguale per tutta la durata, e con lui la rata;
-• **variabile**: segue un tasso di riferimento del mercato più una maggiorazione fissa, lo **spread**. Se i tassi salgono, sale anche la rata.
+Con il **tasso fisso** il tasso resta quello del primo giorno, e con lui la rata: sai già oggi quanto pagherai tra vent'anni.
 
-Con il fisso sai già oggi quanto pagherai. Con il variabile parti spesso da una rata più bassa, ma ti prendi il rischio che salga.'''),
+Con il **tasso variabile** il tasso segue un tasso di riferimento del mercato, a cui la banca aggiunge una maggiorazione fissa, lo **spread**. Se i tassi di mercato salgono, sale anche la tua rata; se scendono, scende.
+
+Il variabile parte spesso da una rata più bassa, ma il rischio che salga è tuo. Il fisso spesso costa un po' di più all'inizio: è il prezzo della certezza.'''),
     BK('Fisso o variabile?', ['Tasso fisso', 'Tasso variabile'], [
       ('La rata resta uguale fino alla fine', 0, 'È il tasso fisso che blocca la rata per tutta la durata.'),
       ('Segue un tasso di mercato più lo spread', 1, 'È proprio la definizione di tasso variabile.'),
@@ -418,25 +461,35 @@ Con il fisso sai già oggi quanto pagherai. Con il variabile parti spesso da una
       'Il tasso variabile segue il mercato: se i tassi salgono, **sale** anche la rata. Con un tasso fisso sarebbe rimasta uguale.'),
   ], 'Fisso: rata certa. Variabile: rata che segue i tassi di mercato. La scelta dipende da quanto margine hai se la rata sale.'),
 
-  LF('basi-4-4', '!', 'Quando il debito lavora contro di te', 6, [
-    G("Hai 2.000 € di debito su una carta di credito al 18% l'anno. Per 5 anni paghi solo gli interessi. Quanto hai pagato in tutto alla fine?",
+  LF('basi-4-4', '!', 'Quando il debito lavora contro di te', 7, [
+    G("Hai pagato un divano e un telefono con la carta di credito: 2.000 € di debito, al 18% l'anno. Per 5 anni paghi solo gli interessi. Quanto hai versato in tutto alla fine?",
       "Ogni anno gli interessi sono 2.000 × 18% = 360 €. In 5 anni fanno **1.800 €**, e devi ancora tutti i 2.000 € di partenza.",
       lo=0, hi=3000, step=50, truth=1800, near=150),
     P('Il debito che non scende', r'''
-Su una carta di credito con rimborso a rate, detta **revolving**, il tasso è spesso molto alto e la rata minima è fatta quasi solo di interessi.
+Alcune carte di credito ti lasciano restituire quello che spendi un po' alla volta. Si chiamano carte **revolving**. Sembra comodo, ma il tasso è spesso molto alto, e la rata minima che ti chiedono copre quasi solo gli interessi.
 
-Se paghi solo gli interessi, il debito resta fermo. Scende solo quando paghi di più.'''),
+Con 2.000 € di debito al 18% l'anno gli interessi sono 360 € l'anno, cioè 30 € al mese. Se paghi 30 € al mese, tutto quello che versi va alla banca come interessi e il debito resta fermo.
+
+[fig]
+
+Il debito scende solo con quello che paghi **in più** degli interessi.''',
+      fig=F([('Versato in 5 anni', '1.800 €', [(1800, 'Tutti interessi', INT)]), ('Debito che resta', '2.000 €', [(2000, 'Come il primo giorno', CAP)])])),
     LV('Chiudi il debito', "2.000 € di debito al 18% l'anno, cioè l'1,5% al mese. Decidi quanto pagare ogni mese.", 'carta', dict(debito=2000, tasso=18),
       [dict(id='rata', label='Pagamento mensile', min=30, max=200, step=10, start=30, unit='€')],
       [dict(label='Chiudi il debito entro 2 anni', cond=[['mesi', '<=', 24]], hint='Con 30 € paghi solo gli interessi. Sali finché il tempo scende a 2 anni.')],
       'Con 30 € al mese non finisci mai. Con 100 € chiudi in 2 anni e paghi circa 396 € di interessi. Più paghi ogni mese, meno ti costa il debito.'),
     P('Quale debito chiudere per primo', r'''
-Rimborsare un debito equivale a un investimento sicuro che rende quanto il tasso del debito.
+Ogni euro con cui riduci un debito smette di costarti interessi. È come un investimento sicuro che rende quanto il tasso del debito.
 
-Hai 1.000 € liberi. Puoi metterli su un conto deposito al 3% o usarli per ridurre la carta al 18%.
+Hai 1.000 € liberi. Guarda che cosa succede in un anno:
 
-• Conto deposito: guadagni 30 € in un anno.
-• Carta: risparmi 180 € di interessi in un anno.'''),
+• sul conto deposito al 3% guadagni 30 €;
+• usati per ridurre la carta al 18%, risparmi 180 € di interessi.
+
+[fig]
+
+Per questo, di solito, conviene chiudere prima i debiti con il tasso più alto.''',
+      fig=F([('Sul conto deposito al 3%', '30 €', [(30, 'Interessi guadagnati', 'menta')]), ('Togliendo debito al 18%', '180 €', [(180, 'Interessi risparmiati', 'menta')])], cap='In un anno, con gli stessi 1.000 €.')),
     OR('Hai dei soldi liberi: in che ordine li usi?', ['Fondo di emergenza', 'Debiti con il tasso più alto', 'Investimenti'],
       after='È una regola pratica: prima la sicurezza, poi i debiti cari, poi il resto.'),
     N("Hai un debito sulla carta al 18% l'anno e lo riduci di 500 €. Quanti interessi risparmi in un anno?", 90, '€',
@@ -627,7 +680,9 @@ for u in UNITS:
             elif T == 'ex': assert 0 <= s['i'] < len(l['ex']), l['key']
         assert not fl or sorted(s['i'] for s in fl if s['type'] == 'ex') == list(range(len(l['ex']))), l['key']
         for pg in l['pages'] + [s for s in fl if s['type'] == 'page']:
-            assert len(pg['x']) < 900, (l['key'], pg['t'], len(pg['x']))
+            assert len(pg['x']) < 1000, (l['key'], pg['t'], len(pg['x']))
+            assert ('[fig]' in pg['x']) == bool(pg.get('fig')), (l['key'], pg['t'], 'disegno e segnaposto non coincidono')
+            for r in (pg.get('fig') or {}).get('rows', []): assert r['segs'] and all(x[0] > 0 and x[2] in ('az', 'pesca', 'menta', 'giallo', 'lilla', 'rosa', 'bianco') for x in r['segs']), (l['key'], pg['t'])
             assert '—' not in pg['x'] and '"' not in pg['x'], (l['key'], pg['t'])
         for e in l['ex']:
             if e['type'] == 'mcq':
