@@ -1,5 +1,5 @@
-const CACHE = 'finlearn-v34';
-const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg'];
+const CACHE = 'finlearn-v35';
+const SHELL = ['./', './index.html', './app.js', './ordine.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg'];
 
 // install: scarica il guscio saltando la cache HTTP del browser, così non si salva una versione vecchia
 self.addEventListener('install', (e) => {
@@ -14,7 +14,7 @@ self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const u = new URL(e.request.url);
   const same = u.origin === self.location.origin;
-  const fresh = same && (e.request.mode === 'navigate' || /\/(app\.js|index\.html)?$/.test(u.pathname) || u.pathname.endsWith('/app.js'));
+  const fresh = same && (e.request.mode === 'navigate' || /\/(app\.js|ordine\.js|index\.html)?$/.test(u.pathname) || u.pathname.endsWith('/app.js') || u.pathname.endsWith('/ordine.js'));
   if (fresh) {
     e.respondWith(fetch(e.request, { cache: 'no-cache' }).then((res) => {
       if (res.ok) { const clone = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, clone)); }

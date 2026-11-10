@@ -34,7 +34,8 @@
   <script>
     // Tema Figurine (chiaro) di default; "scuro" resta selezionabile dal Profilo
     try { var t = localStorage.getItem('finlearn_fig') ? (localStorage.getItem('finlearn_theme') || 'light') : 'light';
-      if (t !== 'dark') document.querySelector('meta[name=theme-color]').setAttribute('content', '#F4F6FA'); } catch (e) {}
+      var ord = localStorage.getItem('finlearn_ui') !== 'figurine';   // grafica "In ordine": sempre chiara, anche durante il caricamento
+      if (t !== 'dark' || ord) { document.querySelector('meta[name=theme-color]').setAttribute('content', '#F4F6FA'); if (ord) document.documentElement.classList.add('fl-fig', 'fl-boot-light'); } } catch (e) {}
   </script>
   <style>
     html, body { margin: 0; padding: 0; background: #0b1322; }
@@ -53,6 +54,7 @@
     #boot .spin { width: 34px; height: 34px; border: 3px solid #f5d06133; border-top-color: #f5d061;
                   border-radius: 50%; animation: sp 0.9s linear infinite; }
     @keyframes sp { to { transform: rotate(360deg); } }
+    html.fl-boot-light #boot { color: #16203A; }
   </style>
 </head>
 <body>
