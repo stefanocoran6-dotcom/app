@@ -1,0 +1,36 @@
+{
+ "v": 1,
+ "aggiornato": "2026-11-10",
+ "mesi": [
+  "2026-11"
+ ],
+ "articoli": [
+  {
+   "id": "2026-11-10-bollette",
+   "data": "2026-11-10",
+   "cat": "Bollette",
+   "titolo": "Decreto bollette: per una famiglia 17-37 € l'anno",
+   "nastro": "Decreto bollette: quanto si risparmia",
+   "numero": "17-37 €",
+   "min": 3
+  },
+  {
+   "id": "2026-11-10-inflazione-usa",
+   "data": "2026-11-10",
+   "cat": "Stati Uniti",
+   "titolo": "Negli Stati Uniti i prezzi salgono più del previsto",
+   "nastro": "Inflazione USA sopra le attese",
+   "numero": "+0,4%",
+   "min": 2
+  },
+  {
+   "id": "2026-11-10-borsa",
+   "data": "2026-11-10",
+   "cat": "Borsa",
+   "titolo": "Piazza Affari sale, ma frena nel finale",
+   "nastro": "Piazza Affari chiude a +0,69%",
+   "numero": "+0,69%",
+   "min": 1
+  }
+ ]
+}

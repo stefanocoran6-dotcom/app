@@ -54,6 +54,7 @@ function HomeScreen({ nav }) {
         title=${u.name} sub=${`${d} di ${plural(ls.length, 'lezione', 'lezioni')}`} right=${html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} onClick=${() => nav.go('percorso', { course: cur.id, unit: u.id })}/>`; })}
       ${others.length > 0 && html`<h2 class="o-h2" style="margin:22px 0 4px">Gli altri tuoi percorsi</h2>`}
       ${others.map(c => html`<${Row} key=${c.id} icon=${c.badge} title=${c.name} sub=${`${doneCount(c.lessons)} di ${plural(c.lessons.length, 'lezione', 'lezioni')}`} right=${html`<${Ring} pct=${coursePct(c)}/>`} onClick=${() => { s2set({ cur: c.id }); }}/>`)}
+      <${NewsHomeRow} nav=${nav}/>
       <${Row} icon=${PathIco(D_PLUS, 22, 2.6)} ibg=${AZ} title="Scopri altri percorsi" sub="Dalle basi alle certificazioni" chev=${true} last=${true} onClick=${() => nav.go('catalogo')}/>
     <//>
     ${dateOpen && html`<${ExamDateSheet} onClose=${() => setDateOpen(false)}/>`}
@@ -82,6 +83,7 @@ function HomeEmpty({ nav }) {
       ${rec.id !== 'cfa2' && html`<${Row} icon=${Ico(GraduationCap, 22)} ibg=${LILLA} title="Preparare un esame" sub="CFA Level II, domande come all'esame" chev=${true} onClick=${() => nav.go('scheda', { course: 'cfa2' })}/>`}
       ${rec.id !== 'basi' && html`<${Row} icon=${Ico(Sprout, 22)} ibg=${AZ} title="Capire la finanza da zero" sub="Soldi, interessi, inflazione" chev=${true} onClick=${() => nav.go('scheda', { course: 'basi' })}/>`}
       <${Row} icon=${Ico(TrendingUp, 22)} ibg=${PESCA} title="Investire i miei risparmi" sub="Azioni, obbligazioni, fondi: in arrivo" chev=${true} onClick=${() => nav.go('catalogo')}/>
+      <${NewsHomeRow} nav=${nav}/>
       <${Row} icon=${Ico(LayoutGrid, 22)} title="Scopri tutti i percorsi" sub="Dalle basi agli esami" chev=${true} last=${true} onClick=${() => nav.go('catalogo')}/>
     <//>
   <//>`;

@@ -17,12 +17,14 @@ Per cambiare una lezione o la grafica: si modifica il pezzo, si lancia `dev/ordi
 
 ## Notizie
 
-Le notizie del nastro in home stanno in `notizie.json`, nella cartella principale. L'app lo scarica a ogni apertura: per cambiare le notizie basta aggiornare quel file, senza ricostruire `ordine.js` e senza alzare la versione.
+Tre file, nessuno dentro il codice:
 
-- `data`: il giorno delle notizie (`AAAA-MM-GG`). Sul nastro compare "Oggi" solo se coincide con la data del telefono, altrimenti il giorno.
-- `articoli`: da 1 a 6. Per ognuno: `id`, `cat`, `nastro` (il titolo corto che scorre), `titolo` con `evid` (il pezzo da evidenziare), `sommario`, `numero` con `nota` e `didascalia` (la copertina), `breve` (i punti in cima), `corpo` (sezioni con `h` e paragrafi `p`), `perche`, `fonti` (`nome`, `titolo`, `url`).
-- Nei paragrafi le parole in `**grassetto**` che stanno nel glossario (`GLOSS_DEF` in `ordine/p10_data.js`) si aprono con un tocco, come nelle lezioni.
-- I testi si scrivono con parole proprie a partire dalle fonti, che vanno sempre indicate. Nei testi niente "oggi" o "ieri": restano online anche nei giorni dopo.
-- Prima di pubblicare: `python3 dev/notizie_check.py` (lo lancia anche `build.sh`).
+- `notizie.json`: le notizie del giorno, quelle che scorrono sul nastro in home.
+- `notizie/indice.json`: l'elenco leggero di tutti gli articoli, per la pagina "Tutte le notizie".
+- `notizie/AAAA-MM.json`: i testi completi, un file per mese.
 
-Il nastro e la pagina dell'articolo sono in `ordine/p37_news.js`.
+L'app li scarica quando servono: per pubblicare notizie nuove non si ricostruisce `ordine.js` e non si alza la versione. Si scrive `notizie.json`, si lancia `python3 dev/notizie_pubblica.py` (controlla i testi, aggiorna il mese e l'elenco) e si fa il commit.
+
+Come si scelgono, si verificano e si scrivono le notizie è in `NOTIZIE.md`: è la procedura che segue anche l'aggiornamento automatico del mattino.
+
+Nei paragrafi le parole in `**grassetto**` che stanno nel glossario (`GLOSS_DEF` in `ordine/p10_data.js`) si aprono con un tocco, come nelle lezioni. Il nastro, la pagina dell'articolo e l'archivio sono in `ordine/p37_news.js`; gli articoli letti restano segnati nella memoria del telefono (`fl2_news_letti`).

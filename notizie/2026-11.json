@@ -1,0 +1,207 @@
+{
+ "v": 1,
+ "mese": "2026-11",
+ "articoli": [
+  {
+   "id": "2026-11-10-bollette",
+   "cat": "Bollette",
+   "nastro": "Decreto bollette: quanto si risparmia",
+   "titolo": "Decreto bollette: per una famiglia 17-37 € l'anno",
+   "evid": "17-37 € l'anno",
+   "sommario": "Il governo ha approvato le nuove misure contro il caro energia. Secondo le prime stime, per una famiglia lo sconto vale qualche decina di euro l'anno.",
+   "numero": "17-37 €",
+   "nota": "da gennaio",
+   "didascalia": "Il risparmio stimato per una famiglia in un anno",
+   "breve": [
+    "Lunedì 9 novembre il Consiglio dei ministri ha approvato il decreto. Le misure partono da gennaio e durano al massimo 18 mesi.",
+    "Per una famiglia le prime stime parlano di 17-37 € in meno all'anno.",
+    "Vale per chi ha la luce a prezzo variabile. Con il prezzo fisso non cambia nulla fino alla scadenza del contratto."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è stato deciso",
+     "p": [
+      "Lunedì 9 novembre il Consiglio dei ministri ha approvato il nuovo decreto bollette. Al centro c'è una soglia di 58,9 € al **megawattora** sul gas usato per produrre elettricità. In questi giorni quel gas costa 82,2 €. Finché il prezzo resta sopra la soglia, le centrali a gas ricevono un rimborso parziale e possono vendere la corrente a un prezzo più basso.",
+      "Il meccanismo parte da gennaio e può durare al massimo 18 mesi."
+     ]
+    },
+    {
+     "h": "Perché il gas decide il prezzo della luce",
+     "p": [
+      "In Italia il prezzo all'ingrosso dell'elettricità si chiama **PUN**. Nelle ore in cui servono le centrali a gas, è il loro costo a fissare il prezzo di tutta la corrente venduta, anche di quella prodotta con il sole o con il vento. Per questo, quando il gas rincara, sale anche la bolletta della luce.",
+      "In questi giorni il PUN è a 313 € al megawattora. Un anno fa era a 107."
+     ]
+    },
+    {
+     "h": "Quanto si risparmia",
+     "p": [
+      "Il ministro dell'Ambiente e della Sicurezza energetica, Gilberto Pichetto Fratin, stima un calo medio del prezzo dell'elettricità di circa 15 € al megawattora. Per una famiglia i primi conti sono prudenti: il centro studi Ecco calcola 1,4 € al mese, cioè 17 € l'anno. Il Codacons arriva a 27-37 € l'anno e avverte che il beneficio potrebbe anche dimezzarsi.",
+      "C'è anche un costo. Il rimborso alle centrali si paga con una nuova voce in bolletta: nelle intenzioni del governo, lo sconto sul prezzo dell'energia sarà più grande di questa voce."
+     ]
+    },
+    {
+     "h": "Per chi vale",
+     "p": [
+      "Per chi ha un contratto della luce a prezzo variabile: circa 18 milioni di famiglie, secondo Assoutenti. Chi ha un contratto a prezzo fisso non vede cambiamenti fino alla scadenza."
+     ]
+    },
+    {
+     "h": "Che cosa succede adesso",
+     "p": [
+      "Il decreto deve essere pubblicato in Gazzetta Ufficiale. Poi il Parlamento ha 60 giorni per convertirlo in legge e può modificarlo: cifre e regole possono ancora cambiare.",
+      "Le reazioni sono divise. Confcommercio parla di bollette fino al 10% più leggere per le imprese. L'Unione nazionale consumatori giudica l'intervento insufficiente e tardivo."
+     ]
+    }
+   ],
+   "perche": "Guarda il tuo contratto della luce. Se è a prezzo variabile, lo sconto dovrebbe vedersi nei mesi dopo gennaio. Se è a prezzo fisso, per ora non cambia nulla.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Dal Cdm ok al Decreto Bollette",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/09/dal-cdm-ok-al-decreto-bollette-15-euro-in-meno-al-megawattora_cbf74d76-2c12-4718-89af-73ab9c1e6fec.html"
+    },
+    {
+     "nome": "Sky TG24",
+     "titolo": "Decreto Bollette: cosa cambia da gennaio",
+     "url": "https://tg24.sky.it/economia/2026/11/10/decreto-bollette-novita-news"
+    },
+    {
+     "nome": "LaPresse",
+     "titolo": "I conti del Codacons sul risparmio",
+     "url": "https://lapresse.it/economia/2026/11/10/decreto-bollette-2026-i-conti-del-codacons-su-quanto-si-puo-risparmiare-col-tetto-al-prezzo-del-gas"
+    },
+    {
+     "nome": "Selectra",
+     "titolo": "Come funziona la soglia sul gas",
+     "url": "https://selectra.net/energia/attualita/decreto-bollette-novembre-2026"
+    }
+   ],
+   "data": "2026-11-10"
+  },
+  {
+   "id": "2026-11-10-inflazione-usa",
+   "cat": "Stati Uniti",
+   "nastro": "Inflazione USA sopra le attese",
+   "titolo": "Negli Stati Uniti i prezzi salgono più del previsto",
+   "evid": "più del previsto",
+   "sommario": "A ottobre i prezzi americani sono saliti dello 0,4% in un mese. I mercati ora si aspettano che la banca centrale alzi ancora i tassi.",
+   "numero": "+0,4%",
+   "nota": "attese +0,3%",
+   "didascalia": "I prezzi negli Stati Uniti a ottobre, rispetto a settembre",
+   "breve": [
+    "A ottobre i prezzi al consumo negli Stati Uniti sono saliti dello 0,4% in un mese. Gli economisti si aspettavano lo 0,3%.",
+    "Tolti cibo ed energia, l'aumento è dello 0,3%, contro lo 0,2% atteso.",
+    "I mercati si aspettano che la Fed, la banca centrale americana, alzi i tassi a dicembre."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Martedì 10 novembre l'ufficio di statistica americano ha pubblicato il dato di ottobre: i prezzi al consumo sono saliti dello 0,4% rispetto a settembre. È meno dello 0,6% del mese prima, ma più dello 0,3% che gli economisti si aspettavano.",
+      "Si guarda molto anche all'**inflazione di fondo**, quella che lascia fuori cibo ed energia perché cambiano prezzo di continuo. È salita dello 0,3%, contro lo 0,2% previsto."
+     ]
+    },
+    {
+     "h": "Che cosa è rincarato",
+     "p": [
+      "La voce che pesa di più è la casa: affitti e costi dell'abitare sono saliti dello 0,3% e spiegano da soli più del 30% dell'aumento. Il cibo è salito dello 0,5%, l'energia dello 0,7%."
+     ]
+    },
+    {
+     "h": "Un confronto che manca",
+     "p": [
+      "Di solito l'**inflazione** si legge su dodici mesi. Stavolta il confronto con ottobre dell'anno scorso non c'è: un anno fa gli uffici pubblici americani erano fermi per mancanza di fondi e i prezzi non furono rilevati."
+     ]
+    },
+    {
+     "h": "Perché tutti guardano la Fed",
+     "p": [
+      "Quando i prezzi corrono, una **banca centrale** alza i tassi di interesse: i prestiti costano di più, si spende di meno e i prezzi rallentano. La **Fed**, la banca centrale americana, tiene i tassi tra il 3,75% e il 4%. La prossima riunione è l'8 e il 9 dicembre e i mercati si aspettano un nuovo rialzo.",
+      "La reazione è arrivata subito: a **Wall Street** le azioni sono scese e il dollaro si è rafforzato."
+     ]
+    }
+   ],
+   "perche": "I tassi americani muovono i mercati di tutto il mondo. Se hai un fondo o un ETF, giornate come questa si vedono anche sul valore dei tuoi investimenti.",
+   "fonti": [
+    {
+     "nome": "Bureau of Labor Statistics",
+     "titolo": "Consumer Price Index, ottobre 2026 (in inglese)",
+     "url": "https://www.bls.gov/news.release/cpi.nr0.htm"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Usa, inflazione a ottobre a +0,4% su mese",
+     "url": "https://www.teleborsa.it/News/2026/11/10/usa-inflazione-si-modera-a-ottobre-a-0-4percent-su-mese-ma-core-rate-oltre-le-attese-a-0-3percent-147.html"
+    },
+    {
+     "nome": "Reuters su Investing.com",
+     "titolo": "Usa, prezzi al consumo oltre le attese a ottobre",
+     "url": "https://it.investing.com/news/economic-indicators/usa-prezzi-al-consumo-aumentano-oltre-attese-a-ottobre-3641292"
+    }
+   ],
+   "data": "2026-11-10"
+  },
+  {
+   "id": "2026-11-10-borsa",
+   "cat": "Borsa",
+   "nastro": "Piazza Affari chiude a +0,69%",
+   "titolo": "Piazza Affari sale, ma frena nel finale",
+   "evid": "frena nel finale",
+   "sommario": "La Borsa di Milano chiude a +0,69%. In mattinata guadagnava quasi il doppio: a rallentarla è stato il dato sull'inflazione americana.",
+   "numero": "+0,69%",
+   "nota": "al mattino +1,3%",
+   "didascalia": "La chiusura della Borsa di Milano, indice FTSE MIB",
+   "breve": [
+    "L'indice FTSE MIB chiude a 51.755 punti, in rialzo dello 0,69%.",
+    "In mattinata guadagnava circa l'1,3%, poi ha rallentato.",
+    "Bene Fincantieri e le banche, giù Stellantis."
+   ],
+   "corpo": [
+    {
+     "h": "Com'è andata",
+     "p": [
+      "Il FTSE MIB è l'**indice** che riassume l'andamento delle società più grandi quotate a Milano. Martedì 10 novembre ha chiuso a 51.755 punti, lo 0,69% in più del giorno prima.",
+      "La giornata era partita meglio. In mattinata il rialzo era intorno all'1,3%, sulla scia della forte chiusura di Wall Street di lunedì e del calo del petrolio."
+     ]
+    },
+    {
+     "h": "Perché ha frenato",
+     "p": [
+      "Nel pomeriggio è arrivato il dato sull'inflazione negli Stati Uniti, più alto del previsto. Wall Street è scesa, il dollaro si è rafforzato e anche Milano ha perso slancio: ha chiuso vicino ai minimi della giornata."
+     ]
+    },
+    {
+     "h": "Chi è salito e chi è sceso",
+     "p": [
+      "In testa Fincantieri (+3,34%) e le banche, con Bper a +2,9% e UniCredit a +2,36%. In coda Stellantis (−3,2%), A2A (−2,54%) dopo i conti e Eni (−0,94%), che ha seguito il petrolio."
+     ]
+    },
+    {
+     "h": "Un giorno solo dice poco",
+     "p": [
+      "Un indice sale e scende ogni giorno, spesso per notizie che arrivano da lontano. Per capire come va un investimento in **azioni** conta l'andamento di anni, non di ore."
+     ]
+    }
+   ],
+   "perche": "Se hai un fondo o un ETF che investe in azioni italiane, in questa giornata il suo valore è salito un po'. Giornate così servono soprattutto a vedere come i mercati reagiscono alle notizie.",
+   "fonti": [
+    {
+     "nome": "SoldiOnline",
+     "titolo": "Ftse Mib +0,69% ma frena sul finale",
+     "url": "https://www.soldionline.it/notizie/azioni-italia/ftse-mib-069-ma-frena-sul-finale-cosa-ha-pesato-su-milano"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "Il FTSE MIB chiude a +0,69% a 51.755 punti",
+     "url": "https://www.money.it/piazza-affari-in-rialzo-il-ftse-mib-10-11-2026"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Borsa: Milano forte in mattinata (+1,3%)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/10/borsa-milano-forte-13-guida-leuropa-bene-lhi-tech-e-le-banche_da87a834-7466-43e8-bbd0-edbd52cdb344.html"
+    }
+   ],
+   "data": "2026-11-10"
+  }
+ ]
+}
