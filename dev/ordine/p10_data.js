@@ -61,6 +61,14 @@ function lessonSteps(l) {
     const kp = l.los.keyPoints || [], et = l.los.examTips || [];
     if (kp.length || et.length) steps.push({ k: 'recap', points: kp, tips: et });
     lessonQuestions(l).forEach(q => steps.push({ k: 'q', q }));
+  } else if (l.flow) {
+    // lezione a passi corti: pagine brevi alternate a cose da fare; "In breve" chiude l'ultima pagina
+    const qs = lessonQuestions(l), lastPage = l.flow.map(s => s.type).lastIndexOf('page');
+    l.flow.forEach((s, i) => {
+      if (s.type === 'page') steps.push({ k: 'page', title: s.t, text: s.x, widget: s.widget, first: !steps.length, note: i === lastPage ? l.note : null });
+      else if (s.type === 'ex') { const e = l.ex[s.i]; if (e.type === 'match') steps.push({ k: 'match', pairs: e.pairs }); else steps.push({ k: 'q', q: qs[l.ex.slice(0, s.i).filter(x => x.type === 'mcq').length] }); }
+      else steps.push(Object.assign({}, s, { k: s.type, n: i }));
+    });
   } else {
     (l.pages || []).forEach((p, i) => steps.push({ k: 'page', title: p.t, text: p.x, widget: p.widget, first: i === 0, note: i === l.pages.length - 1 ? l.note : null }));
     let qi = 0;

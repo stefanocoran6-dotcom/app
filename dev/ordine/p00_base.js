@@ -150,6 +150,29 @@ html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(saf
 .o-sw>i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:${INK};transition:transform .15s}
 .o-sw.on{background:${MENTA}}
 .o-sw.on>i{transform:translateX(20px)}
+.o-range{-webkit-appearance:none;appearance:none;width:100%;height:44px;margin:0;padding:0;background:transparent;touch-action:pan-y;cursor:pointer}
+.o-range:focus{outline:none}
+.o-range::-webkit-slider-runnable-track{box-sizing:border-box;height:14px;background:linear-gradient(to right,${AZ} var(--p,0%),#fff var(--p,0%));border:2.5px solid ${INK};border-radius:999px}
+.o-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;box-sizing:border-box;width:38px;height:38px;margin-top:-14.5px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:2px 2px 0 ${INK}}
+.o-range::-moz-range-track{box-sizing:border-box;height:14px;background:linear-gradient(to right,${AZ} var(--p,0%),#fff var(--p,0%));border:2.5px solid ${INK};border-radius:999px}
+.o-range::-moz-range-thumb{box-sizing:border-box;width:38px;height:38px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:2px 2px 0 ${INK}}
+.o-range:disabled{opacity:.55}
+.o-stepb{width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;background:#fff;border:2.5px solid ${INK};border-radius:50%;color:${INK}}
+.o-stepb:disabled{border-color:${DIM};color:${DIM}}
+.o-bign{font-size:44px;line-height:50px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.o-keys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.o-key{height:48px;display:flex;align-items:center;justify-content:center;background:#fff;border:2.5px solid ${INK};border-radius:14px;font-size:22px;line-height:1;font-weight:800;color:${INK}}
+.o-key:active{background:${T_AZ}}
+.o-numd{display:flex;align-items:baseline;justify-content:center;gap:8px;min-height:60px;padding:8px 16px;background:${T_BG};border:2.5px solid ${INK};border-radius:16px;font-size:34px;line-height:40px;font-weight:800;font-variant-numeric:tabular-nums}
+.o-bucket{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:6px;min-height:136px;padding:10px;background:#fff;border:2.5px solid ${INK};border-radius:20px;box-shadow:4px 4px 0 ${INK};color:${INK};transition:background .15s}
+.o-bucket.ok{background:${MENTA}}
+.o-bucket.ko{background:${ROSA}}
+.o-bucket:disabled{box-shadow:none}
+.o-chip2{display:block;padding:5px 9px;background:${T_GR};border-radius:10px;font-size:13px;line-height:17px;font-weight:700;text-align:left}
+.o-goal{display:flex;align-items:center;gap:12px;padding:12px 14px;background:${T_GIALLO};border:2.5px solid ${INK};border-radius:18px}
+.o-goal.ok{background:${MENTA}}
+@keyframes oShake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.o-shake{animation:oShake .36s ease-in-out}
 @keyframes oIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes oUp{from{transform:translateY(100%)}to{transform:none}}
 @keyframes oFade{from{opacity:0}to{opacity:1}}
@@ -158,7 +181,7 @@ html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(saf
 .o-up{animation:oUp .26s cubic-bezier(.22,1,.36,1) both}
 .o-fade{animation:oFade .2s ease-out both}
 .o-pop{animation:oPop .32s cubic-bezier(.22,1,.36,1) both}
-@media (prefers-reduced-motion: reduce){.o-in,.o-up,.o-fade,.o-pop{animation:none}}
+@media (prefers-reduced-motion: reduce){.o-in,.o-up,.o-fade,.o-pop,.o-shake{animation:none}}
 @media (min-width:521px){body{background:#DDE3EC!important}}
 `;
 function ordInjectCss() {

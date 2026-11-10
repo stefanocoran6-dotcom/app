@@ -253,16 +253,21 @@ function LessonScreen({ nav, lessonKey }) {
   useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; setSel(null); setFb(null); setTab('case'); setMatched(false); }, [i]);
   const st = steps[i];
   const finish = (resNow) => {
-    const R = resNow || res, qi = steps.map((s, k) => s.k === 'q' ? k : -1).filter(k => k >= 0), okN = qi.filter(k => R[k] && R[k].ok).length, first = !isDone(l.key);
+    // contano come risposte le domande a scelta e i "Calcola tu"
+    const R = resNow || res, qi = steps.map((s, k) => s.k === 'q' || s.k === 'num' ? k : -1).filter(k => k >= 0), okN = qi.filter(k => R[k] && R[k].ok).length, first = !isDone(l.key);
     if (first) { if (l.kind === 'los') K.setLosProgress(p => p.includes(l.key) ? p : [...p, l.key]); else s2set(s => ({ basi: s.basi.includes(l.key) ? s.basi : [...s.basi, l.key] })); K.albumLearn(l.key); }
     else if (qi.length) K.albumReview(l.key, okN === qi.length);
     const xp = first ? 10 + 10 * okN : 5 * okN; addXp(xp);
-    setDone({ xp, okN, qn: qi.length, first, wrong: qi.filter(k => !(R[k] && R[k].ok)) });
+    setDone({ xp, okN, qn: qi.length, first, wrong: qi.filter(k => steps[k].k === 'q' && !(R[k] && R[k].ok)) });
   };
   const next = () => { if (i < steps.length - 1) setI(i + 1); else finish(); };
   useEffect(() => { if (!steps.length) finish({}); }, []);
   if (done) return html`<${LessonDone} nav=${nav} l=${l} done=${done} steps=${steps} res=${res}/>`;
   if (!st) return html`<div class="o-scr"></div>`;
+  // passi interattivi (stima, leve, metti a posto, ordina, calcola): ognuno disegna il suo corpo e il suo piede
+  const IS = ISTEPS[st.k];
+  if (IS) return html`<${IS} key=${i} st=${st} l=${l} repeat=${isDone(l.key)} scrollRef=${scrollRef} top=${html`<${TopBar} onClose=${nav.back} n=${steps.length} i=${i}/>`}
+    onNext=${r => { const R = r ? Object.assign({}, res, { [i]: r }) : res; if (r) setRes(R); if (i < steps.length - 1) setI(i + 1); else finish(R); }}/>`;
   const check = () => {
     const ok = sel === st.q.ans; recordAnswer(st.q, ok); setRes(r => Object.assign({}, r, { [i]: { sel, ok } }));
     if (ok) return setFb('ok');
