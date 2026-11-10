@@ -128,6 +128,8 @@ html .o-app .o-rich .fl-table-wrap{margin:10px 0;border:2px solid ${INK};border-
 html .o-app .o-rich .fl-table{width:100%;border-collapse:collapse;font-size:13.5px;line-height:18px;font-weight:600}
 html .o-app .o-rich .fl-table th{background:${AZ};text-align:left;padding:8px 10px;font-weight:800;white-space:nowrap}
 html .o-app .o-rich .fl-table td{padding:7px 10px;border-top:2px solid ${SEP};white-space:nowrap}
+html .o-app .o-rich .fl-table td:first-child,html .o-app .o-rich .fl-table th:first-child{white-space:normal;min-width:132px}
+html .o-app .o-coach button{text-align:center}
 .o-rich.sm{font-size:15px;line-height:22px;font-weight:600}
 .o-rich.q{font-size:17px;line-height:25px;font-weight:700}
 .o-ovl{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(26,26,26,.45)}
@@ -171,7 +173,18 @@ const S2_KEY = 'fl2_state';
 const S2_DEF = { v: 1, name: '', onboard: null, started: [], cur: null, basi: [], expl: { d: '', n: 0 }, tests: {}, ans: {}, duel: { w: 0, l: 0, last: null }, xp: {}, gold: {}, seen: {},
   settings: { goalMin: 10, remind: false, remindAt: '19:30', lang: 'Italiano', examEn: true } };
 let s2 = null; const s2subs = new Set();
-function s2get() { if (!s2) { const sv = LS.get(S2_KEY, {}) || {}; s2 = Object.assign({}, S2_DEF, sv, { settings: Object.assign({}, S2_DEF.settings, sv.settings || {}) }); } return s2; }
+// dati salvati con una forma sbagliata (versioni vecchie, memoria rovinata): si torna al valore di partenza di quel campo
+const sameKind = (a, b) => Array.isArray(a) === Array.isArray(b) && typeof a === typeof b && (a === null) === (b === null);
+function s2get() {
+  if (!s2) {
+    let sv = LS.get(S2_KEY, {}); if (!sv || typeof sv !== 'object' || Array.isArray(sv)) sv = {};
+    const clean = {}; for (const k in sv) { if (!(k in S2_DEF) || S2_DEF[k] === null || sameKind(sv[k], S2_DEF[k]) || (S2_DEF[k] === '' && typeof sv[k] === 'string')) clean[k] = sv[k]; }
+    if (clean.duel && (typeof clean.duel.w !== 'number' || typeof clean.duel.l !== 'number')) delete clean.duel;
+    if (clean.expl && typeof clean.expl.n !== 'number') delete clean.expl;
+    s2 = Object.assign({}, S2_DEF, clean, { settings: Object.assign({}, S2_DEF.settings, clean.settings || {}) });
+  }
+  return s2;
+}
 function s2set(patch) { const cur = s2get(); s2 = Object.assign({}, cur, typeof patch === 'function' ? patch(cur) : patch); LS.set(S2_KEY, s2); s2subs.forEach(f => f()); }
 const s2sub = cb => { s2subs.add(cb); return () => s2subs.delete(cb); };
 function useS2() { return useSyncExternalStore(s2sub, s2get); }
@@ -728,7 +741,7 @@ function MatchExercise({ pairs, onDone }) {
   return html`<div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">
     <${Rally} pose="pensa" w=${196} alt="" style="position:absolute;right:-12px;top:-14px"/>
     <div class="o-col" style="gap:6px;position:relative;min-height:150px;max-width:190px"><h1 class="o-big">Abbina le coppie</h1><p class="o-lab">Tocca una parola, poi il suo significato.</p></div>
-    <div style="display:grid;grid-template-columns:132px 1fr;gap:10px 12px;margin-top:18px;position:relative">
+    <div style="display:grid;grid-template-columns:minmax(132px,43%) 1fr;gap:10px 12px;margin-top:18px;position:relative">
       ${pairs.map((p, i) => html`<${React.Fragment} key=${i}>
         <button type="button" aria-pressed=${a === i || ok.includes(i) ? 'true' : 'false'} disabled=${ok.includes(i)} onClick=${() => setA(a === i ? null : i)} style=${Object.assign(cell(a === i, ok.includes(i)), { fontSize: 16, fontWeight: 800 })}>${p[0]}${ok.includes(i) && tick}</button>
         <button type="button" disabled=${ok.includes(right[i])} onClick=${() => tapR(right[i])} style=${Object.assign(cell(false, ok.includes(right[i]), bad === right[i]), { fontSize: 14, lineHeight: '19px', fontWeight: ok.includes(right[i]) ? 700 : 600 })}>${pairs[right[i]][1]}${ok.includes(right[i]) && tick}</button>
@@ -1678,11 +1691,11 @@ export function OrdineApp({ kit }) {
     : tab === 'sfide' ? html`<${SfideScreen} nav=${nav}/>` : tab === 'coach' ? html`<${CoachScreen} nav=${nav}/>` : html`<${ProfiloScreen} nav=${nav}/>`;
   const layer = (on, child, key, anim) => html`<div key=${key} class=${anim ? 'o-in' : ''} style=${{ position: 'absolute', inset: 0, visibility: on ? 'visible' : 'hidden', pointerEvents: on ? 'auto' : 'none' }} aria-hidden=${on ? undefined : 'true'}>${child}</div>`;
   const Calc = kit.TICalculator, Chat = kit.AiChatModal;
-  return html`<div class="o-app">
+  return html`<${React.Fragment}><div class="o-app">
     ${layer(top < 0, tabScreen, 'tab:' + tab + ':' + sub, false)}
     ${stack.map((e, k) => layer(k === top, SCREENS[e.name] ? SCREENS[e.name](Object.assign({ nav }, e.params)) : null, 'st' + e.id, true))}
     ${toast && html`<div class="o-toast o-fade" role="status">${toast}</div>`}
-    ${calc && Calc && html`<${Calc} onClose=${() => setCalc(false)}/>`}
-    ${ai && Chat && html`<${Chat} key=${ai.id} variant="quiz" chatId=${ai.id} chats=${K.chats} setChats=${K.setChats} currentQuestion=${ai.q} initialMessage=${ai.preset} onClose=${() => setAi(null)}/>`}
-  </div>`;
+  </div>
+  ${calc && Calc && html`<${Calc} onClose=${() => setCalc(false)}/>`}
+  ${ai && Chat && html`<${Chat} key=${ai.id} variant="quiz" chatId=${ai.id} chats=${K.chats} setChats=${K.setChats} currentQuestion=${ai.q} initialMessage=${ai.preset} onClose=${() => setAi(null)}/>`}<//>`;
 }

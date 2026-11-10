@@ -10879,7 +10879,12 @@ Rispondi in modo chiaro e pratico, come un tutor esperto.`;
     }
   }, /*#__PURE__*/React.createElement(Sun, {
     size: 16
-  }))))), /*#__PURE__*/React.createElement("button", {
+  }))))), React.createElement("button", {
+    // ritorno alla grafica "In ordine" (FinLearn 2.0) per chi è passato a quella precedente
+    onClick: () => onUi && onUi('ordine'),
+    className: "w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold shadow-lg transition mb-4",
+    style: { backgroundColor: '#8EC5FF', color: '#1A1A1A', borderWidth: 1, borderColor: th.cardBorder }
+  }, "Passa alla nuova grafica"), /*#__PURE__*/React.createElement("button", {
     onClick: onLogout,
     className: "w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold shadow-lg transition mb-4",
     style: {
