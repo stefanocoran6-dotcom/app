@@ -141,6 +141,16 @@ const TG = (function () {
       const bl = B.map((b) => { const o = { t0: pl.words[w].t, show: b[1] }; w += b[0]; return o; });
       if (w !== pl.words.length) throw new Error('TG: i blocchi di "' + s.id + '" coprono ' + w + ' parole su ' + pl.words.length);
       bl.forEach((b, i) => { b.t1 = i + 1 < bl.length ? bl[i + 1].t0 : t0 + dur + .22; });
+      // con i tempi veri un blocco può restare meno di 0,6 s: si unisce al vicino (quello dopo, o quello prima se chiude la frase)
+      const lungo = (x) => x.replace(/\*/g, '').length;
+      for (let i = 0; i < bl.length && bl.length > 1; i++) {
+        if (bl[i].t1 - bl[i].t0 >= .6) continue;
+        const chiude = /[.?!]$/.test(bl[i].show.replace(/\*/g, '')), cand = chiude ? [i - 1, i + 1] : [i + 1, i - 1];
+        const j = cand.find((k) => k >= 0 && k < bl.length && lungo(bl[Math.min(i, k)].show + ' ' + bl[Math.max(i, k)].show) <= 44);
+        if (j == null) continue;
+        const a = Math.min(i, j), b = Math.max(i, j);
+        bl[a] = { t0: bl[a].t0, t1: bl[b].t1, show: bl[a].show + ' ' + bl[b].show }; bl.splice(b, 1); i = a - 1;
+      }
       return { id: s.id, dice: s.dice, t0, dur, t1: t0 + dur, pausa, blocchi: bl, seq: pl.seq, words: pl.words };
     });
     T = { V, sc, by: {}, q: {}, total: sc[sc.length - 1].t1 + 1.4, env: tempi && tempi.env ? tempi.env : null, envFps: (tempi && tempi.fps) || 30 };

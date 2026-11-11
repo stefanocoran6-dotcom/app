@@ -83,7 +83,7 @@ window.VIDEO = {
       passi: [{ icona: 'piatti', nome: 'LAVA I PIATTI', a: 'c2b:piatti' }, { icona: 'tazza', nome: "DA DENNY'S", a: "c2b:Denny's", d: -.1 }],
       note: [{ testo: 'ricordati!', passo: 1, colore: 'giallo', a: 'c2b:Ricordati' }] },
     // 3 · il tavolo di Denny's
-    { tipo: 'titolo', da: 'c3a:progetta', d: -.2, etichetta: 'IN CALIFORNIA', righe: ['Ingegnere,', 'progetta chip'], evid: 1, icona: { nome: 'chip', a: 'c3a:chip' } },
+    { tipo: 'titolo', da: 'c3a:progetta', d: -.2, etichetta: 'IN CALIFORNIA', righe: ['Ingegnere,', 'progetta chip'], evid: 1, icona: { nome: 'chip', a: 'c3a:progetta', d: .25 } },
     { tipo: 'numero', da: 'c3b:@inizio', d: -.1, etichetta: 'NASCE NVIDIA', parti: [{ testo: '1993', a: 'c3b:millenovecentonovantatré' }],
       chips: [{ testo: "a trent'anni", a: "c3b:trent'anni" }, { testo: '+ 2 ingegneri', icona: 'persone', a: 'c3b:due' }] },
     { tipo: 'titolo', da: 'c3c:@inizio', d: -.1, etichetta: "DOVE NASCE L'IDEA", righe: ['A colazione,', "da Denny's"], evid: 1, icona: { nome: 'tazza', a: 'c3c:colazione' },
@@ -98,7 +98,7 @@ window.VIDEO = {
     { tipo: 'scelta', da: 'c5a:flop', d: -.35, etichetta: 'IL PRIMO CHIP', domanda: 'Come si disegna il 3D?',
       carte: [{ titolo: 'Il modo di NVIDIA', nota: 'flop', colore: 'rosa', segno: 'no', a: 'c5a:flop' }, { titolo: 'Il modo Microsoft', nota: 'vince', colore: 'menta', segno: 'si', a: 'c5a:Windows', d: -.1, pulse: 'c5a:dimensioni' }] },
     { tipo: 'titolo', da: 'c5b:@inizio', d: -.1, etichetta: 'INTANTO', righe: ['Sega aspetta', 'il suo chip'], evid: 0, icona: { nome: 'joypad', a: 'c5b:aspetta' },
-      timbro: { testo: 'NUOVA CONSOLE', colore: 'lilla', a: 'c5b:nuova' } },
+      timbro: { testo: 'NUOVA CONSOLE', colore: 'lilla', a: 'c5b:chip' } },
     { tipo: 'titolo', da: 'c5c:@inizio', d: -.1, etichetta: 'LA VERITÀ', righe: ['Ammette', "l'errore"], evid: 1, icona: { nome: 'banconota', a: 'c5c:pagare' },
       timbro: { testo: 'O NVIDIA CHIUDE', colore: 'rosa', a: 'c5c:senza' } },
     { tipo: 'numero', da: 'c5d:@inizio', d: -.1, etichetta: 'SEGA ACCETTA', parti: [{ testo: '5', a: 'c5d:cinque' }, { testo: ' milioni $', a: 'c5d:milioni' }],
@@ -143,7 +143,7 @@ window.VIDEO = {
     { tipo: 'catena', da: 'c10b:@inizio', d: -.1, etichetta: 'A STANFORD',
       passi: [{ icona: 'fiamma', nome: 'FATICA', a: 'c10b:fatica' }, { icona: 'coppa', nome: 'CARATTERE', a: 'c10b:carattere' }],
       note: [{ testo: 'e sofferenza', passo: 0, colore: 'rosa', a: 'c10b:sofferenza' }] },
-    { tipo: 'titolo', da: 'c10c:ha', d: -.15, etichetta: 'LA LEZIONE', righe: ['Ha cominciato', 'pulendo bagni'], evid: 1, icona: { nome: 'secchio', a: 'c10c:pulendo' } },
+    { tipo: 'titolo', da: 'c10c:ha', d: -.15, etichetta: 'LA LEZIONE', righe: ['Ha cominciato', 'pulendo bagni'], evid: 1, icona: { nome: 'secchio', a: 'c10c:cominciato' } },
     { tipo: 'saluto', da: 'saluto:@inizio', d: -.08, segui: { a: 'saluto:Seguimi' }, motto: 'una storia al giorno' }
   ],
   gesti: [
