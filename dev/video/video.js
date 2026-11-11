@@ -30,7 +30,7 @@ window.VIDEO = {
     { id: 'c1a', dice: 'Jensen nasce a Taiwan. A nove anni i genitori lo mandano in America, dagli zii.', mostra: 'Jensen nasce a *Taiwan*. A 9 anni i genitori lo mandano in *America*, dagli zii.' },
     { id: 'c1b', dice: 'Loro lo iscrivono a un collegio in Kentucky, convinti che sia una scuola prestigiosa.', mostra: 'Loro lo iscrivono a un collegio in *Kentucky*, convinti che sia una scuola prestigiosa.' },
     { id: 'c1c', dice: 'Sorpresa: non lo è. È un istituto per ragazzi difficili, e il suo compito è pulire i bagni.', mostra: 'Sorpresa: non lo è. È un istituto per *ragazzi difficili*, e il suo compito è pulire i *bagni*.' },
-    { id: 'c2a', dice: 'Due anni dopo raggiunge i genitori in Oregon, e finisce il liceo a sedici anni.', mostra: 'Due anni dopo raggiunge i genitori in *Oregon*, e finisce il liceo a *16 anni*.' },
+    { id: 'c2a', dice: 'Due anni dopo raggiunge i genitori in Oregon, e si diploma a sedici anni.', mostra: 'Due anni dopo raggiunge i genitori in *Oregon*, e si diploma a *16 anni*.' },
     { id: 'c2b', dice: "Intanto, di notte, lava i piatti e serve ai tavoli da Denny's, una catena di ristoranti. Ricordati questo posto: tornerà.", mostra: "Intanto, di notte, lava i piatti e serve ai tavoli da *Denny's*, una catena di ristoranti. Ricordati questo posto: *tornerà*." },
     { id: 'c3a', dice: 'Diventa ingegnere e progetta chip in California.', mostra: 'Diventa ingegnere e progetta *chip* in California.' },
     { id: 'c3b', dice: "Nel millenovecentonovantatré, a trent'anni, fonda NVIDIA con due ingegneri conosciuti al lavoro.", mostra: "Nel *1993*, a trent'anni, fonda *NVIDIA* con due ingegneri conosciuti al lavoro." },
@@ -77,7 +77,7 @@ window.VIDEO = {
       timbro: { testo: 'PULISCE I BAGNI', colore: 'rosa', a: 'c1c:compito', d: .1 } },
     // 2 · il lavapiatti
     { tipo: 'catena', da: 'c2a:raggiunge', d: -.15, etichetta: 'DUE ANNI DOPO',
-      passi: [{ icona: 'casa', nome: 'OREGON', a: 'c2a:Oregon', d: -.1 }, { icona: 'diploma', nome: 'LICEO', a: 'c2a:liceo', d: -.1 }],
+      passi: [{ icona: 'casa', nome: 'OREGON', a: 'c2a:Oregon', d: -.1 }, { icona: 'diploma', nome: 'DIPLOMA', a: 'c2a:diploma', d: -.1 }],
       note: [{ testo: 'a 16 anni', passo: 1, colore: 'giallo', a: 'c2a:sedici' }] },
     { tipo: 'catena', da: 'c2b:lava', d: -.15, etichetta: 'DI NOTTE',
       passi: [{ icona: 'piatti', nome: 'LAVA I PIATTI', a: 'c2b:piatti' }, { icona: 'tazza', nome: "DA DENNY'S", a: "c2b:Denny's", d: -.1 }],
