@@ -30,6 +30,10 @@ const TG = (function () {
   const key = (w) => w.toLowerCase().replace(/[^a-zàèéìòù]/g, '');
 
   let T = null;
+  // lingua dell'episodio (VIDEO.lingua: 'it' o 'en'): labiale e le poche scritte fisse dello studio
+  let LANG = 'it';
+  const TXT = { it: { capitolo: 'CAPITOLO', di: 'DI', segui: 'Seguimi' }, en: { capitolo: 'CHAPTER', di: 'OF', segui: 'Follow me' } };
+  const tx = (k) => (TXT[LANG] || TXT.it)[k];
 
   // ---------- tempi: battute, parole, sottotitoli ----------
   function plan(text, t0, dur, parole) {
@@ -40,7 +44,7 @@ const TG = (function () {
       const seq = [];
       words.forEach((w, k) => {
         w.t = parole[k].t; w.end = Math.max(parole[k].end, w.t + .05);
-        const s = r4LipSync(w.w, { lang: 'it' }), d = r4LipSyncDuration(s) || .1, a = w.t - t0, sc = (w.end - w.t) / d;
+        const s = r4LipSync(w.w, { lang: LANG }), d = r4LipSyncDuration(s) || .1, a = w.t - t0, sc = (w.end - w.t) / d;
         s.forEach((e) => {
           const x = { t: +(a + e.t * sc).toFixed(3), key: e.key, i: w.i + e.i };
           if (seq.length && seq[seq.length - 1].t >= x.t) seq[seq.length - 1] = x; else seq.push(x);
@@ -48,8 +52,8 @@ const TG = (function () {
       });
       return { seq, words };
     }
-    const d0 = r4LipSyncDuration(r4LipSync(text, { lang: 'it' })) || 1;
-    const seq = r4LipSync(text, { lang: 'it', rate: d0 / dur });
+    const d0 = r4LipSyncDuration(r4LipSync(text, { lang: LANG })) || 1;
+    const seq = r4LipSync(text, { lang: LANG, rate: d0 / dur });
     const words = []; const re = /\S+/g; let m;
     while ((m = re.exec(text))) words.push({ w: m[0], i: m.index, key: key(m[0]) });
     words.forEach((w, k) => {
@@ -64,7 +68,8 @@ const TG = (function () {
   // ai blocchi di 2-4 parole. Il taglio cade sulla punteggiatura, mai dentro un'evidenziazione, e un blocco non finisce con "di", "la"...
   const DEBOLI = new Set(('il lo la i gli le un una uno di da a in per con su tra fra del dello della dei degli delle al allo alla ai agli alle ' +
     'dal dallo dalla dai dagli dalle nel nello nella nei negli nelle sul sullo sulla e ed o che ma se non suo sua suoi sue quel quella questo questa ' +
-    'si ci ne mi ti vi più').split(' '));
+    'si ci ne mi ti vi più ' +
+    'the an of to on at for with and or but that his her its their is was by from as into than this these those').split(' '));
   function autoBlocchi(testo, n, id) {
     const tk = testo.trim().split(/\s+/);
     if (tk.length !== n) throw new Error('TG: "mostra" di "' + id + '" ha ' + tk.length + ' parole, la voce ' + n);
@@ -128,6 +133,7 @@ const TG = (function () {
   }
 
   function init(V, tempi) {
+    LANG = V.lingua === 'en' ? 'en' : 'it';
     let t = .2;
     const P0 = pausaScene(V);                       // prima di ogni capitolo un respiro in più (lo stesso che usa tempi.py)
     const sc = V.scene.map((s, j) => {
@@ -628,13 +634,13 @@ const TG = (function () {
     h += `<div style="position:absolute;left:50%;top:128px;transform:translate(-50%,-50%) rotate(-3deg) scale(${k.toFixed(3)});white-space:nowrap;font:800 132px/1 ${DISP};letter-spacing:-.04em;color:${C.ink};background:${C.giallo};border:8px solid ${C.ink};border-radius:26px;box-shadow:0 10px 0 ${C.ink};padding:10px 34px 16px">${esc(V.rubrica)}</div>`;
     h += `<div style="position:absolute;left:0;top:246px;width:${MW}px;text-align:center;font:700 40px/1 ${DISP};color:${C.ink};opacity:${E.out(seg(t, S.t0 + .33, S.t0 + .58)).toFixed(2)}">${esc(S.motto || 'una notizia al giorno')}</div>`;
     if (k2 > 0) h += `<div style="position:absolute;left:50%;top:346px;transform:translate(-50%,-50%) scale(${k2.toFixed(3)});display:flex;align-items:center;gap:14px;white-space:nowrap;font:700 38px/1 ${MONO};color:${C.giallo};background:${C.ink};border-radius:16px;padding:14px 24px 14px 16px">` +
-      `<span style="display:inline-flex;width:44px;height:44px;border-radius:50%;background:${C.giallo};color:${C.ink};align-items:center;justify-content:center;font:800 40px/1 ${DISP}">+</span>Seguimi</div>`;
+      `<span style="display:inline-flex;width:44px;height:44px;border-radius:50%;background:${C.giallo};color:${C.ink};align-items:center;justify-content:center;font:800 40px/1 ${DISP}">+</span>${esc(tx('segui'))}</div>`;
     return h;
   }
   // capitolo: il cartello che apre ogni capitolo (lo mette da solo init, dai "capitoli" della scheda): numero, titolo, a che punto della storia siamo
   function scCapitolo(t, S) {
     const N = T.capitoli.length, k = pop(t, S.t0 + .04, .34, 1.6), kt = pop(t, S.t0 + .16, .34, 1.3), kd = E.out(seg(t, S.t0 + .3, S.t0 + .6));
-    let h = tab('CAPITOLO ' + S.n + (N > 1 ? ' DI ' + N : ''), t, S.t0 + .02);
+    let h = tab(tx('capitolo') + ' ' + S.n + (N > 1 ? ' ' + tx('di') + ' ' + N : ''), t, S.t0 + .02);
     h += `<div style="position:absolute;left:40px;top:84px;width:224px;height:224px;box-sizing:border-box;border-radius:50%;background:${C.giallo};border:9px solid ${C.ink};box-shadow:0 10px 0 ${C.ink};` +
       `display:flex;align-items:center;justify-content:center;transform:scale(${k.toFixed(3)}) rotate(${(-10 * (1 - k)).toFixed(2)}deg);font:800 ${S.n >= 10 ? 118 : 150}px/1 ${DISP};letter-spacing:-.05em;color:${C.ink}">${S.n}</div>`;
     const L = S.titolo.length, fs = L > 22 ? 56 : L > 16 ? 64 : 76;
@@ -753,7 +759,8 @@ const TG = (function () {
     // bancone e microfono
     h += `<div style="position:absolute;left:-400px;top:${DY + 26}px;width:1880px;height:1200px;background:${C.lilla}"></div>`;
     h += `<div style="position:absolute;left:-400px;top:${DY}px;width:1880px;height:26px;background:${C.lillaL};border-top:8px solid ${C.ink};border-bottom:8px solid ${C.ink}"></div>`;
-    h += `<div style="position:absolute;left:-60px;top:1500px;width:1200px;text-align:center;transform:rotate(-2deg);white-space:nowrap;font:800 250px/1 ${DISP};letter-spacing:-.05em;color:${C.lillaD};opacity:.6">${esc(T.V.rubrica)}</div>`;
+    const rl = [...T.V.rubrica].length, rfs = rl <= 8 ? 250 : Math.floor(1700 / rl);   // un nome più lungo di TG RALLY si rimpicciolisce per restare intero
+    h += `<div style="position:absolute;left:-60px;top:${1500 + (250 - rfs) / 2}px;width:1200px;text-align:center;transform:rotate(-2deg);white-space:nowrap;font:800 ${rfs}px/1 ${DISP};letter-spacing:-.05em;color:${C.lillaD};opacity:.6">${esc(T.V.rubrica)}</div>`;
     h += `<svg style="position:absolute;left:776px;top:${DY - 190}px;overflow:visible" width="120" height="200" viewBox="0 0 120 200">` +
       `<path d="M60 196 V120" ${ST(9)} fill="none"/><ellipse cx="60" cy="194" rx="38" ry="10" fill="${C.ink}"/>` +
       `<g transform="rotate(-16 60 120)"><rect x="38" y="36" width="44" height="90" rx="22" fill="${C.mut}" ${ST(7)}/><path d="M38 70 H82 M38 92 H82" ${ST(5)} opacity=".55"/><path d="M48 50 C50 44 56 42 62 42" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".7"/></g></svg>`;
@@ -762,7 +769,7 @@ const TG = (function () {
   function nastro(t) {
     const V = T.V, fs = 32, cw = fs * .6, chipTxt = V.rubrica + ' · ' + V.data;
     let cap = null; T.capitoli.forEach((c) => { if (t >= c.t0) cap = c; }); if (t >= T.fineCapitoli) cap = null;   // nel capitolo il nastro ne mostra il titolo
-    const items = cap ? ['CAPITOLO ' + cap.n + ' · ' + cap.titolo.toUpperCase()].concat(V.nastro) : V.nastro;
+    const items = cap ? [tx('capitolo') + ' ' + cap.n + ' · ' + cap.titolo.toUpperCase()].concat(V.nastro) : V.nastro;
     const run = items.join('   •   ') + '   •   ', loopW = run.length * cw, off = -(((t - (cap ? cap.t0 : 0)) * 92) % loopW);
     const chipW = Math.round(chipTxt.length * 26 * .6 + 34);
     const jolt = T.slides.reduce((m, s, i) => i ? Math.max(m, E.bump(seg(t, s.t0, s.t0 + .28))) : m, 0);   // scatta a ogni cambio di schermata

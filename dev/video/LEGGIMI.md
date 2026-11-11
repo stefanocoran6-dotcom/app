@@ -43,7 +43,9 @@ Senza `tempi.js` i tempi sono stimati a 2,2 parole al secondo (il passo della vo
 
 ## La scheda dell'episodio (`video.js`)
 
-Ogni episodio è una scheda: battute, schermate e gesti scelti dalle librerie di `tg.js`. Codice nuovo serve solo quando una storia chiede un disegno che non c'è ancora. Due esempi completi: `episodi/2026-11-10-bollette.js` (una notizia, 30 secondi) e `episodi/2026-11-11-jensen-huang.js` (uno speciale di 4 minuti, a capitoli). Ogni episodio si salva in `episodi/` con il suo nome, poi si copia in `video.js` per montarlo.
+Ogni episodio è una scheda: battute, schermate e gesti scelti dalle librerie di `tg.js`. Codice nuovo serve solo quando una storia chiede un disegno che non c'è ancora. Tre esempi completi: `episodi/2026-11-10-bollette.js` (una notizia, 30 secondi), `episodi/2026-11-11-jensen-huang.js` (uno speciale di 4 minuti, a capitoli) e `episodi/2026-11-11-jensen-huang-en.js` (lo stesso speciale in inglese). Ogni episodio si salva in `episodi/` con il suo nome, poi si copia in `video.js` per montarlo.
+
+- **`lingua`**: `'it'` (se manca) o `'en'`. Cambia il labiale di Rally, le scritte fisse dello studio (CAPITOLO/CHAPTER, DI/OF, Seguimi/Follow me), le parole deboli su cui un sottotitolo non deve finire e la lingua del riconoscitore vocale in `tempi.py` e `giunta.py`. Tutto il resto (battute, schermate, `rubrica`, `nastro`, `motto`) si scrive già nella lingua dell'episodio. In inglese un numero detto come una parola sola si scrive con i trattini in `dice` ("nineteen-ninety-three", "one-twenty-eight", "three-D"), così corrisponde alla parola "1993" di `mostra`; `tempi.py` riconosce le letture inglesi dei numeri (anni a coppie, "two thousand seven", "$5 trillion").
 
 - **`scene`**: le battute in ordine, ognuna con `id` e `dice` (il testo per la voce, numeri in lettere). I sottotitoli in due modi:
   - `mostra`: lo stesso testo con i numeri in cifre e la *parola* da evidenziare tra asterischi, stesse parole una per una ("cinque milioni" → "*5 milioni*"). `tg.js` lo taglia da solo in blocchi di 2-4 parole, sulla punteggiatura e mai dentro un'evidenziazione;
@@ -78,7 +80,7 @@ Icone: lampadina, fiamma, centrale, casa, moneta, barile, banca, carrello, salva
 - La voce costa circa 0,7 crediti ogni 100 caratteri (11 novembre 2026): uno speciale di 4 minuti, circa 3.000 caratteri, circa 21 crediti.
 - Non accelerare la voce: con `TEMPO=1.1` si capiva peggio ("Prima estime" invece di "Prime stime").
 - Questa voce ha un leggero accento: "bolletta" si sente come "boletta", "videogiochi" come "videogiocchi", "moltiplichi" come "multiplichi", "accetta" come "acchetta". In tre prove "finisce il liceo" aveva un suono strano in mezzo: meglio "si diploma". Un numero detto in fretta ("sei mesi") può sembrare un'altra parola: va ricontrollato sempre.
-- Quando una presa sbaglia una parola e un'altra presa un'altra, `giunta.py` unisce i pezzi buoni nel silenzio tra due parole, senza spendere crediti.
+- Quando una presa sbaglia una parola e un'altra presa un'altra, `giunta.py` unisce i pezzi buoni nel silenzio tra due parole, senza spendere crediti: `python3 giunta.py A.mp3 B.mp3 <ultima parola da A> <prima parola da B> uscita.mp3 [it o en]`.
 - Il primo speciale (3.068 caratteri, 12 battute rifatte) è costato 30 crediti: conta un terzo in più del preventivo per le prese da rifare.
 
 ## Controlli rapidi

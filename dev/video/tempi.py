@@ -3,7 +3,8 @@
 
 Uso: python3 tempi.py <cartella con <id>.mp3> <scene.json> [cartella di uscita]
 Scrive tempi.js (window.TEMPI, letto da tg.js), tempi.json e voce.wav (mono, 48 kHz),
-e stampa il controllo: che cosa ha capito il riconoscitore vocale e quali parole del copione non ha sentito."""
+e stampa il controllo: che cosa ha capito il riconoscitore vocale e quali parole del copione non ha sentito.
+La lingua (it o en) arriva da scene.json, cioè da VIDEO.lingua della scheda."""
 import difflib, json, os, re, subprocess, sys, unicodedata
 import numpy as np
 from scipy.io import wavfile
@@ -33,12 +34,60 @@ def num(n):
     return str(n)
 
 
-def nrm(w):
-    """Una parola ridotta a sole lettere, per confrontare copione e trascrizione (17 -> diciassette)."""
-    w = w.lower().replace('’', "'").replace('€', ' euro ').replace('%', ' percento ')
-    w = re.sub(r'\d+', lambda m: num(int(m.group())), w)
+EN_U = ('zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen '
+        'seventeen eighteen nineteen').split()
+EN_D = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
+
+
+def num_en(n):
+    if n < 20: return EN_U[n]
+    if n < 100: return EN_D[n // 10] + (EN_U[n % 10] if n % 10 else '')
+    for v, nome in ((10 ** 12, 'trillion'), (10 ** 9, 'billion'), (10 ** 6, 'million'), (1000, 'thousand'), (100, 'hundred')):
+        if n >= v:
+            q, r = divmod(n, v)
+            return num_en(q) + nome + (num_en(r) if r else '')
+
+
+def varianti_en(n):
+    """I modi di leggere un numero in inglese: 1993 nineteen ninety three, 2007 two thousand seven, 128 one twenty eight."""
+    v = [num_en(n)]
+    if 1100 <= n <= 9999 and n % 100 >= 10 and not 2000 <= n <= 2009: v.insert(0, num_en(n // 100) + num_en(n % 100))
+    if 100 <= n <= 999 and n % 100: v.append(num_en(n // 100) + num_en(n % 100))
+    return v
+
+
+LINGUA = 'it'
+
+
+def nrm(w, rif=''):
+    """Una parola ridotta a sole lettere, per confrontare copione e trascrizione (17 -> diciassette, o seventeen).
+    rif: il copione già ridotto, per scegliere tra più letture di un numero quella che c'è nel copione."""
+    w = w.lower().replace('’', "'")
+    if LINGUA == 'en':
+        w = re.sub(r'(?<=\d),(?=\d{3})', '', w).replace('%', ' percent ').replace('$', '').replace('€', ' euros ')
+        def n_en(m):
+            v = varianti_en(int(m.group()))
+            return next((x for x in v if x in rif), v[0])
+        w = re.sub(r'\d+', n_en, w)
+    else:
+        w = w.replace('€', ' euro ').replace('%', ' percento ')
+        w = re.sub(r'\d+', lambda m: num(int(m.group())), w)
     w = ''.join(c for c in unicodedata.normalize('NFD', w) if unicodedata.category(c) != 'Mn')
     return re.sub(r'[^a-z]', '', w)
+
+
+GRANDI = {'million', 'billion', 'trillion', 'millions', 'billions', 'trillions'}
+
+
+def nrm_sentite(words, rif):
+    """Le parole riconosciute, ridotte. In inglese "$5 trillion" diventa five / trillion dollars, come si dice."""
+    out = [nrm(w.word, rif) for w in words]
+    if LINGUA == 'en':
+        for i, w in enumerate(words):
+            if '$' in w.word:
+                j = i + 1 if i + 1 < len(words) and nrm(words[i + 1].word) in GRANDI else i
+                out[j] += 'dollars'
+    return out
 
 
 def load(p):
@@ -76,15 +125,15 @@ def model():
         return WhisperModel('small', device='cpu', compute_type='int8')
 
 
-def align(dice, words, dur):
+def align(dice, words, nw, dur):
     """Tempo d'inizio e fine di ogni parola del copione, a partire dalle parole riconosciute (confronto lettera per lettera)."""
     sw = dice.split()
     S, Sk = [], []
     for k, w in enumerate(sw):
         for ch in nrm(w): S.append(ch); Sk.append(k)
     Wc, Wt, Wd = [], [], []
-    for w in words:
-        n = nrm(w.word); step = (w.end - w.start) / max(1, len(n))
+    for w, n in zip(words, nw):
+        step = (w.end - w.start) / max(1, len(n))
         for j, ch in enumerate(n): Wc.append(ch); Wt.append(w.start + j * step); Wd.append(step)
     st, en = [None] * len(sw), [None] * len(sw)
     for a, b, size in difflib.SequenceMatcher(None, ''.join(S), ''.join(Wc), autojunk=False).get_matching_blocks():
@@ -115,16 +164,19 @@ def align(dice, words, dur):
 M = model()
 T, clips, t, ok = {'fps': FPS}, [], START, True
 for s in scene:
+    LINGUA = s.get('lingua', 'it')
     t += s.get('pausa', 0)                              # respiro in più (prima di un capitolo): lo calcola scene.cjs come tg.js
     x = level(trim(load(os.path.join(vdir, s['id'] + '.mp3'))))
     path = os.path.join(out, 'voce_' + s['id'] + '.wav')
     wavfile.write(path, SR, (np.clip(x, -1, 1) * 32767).astype(np.int16))
     dur = len(x) / SR
-    segs, _ = M.transcribe(path, language='it', word_timestamps=True, beam_size=5, condition_on_previous_text=False)
+    segs, _ = M.transcribe(path, language=LINGUA, word_timestamps=True, beam_size=5, condition_on_previous_text=False)
     words = [w for sg in segs for w in (sg.words or [])]
-    st, en, found = align(s['dice'], words, dur)
+    rif = ''.join(nrm(w) for w in s['dice'].split())
+    b = nrm_sentite(words, rif)
+    st, en, found = align(s['dice'], words, b, dur)
     heard = ' '.join(w.word.strip() for w in words)
-    a, b = [nrm(w) for w in s['dice'].split()], [nrm(w.word) for w in words]
+    a = [nrm(w) for w in s['dice'].split()]
     ratio = difflib.SequenceMatcher(None, a, b, autojunk=False).ratio()
     missing = [w for w in s['dice'].split() if nrm(w) and nrm(w) not in ''.join(b)]
     if ratio < .8 or missing: ok = False

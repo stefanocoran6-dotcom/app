@@ -2,7 +2,7 @@
 """Unisce due prese della stessa battuta: l'inizio da una, il resto dall'altra, tagliando nel silenzio tra due parole.
 Serve quando ogni presa sbaglia una parola diversa: rifarla ancora costerebbe crediti senza garanzie.
 
-Uso: python3 giunta.py <presa A> <presa B> <ultima parola da A> <prima parola da B> <uscita.mp3>
+Uso: python3 giunta.py <presa A> <presa B> <ultima parola da A> <prima parola da B> <uscita.mp3> [lingua: it o en]
 Esempio: python3 giunta.py voce/c5d.mp3 prova/c5d.mp3 dollari bastano voce/c5d.mp3
 Poi si rifà tempi.py, che ricontrolla le parole della battuta unita."""
 import subprocess, sys
@@ -20,11 +20,12 @@ M = modello()
 
 
 def parole(p):
-    segs, _ = M.transcribe(p, language='it', word_timestamps=True, beam_size=5, condition_on_previous_text=False)
+    segs, _ = M.transcribe(p, language=LINGUA, word_timestamps=True, beam_size=5, condition_on_previous_text=False)
     return [(w.word.strip().lower().strip('.,:;!?'), w.start, w.end) for s in segs for w in (s.words or [])]
 
 
 a, b, wa, wb, out = sys.argv[1:6]
+LINGUA = sys.argv[6] if len(sys.argv) > 6 else 'it'
 A, B = parole(a), parole(b)
 ea = [w for w in A if w[0] == wa][0][2]; dopo = [w for w in A if w[1] > ea]
 ea = min(ea + 0.12, (dopo[0][1] - 0.02) if dopo else ea + 0.12)          # un attimo dopo la parola, prima della successiva
