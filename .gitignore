@@ -1,2 +1,12 @@
 dev/ordine/basi.json
 __pycache__/
+dev/video/node_modules/
+dev/video/fonts.css
+dev/video/tempi.js
+dev/video/tempi.json
+dev/video/scene.json
+dev/video/eventi.json
+dev/video/voce/
+dev/video/*.wav
+dev/video/*.mp4
+dev/video/*.jpg
