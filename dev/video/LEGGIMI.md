@@ -62,7 +62,7 @@ Ogni episodio è una scheda: battute, schermate e gesti scelti dalle librerie di
 | `numero` | `etichetta`, `parti` [{testo, a}]: la prima arriva con un colpo, le altre scivolano; `chips` [{testo, icona, colore, a}]; `fonte` |
 | `catena` | `etichetta`, `passi` [{icona, nome, a}] (2 o 3) uniti da frecce, ognuno entra sulla sua parola; `note` [{testo, passo, colore, lato, a}]; `fx`: `cresce`, `moneta`, `accendi` {passo, a, fino} e `prezzo` {passo, su, giu, simbolo} |
 | `scelta` | `etichetta`, `domanda`, `carte` (2) [{titolo, nota, colore, notaColore, segno: si, no o uguale, a, pulse}] |
-| `confronto` | `etichetta`, `sinistra` {testo, nota, a}, `destra` {testo, nota, colore, a} |
+| `confronto` | `etichetta`, `sinistra` {testo, nota, a}, `destra` {testo, nota, colore, a}, `freccia` {a} (se manca, la freccia entra poco prima di `destra`) |
 | `grafico` | `etichetta`, `valori`, `linea` {a}, `soglia` {valore, testo}, `fine` {testo, a}, `verso` (su o giu), `colore` |
 | `griglia` | lo schermo fatto di pixel. `modo` assente: l'immagine si disegna (`disegna` {a, fino}) e un puntino si ingrandisce (`lente` {a, i, j, testo}); `modo: 'confronto'`: `sinistra` {a, testo, nota} colora un puntino alla volta, `destra` {a, testo, nota} si riempie tutta insieme su `tutti` {a}; `modo: 'pioggia'`: tanti puntini insieme (`pioggia` {a}), `chips` sotto |
 | `formula` | `etichetta`, `termini` [{testo, nota, colore, a}] uniti da `operatori` (di solito × e =); l'ultimo è il risultato, in giallo |
@@ -85,7 +85,7 @@ Icone: lampadina, fiamma, centrale, casa, moneta, barile, banca, carrello, salva
 - Quando una presa sbaglia una parola e un'altra presa un'altra, `giunta.py` unisce i pezzi buoni nel silenzio tra due parole, senza spendere crediti: `python3 giunta.py A.mp3 B.mp3 <ultima parola da A> <prima parola da B> uscita.mp3 [it o en]`.
 - Il primo speciale (3.068 caratteri, 12 battute rifatte) è costato 30 crediti: conta un terzo in più del preventivo per le prese da rifare.
 - In inglese la voce di Rally è il preset Ainsley (`731b4ffe-e95e-59f4-8c00-81608936091f`, scelto da Stefano l'11 novembre 2026), senza cambiare il tono. Si ferma a lungo dopo i due punti e le domande (fino a 1,8 s): `PAUSA=0.6` in `tempi.py` accorcia quelle pause. Il riconoscitore scrive "Raleigh" per Rally e "and Vidia" per Nvidia: sono il suo modo di scrivere, non errori della voce.
-- A volte il generatore aggiunge qualcosa che non c'è nel copione: una sillaba prima della battuta, una frase senza senso o un colpo secco alla fine (4 prese su 36 nello speciale inglese). `pulisci.py` le toglie senza spendere crediti; se una presa ha parole sbagliate in mezzo, va rifatta.
+- A volte il generatore aggiunge qualcosa che non c'è nel copione: una sillaba prima della battuta, una frase senza senso o un colpo secco alla fine (5 prese su 36 nello speciale inglese). `pulisci.py` le toglie senza spendere crediti; se una presa ha parole sbagliate in mezzo, va rifatta.
 
 ## Controlli rapidi
 

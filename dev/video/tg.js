@@ -206,6 +206,7 @@ const TG = (function () {
       if (s.lente && s.lente._t != null) ev.push({ t: s.lente._t, tipo: 'cartellino' });
       (s.parti || []).forEach((p, j) => { ev.push({ t: p._t, tipo: 'numero' }); if (!j) T.shakes.push(p._t); });
       ['sinistra', 'destra'].forEach((k) => { if (s[k] && s[k]._t != null) ev.push({ t: s[k]._t, tipo: 'numero' }); });
+      if (s.freccia && s.freccia._t != null) ev.push({ t: s.freccia._t, tipo: 'passo' });
       (s.fx || []).forEach((f) => {
         if (f.tipo === 'moneta') ev.push({ t: f._t, tipo: 'moneta' });
         if (f.tipo === 'cresce' || f.tipo === 'prezzo') ev.push({ t: f.tipo === 'prezzo' ? f._su : f._t, tipo: 'sale' });
@@ -608,7 +609,8 @@ const TG = (function () {
         `<div style="margin-top:18px;font:700 30px/1 ${MONO};letter-spacing:.02em;color:${C.mut}">${esc(o.nota || '')}</div></div>`;
     };
     h += side(S.sinistra, 215, false) + side(S.destra, 605, true);
-    if (S.destra && t >= S.destra._t - .3) h += `<div style="position:absolute;left:${MW / 2}px;top:170px;transform:translate(-50%,-50%) scale(${pop(t, S.destra._t - .3, .3).toFixed(3)});font:800 64px/1 ${DISP};color:${C.ink}">→</div>`;
+    const fa = S.freccia && S.freccia._t != null ? S.freccia._t : S.destra ? S.destra._t - .3 : null;   // freccia {a}: entra su una parola sua
+    if (fa != null && t >= fa) h += `<div style="position:absolute;left:${MW / 2}px;top:170px;transform:translate(-50%,-50%) scale(${pop(t, fa, .3).toFixed(3)});font:800 64px/1 ${DISP};color:${C.ink}">→</div>`;
     return h;
   }
   // grafico: valori (una linea che si disegna da linea.a), soglia {valore, testo}, fine {testo, a}, verso 'su'|'giu'
