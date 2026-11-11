@@ -17,7 +17,7 @@ const TG = (function () {
   const DY = 1090;                                  // piano del bancone
   const NY = 1146, NH = 66;                         // nastro
   const SY = 1256, SH = 182;                        // sottotitoli
-  const WPS = 2.4, ARIA = .3;                       // parole al secondo e aria tra le battute (stima, prima della voce)
+  const WPS = 2.2, ARIA = .3;                       // parole al secondo e aria tra le battute (stima, prima della voce)
 
   const E = R4M.ease;
   const clamp = (x, a, b) => x < a ? a : x > b ? b : x, lerp = (a, b, k) => a + (b - a) * k;

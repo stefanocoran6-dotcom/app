@@ -32,7 +32,7 @@ python3 sound.py eventi.json voce.wav mix.wav
 ./render.sh tg-rally-AAAA-MM-GG.mp4 1 mix.wav        # finale: 1080×1920, meglio con size "xl"
 ```
 
-Senza `tempi.js` i tempi sono stimati a 2,4 parole al secondo: serve per lo storyboard, prima della voce.
+Senza `tempi.js` i tempi sono stimati a 2,2 parole al secondo (il passo della voce di Rally): serve per lo storyboard, prima della voce.
 
 ## La scheda dell'episodio (`video.js`)
 
