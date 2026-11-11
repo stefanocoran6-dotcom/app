@@ -28,3 +28,15 @@ L'app li scarica quando servono: per pubblicare notizie nuove non si ricostruisc
 Come si scelgono, si verificano e si scrivono le notizie è in `NOTIZIE.md`: è la procedura che segue anche l'aggiornamento automatico del mattino.
 
 Nei paragrafi le parole in `**grassetto**` che stanno nel glossario (`GLOSS_DEF` in `ordine/p10_data.js`) si aprono con un tocco, come nelle lezioni. Il nastro, la pagina dell'articolo e l'archivio sono in `ordine/p37_news.js`; gli articoli letti restano segnati nella memoria del telefono (`fl2_news_letti`).
+
+## Formule
+
+Ogni formula, anche una sola lettera usata come variabile, si scrive in LaTeX: in mezzo al testo tra `\(` e `\)`, su una riga a sé tra `$$` e `$$` (anche più righe con `\begin{aligned}`). Le regole usate in tutti i contenuti:
+
+- frazioni con `\dfrac` in mezzo al testo e `\frac` nelle formule su riga a sé;
+- sigle e parole dentro `\text{}` (`\text{FCFF}`, `\text{P/E}`, `\text{EPS}_t`), lettere singole in corsivo (`r`, `g`, `D_1`);
+- meno `-`, per `\times`, circa `\approx`, lettere greche come comandi (`\sigma`, `\beta`);
+- percentuale `\%`, virgola decimale `{,}` (`0{,}5`);
+- in una formula che lega grandezze a parole va tutto in LaTeX (`\(\text{EV} = \text{equity} + \text{debito} - \text{cassa}\)`); una definizione a parole ("\(H\) = metà del periodo") resta testo.
+
+L'app spezza da sola le formule lunghe in mezzo al testo dopo `=`, `+`, `-`, `\times`, così su un telefono vanno a capo; le formule su riga a sé che sono appena più larghe dello schermo vengono rimpicciolite fino al 70%, oltre si scorrono di lato. Una formula su riga a sé conviene tenerla entro circa 35 caratteri visibili per riga, andando a capo con `aligned`.

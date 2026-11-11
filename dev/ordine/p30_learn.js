@@ -291,7 +291,7 @@ function LessonScreen({ nav, lessonKey }) {
       <div style="margin-top:12px">${(() => { const parts = st.fig ? String(st.text).split(/\n*\[fig\]\n*/) : [st.text]; return html`<${React.Fragment}><${Rich} text=${parts[0]}/>${st.fig && html`<${Fig} key=${'f' + i} fig=${st.fig}/>`}${parts[1] && html`<${Rich} text=${parts[1]}/>`}<//>`; })()}</div>
       ${i === firstTermPage && html`<p class="o-s" style="margin-top:14px">Le parole sottolineate si possono toccare: ti dicono che cosa vogliono dire.</p>`}
       ${st.widget === 'compound' && html`<${CompoundWidget}/>`}
-      ${st.note && html`<div class="o-note" style="margin-top:18px">In breve: ${st.note}</div>`}
+      ${st.note && html`<div class="o-note" style="margin-top:18px"><${Rich} text=${'In breve: ' + st.note} cls="sm" style=${{ fontSize: 'inherit', lineHeight: 'inherit', fontWeight: 'inherit' }}/></div>`}
     </div>`;
     foot = html`<${Btn} cls="lg" onClick=${next}>Ho capito<//>`;
   } else if (st.k === 'recap') {
