@@ -2,6 +2,7 @@
 """Voce del TG Rally: taglia i silenzi, trova i tempi di ogni parola e prepara la traccia della voce.
 
 Uso: python3 tempi.py <cartella con <id>.mp3> <scene.json> [cartella di uscita]
+Con PAUSA=0.6 i silenzi dentro una battuta più lunghi di 0,6 s si accorciano a 0,6 s (alcune voci si fermano troppo dopo i due punti).
 Scrive tempi.js (window.TEMPI, letto da tg.js), tempi.json e voce.wav (mono, 48 kHz),
 e stampa il controllo: che cosa ha capito il riconoscitore vocale e quali parole del copione non ha sentito.
 La lingua (it o en) arriva da scene.json, cioè da VIDEO.lingua della scheda."""
@@ -11,9 +12,7 @@ from scipy.io import wavfile
 
 SR, FPS, START, ARIA, HOLD = 48000, 30, .2, .3, 1.4      # come tg.js: inizio, aria tra le battute, fermo finale
 TEMPO = float(os.environ.get('TEMPO', '1'))             # sopra 1 la voce va più veloce, con lo stesso tono
-vdir, scene_path = sys.argv[1], sys.argv[2]
-out = sys.argv[3] if len(sys.argv) > 3 else '.'
-scene = json.load(open(scene_path, encoding='utf-8'))
+PAUSA = float(os.environ.get('PAUSA', '0'))             # se più di 0: la pausa più lunga dentro una battuta, in secondi
 
 UNI = ('zero uno due tre quattro cinque sei sette otto nove dieci undici dodici tredici quattordici quindici '
        'sedici diciassette diciotto diciannove').split()
@@ -109,6 +108,23 @@ def trim(x, rel_db=-38, pad=.035):
     return x[a:b]
 
 
+def stringi(x, massimo, rel_db=-38):
+    """Accorcia i silenzi interni più lunghi di massimo secondi: ne tiene metà all'inizio e metà alla fine."""
+    w = int(.01 * SR); r = 20 * np.log10(rms_win(x, w) / rms_win(x, w).max())
+    zitto = r < rel_db; pezzi, i, tolti = [], 0, 0.0
+    k = 0
+    while k < len(zitto):
+        if not zitto[k]: k += 1; continue
+        j = k
+        while j < len(zitto) and zitto[j]: j += 1
+        if k > 0 and j < len(zitto) and (j - k) * .01 > massimo:      # solo dentro la battuta, non all'inizio o alla fine
+            a, b = (k + int(massimo * 50)) * w, (j - int(massimo * 50)) * w
+            pezzi.append(x[i:a]); i = b; tolti += (b - a) / SR
+        k = j
+    pezzi.append(x[i:])
+    return np.concatenate(pezzi), tolti
+
+
 def level(x, target_db=-20.0):
     """Stesso volume per tutte le battute: il parlato (finestre attive) a -20 dBFS."""
     r = rms_win(x, int(.02 * SR)); act = r[r > r.max() * 10 ** (-35 / 20)]
@@ -161,12 +177,19 @@ def align(dice, words, nw, dur):
     return st, en, found
 
 
-M = model()
-T, clips, t, ok = {'fps': FPS}, [], START, True
-for s in scene:
+def main():
+  global LINGUA
+  vdir, scene_path = sys.argv[1], sys.argv[2]
+  out = sys.argv[3] if len(sys.argv) > 3 else '.'
+  scene = json.load(open(scene_path, encoding='utf-8'))
+  M = model()
+  T, clips, t, ok = {'fps': FPS}, [], START, True
+  for s in scene:
     LINGUA = s.get('lingua', 'it')
     t += s.get('pausa', 0)                              # respiro in più (prima di un capitolo): lo calcola scene.cjs come tg.js
     x = level(trim(load(os.path.join(vdir, s['id'] + '.mp3'))))
+    tolti = 0.0
+    if PAUSA > 0: x, tolti = stringi(x, PAUSA)
     path = os.path.join(out, 'voce_' + s['id'] + '.wav')
     wavfile.write(path, SR, (np.clip(x, -1, 1) * 32767).astype(np.int16))
     dur = len(x) / SR
@@ -180,22 +203,26 @@ for s in scene:
     ratio = difflib.SequenceMatcher(None, a, b, autojunk=False).ratio()
     missing = [w for w in s['dice'].split() if nrm(w) and nrm(w) not in ''.join(b)]
     if ratio < .8 or missing: ok = False
-    print(f"[{s['id']}] {dur:.2f} s · parole uguali {ratio:.0%} · trovate {found}/{len(st)}" + (f" · NON SENTITE: {missing}" if missing else ''))
+    print(f"[{s['id']}] {dur:.2f} s" + (f" (pause accorciate di {tolti:.2f} s)" if tolti else '') + f" · parole uguali {ratio:.0%} · trovate {found}/{len(st)}" + (f" · NON SENTITE: {missing}" if missing else ''))
     print('   sentito:', heard)
     T[s['id']] = {'t0': round(t, 3), 'dur': round(dur, 3),
                   'parole': [{'t': round(t + p, 3), 'end': round(t + q, 3)} for p, q in zip(st, en)]}
     clips.append((t, x)); t += dur + ARIA
-total = t - ARIA + HOLD
-voce = np.zeros(int(round(total * SR)) + 1)
-for t0, x in clips:
+  total = t - ARIA + HOLD
+  voce = np.zeros(int(round(total * SR)) + 1)
+  for t0, x in clips:
     i = int(round(t0 * SR)); voce[i:i + len(x)] += x
-w = SR // FPS; nf = int(np.ceil(total * FPS)) + 1
-pad = np.concatenate([np.zeros(w // 2), voce, np.zeros(w * 2)])
-r = np.array([np.sqrt(np.mean(pad[f * w:f * w + w] ** 2)) for f in range(nf)])
-ref = np.percentile(r[r > 1e-4], 95) if np.any(r > 1e-4) else 1
-T['env'] = [round(float(min(1, v / ref)), 3) for v in r]
-T['total'] = round(total, 3)
-wavfile.write(os.path.join(out, 'voce.wav'), SR, (np.clip(voce, -1, 1) * 32767).astype(np.int16))
-json.dump(T, open(os.path.join(out, 'tempi.json'), 'w'))
-open(os.path.join(out, 'tempi.js'), 'w').write('window.TEMPI=' + json.dumps(T) + ';\n')
-print(f"totale {total:.2f} s · {'parole a posto' if ok else 'DA CONTROLLARE: qualche parola non torna'}")
+  w = SR // FPS; nf = int(np.ceil(total * FPS)) + 1
+  pad = np.concatenate([np.zeros(w // 2), voce, np.zeros(w * 2)])
+  r = np.array([np.sqrt(np.mean(pad[f * w:f * w + w] ** 2)) for f in range(nf)])
+  ref = np.percentile(r[r > 1e-4], 95) if np.any(r > 1e-4) else 1
+  T['env'] = [round(float(min(1, v / ref)), 3) for v in r]
+  T['total'] = round(total, 3)
+  wavfile.write(os.path.join(out, 'voce.wav'), SR, (np.clip(voce, -1, 1) * 32767).astype(np.int16))
+  json.dump(T, open(os.path.join(out, 'tempi.json'), 'w'))
+  open(os.path.join(out, 'tempi.js'), 'w').write('window.TEMPI=' + json.dumps(T) + ';\n')
+  print(f"totale {total:.2f} s · {'parole a posto' if ok else 'DA CONTROLLARE: qualche parola non torna'}")
+
+
+if __name__ == '__main__':
+  main()

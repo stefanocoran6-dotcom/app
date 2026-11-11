@@ -11,6 +11,7 @@ Qui c'è tutto quello che serve per montare il TG di Rally, il canale TikTok di 
 | `video.js` | La scheda dell'episodio: battute, sottotitoli, capitoli, schermate, gesti. Cambia a ogni episodio. |
 | `render.html`, `render.cjs`, `render.sh` | Disegnano i fotogrammi e montano il video. |
 | `scene.cjs` | Dalla scheda alle battute per la voce (`scene.json`), con le pause prima dei capitoli. |
+| `pulisci.py` | Voce: toglie i rumori e le parole inventate che il generatore a volte aggiunge prima o dopo una battuta. |
 | `tempi.py` | Voce: taglia i silenzi, controlla le parole con il riconoscitore vocale, trova i tempi veri di ogni parola. |
 | `sound.py` | Effetti sonori sintetizzati e mix: voce sopra, effetti almeno 10 dB sotto, −14 LUFS. |
 | `giunta.py` | Unisce due prese della stessa battuta, l'inizio da una e il resto dall'altra. |
@@ -28,8 +29,9 @@ npm i --no-save --silent @fontsource-variable/bricolage-grotesque@5.3.0 @fontsou
 export NODE_PATH=$(npm root -g)
 cp episodi/AAAA-MM-GG-parola.js video.js             # l'episodio da montare
 node scene.cjs scene.json
-mkdir -p voce        # una battuta per scena: voce/<id>.mp3, scaricata dall'indirizzo della generazione
-python3 tempi.py voce scene.json .
+mkdir -p prese voce  # una battuta per scena: prese/<id>.mp3, scaricata dall'indirizzo della generazione
+python3 pulisci.py prese scene.json voce              # toglie rumori e parole in più: stampa che cosa ha tolto
+PAUSA=0.6 python3 tempi.py voce scene.json .          # PAUSA: le pause dentro una battuta al massimo 0,6 s
 node controlli.cjs                                   # di nuovo, con i tempi veri
 node render.cjs eventi eventi.json
 python3 sound.py eventi.json voce.wav mix.wav
@@ -82,6 +84,8 @@ Icone: lampadina, fiamma, centrale, casa, moneta, barile, banca, carrello, salva
 - Questa voce ha un leggero accento: "bolletta" si sente come "boletta", "videogiochi" come "videogiocchi", "moltiplichi" come "multiplichi", "accetta" come "acchetta". In tre prove "finisce il liceo" aveva un suono strano in mezzo: meglio "si diploma". Un numero detto in fretta ("sei mesi") può sembrare un'altra parola: va ricontrollato sempre.
 - Quando una presa sbaglia una parola e un'altra presa un'altra, `giunta.py` unisce i pezzi buoni nel silenzio tra due parole, senza spendere crediti: `python3 giunta.py A.mp3 B.mp3 <ultima parola da A> <prima parola da B> uscita.mp3 [it o en]`.
 - Il primo speciale (3.068 caratteri, 12 battute rifatte) è costato 30 crediti: conta un terzo in più del preventivo per le prese da rifare.
+- In inglese la voce di Rally è il preset Ainsley (`731b4ffe-e95e-59f4-8c00-81608936091f`, scelto da Stefano l'11 novembre 2026), senza cambiare il tono. Si ferma a lungo dopo i due punti e le domande (fino a 1,8 s): `PAUSA=0.6` in `tempi.py` accorcia quelle pause. Il riconoscitore scrive "Raleigh" per Rally e "and Vidia" per Nvidia: sono il suo modo di scrivere, non errori della voce.
+- A volte il generatore aggiunge qualcosa che non c'è nel copione: una sillaba prima della battuta, una frase senza senso o un colpo secco alla fine (4 prese su 36 nello speciale inglese). `pulisci.py` le toglie senza spendere crediti; se una presa ha parole sbagliate in mezzo, va rifatta.
 
 ## Controlli rapidi
 
