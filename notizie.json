@@ -1,164 +1,204 @@
 {
-  "v": 1,
-  "data": "2026-11-10",
-  "articoli": [
+ "v": 1,
+ "data": "2026-11-11",
+ "articoli": [
+  {
+   "id": "2026-11-11-educazione-finanziaria",
+   "cat": "Risparmio",
+   "nastro": "La finanza interessa a 9 italiani su 10",
+   "titolo": "La finanza interessa a 9 italiani su 10, ma la paura frena",
+   "evid": "la paura frena",
+   "sommario": "Un'indagine su circa 5.000 persone dice che l'interesse per i temi dei soldi è cresciuto molto in cinque anni. Ma chi vuole imparare fatica a trovare fonti di cui fidarsi, e quasi uno su due terrebbe i nuovi risparmi fermi.",
+   "numero": "93%",
+   "nota": "nel 2021 era 76%",
+   "didascalia": "Gli intervistati interessati a economia e finanza, secondo l'Osservatorio Edufin 2026",
+   "breve": [
+    "Il 93% degli intervistati si dice interessato a economia e finanza: nel 2021 era il 76%.",
+    "Il 48% fatica a trovare contenuti e persone affidabili e il 47% non sa a chi rivolgersi quando deve investire.",
+    "Il 45% terrebbe i nuovi risparmi liquidi, il 26% sceglierebbe BTP e altre obbligazioni, solo il 2% le azioni."
+   ],
+   "corpo": [
     {
-      "id": "2026-11-10-bollette",
-      "cat": "Bollette",
-      "nastro": "Decreto bollette: quanto si risparmia",
-      "titolo": "Decreto bollette: per una famiglia 17-37 € l'anno",
-      "evid": "17-37 € l'anno",
-      "sommario": "Il governo ha approvato le nuove misure contro il caro energia. Secondo le prime stime, per una famiglia lo sconto vale qualche decina di euro l'anno.",
-      "numero": "17-37 €",
-      "nota": "da gennaio",
-      "didascalia": "Il risparmio stimato per una famiglia in un anno",
-      "breve": [
-        "Lunedì 9 novembre il Consiglio dei ministri ha approvato il decreto. Le misure partono da gennaio e durano al massimo 18 mesi.",
-        "Per una famiglia le prime stime parlano di 17-37 € in meno all'anno.",
-        "Vale per chi ha la luce a prezzo variabile. Con il prezzo fisso non cambia nulla fino alla scadenza del contratto."
-      ],
-      "corpo": [
-        {
-          "h": "Che cosa è stato deciso",
-          "p": [
-            "Lunedì 9 novembre il Consiglio dei ministri ha approvato il nuovo decreto bollette. Al centro c'è una soglia di 58,9 € al **megawattora** sul gas usato per produrre elettricità. In questi giorni quel gas costa 82,2 €. Finché il prezzo resta sopra la soglia, le centrali a gas ricevono un rimborso parziale e possono vendere la corrente a un prezzo più basso.",
-            "Il meccanismo parte da gennaio e può durare al massimo 18 mesi."
-          ]
-        },
-        {
-          "h": "Perché il gas decide il prezzo della luce",
-          "p": [
-            "In Italia il prezzo all'ingrosso dell'elettricità si chiama **PUN**. Nelle ore in cui servono le centrali a gas, è il loro costo a fissare il prezzo di tutta la corrente venduta, anche di quella prodotta con il sole o con il vento. Per questo, quando il gas rincara, sale anche la bolletta della luce.",
-            "In questi giorni il PUN è a 313 € al megawattora. Un anno fa era a 107."
-          ]
-        },
-        {
-          "h": "Quanto si risparmia",
-          "p": [
-            "Il ministro dell'Ambiente e della Sicurezza energetica, Gilberto Pichetto Fratin, stima un calo medio del prezzo dell'elettricità di circa 15 € al megawattora. Per una famiglia i primi conti sono prudenti: il centro studi Ecco calcola 1,4 € al mese, cioè 17 € l'anno. Il Codacons arriva a 27-37 € l'anno e avverte che il beneficio potrebbe anche dimezzarsi.",
-            "C'è anche un costo. Il rimborso alle centrali si paga con una nuova voce in bolletta: nelle intenzioni del governo, lo sconto sul prezzo dell'energia sarà più grande di questa voce."
-          ]
-        },
-        {
-          "h": "Per chi vale",
-          "p": [
-            "Per chi ha un contratto della luce a prezzo variabile: circa 18 milioni di famiglie, secondo Assoutenti. Chi ha un contratto a prezzo fisso non vede cambiamenti fino alla scadenza."
-          ]
-        },
-        {
-          "h": "Che cosa succede adesso",
-          "p": [
-            "Il decreto deve essere pubblicato in Gazzetta Ufficiale. Poi il Parlamento ha 60 giorni per convertirlo in legge e può modificarlo: cifre e regole possono ancora cambiare.",
-            "Le reazioni sono divise. Confcommercio parla di bollette fino al 10% più leggere per le imprese. L'Unione nazionale consumatori giudica l'intervento insufficiente e tardivo."
-          ]
-        }
-      ],
-      "perche": "Guarda il tuo contratto della luce. Se è a prezzo variabile, lo sconto dovrebbe vedersi nei mesi dopo gennaio. Se è a prezzo fisso, per ora non cambia nulla.",
-      "fonti": [
-        { "nome": "ANSA", "titolo": "Dal Cdm ok al Decreto Bollette", "url": "https://www.ansa.it/sito/notizie/economia/2026/11/09/dal-cdm-ok-al-decreto-bollette-15-euro-in-meno-al-megawattora_cbf74d76-2c12-4718-89af-73ab9c1e6fec.html" },
-        { "nome": "Sky TG24", "titolo": "Decreto Bollette: cosa cambia da gennaio", "url": "https://tg24.sky.it/economia/2026/11/10/decreto-bollette-novita-news" },
-        { "nome": "LaPresse", "titolo": "I conti del Codacons sul risparmio", "url": "https://lapresse.it/economia/2026/11/10/decreto-bollette-2026-i-conti-del-codacons-su-quanto-si-puo-risparmiare-col-tetto-al-prezzo-del-gas" },
-        { "nome": "Selectra", "titolo": "Come funziona la soglia sul gas", "url": "https://selectra.net/energia/attualita/decreto-bollette-novembre-2026" }
-      ]
+     "h": "Che cosa dice l'indagine",
+     "p": [
+      "Martedì 10 novembre, a Milano, è stata presentata la sesta edizione dell'Osservatorio Edufin. È un'indagine di Pictet Asset Management, una società che gestisce investimenti, fatta con l'istituto di ricerca Finer. Hanno risposto circa 5.000 persone.",
+      "Il dato principale: il 93% degli intervistati si dice interessato ai temi di economia e finanza. Nel 2021 era il 76%. Il 45% sente di saperne poco e vorrebbe imparare di più."
+     ]
     },
     {
-      "id": "2026-11-10-inflazione-usa",
-      "cat": "Stati Uniti",
-      "nastro": "Inflazione USA sopra le attese",
-      "titolo": "Negli Stati Uniti i prezzi salgono più del previsto",
-      "evid": "più del previsto",
-      "sommario": "A ottobre i prezzi americani sono saliti dello 0,4% in un mese. I mercati ora si aspettano che la banca centrale alzi ancora i tassi.",
-      "numero": "+0,4%",
-      "nota": "attese +0,3%",
-      "didascalia": "I prezzi negli Stati Uniti a ottobre, rispetto a settembre",
-      "breve": [
-        "A ottobre i prezzi al consumo negli Stati Uniti sono saliti dello 0,4% in un mese. Gli economisti si aspettavano lo 0,3%.",
-        "Tolti cibo ed energia, l'aumento è dello 0,3%, contro lo 0,2% atteso.",
-        "I mercati si aspettano che la Fed, la banca centrale americana, alzi i tassi a dicembre."
-      ],
-      "corpo": [
-        {
-          "h": "Che cosa è successo",
-          "p": [
-            "Martedì 10 novembre l'ufficio di statistica americano ha pubblicato il dato di ottobre: i prezzi al consumo sono saliti dello 0,4% rispetto a settembre. È meno dello 0,6% del mese prima, ma più dello 0,3% che gli economisti si aspettavano.",
-            "Si guarda molto anche all'**inflazione di fondo**, quella che lascia fuori cibo ed energia perché cambiano prezzo di continuo. È salita dello 0,3%, contro lo 0,2% previsto."
-          ]
-        },
-        {
-          "h": "Che cosa è rincarato",
-          "p": [
-            "La voce che pesa di più è la casa: affitti e costi dell'abitare sono saliti dello 0,3% e spiegano da soli più del 30% dell'aumento. Il cibo è salito dello 0,5%, l'energia dello 0,7%."
-          ]
-        },
-        {
-          "h": "Un confronto che manca",
-          "p": [
-            "Di solito l'**inflazione** si legge su dodici mesi. Stavolta il confronto con ottobre dell'anno scorso non c'è: un anno fa gli uffici pubblici americani erano fermi per mancanza di fondi e i prezzi non furono rilevati."
-          ]
-        },
-        {
-          "h": "Perché tutti guardano la Fed",
-          "p": [
-            "Quando i prezzi corrono, una **banca centrale** alza i tassi di interesse: i prestiti costano di più, si spende di meno e i prezzi rallentano. La **Fed**, la banca centrale americana, tiene i tassi tra il 3,75% e il 4%. La prossima riunione è l'8 e il 9 dicembre e i mercati si aspettano un nuovo rialzo.",
-            "La reazione è arrivata subito: a **Wall Street** le azioni sono scese e il dollaro si è rafforzato."
-          ]
-        }
-      ],
-      "perche": "I tassi americani muovono i mercati di tutto il mondo. Se hai un fondo o un ETF, giornate come questa si vedono anche sul valore dei tuoi investimenti.",
-      "fonti": [
-        { "nome": "Bureau of Labor Statistics", "titolo": "Consumer Price Index, ottobre 2026 (in inglese)", "url": "https://www.bls.gov/news.release/cpi.nr0.htm" },
-        { "nome": "Teleborsa", "titolo": "Usa, inflazione a ottobre a +0,4% su mese", "url": "https://www.teleborsa.it/News/2026/11/10/usa-inflazione-si-modera-a-ottobre-a-0-4percent-su-mese-ma-core-rate-oltre-le-attese-a-0-3percent-147.html" },
-        { "nome": "Reuters su Investing.com", "titolo": "Usa, prezzi al consumo oltre le attese a ottobre", "url": "https://it.investing.com/news/economic-indicators/usa-prezzi-al-consumo-aumentano-oltre-attese-a-ottobre-3641292" }
-      ]
+     "h": "Dove ci si informa e che cosa manca",
+     "p": [
+      "Per informarsi, il canale preferito sono ormai i social network, scelti dal 44% (nel 2021 erano il 27%). Giornali, televisione ed eventi dal vivo, tutti insieme, sono scesi dal 41% al 15%.",
+      "L'ostacolo più citato, dal 48%, è trovare contenuti e persone di cui fidarsi. Il 47% non sa a chi rivolgersi quando deve investire.",
+      "Cresce anche l'intelligenza artificiale: il 75% la usa almeno una volta a settimana. Per le questioni di soldi la usa regolarmente il 28%, contro il 17% di un anno prima."
+     ]
     },
     {
-      "id": "2026-11-10-borsa",
-      "cat": "Borsa",
-      "nastro": "Piazza Affari chiude a +0,69%",
-      "titolo": "Piazza Affari sale, ma frena nel finale",
-      "evid": "frena nel finale",
-      "sommario": "La Borsa di Milano chiude a +0,69%. In mattinata guadagnava quasi il doppio: a rallentarla è stato il dato sull'inflazione americana.",
-      "numero": "+0,69%",
-      "nota": "al mattino +1,3%",
-      "didascalia": "La chiusura della Borsa di Milano, indice FTSE MIB",
-      "breve": [
-        "L'indice FTSE MIB chiude a 51.755 punti, in rialzo dello 0,69%.",
-        "In mattinata guadagnava circa l'1,3%, poi ha rallentato.",
-        "Bene Fincantieri e le banche, giù Stellantis."
-      ],
-      "corpo": [
-        {
-          "h": "Com'è andata",
-          "p": [
-            "Il FTSE MIB è l'**indice** che riassume l'andamento delle società più grandi quotate a Milano. Martedì 10 novembre ha chiuso a 51.755 punti, lo 0,69% in più del giorno prima.",
-            "La giornata era partita meglio. In mattinata il rialzo era intorno all'1,3%, sulla scia della forte chiusura di Wall Street di lunedì e del calo del petrolio."
-          ]
-        },
-        {
-          "h": "Perché ha frenato",
-          "p": [
-            "Nel pomeriggio è arrivato il dato sull'inflazione negli Stati Uniti, più alto del previsto. Wall Street è scesa, il dollaro si è rafforzato e anche Milano ha perso slancio: ha chiuso vicino ai minimi della giornata."
-          ]
-        },
-        {
-          "h": "Chi è salito e chi è sceso",
-          "p": [
-            "In testa Fincantieri (+3,34%) e le banche, con Bper a +2,9% e UniCredit a +2,36%. In coda Stellantis (−3,2%), A2A (−2,54%) dopo i conti e Eni (−0,94%), che ha seguito il petrolio."
-          ]
-        },
-        {
-          "h": "Un giorno solo dice poco",
-          "p": [
-            "Un indice sale e scende ogni giorno, spesso per notizie che arrivano da lontano. Per capire come va un investimento in **azioni** conta l'andamento di anni, non di ore."
-          ]
-        }
-      ],
-      "perche": "Se hai un fondo o un ETF che investe in azioni italiane, in questa giornata il suo valore è salito un po'. Giornate così servono soprattutto a vedere come i mercati reagiscono alle notizie.",
-      "fonti": [
-        { "nome": "SoldiOnline", "titolo": "Ftse Mib +0,69% ma frena sul finale", "url": "https://www.soldionline.it/notizie/azioni-italia/ftse-mib-069-ma-frena-sul-finale-cosa-ha-pesato-su-milano" },
-        { "nome": "Money.it", "titolo": "Il FTSE MIB chiude a +0,69% a 51.755 punti", "url": "https://www.money.it/piazza-affari-in-rialzo-il-ftse-mib-10-11-2026" },
-        { "nome": "ANSA", "titolo": "Borsa: Milano forte in mattinata (+1,3%)", "url": "https://www.ansa.it/sito/notizie/economia/2026/11/10/borsa-milano-forte-13-guida-leuropa-bene-lhi-tech-e-le-banche_da87a834-7466-43e8-bbd0-edbd52cdb344.html" }
-      ]
+     "h": "Ansia e paura pesano sulle scelte",
+     "p": [
+      "Il 77% dice di provare ansia quando si tratta di soldi: nel 2024 era il 69%. Per il 73% è la paura a guidare le decisioni.",
+      "Si vede da dove andrebbero i nuovi risparmi. Il 45% li terrebbe in **liquidità**, cioè disponibili subito, per esempio sul **conto corrente**. Il 26% sceglierebbe BTP e altre **obbligazioni**, cioè prestiti fatti a uno Stato o a un'azienda in cambio di un interesse. Solo il 2% comprerebbe **azioni**, cioè piccole parti di un'azienda: nel 2023 era il 6%."
+     ]
+    },
+    {
+     "h": "Che cosa vuol dire",
+     "p": [
+      "Tenere i soldi liquidi dà tranquillità, perché si possono usare in ogni momento. Ha però un costo che non si vede: con l'**inflazione**, cioè l'aumento dei prezzi, la stessa somma compra un po' meno ogni anno. Le obbligazioni e le azioni hanno vantaggi e rischi diversi. Conoscerli è quello che permette di scegliere sapendo che cosa si fa, qualunque sia la scelta."
+     ]
     }
-  ]
+   ],
+   "perche": "Se ti sembra di sapere poco di soldi e di non sapere a chi chiedere, sei in buona compagnia: è così per quasi metà degli intervistati. Capire come funzionano conto, obbligazioni e azioni aiuta a riconoscere le fonti affidabili e a fare le domande giuste.",
+   "fonti": [
+    {
+     "nome": "Radiocor (Borsa Italiana)",
+     "titolo": "Pictet AM: il 93% degli italiani si dice interessato alla finanza",
+     "url": "https://www.borsaitaliana.it/borsa/notizie/radiocor/finanza/dettaglio/finanza-pictet-am-sempre-piu--italiani-interessati-percentuale-sale-al-93-nRC_10112026_1243_360597682.html"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Osservatorio Edufin: cresce l'interesse degli italiani per la finanza",
+     "url": "https://www.teleborsa.it/News/2026/11/10/finanza-pictet-am-italiani-sempre-piu-interessati-171.html"
+    },
+    {
+     "nome": "MF Milano Finanza",
+     "titolo": "Solo il 2% metterebbe i nuovi risparmi in azioni",
+     "url": "https://www.milanofinanza.it/news/il-portafoglio-della-paura-solo-il-2-degli-italiani-vuole-investire-in-azioni-ma-le-alternative-non-sono-202611101230189282"
+    },
+    {
+     "nome": "Tgcom24",
+     "titolo": "Più interesse per la finanza, ma è difficile trovare contenuti affidabili",
+     "url": "https://www.tgcom24.mediaset.it/economia/gli-italiani-sempre-piu-interessati-alla-finanza-ma-faticano-a-trovare-contenuti-affidabili_118833321-202602k.shtml"
+    }
+   ]
+  },
+  {
+   "id": "2026-11-11-svimez-sud",
+   "cat": "Sud",
+   "nastro": "Svimez: il Sud cresce, ma frena nel 2027",
+   "titolo": "Il Sud cresce più del Centro-Nord, ma gli stipendi perdono terreno",
+   "evid": "stipendi perdono terreno",
+   "sommario": "Secondo il rapporto Svimez, nel 2026 l'economia del Mezzogiorno crescerà un po' più di quella del Centro-Nord. Dal 2027 dovrebbe rallentare, con la fine della spinta del PNRR. E le paghe, tenuto conto dei prezzi, valgono meno che nel 2021.",
+   "numero": "+0,9%",
+   "nota": "Centro-Nord +0,8%",
+   "didascalia": "La crescita del PIL del Mezzogiorno nel 2026, secondo le stime della Svimez",
+   "breve": [
+    "Per la Svimez il PIL del Sud crescerà dello 0,9% nel 2026, contro lo 0,8% del Centro-Nord.",
+    "Nel 2027 il Sud dovrebbe rallentare allo 0,5%, soprattutto perché si esaurisce la spinta dei fondi del PNRR.",
+    "Tra il 2021 e la prima metà del 2026 la paga oraria al Sud, tenuto conto dei prezzi, è scesa del 9,9%."
+   ],
+   "corpo": [
+    {
+     "h": "Il rapporto",
+     "p": [
+      "La Svimez è un istituto di ricerca che da 80 anni studia l'economia del Mezzogiorno. Martedì 10 novembre ha presentato il suo rapporto 2026.",
+      "Il **PIL**, prodotto interno lordo, misura il valore di tutto quello che si produce in un anno. Tra il 2021 e il 2025 quello del Sud è cresciuto in tutto del 9,5%, più di quello del Centro-Nord (+6,6%). Per il 2026 la Svimez stima +0,9% al Sud e +0,8% al Centro-Nord."
+     ]
+    },
+    {
+     "h": "Perché nel 2027 rallenta",
+     "p": [
+      "Secondo la Svimez, una parte importante della crescita è venuta dagli **investimenti**, cioè le spese per costruire o rinnovare edifici, strade e impianti. Molti sono stati pagati con il PNRR, il piano finanziato dall'Unione europea dopo la pandemia. Quella spinta si sta esaurendo.",
+      "Per questo la Svimez stima che nel 2027 il Sud crescerà dello 0,5% e il Centro-Nord dello 0,6%. Gli investimenti al Sud passerebbero da +6% nel 2026 a +0,8% nel 2027. Il reddito delle famiglie, tenuto conto dei prezzi, calerebbe dello 0,1% al Sud e salirebbe dello 0,6% al Centro-Nord."
+     ]
+    },
+    {
+     "h": "Più lavoro, ma pagato meno",
+     "p": [
+      "Nel secondo trimestre del 2026 al Sud lavoravano 643.000 persone in più rispetto al 2021. Ma solo circa 70.000 hanno meno di 35 anni. Tra il 2021 e il 2025, negli spostamenti con il Centro-Nord, il Sud ha perso circa 154.000 persone tra i 25 e i 34 anni.",
+      "I salari reali sono le paghe calcolate tenendo conto dell'aumento dei prezzi. Tra il 2021 e la prima metà del 2026 la paga di un'ora di lavoro, in termini reali, è scesa del 9,9% al Sud, del 7,2% in tutta Italia e dello 0,6% nell'area euro. Al Sud il 23,3% dei dipendenti guadagna meno di 9 € lordi l'ora."
+     ]
+    }
+   ],
+   "perche": "Quando le paghe crescono meno dei prezzi, si perde **potere d'acquisto**: con lo stesso stipendio si compra meno. Secondo il rapporto, al Sud è successo più che altrove: il lavoro è aumentato, ma spesso è pagato poco.",
+   "fonti": [
+    {
+     "nome": "Teleborsa (Borsa Italiana)",
+     "titolo": "Rapporto Svimez 2026: il Sud cresce grazie al PNRR, poi rallenta",
+     "url": "https://www.borsaitaliana.it/borsa/notizie/teleborsa/economia/rapporto-svimez-2026-sud-corre-grazie-a-pnrr-in-2027-pil-italia-sotto-media-ue-113_2026-11-10_TLB.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Svimez: il Sud cresce più del Centro-Nord ma frena nel 2027",
+     "url": "https://www.ansa.it/sito/notizie/politica/2026/11/09/il-valore-della-coesione.-la-presentazione-del-rapporto-svimez-2026_1353bc1f-7f4a-4cd7-b4c2-dba32ea51d4a.html"
+    },
+    {
+     "nome": "Quotidiano Nazionale",
+     "titolo": "Il Sud cresce più del Nord ma perde i giovani",
+     "url": "https://www.quotidiano.net/economia/il-sud-cresce-piu-del-nord-ma-perde-i-giovani-stipendi-piu-bassi-di-mille-euro-sfg7mzgs"
+    }
+   ]
+  },
+  {
+   "id": "2026-11-11-petrolio",
+   "cat": "Petrolio",
+   "nastro": "Petrolio ai minimi da agosto",
+   "titolo": "Petrolio sotto i 90 dollari per qualche ora: non succedeva da agosto",
+   "evid": "sotto i 90 dollari",
+   "sommario": "Martedì 10 novembre il Brent, il petrolio di riferimento in Europa, è sceso per qualche ora sotto i 90 dollari al barile. Pesano le speranze che la guerra che coinvolge l'Iran si avvii alla fine.",
+   "numero": "−1,2%",
+   "nota": "a 91,49 dollari",
+   "didascalia": "Il calo del Brent nella giornata di martedì 10 novembre",
+   "breve": [
+    "Il Brent ha chiuso martedì 10 novembre a 91,49 dollari al barile, l'1,2% in meno del giorno prima.",
+    "Il calo è legato alle speranze di pace, dopo che gli Stati Uniti hanno detto di non ritenere necessari nuovi attacchi contro l'Iran.",
+    "Martedì 10 novembre la benzina self costava in media 1,998 € al litro, il gasolio 2,240 €. Sul gasolio c'è uno sconto sulle accise fino al 23 novembre."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Il prezzo del petrolio si misura in dollari al barile, e un barile è circa 159 litri. Il riferimento per l'Europa si chiama Brent. Martedì 10 novembre, per qualche ora, è sceso sotto i 90 dollari: non succedeva da agosto.",
+      "Poi ha recuperato una parte del calo e ha chiuso a 91,49 dollari, l'1,2% in meno di lunedì. Anche il WTI, il riferimento negli Stati Uniti, ha chiuso in calo, dello 0,9%, a 86,04 dollari."
+     ]
+    },
+    {
+     "h": "Perché scende",
+     "p": [
+      "Da mesi la guerra che coinvolge l'Iran tiene alto il prezzo. Nello Stretto di Hormuz, tra l'Iran e la penisola arabica, passa una parte importante del petrolio venduto nel mondo, e lì le navi continuano a essere attaccate.",
+      "Tra lunedì 9 e martedì 10 novembre il governo degli Stati Uniti ha fatto sapere di non ritenere necessari nuovi attacchi militari contro l'Iran. Chi compra e vende petrolio ha letto queste parole come un passo verso la fine della guerra, e il prezzo è sceso."
+     ]
+    },
+    {
+     "h": "E ai distributori?",
+     "p": [
+      "Il prezzo alla pompa non segue il petrolio giorno per giorno: dipende anche dal costo per raffinarlo e soprattutto dalle tasse, che in Italia sono una parte grande del prezzo. Secondo i dati del ministero delle Imprese, martedì 10 novembre la benzina self costava in media 1,998 € al litro sulla rete stradale, appena sotto i 2 €. Il gasolio self era a 2,240 €.",
+      "Dal 10 al 23 novembre il governo ha ridotto le accise sul gasolio, una delle tasse sui carburanti, di 4 centesimi al litro: con l'IVA lo sconto arriva a 4,88 centesimi. È pagato con l'IVA in più che lo Stato ha incassato a ottobre, quando il petrolio costava di più. Lo sconto riguarda solo il gasolio."
+     ]
+    }
+   ],
+   "perche": "Il petrolio entra nel prezzo di benzina, gasolio e riscaldamento e nel costo per trasportare quasi tutte le merci. Per questo pesa sull'**inflazione**, cioè sull'aumento generale dei prezzi. Quando il suo prezzo cambia per settimane, prima o poi lo si nota anche nelle spese di tutti i giorni.",
+   "fonti": [
+    {
+     "nome": "Reuters (The Star)",
+     "titolo": "Il petrolio tocca i minimi da due mesi: le chiusure di Brent e WTI",
+     "url": "https://www.thestar.com.my/business/2026/11/11/oil-hits-two-month-lows-as-us-eases-iran-fears"
+    },
+    {
+     "nome": "Rigzone",
+     "titolo": "Il petrolio scende con le speranze di pace: Brent per poco sotto i 90 dollari",
+     "url": "https://www.rigzone.com/news/oil_prices_retreat_as_peace_hopes_grow-10-nov-2026-185054-article"
+    },
+    {
+     "nome": "Agenzia DIRE",
+     "titolo": "Il Brent scende sotto i 90 dollari per la prima volta da agosto",
+     "url": "https://www.dire.it/10-11-2026/1287008-trump-frena-sugli-attacchi-in-iran-il-brent-crolla-sotto-quota-90-dollari/"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Carburanti: benzina a 1,998 euro, gasolio a 2,240 euro",
+     "url": "https://teleborsa.ansa.it/notiziario/economia/carburanti-prezzo-benzina-scende-a-1998-euro-e-gasolio-a-2240-euro/"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "Tornano le accise mobili: 4,88 centesimi in meno sul gasolio",
+     "url": "https://www.money.it/accise-il-mef-rideterminata-temporaneamente-l-aliquota-cosa-cambia-per-i-consumatori"
+    },
+    {
+     "nome": "Quattroruote",
+     "titolo": "Accise sul gasolio più basse fino al 23 novembre",
+     "url": "https://quattroruote.it/news/mercato/2026/11/10/prezzi_carburanti_11_novembre.html"
+    }
+   ]
+  }
+ ]
 }

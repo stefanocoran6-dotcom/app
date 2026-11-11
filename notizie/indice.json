@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-10",
+ "aggiornato": "2026-11-11",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-11-educazione-finanziaria",
+   "data": "2026-11-11",
+   "cat": "Risparmio",
+   "titolo": "La finanza interessa a 9 italiani su 10, ma la paura frena",
+   "nastro": "La finanza interessa a 9 italiani su 10",
+   "numero": "93%",
+   "min": 3
+  },
+  {
+   "id": "2026-11-11-svimez-sud",
+   "data": "2026-11-11",
+   "cat": "Sud",
+   "titolo": "Il Sud cresce più del Centro-Nord, ma gli stipendi perdono terreno",
+   "nastro": "Svimez: il Sud cresce, ma frena nel 2027",
+   "numero": "+0,9%",
+   "min": 2
+  },
+  {
+   "id": "2026-11-11-petrolio",
+   "data": "2026-11-11",
+   "cat": "Petrolio",
+   "titolo": "Petrolio sotto i 90 dollari per qualche ora: non succedeva da agosto",
+   "nastro": "Petrolio ai minimi da agosto",
+   "numero": "−1,2%",
+   "min": 2
+  },
   {
    "id": "2026-11-10-bollette",
    "data": "2026-11-10",
