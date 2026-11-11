@@ -13,6 +13,7 @@ Qui c'è tutto quello che serve per montare il TG di Rally, il canale TikTok di 
 | `scene.cjs` | Dalla scheda alle battute per la voce (`scene.json`), con le pause prima dei capitoli. |
 | `tempi.py` | Voce: taglia i silenzi, controlla le parole con il riconoscitore vocale, trova i tempi veri di ogni parola. |
 | `sound.py` | Effetti sonori sintetizzati e mix: voce sopra, effetti almeno 10 dB sotto, −14 LUFS. |
+| `giunta.py` | Unisce due prese della stessa battuta, l'inizio da una e il resto dall'altra. |
 | `controlli.cjs` | I controlli automatici: sottotitoli troppo brevi, scritte che spariscono troppo presto, tratti vuoti. |
 | `fonts.py` | Incorpora i caratteri dell'app (Bricolage Grotesque, IBM Plex Mono). |
 
@@ -76,7 +77,9 @@ Icone: lampadina, fiamma, centrale, casa, moneta, barile, banca, carrello, salva
 - Higgsfield accetta al massimo due voci alla volta: le altre richieste tornano indietro (429) e vanno rimandate. Una richiesta arriva al massimo a 2048 caratteri.
 - La voce costa circa 0,7 crediti ogni 100 caratteri (11 novembre 2026): uno speciale di 4 minuti, circa 3.000 caratteri, circa 21 crediti.
 - Non accelerare la voce: con `TEMPO=1.1` si capiva peggio ("Prima estime" invece di "Prime stime").
-- Questa voce ha un leggero accento: "bolletta" si sente come "boletta".
+- Questa voce ha un leggero accento: "bolletta" si sente come "boletta", "videogiochi" come "videogiocchi", "moltiplichi" come "multiplichi", "accetta" come "acchetta". In tre prove "finisce il liceo" aveva un suono strano in mezzo: meglio "si diploma". Un numero detto in fretta ("sei mesi") può sembrare un'altra parola: va ricontrollato sempre.
+- Quando una presa sbaglia una parola e un'altra presa un'altra, `giunta.py` unisce i pezzi buoni nel silenzio tra due parole, senza spendere crediti.
+- Il primo speciale (3.068 caratteri, 12 battute rifatte) è costato 30 crediti: conta un terzo in più del preventivo per le prese da rifare.
 
 ## Controlli rapidi
 
