@@ -2,6 +2,7 @@
 // Ogni fotogramma è funzione del tempo t (secondi), senza stato nascosto: lo stesso t dà sempre lo stesso disegno.
 // Dipende da rally4.js (scheletro di Rally) e da window.VIDEO (scheda del video del giorno).
 // Uso: TG.init(VIDEO, tempiVeri?) poi TG.frame(t, uid) -> stringa HTML 1080x1920.
+// La scheda dell'episodio (video.js) sceglie schermate e gesti da due librerie (SCREENS e G, più sotto) e li aggancia alle parole.
 const TG = (function () {
   const W = 1080, H = 1920, TAU = Math.PI * 2, S = Math.sin, Co = Math.cos, ex = Math.exp;
   // colori e caratteri dell'app
@@ -59,10 +60,36 @@ const TG = (function () {
     words.forEach((w, k) => { w.end = k + 1 < words.length ? words[k + 1].t : t0 + dur; });
     return { seq, words };
   }
-  function at(id, w, plus) {
-    const f = T.by[id].words.find((x) => x.key === key(w));
-    if (!f) throw new Error('TG: parola non trovata ' + id + '/' + w);
-    return f.t + (plus || 0);
+  // ---------- appuntamenti: "scena:parola" -> secondi ----------
+  // "fatto:Prime" = quando Rally dice "Prime" nella scena fatto · "fatto:il#2" = la seconda volta che dice "il"
+  // "come:@inizio" / "come:@fine" = inizio e fine della battuta · {a:'fatto:Prime', d:-.12} = con uno scarto in secondi
+  function tc(c, d) {
+    if (c == null) return null;
+    if (typeof c === 'number') return c + (d || 0);
+    if (typeof c === 'object') return tc(c.a, (c.d || 0) + (d || 0));
+    const m = String(c).match(/^([^:]+):(.+)$/);
+    if (!m) throw new Error('TG: appuntamento senza scena: ' + c);
+    const s = T.by[m[1]]; if (!s) throw new Error('TG: scena sconosciuta: ' + m[1]);
+    let w = m[2], n = 1; const h = w.match(/^(.*)#(\d+)$/); if (h) { w = h[1]; n = +h[2]; }
+    if (w === '@inizio') return s.t0 + (d || 0);
+    if (w === '@fine') return s.t1 + (d || 0);
+    const k = key(w), f = s.words.filter((x) => x.key === k)[n - 1];
+    if (!f) throw new Error('TG: parola non trovata: ' + c);
+    return f.t + (d || 0);
+  }
+  // risolve una volta sola tutti gli appuntamenti di schermate e gesti: a -> _t, fino -> _f, su -> _su, giu -> _giu, pulse -> _p, oltre -> _o
+  function risolvi(o) {
+    if (Array.isArray(o)) { o.forEach(risolvi); return; }
+    if (!o || typeof o !== 'object') return;
+    Object.keys(o).forEach((k) => { if (o[k] && typeof o[k] === 'object' && k !== 'a' && k !== 'fino') risolvi(o[k]); });
+    if (o.a != null) o._t = tc(o.a, o.d);
+    if (o.fino != null) o._f = tc(o.fino, o.fd);
+    if (o.su != null) o._su = tc(o.su, o.sd);
+    if (o.giu != null) o._giu = tc(o.giu, o.gd);
+    if (o.pulse != null) o._p = tc(o.pulse, o.pd);
+    if (o.oltre != null) o._o = tc(o.oltre, o.od);
+    if (o.sporgi != null && typeof o.sporgi !== 'boolean') o._s = tc(o.sporgi, o.spd);
+    if (Array.isArray(o.tocchi)) o._tocchi = o.tocchi.map((x) => tc(x));
   }
 
   function init(V, tempi) {
@@ -78,48 +105,52 @@ const TG = (function () {
       bl.forEach((b, i) => { b.t1 = i + 1 < bl.length ? bl[i + 1].t0 : t0 + dur + .22; });
       return { id: s.id, dice: s.dice, t0, dur, t1: t0 + dur, blocchi: bl, seq: pl.seq, words: pl.words };
     });
-    T = { V, sc, by: {}, total: sc[sc.length - 1].t1 + 1.4, env: tempi && tempi.env ? tempi.env : null, envFps: (tempi && tempi.fps) || 30 };
+    T = { V, sc, by: {}, q: {}, total: sc[sc.length - 1].t1 + 1.4, env: tempi && tempi.env ? tempi.env : null, envFps: (tempi && tempi.fps) || 30 };
     sc.forEach((s) => { T.by[s.id] = s; });
-    const q = T.q = {
-      s1: T.by.gancio.t0, s2: T.by.fatto.t0, s3: T.by.come.t0, s4: T.by.perte.t0, s5: T.by.saluto.t0,
-      gennaio: at('gancio', 'da'),
-      approvato: at('fatto', 'approvato', .12), stime: at('fatto', 'Prime'), famiglia: at('fatto', 'famiglia'),
-      n17: at('fatto', 'diciassette'), n37: at('fatto', 'trentasette'), anno: at('fatto', "l'anno."),
-      se: at('come', 'Se'), troppo: at('come', 'costa'), centrali: at('come', 'centrali'), rimborso: at('come', 'rimborso'),
-      vendono: at('come', 'vendono'), meno: at('come', 'meno'),
-      hai: at('perte', 'hai'), variabile: at('perte', 'prezzo'), fisso: at('perte', 'Con'), nulla: at('perte', 'non'),
-      seguimi: at('saluto', 'Seguimi')
-    };
-    T.slides = [
-      { id: 'titolo', t0: 0, fn: slTitolo },
-      { id: 'numero', t0: q.stime - .12, fn: slNumero },
-      { id: 'come', t0: q.s3 - .08, fn: slCome },
-      { id: 'perte', t0: q.s4 - .08, fn: slPerTe },
-      { id: 'saluto', t0: q.s5 - .08, fn: slSaluto }
-    ];
+    const last = sc[sc.length - 1];
+    // schermate: modelli riusabili (titolo, numero, catena, scelta, confronto, grafico, saluto)
+    const SCH = JSON.parse(JSON.stringify(V.schermi || []));
+    risolvi(SCH);
+    T.slides = SCH.map((s, i) => {
+      if (!SCREENS[s.tipo]) throw new Error('TG: schermata sconosciuta: ' + s.tipo);
+      return Object.assign(s, { t0: i ? tc(s.da, s.d) : 0, fn: SCREENS[s.tipo] });
+    });
+    T.slides.forEach((s, i) => { s.t1 = i + 1 < T.slides.length ? T.slides[i + 1].t0 : T.total; });
+    // gesti e umori di Rally
+    T.gesti = JSON.parse(JSON.stringify(V.gesti || [])); risolvi(T.gesti);
+    T.gesti.forEach((g) => { if (!G[g.g]) throw new Error('TG: gesto sconosciuto: ' + g.g); });
+    T.umori = (V.umori || []).map((u) => ({ t: tc(u.a, u.d), u: u.u })).sort((a, b) => a.t - b.t);
     // camera: (ingrandimento k attorno al punto fx,fy). Si muove poco e con uno scopo.
-    const FR = RY + 172;   // altezza del muso di Rally
-    T.cam = [
-      { t: 0, k: 1.13, fx: CX, fy: FR },
-      { t: q.s2 - .3, k: 1.17, fx: CX, fy: FR },               // lento avvicinamento sul gancio
-      { t: q.s2 + .12, k: 1, fx: CX, fy: FR },                // si allarga: entra lo schermo
-      { t: q.n17, k: 1, fx: CX, fy: 560 },
-      { t: q.s3 - .3, k: 1.05, fx: CX, fy: 560 },             // lento avvicinamento sul numero
-      { t: q.s3 + .15, k: 1.09, fx: CX, fy: 520 },
-      { t: q.s4 - .3, k: 1.12, fx: CX, fy: 520 },             // resta vicino allo schema
-      { t: q.s4 + .12, k: 1, fx: CX, fy: FR },
-      { t: q.s5 - .25, k: 1, fx: CX, fy: FR },
-      { t: q.s5 + .17, k: 1.07, fx: CX, fy: FR - 30 },        // chiusura su Rally
-      { t: T.total, k: 1.1, fx: CX, fy: FR - 30 }
-    ];
+    const FR = RY + 172, K = [{ t: 0, k: 1.13, fx: CX, fy: FR }];   // FR: altezza del muso di Rally
+    if (sc[1]) K.push({ t: sc[1].t0 - .3, k: 1.17, fx: CX, fy: FR }, { t: sc[1].t0 + .12, k: 1, fx: CX, fy: FR });
+    T.slides.forEach((s, i) => {
+      if (!i) return;
+      if (s.tipo === 'saluto') K.push({ t: s.t0 - .17, k: 1, fx: CX, fy: FR }, { t: s.t0 + .25, k: 1.07, fx: CX, fy: FR - 30 }, { t: T.total, k: 1.1, fx: CX, fy: FR - 30 });
+      else if ((s.camera || (s.tipo === 'scelta' ? 'rally' : 'schermo')) === 'rally') K.push({ t: s.t0 + .2, k: 1, fx: CX, fy: FR }, { t: s.t1 - .3, k: 1.02, fx: CX, fy: FR });
+      else { const z = s.zoom || [1, 1.06], y = s.fy || [560, 540]; K.push({ t: s.t0 + .4, k: z[0], fx: CX, fy: y[0] }, { t: s.t1 - .3, k: z[1], fx: CX, fy: y[1] }); }   // zoom e fy: si possono scegliere per schermata
+    });
+    if (K[K.length - 1].t < T.total) K.push(Object.assign({}, K[K.length - 1], { t: T.total }));
+    T.cam = K.sort((a, b) => a.t - b.t).filter((k, i, A) => !i || k.t > A[i - 1].t + .05);
     // eventi per i suoni: una sola fonte dei tempi
-    T.events = [
-      { t: 0, tipo: 'apertura' }, { t: q.approvato, tipo: 'timbro' }, { t: T.slides[1].t0, tipo: 'cambio' },
-      { t: q.n17, tipo: 'numero' }, { t: q.n37, tipo: 'numero' }, { t: T.slides[2].t0, tipo: 'cambio' },
-      { t: q.troppo, tipo: 'sale' }, { t: q.rimborso, tipo: 'moneta' }, { t: q.meno, tipo: 'scende' },
-      { t: T.slides[3].t0, tipo: 'cambio' }, { t: q.variabile - .15, tipo: 'cartellino' }, { t: q.fisso, tipo: 'cartellino' },
-      { t: T.slides[4].t0, tipo: 'cambio' }, { t: q.seguimi, tipo: 'chiusura' }, { t: T.by.saluto.t1 + .06, tipo: 'sigla' }
-    ].sort((a, b) => a.t - b.t);
+    const ev = [{ t: 0, tipo: 'apertura' }];
+    T.shakes = [];
+    T.slides.forEach((s, i) => {
+      if (i) ev.push({ t: s.t0, tipo: 'cambio' });
+      if (s.timbro) ev.push({ t: s.timbro._t, tipo: 'timbro' });
+      (s.parti || []).forEach((p, j) => { ev.push({ t: p._t, tipo: 'numero' }); if (!j) T.shakes.push(p._t); });
+      ['sinistra', 'destra'].forEach((k) => { if (s[k] && s[k]._t != null) ev.push({ t: s[k]._t, tipo: 'numero' }); });
+      (s.fx || []).forEach((f) => {
+        if (f.tipo === 'moneta') ev.push({ t: f._t, tipo: 'moneta' });
+        if (f.tipo === 'cresce' || f.tipo === 'prezzo') ev.push({ t: f.tipo === 'prezzo' ? f._su : f._t, tipo: 'sale' });
+        if (f.tipo === 'prezzo' && f._giu != null) ev.push({ t: f._giu, tipo: 'scende' });
+      });
+      (s.carte || []).forEach((c) => ev.push({ t: c._t, tipo: 'cartellino' }));
+      if (s.linea && s.linea._t != null) ev.push({ t: s.linea._t, tipo: s.verso === 'su' ? 'sale' : 'scende' });
+      if (s.fine && s.fine._t != null) ev.push({ t: s.fine._t, tipo: 'numero' });
+      if (s.segui && s.segui._t != null) ev.push({ t: s.segui._t, tipo: 'chiusura' });
+    });
+    ev.push({ t: last.t1 + .06, tipo: 'sigla' });
+    const seen = {}; T.events = ev.filter((e) => e.t != null).sort((a, b) => a.t - b.t).filter((e) => { const k = e.tipo + Math.round(e.t * 20); if (seen[k]) return false; seen[k] = 1; return true; });
     R4M.define('tg', { dur: T.total, mood: 'happy', fn: recita });
     return T;
   }
@@ -156,8 +187,73 @@ const TG = (function () {
     (P._x = P._x || []).push({ name, w });
   }
 
+  // ---------- i gesti di Rally: si scelgono nella scheda dell'episodio (VIDEO.gesti) e si agganciano alle parole ----------
+  // ognuno riceve P (la posa del fotogramma), t e g (il gesto, con _t = inizio, _f = fine)
+  const bounce = (P, t, t0, f) => { const x = t - t0; if (x >= 0 && x < .7) { const b = ex(-x * 7) * S(TAU * 2.1 * x); P.y += -3.2 * (f || 1) * b; P.earL += 11 * b; P.earR += 11 * b; } };
+  const G = {
+    // si sporge verso chi guarda e apre il braccio (frase d'apertura)
+    sporgi(P, t, g) { const F = g._f != null ? g._f : g._t + 2, w = env(t, g._t - .1, F - .3, .28, .3);
+      P.aR += -30 * w; P.eR = (P.eR || 0) - 42 * w; P.aL += 10 * w; P.uRot += .8 * w; P.hRot += -2 * w; },
+    // busto un po' più vicino alla camera
+    avanti(P, t, g) { const F = g._f != null ? g._f : g._t + 2, w = ease(t, g._t, g._t + .4) * (1 - ease(t, F - .3, F + .1)); P.sy *= 1 + .02 * w; P.sx *= 1 + .02 * w; },
+    // piccolo salto di sorpresa, con le orecchie che seguono
+    salto(P, t, g) { bounce(P, t, g._t, g.forza); },
+    // si gira verso lo schermo (tre quarti) e poi torna: preparazione prima, piccolo rimbalzo dopo
+    gira(P, t, g) {
+      const tA = g._t, tB = g._f != null ? g._f : tA + (g.durata || 1.12);
+      const a1 = E.bump(seg(t, tA - .16, tA + .12)), a2 = E.bump(seg(t, tB - .16, tB + .12));
+      const k1 = E.inOut(seg(t, tA, tA + .4)), k2 = E.inOut(seg(t, tB, tB + .4)), yaw = clamp(k1 - k2, 0, 1);
+      const ov1 = t > tA + .4 ? ex(-(t - tA - .4) * 6) * S(TAU * 1.3 * (t - tA - .4)) : 0;
+      const ov2 = t > tB + .4 ? ex(-(t - tB - .4) * 6) * S(TAU * 1.3 * (t - tB - .4)) : 0;
+      P.yaw = Math.max(P.yaw || 0, yaw);
+      P.rot += -2.2 * a1 + 3 * ov1 + 1.8 * a2 - 2.6 * ov2;
+      P.sy *= 1 - .035 * a1 - .025 * a2 + .03 * E.bump(k1) + .025 * E.bump(k2);
+      P.sx *= 1 + .018 * a1 + .012 * a2 - .02 * E.bump(k1) - .015 * E.bump(k2);
+      look(P, 0, -3, yaw); P.hRot += -5 * yaw; P.hDy += -1.6 * yaw;
+    },
+    // la bacchetta: sale all'inizio, tocca lo schermo sulle parole di "tocchi", scende alla fine
+    bacchetta(P, t, g) {
+      const A = g._t, F = g._f != null ? g._f : A + 4;
+      const ant = E.bump(seg(t, A - .06, A + .2)); P.sy *= 1 - .022 * ant; P.sx *= 1 + .012 * ant;
+      const w = E.outBack(seg(t, A + .12, A + .5), 1.1) * (1 - E.inOut(seg(t, F - .5, F - .16)));
+      let tap = 0; (g._tocchi || []).forEach((tn) => { tap = Math.max(tap, E.bump(seg(t, tn - .08, tn + .22))); });
+      P.aR += (-40 - 9 * tap) * w; P.eR = (P.eR || 0) + (-110 + 16 * tap) * w; P.aL += 5 * w;
+      if (w > .001) P._ptr = { w, rot: lerp(172, -30 - 10 * tap + 3 * S(TAU * t / 2.3), E.inOut(clamp(w, 0, 1))) };
+    },
+    // guarda lo schermo (dx, dy spostano lo sguardo)
+    guarda(P, t, g) { const F = g._f != null ? g._f : g._t + 1, w = ease(t, g._t, g._t + .22) - ease(t, F, F + .3);
+      look(P, g.dx || 0, g.dy == null ? -3 : g.dy, w); P.hRot += (g.rot == null ? 2.4 : g.rot) * w; P.hDy += -1.2 * w; },
+    // segue lo schema con gli occhi, da sinistra a destra; resta a guardare fino a "oltre"
+    segui(P, t, g) {
+      const A = g._t, F = g._f != null ? g._f : A + 2, O = g._o != null ? g._o : F;
+      const w = ease(t, A - .1, A + .15) - ease(t, O + .5, O + .8), sw = lerp(-2.4, 2.2, ease(t, A, F));
+      look(P, sw, -3, w * .9); P.hRot += (1.6 * sw / 2.4) * w; P.hDy += -1 * w;
+    },
+    // testa inclinata: una domanda
+    inclina(P, t, g) { const F = g._f != null ? g._f : g._t + 1, w = E.bump(seg(t, g._t, F)); P.hRot += 5.5 * w; P.hDx += 1.2 * w; look(P, -1.5, -2.6, w); },
+    // orecchie giù: qualcosa che preoccupa
+    orecchie(P, t, g) { const w = E.bump(seg(t, g._t, g._t + .8)); P.earL += -15 * w; P.earR += -15 * w; P.hDy += .9 * w; },
+    // una posa della libreria di Rally (maniFianchi, indicaCamera, pensa, ...); "sporgi" lo fa avvicinare a metà
+    posa(P, t, g) {
+      const F = g._f != null ? g._f : g._t + 1.5; poseOn(P, g.nome, env(t, g._t, F, .3, .3));
+      if (g._s != null) { const l = E.bump(seg(t, g._s - .25, g._s + .9)); P.sy *= 1 + .022 * l; P.sx *= 1 + .022 * l; P.hRot += -3.5 * l; }
+    },
+    // alza le spalle: "non cambia nulla"
+    spalle(P, t, g) { const F = g._f != null ? g._f : g._t + 1.2, w = env(t, g._t, F, .3, .28); poseOn(P, 'scrollaSpalle', w); P.y += 1.6 * w; },
+    // saluto con la mano, a fine episodio
+    saluta(P, t, g) {
+      const tw = t - (g._t + .02); if (tw <= -.2) return;
+      const ant = E.bump(seg(tw, 0, .3)); P.sy *= 1 - .025 * ant; P.sx *= 1 + .012 * ant; P.aR += 7 * ant;
+      const up = E.outBack(seg(tw, .18, .55), 1.4) * (1 - E.inOut(seg(tw, 2.5, 3.0)));
+      const on = E.smooth(seg(tw, .4, .6)) * (1 - E.smooth(seg(tw, 2.3, 2.55))), ph = TAU * 2.5 * (tw - .55);
+      if (up > .5) P.fR = 1;
+      if (up > .001) { P.pose = { name: 'saluta', w: Math.min(1, up) }; (P._x = P._x || []).push({ name: 'saluta', w: up }); }
+      P.aR += -96 * up + 6 * on * S(ph); P.eR = (P.eR || 0) + (-40 * up + 24 * on * S(ph - 1.0));
+      P.hRot += 4.5 * up + .8 * on * S(ph - 1.6); P.hDx += 1 * up; P.rot += .7 * on * S(ph - .4); P.uRot += 1.2 * up; P.aL += -4 * up;
+    }
+  };
+
   function recita(P, t) {
-    const q = T.q;
     breathe(P, t, .8); blinks(P, t, 11);
     // ingresso: sale da dietro il bancone e si assesta
     P.y += 54 * (1 - E.outBack(seg(t, 0, .46), 1.4));
@@ -172,65 +268,11 @@ const TG = (function () {
       P.hDy += 1.1 * nod; P.hRot += sg * 1.5 * nod;
     }
     // umore: il cambio si nasconde dietro un battito di ciglia
-    const M = [[0, 'surprised'], [q.gennaio - .06, 'happy'], [q.approvato + .02, 'surprised'], [q.approvato + .75, 'happy'], [q.troppo - .1, 'nervous'], [q.rimborso - .06, 'happy'],
-      [q.s4 + .15, 'smug'], [q.variabile + .7, 'happy'], [q.nulla - .1, 'neutral'], [q.s5 - .1, 'happy'], [T.by.saluto.t1 + .18, 'wink']];
-    let mood = 'happy'; M.forEach((m, i) => { if (t >= m[0]) mood = m[1]; if (i) P.blink = Math.max(P.blink, E.bump(seg(t, m[0] - .08, m[0] + .09))); });
+    let mood = 'happy';
+    T.umori.forEach((m, i) => { if (t >= m.t) mood = m.u; if (i) P.blink = Math.max(P.blink, E.bump(seg(t, m.t - .08, m.t + .09))); });
     P.mood = mood;
-
-    // S1 · gancio: si sporge e apre il braccio su "da gennaio"
-    const g1 = env(t, q.gennaio - .1, q.s2 - .3, .28, .3);
-    P.aR += -30 * g1; P.eR = (P.eR || 0) - 42 * g1; P.aL += 10 * g1; P.uRot += .8 * g1; P.hRot += -2 * g1;
-    const lean = ease(t, .3, .7) * (1 - ease(t, q.s2 - .3, q.s2 + .1)); P.sy *= 1 + .02 * lean; P.sx *= 1 + .02 * lean;
-
-    // S2 · il fatto: il timbro lo fa girare verso lo schermo; poi prende la bacchetta e indica i numeri
-    { const x = t - q.approvato; if (x >= 0 && x < .6) { const bb = ex(-x * 8) * S(TAU * 2.2 * x); P.y += -3.4 * bb; P.earL += 12 * bb; P.earR += 12 * bb; } }
-    const tA = q.approvato + .1, tB = tA + 1.12;
-    const a1 = E.bump(seg(t, tA - .16, tA + .12)), a2 = E.bump(seg(t, tB - .16, tB + .12));
-    const k1 = E.inOut(seg(t, tA, tA + .4)), k2 = E.inOut(seg(t, tB, tB + .4));
-    P.yaw = clamp(k1 - k2, 0, 1);
-    const ov1 = t > tA + .4 ? ex(-(t - tA - .4) * 6) * S(TAU * 1.3 * (t - tA - .4)) : 0;
-    const ov2 = t > tB + .4 ? ex(-(t - tB - .4) * 6) * S(TAU * 1.3 * (t - tB - .4)) : 0;
-    P.rot += -2.2 * a1 + 3 * ov1 + 1.8 * a2 - 2.6 * ov2;
-    P.sy *= 1 - .035 * a1 - .025 * a2 + .03 * E.bump(k1) + .025 * E.bump(k2);
-    P.sx *= 1 + .018 * a1 + .012 * a2 - .02 * E.bump(k1) - .015 * E.bump(k2);
-    look(P, 0, -3, P.yaw); P.hRot += -5 * P.yaw; P.hDy += -1.6 * P.yaw;
-    // la bacchetta: sale su "Prime stime", resta per tutto lo schema, scende prima di "per te"
-    const antB = E.bump(seg(t, q.stime - .06, q.stime + .2)); P.sy *= 1 - .022 * antB; P.sx *= 1 + .012 * antB;
-    const wb = E.outBack(seg(t, q.stime + .12, q.stime + .5), 1.1) * (1 - E.inOut(seg(t, q.s4 - .5, q.s4 - .16)));
-    let tap = 0; [q.n17, q.n37, q.rimborso + .1, q.meno].forEach((tn) => { tap = Math.max(tap, E.bump(seg(t, tn - .08, tn + .22))); });
-    P.aR += (-40 - 9 * tap) * wb; P.eR = (P.eR || 0) + (-110 + 16 * tap) * wb; P.aL += 5 * wb;
-    P._ptr = { w: wb, rot: lerp(172, -30 - 10 * tap + 3 * S(TAU * t / 2.3), E.inOut(clamp(wb, 0, 1))) };
-    const lk2 = ease(t, q.stime, q.stime + .22) - ease(t, q.n37 + .6, q.n37 + .9);
-    look(P, 1.4, -3.2, lk2); P.hRot += 2.4 * lk2; P.hDy += -1.2 * lk2;
-    [q.n17, q.n37].forEach((tn) => { const x = t - tn; if (x >= 0 && x < .7) { const bb = ex(-x * 7) * S(TAU * 2.1 * x); P.y += -3.2 * bb; P.earL += 11 * bb; P.earR += 11 * bb; } });
-
-    // S3 · come funziona: testa inclinata sulla domanda, poi segue lo schema con gli occhi
-    const q3 = E.bump(seg(t, q.s3 - .05, q.se - .08)); P.hRot += 5.5 * q3; P.hDx += 1.2 * q3; look(P, -1.5, -2.6, q3);
-    const lk3 = ease(t, q.se - .1, q.se + .15) - ease(t, q.meno + .5, q.meno + .8);
-    const sweep = lerp(-2.4, 2.2, ease(t, q.se, q.vendono));                       // gli occhi vanno dal gas alla lampadina
-    look(P, sweep, -3, lk3 * .9); P.hRot += (1.6 * sweep / 2.4) * lk3; P.hDy += -1 * lk3;
-    const pk = E.bump(seg(t, q.troppo, q.troppo + .8)); P.earL += -15 * pk; P.earR += -15 * pk; P.hDy += .9 * pk;   // orecchie giù: costa troppo
-    { const x = t - q.rimborso - .26; if (x >= 0 && x < .7) { const bb = ex(-x * 7) * S(TAU * 2.1 * x); P.y += -2.8 * bb; P.earL += 10 * bb; P.earR += 10 * bb; } }
-    { const x = t - q.meno - .2; if (x >= 0 && x < .8) { const bb = ex(-x * 6) * S(TAU * 1.9 * x); P.y += -3.4 * bb; P.earL += 9 * bb; P.earR += 9 * bb; } }
-
-    // S4 · per te: si sporge verso chi guarda con le mani sui fianchi, poi alza le spalle sul "non cambia nulla"
-    const g4 = env(t, q.s4 + .1, q.fisso + .1, .3, .3); poseOn(P, 'maniFianchi', g4);
-    const ln4 = E.bump(seg(t, q.hai - .25, q.hai + .9)); P.sy *= 1 + .022 * ln4; P.sx *= 1 + .022 * ln4; P.hRot += -3.5 * ln4;
-    const up4 = E.bump(seg(t, q.variabile - .1, q.variabile + .9)); look(P, 0, -3, up4); P.hDy += -1 * up4;
-    const g5 = env(t, q.nulla - .14, T.by.perte.t1 + .22, .3, .28); poseOn(P, 'scrollaSpalle', g5);
-    P.y += 1.6 * g5;
-
-    // S5 · saluto con la mano
-    const tw = t - (q.s5 + .02);
-    if (tw > -.2) {
-      const ant = E.bump(seg(tw, 0, .3)); P.sy *= 1 - .025 * ant; P.sx *= 1 + .012 * ant; P.aR += 7 * ant;
-      const up = E.outBack(seg(tw, .18, .55), 1.4) * (1 - E.inOut(seg(tw, 2.5, 3.0)));
-      const on = E.smooth(seg(tw, .4, .6)) * (1 - E.smooth(seg(tw, 2.3, 2.55))), ph = TAU * 2.5 * (tw - .55);
-      if (up > .5) P.fR = 1;
-      if (up > .001) { P.pose = { name: 'saluta', w: Math.min(1, up) }; (P._x = P._x || []).push({ name: 'saluta', w: up }); }
-      P.aR += -96 * up + 6 * on * S(ph); P.eR = (P.eR || 0) + (-40 * up + 24 * on * S(ph - 1.0));
-      P.hRot += 4.5 * up + .8 * on * S(ph - 1.6); P.hDx += 1 * up; P.rot += .7 * on * S(ph - .4); P.uRot += 1.2 * up; P.aL += -4 * up;
-    }
+    P.yaw = 0;
+    T.gesti.forEach((g) => G[g.g](P, t, g));
     ['eL', 'eR'].forEach((k) => { if (P[k] != null && Math.abs(P[k]) < .02) P[k] = null; });
   }
 
@@ -295,104 +337,186 @@ const TG = (function () {
   const tab = (txt, t, t0) => `<div style="position:absolute;left:30px;top:26px;transform-origin:0 50%;transform:scale(${pop(t, t0, .26, 1.4).toFixed(3)});white-space:nowrap;font:700 25px/1 ${MONO};letter-spacing:.06em;color:#fff;background:${C.ink};border-radius:10px;padding:10px 15px">${txt}</div>`;
   const svgL = (inner) => `<svg style="position:absolute;left:0;top:0;overflow:visible" width="${MW}" height="${MH}" viewBox="0 0 ${MW} ${MH}">${inner}</svg>`;
 
-  // ---------- le schermate ----------
-  function slTitolo(t) {
-    const q = T.q; let h = tab('LA NOTIZIA', t, .04);
-    const l1 = pop(t, .06, .3, 1.2), l2 = pop(t, .18, .3, 1.2);
-    h += `<div style="position:absolute;left:44px;top:92px;font:800 124px/1 ${DISP};letter-spacing:-.035em;color:${C.ink}">` +
-      `<div style="transform:translateY(${px(36 * (1 - l1))});opacity:${l1 > 0 ? 1 : 0}">Decreto</div>` +
-      `<div style="transform:translateY(${px(36 * (1 - l2))});opacity:${l2 > 0 ? 1 : 0};margin-top:2px"><span style="background:linear-gradient(transparent 56%,${C.giallo} 56%);padding:0 12px;margin-left:-12px">bollette</span></div></div>`;
-    const kb = pop(t, .22, .36, 1.6);
-    h += svgL(`<g transform="translate(676 262) scale(${kb.toFixed(3)})">${bulb(0, 0, 1.25, true, t)}</g>`);
-    const st = t - q.approvato;
-    if (st >= 0) h += chip(590, 352, 'OK DEL GOVERNO', { bg: C.menta, fs: 37, k: 2.4 - 1.4 * E.outBack(seg(st, 0, .2), 1.2), rot: -8, bd: 7, r: 12, sh: 7 });
+  // ---------- icone: disegnate qui, base in (0,0), alte circa 150 ----------
+  const ICON_W = { lampadina: 50, fiamma: 48, centrale: 84, casa: 80, moneta: 52, barile: 50, banca: 84, carrello: 84, salvadanaio: 80, banconota: 74, persone: 82, grafico: 72 };
+  function icona(n, t, on) {
+    switch (n) {
+      case 'lampadina': return bulb(0, 0, 1, on, t);
+      case 'fiamma': return flame(0, 0, 1, t);
+      case 'centrale': return plant(0, 0, t);
+      case 'casa': return `<path d="M-60 0 V-78 H60 V0 Z" fill="#fff" ${ST(7)}/><path d="M-80 -74 L0 -148 L80 -74 Z" fill="${C.pesca}" ${ST(7)}/><rect x="-20" y="-50" width="40" height="50" rx="6" fill="${C.az}" ${ST(6)}/>`;
+      case 'moneta': return coin(0, -56, 52, 0);
+      case 'barile': return `<rect x="-50" y="-150" width="100" height="150" rx="16" fill="${C.mut}" ${ST(7)}/><path d="M-50 -104 H50 M-50 -46 H50" ${ST(6)}/>` +
+        `<path d="M0 -94 C14 -76 21 -67 21 -58 C21 -46 12 -39 0 -39 C-12 -39 -21 -46 -21 -58 C-21 -67 -14 -76 0 -94 Z" fill="${C.ink}" stroke="#fff" stroke-width="5"/>` +
+        `<path d="M-32 -138 V-120" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"/>`;
+      case 'banca': return `<path d="M-84 -104 L0 -152 L84 -104 Z" fill="${C.pesca}" ${ST(7)}/><rect x="-76" y="-104" width="152" height="16" fill="#fff" ${ST(6)}/>` +
+        [-52, -18, 18, 52].map((x) => `<rect x="${x - 9}" y="-88" width="18" height="66" fill="#fff" ${ST(5)}/>`).join('') + `<rect x="-86" y="-22" width="172" height="22" rx="5" fill="${C.grigio}" ${ST(7)}/>`;
+      case 'carrello': return `<path d="M-50 -110 H76 L58 -42 H-34 Z" fill="#fff" ${ST(7)}/><path d="M-86 -130 H-62 L-34 -42" fill="none" ${ST(7)}/><path d="M-40 -78 H66" ${ST(5)}/>` +
+        `<circle cx="-24" cy="-16" r="14" fill="${C.ink}"/><circle cx="48" cy="-16" r="14" fill="${C.ink}"/>`;
+      case 'salvadanaio': return `<rect x="-44" y="-36" width="22" height="34" rx="6" fill="${C.rosa}" ${ST(6)}/><rect x="16" y="-36" width="22" height="34" rx="6" fill="${C.rosa}" ${ST(6)}/>` +
+        `<ellipse cx="0" cy="-72" rx="70" ry="52" fill="${C.rosa}" ${ST(7)}/><path d="M-30 -118 L-16 -146 L0 -120" fill="${C.rosa}" ${ST(6)}/>` +
+        `<ellipse cx="62" cy="-70" rx="16" ry="20" fill="#FF9DB5" ${ST(6)}/><circle cx="58" cy="-74" r="3.5" fill="${C.ink}"/><circle cx="66" cy="-64" r="3.5" fill="${C.ink}"/>` +
+        `<circle cx="30" cy="-92" r="6" fill="${C.ink}"/><rect x="-22" y="-128" width="40" height="9" rx="4" fill="${C.ink}"/>` +
+        `<path d="M-70 -78 C-86 -80 -88 -98 -76 -100" fill="none" ${ST(6)}/>`;
+      case 'banconota': return `<rect x="-74" y="-112" width="148" height="86" rx="12" fill="${C.menta}" ${ST(7)}/><circle cx="0" cy="-69" r="27" fill="#fff" ${ST(6)}/>` +
+        `<text x="0" y="-56" text-anchor="middle" font-family="${DISP}" font-weight="800" font-size="38" fill="${C.ink}">€</text>` +
+        `<circle cx="-50" cy="-90" r="6" fill="${C.ink}"/><circle cx="50" cy="-48" r="6" fill="${C.ink}"/>`;
+      case 'persone': return [[-50, C.pesca, .86], [50, C.az, .86], [0, C.menta, 1]].map(([x, c, s]) =>
+        `<g transform="translate(${x} 0) scale(${s})"><path d="M-40 0 C-40 -40 -22 -62 0 -62 C22 -62 40 -40 40 0 Z" fill="${c}" ${ST(7)}/><circle cx="0" cy="-96" r="28" fill="${c}" ${ST(7)}/></g>`).join('');
+      case 'grafico': return `<rect x="-72" y="-146" width="144" height="140" rx="16" fill="#fff" ${ST(7)}/><path d="M-50 -36 L-18 -70 L6 -54 L46 -110" fill="none" ${ST(8)}/>` +
+        `<path d="M24 -112 L48 -112 L48 -88" fill="none" ${ST(8)}/>`;
+      default: return `<circle cx="0" cy="-70" r="60" fill="#fff" ${ST(7)}/><text x="0" y="-48" text-anchor="middle" font-family="${DISP}" font-weight="800" font-size="64" fill="${C.ink}">?</text>`;
+    }
+  }
+  const tinta = (n, def) => (n && C[n]) || (n === 'bianco' ? '#fff' : def || '#fff');
+  const segno = (n) => n === 'uguale' ? `<path d="M9 16 H37 M9 30 H37" fill="none" ${ST(8)}/>` : n === 'no' ? `<path d="M12 12 L34 34 M34 12 L12 34" fill="none" ${ST(8)}/>` : `<path d="M9 24 L19 34 L37 13" fill="none" ${ST(8)}/>`;
+
+  // ---------- le schermate: modelli riusabili, riempiti dalla scheda dell'episodio (VIDEO.schermi) ----------
+  // titolo: righe (2), evid (indice della riga evidenziata), icona, timbro {testo, a}
+  function scTitolo(t, S) {
+    let h = tab(S.etichetta || 'LA NOTIZIA', t, S.t0 + .04);
+    const R = S.righe || [], n = Math.max(1, ...R.map((r) => r.length)), fs = Math.round(Math.min(124, 600 / (.55 * n)));
+    h += `<div style="position:absolute;left:44px;top:${Math.round(92 + (124 - fs) * .7)}px;font:800 ${fs}px/1.02 ${DISP};letter-spacing:-.035em;color:${C.ink};white-space:nowrap">` +
+      R.map((r, i) => {
+        const k = pop(t, S.t0 + .06 + .12 * i, .3, 1.2);
+        const inner = i === S.evid ? `<span style="background:linear-gradient(transparent 56%,${C.giallo} 56%);padding:0 12px;margin-left:-12px">${esc(r)}</span>` : esc(r);
+        return `<div style="transform:translateY(${px(36 * (1 - k))});opacity:${k > 0 ? 1 : 0}">${inner}</div>`;
+      }).join('') + `</div>`;
+    if (S.icona) { const kb = pop(t, S.t0 + .22, .36, 1.6); h += svgL(`<g transform="translate(676 262) scale(${(1.25 * kb).toFixed(3)})">${icona(S.icona, t, true)}</g>`); }
+    const st = S.timbro;
+    if (st && t >= st._t) h += chip(590, 352, esc(st.testo), { bg: tinta(st.colore, C.menta), fs: 37, k: 2.4 - 1.4 * E.outBack(seg(t - st._t, 0, .2), 1.2), rot: -8, bd: 7, r: 12, sh: 7 });
     return h;
   }
-  function slNumero(t) {
-    const q = T.q; let h = tab('PRIME STIME', t, q.stime);
-    const a = t - q.n17, b = t - q.n37;
-    const ka = a < 0 ? 0 : 1.9 - .9 * E.outBack(seg(a, 0, .24), 1.3), kb = b < 0 ? 0 : E.outBack(seg(b, 0, .3), 1.8);
-    h += `<div style="position:absolute;left:0;top:74px;width:${MW}px;text-align:center;font:800 200px/1 ${DISP};letter-spacing:-.045em;color:${C.ink};white-space:nowrap">` +
-      `<span style="display:inline-block;transform:scale(${ka.toFixed(3)});opacity:${a < 0 ? 0 : 1}">17</span>` +
-      `<span style="display:inline-block;transform-origin:0 60%;transform:translateX(${px(70 * (1 - kb))}) scale(${(.6 + .4 * kb).toFixed(3)});opacity:${b < 0 ? 0 : 1}">-37&nbsp;€</span></div>`;
-    const kf = pop(t, q.famiglia, .3), kn = pop(t, q.anno, .3);
-    if (kf > 0) h += `<div style="position:absolute;left:216px;top:316px;transform:translate(-50%,-50%) scale(${kf.toFixed(3)});display:flex;align-items:center;gap:12px;white-space:nowrap;font:700 38px/1 ${DISP};color:${C.ink};background:#fff;border:5px solid ${C.ink};border-radius:16px;padding:10px 20px 10px 14px">` +
-      `<svg width="56" height="48" viewBox="-44 -68 88 72" style="overflow:visible">${house(0, 0, .82)}</svg>una famiglia</div>`;
-    h += chip(580, 316, "in meno l'anno", { bg: C.giallo, fs: 38, k: kn, r: 16, disp: true });
-    h += `<div style="position:absolute;right:34px;top:372px;font:600 25px/1 ${MONO};color:${C.mut};opacity:${E.out(seg(t, q.n37 + .2, q.n37 + .5)).toFixed(2)}">stime Ecco e Codacons</div>`;
+  // numero: parti [{testo, a}] (la prima arriva con un colpo, le altre scivolano), chips [{testo, icona, colore, a}], fonte
+  function scNumero(t, S) {
+    let h = tab(S.etichetta || 'IL NUMERO', t, S.t0 + .02);
+    const P = S.parti || [], n = Math.max(1, P.reduce((a, p) => a + p.testo.length, 0)), fs = Math.round(Math.min(200, 760 / (.56 * n)));
+    h += `<div style="position:absolute;left:0;top:${Math.round(74 + (200 - fs) * .5)}px;width:${MW}px;text-align:center;font:800 ${fs}px/1 ${DISP};letter-spacing:-.045em;color:${C.ink};white-space:nowrap">` +
+      P.map((p, i) => {
+        const x = t - p._t, txt = esc(p.testo).replace(/ /g, '&nbsp;');
+        if (x < 0) return `<span style="display:inline-block;opacity:0">${txt}</span>`;
+        if (!i) return `<span style="display:inline-block;transform:scale(${(1.9 - .9 * E.outBack(seg(x, 0, .24), 1.3)).toFixed(3)})">${txt}</span>`;
+        const k = E.outBack(seg(x, 0, .3), 1.8);
+        return `<span style="display:inline-block;transform-origin:0 60%;transform:translateX(${px(70 * (1 - k))}) scale(${(.6 + .4 * k).toFixed(3)})">${txt}</span>`;
+      }).join('') + `</div>`;
+    const CH = S.chips || [];
+    if (CH.length) h += `<div style="position:absolute;left:0;top:316px;width:${MW}px;transform:translateY(-50%);display:flex;justify-content:center;gap:30px">` + CH.map((c) => {
+      const k = pop(t, c._t, .3);
+      return `<div style="transform:scale(${k.toFixed(3)});display:flex;align-items:center;gap:12px;white-space:nowrap;font:700 38px/1 ${DISP};color:${C.ink};background:${tinta(c.colore)};border:5px solid ${C.ink};border-radius:16px;padding:10px 20px 10px ${c.icona ? 12 : 20}px">` +
+        (c.icona ? `<svg width="50" height="50" viewBox="-90 -160 180 170" style="overflow:visible">${icona(c.icona, t, true)}</svg>` : '') + `${esc(c.testo)}</div>`;
+    }).join('') + `</div>`;
+    const lastT = P.length ? P[P.length - 1]._t : S.t0;
+    if (S.fonte) h += `<div style="position:absolute;right:34px;top:372px;font:600 25px/1 ${MONO};color:${C.mut};opacity:${E.out(seg(t, lastT + .2, lastT + .5)).toFixed(2)}">${esc(S.fonte)}</div>`;
     return h;
   }
-  function slCome(t) {
-    const q = T.q; let h = tab('COME FUNZIONA', t, q.s3 - .02);
-    const gx = 142, px0 = 402, lx = 640, base = 326, tx = lx + 118;
-    const up = ease(t, q.troppo, q.troppo + .5), dn = ease(t, q.meno - .1, q.meno + .45);
-    const fs = 1 + .18 * up * (1 - .6 * dn);                                   // la fiamma cresce quando il gas costa troppo
-    const cx = t - q.rimborso;                                                 // la moneta cade sulla centrale e rimbalza
-    let cy = -80, crot = 0, cvis = cx >= 0;
-    if (cvis) { const fall = E.in(seg(cx, 0, .26)); const bn = cx > .26 ? ex(-(cx - .26) * 7) * Math.abs(S(TAU * 1.9 * (cx - .26))) : 0; cy = lerp(-80, 178, fall) - 46 * bn; crot = 360 * seg(cx, 0, .5); }
-    const py = lerp(lerp(160, 112, up), 190, dn);                              // il cartellino del prezzo della luce sale, poi scende
-    const pcol = dn > .5 ? C.menta : up > .5 ? C.rosa : '#fff';
-    const k0 = pop(t, q.s3 + .05, .3), k1 = pop(t, q.s3 + .16, .3), k2 = pop(t, q.s3 + .27, .3);
+  // catena: passi [{icona, nome}] (2 o 3) collegati da frecce; note [{testo, passo, colore, lato, a}];
+  // fx [{tipo:'cresce'|'moneta'|'accendi', passo, a, fino}] e [{tipo:'prezzo', passo, su, giu}]
+  function scCatena(t, S) {
+    let h = tab(S.etichetta || 'COME FUNZIONA', t, S.t0 + .06);
+    const P = S.passi || [], X = P.length === 2 ? [230, 590] : [142, 402, 640], base = 326, SC = P.length === 2 ? [1.3, 1.3] : [1.25, 1.15, 1.12];
+    const FX = S.fx || [], sx = (i) => (P[i].scala || SC[i]);
     let g = '';
-    g += `<g transform="translate(${gx} ${base}) scale(${(1.25 * k0).toFixed(3)})">${flame(0, 0, fs, t)}</g>`;
-    g += `<g transform="translate(${px0} ${base}) scale(${(1.15 * k1).toFixed(3)})">${plant(0, 0, t)}</g>`;
-    g += `<g transform="translate(${lx} ${base}) scale(${(1.12 * k2).toFixed(3)})">${bulb(0, 0, 1, dn > .5, t)}</g>`;
-    if (k1 > .9) g += arrow(gx + 76, base - 54, px0 - 106, t);
-    if (k2 > .9) g += arrow(px0 + 106, base - 54, lx - 66, t);
-    if (cvis) g += coin(px0 - 30, cy, 36, crot);
+    const ks = P.map((p, i) => pop(t, S.t0 + .13 + .11 * i, .3));
+    P.forEach((p, i) => {
+      let gr = 0; FX.filter((f) => f.tipo === 'cresce' && f.passo === i).forEach((f) => { gr = Math.max(gr, ease(t, f._t, f._t + .5) * (f._f != null ? 1 - .6 * ease(t, f._f - .1, f._f + .45) : 1)); });
+      const on = FX.some((f) => f.tipo === 'accendi' && f.passo === i && t >= f._t + .17);
+      g += `<g transform="translate(${X[i]} ${base}) scale(${(sx(i) * ks[i] * (1 + .18 * gr)).toFixed(3)})">${icona(p.icona, t, on)}</g>`;
+      if (i && ks[i] > .9) g += arrow(X[i - 1] + (ICON_W[P[i - 1].icona] || 60) * sx(i - 1) + 14, base - 54, X[i] - (ICON_W[p.icona] || 60) * sx(i) - 12, t);
+    });
+    FX.filter((f) => f.tipo === 'moneta').forEach((f) => {   // la moneta cade sul passo e rimbalza
+      const x = t - f._t; if (x < 0) return;
+      const fall = E.in(seg(x, 0, .26)), bn = x > .26 ? ex(-(x - .26) * 7) * Math.abs(Math.sin(TAU * 1.9 * (x - .26))) : 0;
+      g += coin(X[f.passo] - 30, lerp(-80, base - 148, fall) - 46 * bn, 36, 360 * seg(x, 0, .5));
+    });
     h += svgL(g);
-    // cartellino del prezzo accanto alla lampadina
-    if (k2 > .9) h += `<div style="position:absolute;left:${tx}px;top:${px(py)};transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;font:800 40px/1 ${DISP};color:${C.ink};background:${pcol};border:5px solid ${C.ink};border-radius:14px;padding:8px 12px">€<span style="font-size:34px">${dn > .5 ? '↓' : up > .5 ? '↑' : ''}</span></div>`;
-    h += chip(gx, base + 46, 'GAS', { fs: 27, bd: 0, bg: 'transparent', k: k0 });
-    h += chip(px0, base + 46, 'CENTRALE', { fs: 27, bd: 0, bg: 'transparent', k: k1 });
-    h += chip(lx, base + 46, 'LUCE', { fs: 27, bd: 0, bg: 'transparent', k: k2 });
-    h += chip(gx + 8, 100, 'troppo caro', { bg: C.rosa, fs: 27, k: pop(t, q.troppo + .1, .3), rot: -3 });
-    h += chip(px0 - 6, 96, 'rimborso', { bg: C.giallo, fs: 27, k: pop(t, q.rimborso + .22, .3), rot: 2 });
-    h += chip(tx - 6, 262, 'a meno', { bg: C.menta, fs: 27, k: pop(t, q.meno + .1, .3), rot: -2 });
+    FX.filter((f) => f.tipo === 'prezzo').forEach((f) => {   // il cartellino del prezzo sale e poi scende
+      const i = f.passo; if (ks[i] <= .9) return;
+      const up = f._su != null ? ease(t, f._su, f._su + .5) : 0, dn = f._giu != null ? ease(t, f._giu - .1, f._giu + .45) : 0;
+      const y = lerp(lerp(160, 112, up), 190, dn), bg = dn > .5 ? C.menta : up > .5 ? C.rosa : '#fff';
+      h += `<div style="position:absolute;left:${X[i] + 118}px;top:${px(y)};transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;font:800 40px/1 ${DISP};color:${C.ink};background:${bg};border:5px solid ${C.ink};border-radius:14px;padding:8px 12px">${esc(f.simbolo || '€')}<span style="font-size:34px">${dn > .5 ? '↓' : up > .5 ? '↑' : ''}</span></div>`;
+    });
+    P.forEach((p, i) => { if (p.nome) h += chip(X[i], base + 46, esc(p.nome), { fs: 27, bd: 0, bg: 'transparent', k: ks[i] }); });
+    (S.note || []).forEach((nt, j) => {
+      const i = nt.passo || 0, right = nt.lato === 'destra';
+      h += chip(right ? X[i] + 112 : X[i] + (j % 2 ? -6 : 8), right ? 262 : 100 - (j % 2) * 4, esc(nt.testo), { bg: tinta(nt.colore, C.giallo), fs: 27, k: pop(t, nt._t, .3), rot: [-3, 2, -2][j % 3] });
+    });
     return h;
   }
+  // scelta: domanda e cartellini [{titolo, nota, colore, notaColore, segno, a, pulse}]: compaiono spenti e si accendono sulla parola
   function card(y, on, bg, icon, titolo, nota, notaBg, k, pulse) {
     if (k <= .001) return '';
-    const kn = pop(on, 0, 1, 1.8);                       // on: 0..1, quanto è "acceso" il cartellino
+    const kn = pop(on, 0, 1, 1.8);
     return `<div style="position:absolute;left:40px;top:${y}px;width:${MW - 80}px;height:110px;box-sizing:border-box;transform:scale(${(k * (1 + .04 * E.bump(on))).toFixed(3)});display:flex;align-items:center;gap:20px;padding:0 22px;background:${on > .5 ? bg : '#F1F3F7'};border:7px solid ${C.ink};border-radius:26px;box-shadow:0 8px 0 ${C.ink}">` +
       `<div style="flex:none;width:66px;height:66px;border-radius:50%;background:#fff;border:6px solid ${C.ink};display:flex;align-items:center;justify-content:center;font:800 44px/1 ${DISP}">${on > .5 ? icon : '?'}</div>` +
       `<div style="flex:1;font:800 48px/1 ${DISP};letter-spacing:-.025em;white-space:nowrap">${titolo}</div>` +
-      (on > .02 ? `<div style="flex:none;transform:scale(${(kn * (1 + .1 * (pulse || 0))).toFixed(3)});font:700 28px/1 ${MONO};background:${notaBg};border:5px solid ${C.ink};border-radius:12px;padding:10px 14px;white-space:nowrap">${nota}</div>` : '') + `</div>`;
+      (on > .02 && nota ? `<div style="flex:none;transform:scale(${(kn * (1 + .1 * (pulse || 0))).toFixed(3)});font:700 28px/1 ${MONO};background:${notaBg};border:5px solid ${C.ink};border-radius:12px;padding:10px 14px;white-space:nowrap">${nota}</div>` : '') + `</div>`;
   }
-  function slPerTe(t) {
-    const q = T.q; let h = tab('PER CHI VALE', t, q.s4 - .02);
-    const ck = `<svg width="40" height="40" viewBox="0 0 46 46"><path d="M9 24 L19 34 L37 13" fill="none" ${ST(8)}/></svg>`;
-    const eq = `<svg width="40" height="40" viewBox="0 0 46 46"><path d="M9 16 H37 M9 30 H37" fill="none" ${ST(8)}/></svg>`;
-    const kq = pop(t, q.s4 + .12, .3, 1.4);
-    h += `<div style="position:absolute;left:40px;top:82px;transform-origin:0 50%;transform:scale(${kq.toFixed(3)});white-space:nowrap;font:800 50px/1 ${DISP};letter-spacing:-.025em;color:${C.ink}">Che contratto hai?</div>`;
-    h += card(150, seg(t, q.variabile - .15, q.variabile + .2), C.menta, ck, 'Prezzo variabile', 'sconto', '#fff', pop(t, q.s4 + .3, .32, 1.5), 0);
-    h += card(276, seg(t, q.fisso, q.fisso + .35), '#fff', eq, 'Prezzo fisso', 'non cambia', C.grigio, pop(t, q.s4 + .42, .32, 1.5), E.bump(seg(t, q.nulla + .25, q.nulla + .7)));
+  function scScelta(t, S) {
+    let h = tab(S.etichetta || 'PER CHI VALE', t, S.t0 + .06);
+    if (S.domanda) h += `<div style="position:absolute;left:40px;top:82px;transform-origin:0 50%;transform:scale(${pop(t, S.t0 + .2, .3, 1.4).toFixed(3)});white-space:nowrap;font:800 50px/1 ${DISP};letter-spacing:-.025em;color:${C.ink}">${esc(S.domanda)}</div>`;
+    (S.carte || []).slice(0, 2).forEach((c, i) => {
+      h += card(150 + 126 * i, seg(t, c._t, c._t + .35), tinta(c.colore), `<svg width="40" height="40" viewBox="0 0 46 46">${segno(c.segno)}</svg>`, esc(c.titolo), c.nota ? esc(c.nota) : '',
+        tinta(c.notaColore), pop(t, S.t0 + .38 + .12 * i, .32, 1.5), c._p != null ? E.bump(seg(t, c._p, c._p + .45)) : 0);
+    });
     return h;
   }
-  function slSaluto(t) {
-    const q = T.q, V = T.V; let h = '';
-    const k = pop(t, q.s5, .34, 1.5), k2 = pop(t, q.seguimi, .3, 1.8);
+  // confronto: due numeri, sinistra {testo, nota, a} e destra {testo, nota, colore, a} (prima/dopo, attese/reale)
+  function scConfronto(t, S) {
+    let h = tab(S.etichetta || 'IL CONFRONTO', t, S.t0 + .06);
+    const side = (o, cx, last) => {
+      if (!o) return '';
+      const x = t - o._t, k = x < 0 ? 0 : last ? 1.9 - .9 * E.outBack(seg(x, 0, .24), 1.3) : E.outBack(seg(x, 0, .3), 1.6);
+      const fs = Math.round(Math.min(150, 330 / (.56 * Math.max(1, o.testo.length))));
+      return `<div style="position:absolute;left:${cx - 190}px;top:96px;width:380px;text-align:center;opacity:${x < 0 ? 0 : 1};transform:scale(${k.toFixed(3)})">` +
+        `<div style="display:inline-block;font:800 ${fs}px/1.05 ${DISP};letter-spacing:-.04em;color:${C.ink};background:${o.colore ? tinta(o.colore) : 'transparent'};border-radius:22px;padding:0 14px">${esc(o.testo).replace(/ /g, '&nbsp;')}</div>` +
+        `<div style="margin-top:18px;font:700 30px/1 ${MONO};letter-spacing:.02em;color:${C.mut}">${esc(o.nota || '')}</div></div>`;
+    };
+    h += side(S.sinistra, 215, false) + side(S.destra, 605, true);
+    if (S.destra && t >= S.destra._t - .3) h += `<div style="position:absolute;left:${MW / 2}px;top:170px;transform:translate(-50%,-50%) scale(${pop(t, S.destra._t - .3, .3).toFixed(3)});font:800 64px/1 ${DISP};color:${C.ink}">→</div>`;
+    return h;
+  }
+  // grafico: valori (una linea che si disegna da linea.a), soglia {valore, testo}, fine {testo, a}, verso 'su'|'giu'
+  function scGrafico(t, S) {
+    let h = tab(S.etichetta || "L'ANDAMENTO", t, S.t0 + .06);
+    const V = S.valori || [0, 1], all = V.concat(S.soglia ? [S.soglia.valore] : []), lo = Math.min(...all), hi = Math.max(...all), pad = (hi - lo) * .15 || 1;
+    const x0 = 70, x1 = 640, y0 = 350, y1 = 110, X = (i) => x0 + (x1 - x0) * i / (V.length - 1), Y = (v) => y0 - (y0 - y1) * (v - lo + pad) / (hi - lo + 2 * pad);
+    const A = S.linea && S.linea._t != null ? S.linea._t : S.t0 + .3, u = E.inOut(seg(t, A, A + 1.4)), n = (V.length - 1) * u;
+    let d = `M${X(0).toFixed(1)} ${Y(V[0]).toFixed(1)}`, ex2 = X(0), ey = Y(V[0]);
+    for (let i = 1; i <= Math.ceil(n) && i < V.length; i++) { const f = Math.min(1, n - (i - 1)); ex2 = lerp(X(i - 1), X(i), f); ey = lerp(Y(V[i - 1]), Y(V[i]), f); d += ` L${ex2.toFixed(1)} ${ey.toFixed(1)}`; }
+    let g = `<path d="M${x0} ${y0 + 20} H${x1 + 30}" ${ST(5)} opacity=".35"/>`;
+    if (S.soglia) g += `<path d="M${x0} ${Y(S.soglia.valore).toFixed(1)} H${x1 + 30}" fill="none" stroke="${C.ink}" stroke-width="5" stroke-dasharray="14 12" opacity=".6"/>`;
+    if (u > 0) g += `<path d="${d}" fill="none" stroke="${C.ink}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${ex2.toFixed(1)}" cy="${ey.toFixed(1)}" r="14" fill="${tinta(S.colore, C.rosa)}" ${ST(6)}/>`;
+    h += svgL(g);
+    if (S.soglia) h += chip(x1 + 90, Y(S.soglia.valore), esc(S.soglia.testo), { fs: 26, bg: '#fff', k: pop(t, A + .2, .3) });
+    if (S.fine && S.fine._t != null) h += chip(Math.min(ex2 + 20, x1 - 40), ey - 62, esc(S.fine.testo), { fs: 40, disp: true, bg: tinta(S.colore, C.rosa), k: pop(t, S.fine._t, .3, 1.8), sh: 6 });
+    return h;
+  }
+  // saluto: nome della rubrica, motto, invito a seguire (segui {a})
+  function scSaluto(t, S) {
+    const V = T.V; let h = '';
+    const k = pop(t, S.t0 + .08, .34, 1.5), k2 = S.segui && S.segui._t != null ? pop(t, S.segui._t, .3, 1.8) : 0;
     h += `<div style="position:absolute;left:50%;top:128px;transform:translate(-50%,-50%) rotate(-3deg) scale(${k.toFixed(3)});white-space:nowrap;font:800 132px/1 ${DISP};letter-spacing:-.04em;color:${C.ink};background:${C.giallo};border:8px solid ${C.ink};border-radius:26px;box-shadow:0 10px 0 ${C.ink};padding:10px 34px 16px">${esc(V.rubrica)}</div>`;
-    h += `<div style="position:absolute;left:0;top:246px;width:${MW}px;text-align:center;font:700 40px/1 ${DISP};color:${C.ink};opacity:${E.out(seg(t, q.s5 + .25, q.s5 + .5)).toFixed(2)}">una notizia al giorno</div>`;
+    h += `<div style="position:absolute;left:0;top:246px;width:${MW}px;text-align:center;font:700 40px/1 ${DISP};color:${C.ink};opacity:${E.out(seg(t, S.t0 + .33, S.t0 + .58)).toFixed(2)}">${esc(S.motto || 'una notizia al giorno')}</div>`;
     if (k2 > 0) h += `<div style="position:absolute;left:50%;top:346px;transform:translate(-50%,-50%) scale(${k2.toFixed(3)});display:flex;align-items:center;gap:14px;white-space:nowrap;font:700 38px/1 ${MONO};color:${C.giallo};background:${C.ink};border-radius:16px;padding:14px 24px 14px 16px">` +
       `<span style="display:inline-flex;width:44px;height:44px;border-radius:50%;background:${C.giallo};color:${C.ink};align-items:center;justify-content:center;font:800 40px/1 ${DISP}">+</span>Seguimi</div>`;
     return h;
   }
+  const SCREENS = { titolo: scTitolo, numero: scNumero, catena: scCatena, scelta: scScelta, confronto: scConfronto, grafico: scGrafico, saluto: scSaluto };
 
   // ---------- lo studio ----------
   const layer = (inner, dx) => `<div style="position:absolute;left:0;top:0;width:${MW}px;height:${MH}px;transform:translateX(${px(dx)})">${inner}</div>`;
   function schermo(t) {
     const sl = T.slides; let i = 0; while (i < sl.length - 1 && t >= sl[i + 1].t0) i++;
     const D = .36, x = t - sl[i].t0;
-    if (i > 0 && x < D) return layer(sl[i - 1].fn(t), -MW * E.inOut(seg(x, 0, D))) + layer(sl[i].fn(t), MW * (1 - E.outBack(seg(x, 0, D), .8)));
-    return layer(sl[i].fn(t), 0);
+    if (i > 0 && x < D) return layer(sl[i - 1].fn(t, sl[i - 1]), -MW * E.inOut(seg(x, 0, D))) + layer(sl[i].fn(t, sl[i]), MW * (1 - E.outBack(seg(x, 0, D), .8)));
+    return layer(sl[i].fn(t, sl[i]), 0);
   }
   function mondo(t, uid) {
-    const q = T.q; let h = '';
+    let h = '';
     h += `<div style="position:absolute;left:-400px;top:-400px;width:1880px;height:2720px;background:${C.az}"></div>`;
     h += `<div style="position:absolute;left:${CX - 590}px;top:20px;width:1180px;height:1180px;border-radius:50%;background:${C.azL}"></div>`;
     // schermo appeso: cinghie, ombra, cornice
-    const sx = t - q.n17, shake = sx >= 0 && sx < .6 ? 1.3 * ex(-sx * 9) * S(TAU * 3 * sx) : 0;
+    let shake = 0; T.shakes.forEach((ts) => { const sx = t - ts; if (sx >= 0 && sx < .6) shake += 1.3 * ex(-sx * 9) * S(TAU * 3 * sx); });   // lo schermo trema quando atterra un numero
     h += `<div style="position:absolute;left:${MX + 150}px;top:-60px;width:22px;height:${MY + 70}px;background:${C.ink}"></div><div style="position:absolute;left:${MX + MW - 172}px;top:-60px;width:22px;height:${MY + 70}px;background:${C.ink}"></div>`;
     h += `<div style="position:absolute;left:${MX}px;top:${MY}px;width:${MW}px;height:${MH}px;transform:rotate(${shake.toFixed(3)}deg)">` +
       `<div style="position:absolute;left:-9px;top:5px;width:${MW + 18}px;height:${MH + 18}px;border-radius:46px;background:${C.ink}"></div>` +

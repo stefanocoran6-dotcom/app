@@ -9,6 +9,7 @@ import numpy as np
 from scipy.io import wavfile
 
 SR, FPS, START, ARIA, HOLD = 48000, 30, .2, .3, 1.4      # come tg.js: inizio, aria tra le battute, fermo finale
+TEMPO = float(os.environ.get('TEMPO', '1'))             # sopra 1 la voce va più veloce, con lo stesso tono
 vdir, scene_path = sys.argv[1], sys.argv[2]
 out = sys.argv[3] if len(sys.argv) > 3 else '.'
 scene = json.load(open(scene_path, encoding='utf-8'))
@@ -41,7 +42,8 @@ def nrm(w):
 
 
 def load(p):
-    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'],
+    af = ['-af', f'atempo={TEMPO}'] if TEMPO != 1 else []
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', p, *af, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'],
                          capture_output=True, check=True).stdout
     return np.frombuffer(raw, dtype=np.float32).astype(np.float64)
 
