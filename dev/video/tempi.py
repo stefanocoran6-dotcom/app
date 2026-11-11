@@ -115,6 +115,7 @@ def align(dice, words, dur):
 M = model()
 T, clips, t, ok = {'fps': FPS}, [], START, True
 for s in scene:
+    t += s.get('pausa', 0)                              # respiro in più (prima di un capitolo): lo calcola scene.cjs come tg.js
     x = level(trim(load(os.path.join(vdir, s['id'] + '.mp3'))))
     path = os.path.join(out, 'voce_' + s['id'] + '.wav')
     wavfile.write(path, SR, (np.clip(x, -1, 1) * 32767).astype(np.int16))

@@ -77,6 +77,12 @@ for e in info['eventi']:
     elif k == 'scende': put(t, glide(980, 470, .34), .33); put(t + .2, click(1700), .35); put(t + .25, marimba(1318.5, .6, .2), .35)
     elif k == 'cartellino': put(t, click(1250, .06), .45); put(t + .005, pop(560, .1), .3)
     elif k == 'chiusura': put(t, pop(860, .1), .35)
+    elif k == 'capitolo':                               # inizio di capitolo: due note che salgono, sempre le stesse
+        put(t, whoosh(.34), .38); put(t + .14, marimba(659.25, .45, .14), .42); put(t + .27, marimba(987.77, .6, .2), .46)
+    elif k == 'passo': put(t, pop(600, .1), .28)        # un passo dello schema o un'icona che entra
+    elif k == 'pioggia':                                # tanti calcoli insieme: una cascata di piccoli clic
+        for i in range(12): put(t + i * .026, click(1500 + 140 * i, .03), .14)
+        put(t + .3, marimba(1318.5, .5, .16), .3)
     elif k == 'sigla':                                  # la firma sonora del TG, sempre uguale
         for i, f in enumerate((523.25, 659.25, 783.99, 1046.5)):
             put(t + i * .1, marimba(f, .8 if i == 3 else .5, .26 if i == 3 else .16), .5 if i < 3 else .62)
