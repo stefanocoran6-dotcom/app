@@ -1,202 +1,230 @@
 {
  "v": 1,
- "data": "2026-11-11",
+ "data": "2026-11-12",
  "articoli": [
   {
-   "id": "2026-11-11-educazione-finanziaria",
-   "cat": "Risparmio",
-   "nastro": "La finanza interessa a 9 italiani su 10",
-   "titolo": "La finanza interessa a 9 italiani su 10, ma la paura frena",
-   "evid": "la paura frena",
-   "sommario": "Un'indagine su circa 5.000 persone dice che l'interesse per i temi dei soldi è cresciuto molto in cinque anni. Ma chi vuole imparare fatica a trovare fonti di cui fidarsi, e quasi uno su due terrebbe i nuovi risparmi fermi.",
-   "numero": "93%",
-   "nota": "nel 2021 era 76%",
-   "didascalia": "Gli intervistati interessati a economia e finanza, secondo l'Osservatorio Edufin 2026",
+   "id": "2026-11-12-pensioni",
+   "cat": "Pensioni",
+   "nastro": "Pensioni: l'aumento di gennaio per tutti",
+   "titolo": "Pensioni, l'aumento di gennaio arriverà a tutti",
+   "evid": "arriverà a tutti",
+   "sommario": "Martedì 10 novembre l'INPS aveva parlato di un rinvio a marzo per circa 3,6 milioni di pensionati. Mercoledì 11 ha corretto: dalla rata di gennaio 2027 tutte le pensioni saranno adeguate ai prezzi.",
+   "numero": "3,6 mln",
+   "nota": "i pensionati sopra soglia",
+   "didascalia": "I pensionati con assegni oltre quattro volte il minimo, secondo le stime dell'INPS: per loro si era parlato di un aumento rinviato a marzo",
    "breve": [
-    "Il 93% degli intervistati si dice interessato a economia e finanza: nel 2021 era il 76%.",
-    "Il 48% fatica a trovare contenuti e persone affidabili e il 47% non sa a chi rivolgersi quando deve investire.",
-    "Il 45% terrebbe i nuovi risparmi liquidi, il 26% sceglierebbe BTP e altre obbligazioni, solo il 2% le azioni."
-   ],
-   "corpo": [
-    {
-     "h": "Che cosa dice l'indagine",
-     "p": [
-      "Martedì 10 novembre, a Milano, è stata presentata la sesta edizione dell'Osservatorio Edufin. È un'indagine di Pictet Asset Management, una società che gestisce investimenti, fatta con l'istituto di ricerca Finer. Hanno risposto circa 5.000 persone.",
-      "Il dato principale: il 93% degli intervistati si dice interessato ai temi di economia e finanza. Nel 2021 era il 76%. Il 45% sente di saperne poco e vorrebbe imparare di più."
-     ]
-    },
-    {
-     "h": "Dove ci si informa e che cosa manca",
-     "p": [
-      "Per informarsi, il canale preferito sono ormai i social network, scelti dal 44% (nel 2021 erano il 27%). Giornali, televisione ed eventi dal vivo, tutti insieme, sono scesi dal 41% al 15%.",
-      "L'ostacolo più citato, dal 48%, è trovare contenuti e persone di cui fidarsi. Il 47% non sa a chi rivolgersi quando deve investire.",
-      "Cresce anche l'intelligenza artificiale: il 75% la usa almeno una volta a settimana. Per le questioni di soldi la usa regolarmente il 28%, contro il 17% di un anno prima."
-     ]
-    },
-    {
-     "h": "Ansia e paura pesano sulle scelte",
-     "p": [
-      "Il 77% dice di provare ansia quando si tratta di soldi: nel 2024 era il 69%. Per il 73% è la paura a guidare le decisioni.",
-      "Si vede da dove andrebbero i nuovi risparmi. Il 45% li terrebbe in **liquidità**, cioè disponibili subito, per esempio sul **conto corrente**. Il 26% sceglierebbe BTP e altre **obbligazioni**, cioè prestiti fatti a uno Stato o a un'azienda in cambio di un interesse. Solo il 2% comprerebbe **azioni**, cioè piccole parti di un'azienda: nel 2023 era il 6%."
-     ]
-    },
-    {
-     "h": "Che cosa vuol dire",
-     "p": [
-      "Tenere i soldi liquidi dà tranquillità, perché si possono usare in ogni momento. Ha però un costo che non si vede: con l'**inflazione**, cioè l'aumento dei prezzi, la stessa somma compra un po' meno ogni anno. Le obbligazioni e le azioni hanno vantaggi e rischi diversi. Conoscerli è quello che permette di scegliere sapendo che cosa si fa, qualunque sia la scelta."
-     ]
-    }
-   ],
-   "perche": "Se ti sembra di sapere poco di soldi e di non sapere a chi chiedere, sei in buona compagnia: è così per quasi metà degli intervistati. Capire come funzionano conto, obbligazioni e azioni aiuta a riconoscere le fonti affidabili e a fare le domande giuste.",
-   "fonti": [
-    {
-     "nome": "Radiocor (Borsa Italiana)",
-     "titolo": "Pictet AM: il 93% degli italiani si dice interessato alla finanza",
-     "url": "https://www.borsaitaliana.it/borsa/notizie/radiocor/finanza/dettaglio/finanza-pictet-am-sempre-piu--italiani-interessati-percentuale-sale-al-93-nRC_10112026_1243_360597682.html"
-    },
-    {
-     "nome": "Teleborsa",
-     "titolo": "Osservatorio Edufin: cresce l'interesse degli italiani per la finanza",
-     "url": "https://www.teleborsa.it/News/2026/11/10/finanza-pictet-am-italiani-sempre-piu-interessati-171.html"
-    },
-    {
-     "nome": "MF Milano Finanza",
-     "titolo": "Solo il 2% metterebbe i nuovi risparmi in azioni",
-     "url": "https://www.milanofinanza.it/news/il-portafoglio-della-paura-solo-il-2-degli-italiani-vuole-investire-in-azioni-ma-le-alternative-non-sono-202611101230189282"
-    },
-    {
-     "nome": "Tgcom24",
-     "titolo": "Più interesse per la finanza, ma è difficile trovare contenuti affidabili",
-     "url": "https://www.tgcom24.mediaset.it/economia/gli-italiani-sempre-piu-interessati-alla-finanza-ma-faticano-a-trovare-contenuti-affidabili_118833321-202602k.shtml"
-    }
-   ]
-  },
-  {
-   "id": "2026-11-11-svimez-sud",
-   "cat": "Sud",
-   "nastro": "Svimez: il Sud cresce, ma frena nel 2027",
-   "titolo": "Il Sud cresce più del Centro-Nord, ma gli stipendi perdono terreno",
-   "evid": "stipendi perdono terreno",
-   "sommario": "Secondo il rapporto Svimez, nel 2026 l'economia del Mezzogiorno crescerà un po' più di quella del Centro-Nord. Dal 2027 dovrebbe rallentare, con la fine della spinta del PNRR. E le paghe, tenuto conto dei prezzi, valgono meno che nel 2021.",
-   "numero": "+0,9%",
-   "nota": "Centro-Nord +0,8%",
-   "didascalia": "La crescita del PIL del Mezzogiorno nel 2026, secondo le stime della Svimez",
-   "breve": [
-    "Per la Svimez il PIL del Sud crescerà dello 0,9% nel 2026, contro lo 0,8% del Centro-Nord.",
-    "Nel 2027 il Sud dovrebbe rallentare allo 0,5%, soprattutto perché si esaurisce la spinta dei fondi del PNRR.",
-    "Tra il 2021 e la prima metà del 2026 la paga oraria al Sud, tenuto conto dei prezzi, è scesa del 9,9%."
-   ],
-   "corpo": [
-    {
-     "h": "Il rapporto",
-     "p": [
-      "La Svimez è un istituto di ricerca che da 80 anni studia l'economia del Mezzogiorno. Martedì 10 novembre ha presentato il suo rapporto 2026.",
-      "Il **PIL**, prodotto interno lordo, misura il valore di tutto quello che si produce in un anno. Tra il 2021 e il 2025 quello del Sud è cresciuto in tutto del 9,5%, più di quello del Centro-Nord (+6,6%). Per il 2026 la Svimez stima +0,9% al Sud e +0,8% al Centro-Nord."
-     ]
-    },
-    {
-     "h": "Perché nel 2027 rallenta",
-     "p": [
-      "Secondo la Svimez, una parte importante della crescita è venuta dagli **investimenti**, cioè le spese per costruire o rinnovare edifici, strade e impianti. Molti sono stati pagati con il PNRR, il piano finanziato dall'Unione europea dopo la pandemia. Quella spinta si sta esaurendo.",
-      "Per questo la Svimez stima che nel 2027 il Sud crescerà dello 0,5% e il Centro-Nord dello 0,6%. Gli investimenti al Sud passerebbero da +6% nel 2026 a +0,8% nel 2027. Il reddito delle famiglie, tenuto conto dei prezzi, calerebbe dello 0,1% al Sud e salirebbe dello 0,6% al Centro-Nord."
-     ]
-    },
-    {
-     "h": "Più lavoro, ma pagato meno",
-     "p": [
-      "Nel secondo trimestre del 2026 al Sud lavoravano 643.000 persone in più rispetto al 2021. Ma solo circa 70.000 hanno meno di 35 anni. Tra il 2021 e il 2025, negli spostamenti con il Centro-Nord, il Sud ha perso circa 154.000 persone tra i 25 e i 34 anni.",
-      "I salari reali sono le paghe calcolate tenendo conto dell'aumento dei prezzi. Tra il 2021 e la prima metà del 2026 la paga di un'ora di lavoro, in termini reali, è scesa del 9,9% al Sud, del 7,2% in tutta Italia e dello 0,6% nell'area euro. Al Sud il 23,3% dei dipendenti guadagna meno di 9 € lordi l'ora."
-     ]
-    }
-   ],
-   "perche": "Quando le paghe crescono meno dei prezzi, si perde **potere d'acquisto**: con lo stesso stipendio si compra meno. Secondo il rapporto, al Sud è successo più che altrove: il lavoro è aumentato, ma spesso è pagato poco.",
-   "fonti": [
-    {
-     "nome": "Teleborsa (Borsa Italiana)",
-     "titolo": "Rapporto Svimez 2026: il Sud cresce grazie al PNRR, poi rallenta",
-     "url": "https://www.borsaitaliana.it/borsa/notizie/teleborsa/economia/rapporto-svimez-2026-sud-corre-grazie-a-pnrr-in-2027-pil-italia-sotto-media-ue-113_2026-11-10_TLB.html"
-    },
-    {
-     "nome": "ANSA",
-     "titolo": "Svimez: il Sud cresce più del Centro-Nord ma frena nel 2027",
-     "url": "https://www.ansa.it/sito/notizie/politica/2026/11/09/il-valore-della-coesione.-la-presentazione-del-rapporto-svimez-2026_1353bc1f-7f4a-4cd7-b4c2-dba32ea51d4a.html"
-    },
-    {
-     "nome": "Quotidiano Nazionale",
-     "titolo": "Il Sud cresce più del Nord ma perde i giovani",
-     "url": "https://www.quotidiano.net/economia/il-sud-cresce-piu-del-nord-ma-perde-i-giovani-stipendi-piu-bassi-di-mille-euro-sfg7mzgs"
-    }
-   ]
-  },
-  {
-   "id": "2026-11-11-petrolio",
-   "cat": "Petrolio",
-   "nastro": "Petrolio ai minimi da agosto",
-   "titolo": "Petrolio sotto i 90 dollari per qualche ora: non succedeva da agosto",
-   "evid": "sotto i 90 dollari",
-   "sommario": "Martedì 10 novembre il Brent, il petrolio di riferimento in Europa, è sceso per qualche ora sotto i 90 dollari al barile. Pesano le speranze che la guerra che coinvolge l'Iran si avvii alla fine.",
-   "numero": "−1,2%",
-   "nota": "a 91,49 dollari",
-   "didascalia": "Il calo del Brent nella giornata di martedì 10 novembre",
-   "breve": [
-    "Il Brent ha chiuso martedì 10 novembre a 91,49 dollari al barile, l'1,2% in meno del giorno prima.",
-    "Il calo è legato alle speranze di pace, dopo che gli Stati Uniti hanno detto di non ritenere necessari nuovi attacchi contro l'Iran.",
-    "Martedì 10 novembre la benzina self costava in media 1,998 € al litro, il gasolio 2,240 €. Sul gasolio c'è uno sconto sulle accise fino al 23 novembre."
+    "Dalla rata di gennaio 2027 l'INPS adeguerà ai prezzi tutte le pensioni, anche quelle oltre quattro volte il minimo, cioè sopra circa 2.447 € lordi al mese.",
+    "Il giorno prima l'Istituto aveva parlato di un aumento pagato entro marzo, con gli arretrati, per circa 3,6 milioni di pensionati.",
+    "La manovra, ancora in discussione, riduce l'adeguamento per le pensioni più alte. Le differenze saranno sistemate più avanti con un conguaglio."
    ],
    "corpo": [
     {
      "h": "Che cosa è successo",
      "p": [
-      "Il prezzo del petrolio si misura in dollari al barile, e un barile è circa 159 litri. Il riferimento per l'Europa si chiama Brent. Martedì 10 novembre, per qualche ora, è sceso sotto i 90 dollari: non succedeva da agosto.",
-      "Poi ha recuperato una parte del calo e ha chiuso a 91,49 dollari, l'1,2% in meno di lunedì. Anche il WTI, il riferimento negli Stati Uniti, ha chiuso in calo, dello 0,9%, a 86,04 dollari."
+      "Ogni anno, a gennaio, le pensioni vengono adeguate all'aumento dei prezzi. Questo meccanismo si chiama rivalutazione, o perequazione, e serve a difendere il **potere d'acquisto**, cioè quanto si riesce a comprare con l'assegno.",
+      "Martedì 10 novembre, in un'audizione sulla manovra davanti alle commissioni Bilancio di Camera e Senato, la direttrice generale dell'INPS ha spiegato che a gennaio l'aumento sarebbe arrivato subito solo per le pensioni fino a quattro volte il minimo. Per quelle più alte, circa 3,6 milioni secondo le stime dell'Istituto, sarebbe stato pagato con gli arretrati entro la fine di marzo."
      ]
     },
     {
-     "h": "Perché scende",
+     "h": "La correzione del giorno dopo",
      "p": [
-      "Da mesi la guerra che coinvolge l'Iran tiene alto il prezzo. Nello Stretto di Hormuz, tra l'Iran e la penisola arabica, passa una parte importante del petrolio venduto nel mondo, e lì le navi continuano a essere attaccate.",
-      "Tra lunedì 9 e martedì 10 novembre il governo degli Stati Uniti ha fatto sapere di non ritenere necessari nuovi attacchi militari contro l'Iran. Chi compra e vende petrolio ha letto queste parole come un passo verso la fine della guerra, e il prezzo è sceso."
+      "Mercoledì 11 novembre l'INPS ha cambiato strada con una nota. Dalla rata di gennaio 2027 l'aumento comparirà nel cedolino di tutti i pensionati, compresi quelli con gli assegni più alti. L'Istituto dice di aver seguito le indicazioni del governo: nei primi mesi dell'anno nessuna pensione resterà ferma.",
+      "Le differenze dovute alle nuove regole, che il Parlamento sta ancora esaminando, saranno sistemate in un secondo momento con un conguaglio, cioè un ricalcolo che serve a fissare gli importi esatti."
      ]
     },
     {
-     "h": "E ai distributori?",
+     "h": "Che cosa cambia con la manovra",
      "p": [
-      "Il prezzo alla pompa non segue il petrolio giorno per giorno: dipende anche dal costo per raffinarlo e soprattutto dalle tasse, che in Italia sono una parte grande del prezzo. Secondo i dati del ministero delle Imprese, martedì 10 novembre la benzina self costava in media 1,998 € al litro sulla rete stradale, appena sotto i 2 €. Il gasolio self era a 2,240 €.",
-      "Dal 10 al 23 novembre il governo ha ridotto le accise sul gasolio, una delle tasse sui carburanti, di 4 centesimi al litro: con l'IVA lo sconto arriva a 4,88 centesimi. È pagato con l'IVA in più che lo Stato ha incassato a ottobre, quando il petrolio costava di più. Lo sconto riguarda solo il gasolio."
+      "La manovra è la legge di bilancio per il 2027, ora in discussione in Parlamento. Cambia il modo di calcolare l'adeguamento e prevede sei fasce, in base a quante volte la pensione supera il trattamento minimo, che nel 2026 è di 611,85 € al mese.",
+      "Fino a quattro volte il minimo, circa 2.447 € al mese al **lordo**, cioè prima delle tasse, l'assegno recupera tutto l'aumento dei prezzi. Sopra quella soglia la quota scende: 85% tra quattro e cinque volte il minimo, 53% tra cinque e sei, 47% tra sei e otto, 37% tra otto e dieci, 32% oltre. La percentuale si applica all'intero assegno, secondo la fascia in cui cade.",
+      "Il testo può ancora cambiare durante l'esame in Parlamento. La percentuale esatta dell'aumento sarà fissata con un decreto, in base ai prezzi misurati dall'Istat. Chi è sopra la soglia vedrà comunque l'aumento già a gennaio, ma l'importo definitivo dipenderà dalle regole approvate."
      ]
     }
    ],
-   "perche": "Il petrolio entra nel prezzo di benzina, gasolio e riscaldamento e nel costo per trasportare quasi tutte le merci. Per questo pesa sull'**inflazione**, cioè sull'aumento generale dei prezzi. Quando il suo prezzo cambia per settimane, prima o poi lo si nota anche nelle spese di tutti i giorni.",
+   "perche": "Se tu o qualcuno in famiglia prende una pensione, a gennaio l'assegno salirà come ogni anno. Per gli importi più alti vale la pena guardare il cedolino dei primi mesi del 2027: con il conguaglio la cifra potrà cambiare quando le regole saranno definitive.",
    "fonti": [
     {
-     "nome": "Reuters (The Star)",
-     "titolo": "Il petrolio tocca i minimi da due mesi: le chiusure di Brent e WTI",
-     "url": "https://www.thestar.com.my/business/2026/11/11/oil-hits-two-month-lows-as-us-eases-iran-fears"
+     "nome": "INPS",
+     "titolo": "La nota dell'11 novembre: perequazione da gennaio per tutti",
+     "url": "https://www.inps.it/it/it/inps-comunica/notizie/dettaglio-news-page.news.2026.11.pensioni-perequazione-da-gennaio-aumento-subito-nel-cedolino.html"
     },
     {
-     "nome": "Rigzone",
-     "titolo": "Il petrolio scende con le speranze di pace: Brent per poco sotto i 90 dollari",
-     "url": "https://www.rigzone.com/news/oil_prices_retreat_as_peace_hopes_grow-10-nov-2026-185054-article"
+     "nome": "ANSA",
+     "titolo": "A gennaio rivalutazione per tutte le pensioni",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/11/inps-a-gennaio-rivalutazione-per-tutte-le-pensioni-nessuna-restera-ferma_dcf3eb8d-6420-483b-a4c8-fb0dfb8e1ef0.html"
     },
     {
-     "nome": "Agenzia DIRE",
-     "titolo": "Il Brent scende sotto i 90 dollari per la prima volta da agosto",
-     "url": "https://www.dire.it/10-11-2026/1287008-trump-frena-sugli-attacchi-in-iran-il-brent-crolla-sotto-quota-90-dollari/"
+     "nome": "il Giornale",
+     "titolo": "L'audizione dell'INPS e il rinvio a marzo per 3,6 milioni di pensionati",
+     "url": "https://www.ilgiornale.it/news/previdenza-e-pensioni/pensioni-la-sorpresa-sugli-aumenti-del-2027-per-36-milioni-di-italiani-slittano-a-marzo-chi-dovra-aspettare/"
+    },
+    {
+     "nome": "QuiFinanza",
+     "titolo": "Rivalutazione da gennaio anche sopra quattro volte il minimo",
+     "url": "https://quifinanza.it/pensioni/rivalutazione-pensioni-2027-inps/1023834/"
+    },
+    {
+     "nome": "MF Milano Finanza",
+     "titolo": "Le sei fasce della rivalutazione previste dalla manovra",
+     "url": "https://www.milanofinanza.it/news/pensioni-dal-2027-cambia-la-rivalutazione-ecco-chi-perdera-di-piu-e-quanto-202611061610254119"
+    },
+    {
+     "nome": "Il Tirreno",
+     "titolo": "Come cambia dal 2027 il calcolo degli aumenti delle pensioni",
+     "url": "https://www.iltirreno.it/toscana/2026/10/31/news/pensioni-2027-cambia-il-calcolo-degli-aumenti-chi-avra-la-rivalutazione-piena-e-chi-meno-1.100936771"
+    }
+   ]
+  },
+  {
+   "id": "2026-11-12-istat-previsioni",
+   "cat": "Economia",
+   "nastro": "Istat: Pil +0,9% nel 2026, poi frena",
+   "titolo": "Istat: l'economia cresce dello 0,9%, ma nel 2027 frena",
+   "evid": "nel 2027 frena",
+   "sommario": "Secondo le nuove previsioni dell'Istat, il Pil italiano crescerà dello 0,9% nel 2026 e dello 0,6% nel 2027. I prezzi della spesa delle famiglie salgono più di quanto l'Istituto stimava a giugno.",
+   "numero": "+0,9%",
+   "nota": "nel 2027 +0,6%",
+   "didascalia": "La crescita del Pil italiano prevista dall'Istat per il 2026",
+   "breve": [
+    "L'Istat prevede una crescita del Pil dello 0,9% nel 2026 e dello 0,6% nel 2027.",
+    "I prezzi della spesa delle famiglie salirebbero del 3,3% nel 2026 e del 2,8% nel 2027: a giugno le stime erano del 2,9% e del 2%.",
+    "La disoccupazione scenderebbe al 6% nel 2026 e al 5,9% nel 2027."
+   ],
+   "corpo": [
+    {
+     "h": "Le previsioni",
+     "p": [
+      "Mercoledì 11 novembre l'Istat, l'istituto nazionale di statistica, ha pubblicato le sue previsioni sull'economia italiana. Il **Pil**, cioè il valore di tutto quello che il Paese produce in un anno, dovrebbe crescere dello 0,9% nel 2026 e dello 0,6% nel 2027. Nel 2025 era cresciuto dello 0,6%.",
+      "A giugno l'Istat prevedeva lo 0,7% per tutti e due gli anni. La stima per il 2026 è quindi salita, quella per il 2027 è scesa."
+     ]
+    },
+    {
+     "h": "Che cosa spinge e che cosa frena",
+     "p": [
+      "A far crescere l'economia è soprattutto la domanda interna, cioè quello che spendono in Italia famiglie, imprese e Stato. Il saldo con l'estero, cioè la differenza tra quello che vendiamo agli altri Paesi e quello che compriamo da loro, nel 2026 è nullo.",
+      "I consumi delle famiglie crescerebbero dell'1% nel 2026 e dello 0,6% nel 2027, dopo l'1,2% del 2025: secondo l'Istat li frena l'aumento dei prezzi. Rallentano anche gli **investimenti**, cioè le spese per macchinari, edifici e tecnologia: +2,9% nel 2026 e +1% nel 2027, soprattutto perché si riducono gli aiuti pubblici.",
+      "Lo stesso giorno l'Istat ha comunicato che a settembre la produzione dell'industria è salita dell'1,2% rispetto ad agosto, ma nel terzo trimestre è calata dello 0,4%."
+     ]
+    },
+    {
+     "h": "Prezzi e lavoro",
+     "p": [
+      "Per l'**inflazione**, cioè l'aumento dei prezzi, l'Istat usa un indicatore della spesa delle famiglie. Dopo l'1,5% del 2025 salirebbe al 3,3% nel 2026, per poi scendere al 2,8% nel 2027. La causa indicata è il rincaro delle materie prime sui mercati internazionali.",
+      "Le previsioni partono da un petrolio Brent in media a 97,8 dollari al barile nel 2026 e a 96,1 nel 2027.",
+      "Sul lavoro, l'occupazione, misurata in posti a tempo pieno, crescerebbe dello 0,9% nel 2026 e dello 0,5% nel 2027. La disoccupazione, cioè la quota di chi cerca lavoro e non lo trova, scenderebbe dal 6,1% del 2025 al 6% e poi al 5,9%."
+     ]
+    },
+    {
+     "h": "I rischi",
+     "p": [
+      "Secondo l'Istat i rischi sono soprattutto al ribasso: è più probabile che le cose vadano peggio delle previsioni che meglio. Le tensioni internazionali potrebbero far risalire i prezzi. E se le attese sui guadagni legati all'intelligenza artificiale venissero ridimensionate, le Borse potrebbero scendere con forza, con effetti anche sull'economia di tutti i giorni."
+     ]
+    }
+   ],
+   "perche": "Se i prezzi salgono più degli stipendi, con gli stessi soldi si compra meno. Le previsioni dell'Istat aiutano a capire che cosa aspettarsi nei prossimi mesi su prezzi, lavoro e consumi.",
+   "fonti": [
+    {
+     "nome": "Istat",
+     "titolo": "Le previsioni sull'economia italiana per il 2026 e il 2027 (comunicato in inglese)",
+     "url": "https://www.istat.it/en/press-release/note-on-the-performance-and-outlook-of-the-italian-economy-years-2026-2027-2/"
+    },
+    {
+     "nome": "Istat",
+     "titolo": "Le previsioni di giugno 2026, per il confronto",
+     "url": "https://www.istat.it/comunicato-stampa/prospettive-delleconomia-italiana-anni-2026-2027/"
+    },
+    {
+     "nome": "Istat",
+     "titolo": "La produzione industriale di settembre 2026",
+     "url": "https://www.istat.it/comunicato-stampa/produzione-industriale-settembre-2026/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Pil +0,9% nel 2026, +0,6% nel 2027",
+     "url": "https://www.ansa.it/sito/notizie/economia/aziende/2026/11/11/nel-2026-il-pil-09-scende-a-06-lanno-prossimo_1cdb337a-67bc-484f-9ac1-be18d2a68df2.html"
     },
     {
      "nome": "Teleborsa",
-     "titolo": "Carburanti: benzina a 1,998 euro, gasolio a 2,240 euro",
-     "url": "https://teleborsa.ansa.it/notiziario/economia/carburanti-prezzo-benzina-scende-a-1998-euro-e-gasolio-a-2240-euro/"
+     "titolo": "Istat: Pil atteso in crescita dello 0,9% nel 2026",
+     "url": "https://www.teleborsa.it/News/2026/11/11/istat-pil-atteso-in-crescita-dello-0-9percent-nel-2026-e-dello-0-6percent-nel-2027-69.html"
     },
     {
-     "nome": "Money.it",
-     "titolo": "Tornano le accise mobili: 4,88 centesimi in meno sul gasolio",
-     "url": "https://www.money.it/accise-il-mef-rideterminata-temporaneamente-l-aliquota-cosa-cambia-per-i-consumatori"
+     "nome": "Askanews",
+     "titolo": "Le previsioni Istat su Pil, lavoro e prezzi",
+     "url": "https://askanews.it/2026/11/11/istat-prevede-09-del-pil-dellitalia-2026-e-06-nel-2027/"
+    }
+   ]
+  },
+  {
+   "id": "2026-11-12-nvidia",
+   "cat": "Borsa",
+   "nastro": "Nvidia giù dopo la chiusura di Wall Street",
+   "titolo": "Nvidia cade in Borsa mentre il consiglio discute del suo capo",
+   "evid": "discute del suo capo",
+   "sommario": "Le azioni di Nvidia, l'azienda americana dei chip per l'intelligenza artificiale, sono scese di circa l'8% negli scambi dopo la chiusura di mercoledì 11 novembre. Pesa l'incertezza sul futuro del fondatore e amministratore delegato, Jensen Huang.",
+   "numero": "−8%",
+   "nota": "negli scambi serali",
+   "didascalia": "Il calo, arrotondato, delle azioni Nvidia negli scambi dopo la chiusura di Wall Street di mercoledì 11 novembre",
+   "breve": [
+    "Mercoledì 11 novembre il Wall Street Journal ha scritto che il consiglio di amministrazione di Nvidia si preparava a sostituire Jensen Huang.",
+    "Dopo la chiusura di Wall Street il titolo è sceso di circa l'8%. Durante la seduta normale era salito di quasi il 3%.",
+    "Fino alla mattina di giovedì 12 novembre Nvidia non aveva annunciato decisioni."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Nvidia è una società americana che progetta chip, in particolare quelli usati per far funzionare l'intelligenza artificiale. In Borsa vale circa 4.000 miliardi di dollari ed è guidata dal suo fondatore, Jensen Huang.",
+      "Domenica 8 novembre il consiglio di amministrazione, cioè l'organo che sceglie e controlla chi dirige l'azienda, ha aperto un'indagine, affidata ai consiglieri indipendenti con l'aiuto di avvocati esterni. Lo ha fatto dopo notizie di stampa secondo cui Huang sarebbe stato preso di mira dai servizi segreti di un altro Paese. Il consiglio ha detto di non avere motivo di credere che la sicurezza degli Stati Uniti o i segreti dell'azienda siano stati compromessi, e di avere fiducia in Huang. Lui, in un messaggio ai dipendenti, ha ammesso una relazione fuori dal matrimonio e ha chiesto scusa.",
+      "Mercoledì 11 novembre il Wall Street Journal ha scritto che il consiglio si preparava a sostituirlo, dopo nuove notizie di stampa sulla sua vita privata. Secondo l'agenzia Reuters, il consiglio si sarebbe riunito la sera stessa per decidere."
+     ]
     },
     {
-     "nome": "Quattroruote",
-     "titolo": "Accise sul gasolio più basse fino al 23 novembre",
-     "url": "https://quattroruote.it/news/mercato/2026/11/10/prezzi_carburanti_11_novembre.html"
+     "h": "La reazione della Borsa",
+     "p": [
+      "Durante la seduta normale di mercoledì le **azioni** Nvidia erano salite di quasi il 3%. Dopo la chiusura di **Wall Street** gli scambi continuano, anche se sono meno numerosi: lì il titolo è sceso di circa l'8%. Anche i future sul Nasdaq, contratti che anticipano l'andamento della Borsa tecnologica americana, perdevano intorno all'1%.",
+      "Fino alla mattina di giovedì 12 novembre Nvidia non aveva comunicato decisioni sul suo amministratore delegato."
+     ]
+    },
+    {
+     "h": "Perché il capo conta così tanto",
+     "p": [
+      "Il prezzo di un'azione riflette quello che gli investitori si aspettano dall'azienda negli anni. Quando una società è molto legata a una persona, anche il dubbio su chi la guiderà può far cambiare idea a molti. Secondo un analista citato da Reuters, Nvidia non ha un piano per la successione.",
+      "Conta anche la dimensione. Con il suo valore, Nvidia è una delle società più grandi della Borsa americana e pesa molto negli indici come l'S&P 500 e il Nasdaq. Per questo i suoi movimenti si sentono anche nei fondi e negli **ETF** che seguono quegli indici."
+     ]
+    }
+   ],
+   "perche": "Se hai un fondo o un ETF sulle Borse americane o mondiali, è molto probabile che dentro ci sia anche Nvidia. La vicenda mostra che cos'è il **rischio** legato a una singola azienda, e perché **diversificare**, cioè distribuire i soldi su tante aziende diverse, ne riduce il peso.",
+   "fonti": [
+    {
+     "nome": "Nvidia",
+     "titolo": "Il comunicato del consiglio di amministrazione dell'8 novembre",
+     "url": "https://nvidianews.nvidia.com/news/statement-from-nvidia-board-of-directors"
+    },
+    {
+     "nome": "Reuters (Internazionale)",
+     "titolo": "Il consiglio di Nvidia si riunisce sul futuro di Huang",
+     "url": "https://www.internazionale.it/ultime-notizie-reuters/2026/11/12/nvidia-is-preparing-to-oust-ceo-jensen-huang-wsj-reports"
+    },
+    {
+     "nome": "Al Jazeera",
+     "titolo": "Le azioni Nvidia scendono dopo le notizie sul consiglio",
+     "url": "https://www.aljazeera.com/economy/2026/11/12/nvidia-shares-plunge-amid-reports-board-to-discuss-ceo-huangs-future"
+    },
+    {
+     "nome": "Yahoo Finance",
+     "titolo": "La chiusura e gli scambi serali di Nvidia dell'11 novembre",
+     "url": "https://finance.yahoo.com/technology/live/nvidia-live-updates-nvidia-stock-tanks-in-after-hours-after-allegations-of-a-second-affair-surface-222438011.html"
+    },
+    {
+     "nome": "Investing.com Italia",
+     "titolo": "Perché il titolo Nvidia scende dopo la chiusura",
+     "url": "https://it.investing.com/news/stock-market-news/perche-il-titolo-nvidia-crolla-nellafterhours-oggi-93CH-3644372"
+    },
+    {
+     "nome": "Sky TG24",
+     "titolo": "Il consiglio valuta la sostituzione del capo di Nvidia",
+     "url": "https://tg24.sky.it/mondo/2026/11/12/nvidia-jensen-huang-nuovo-affaire-board-rimozione"
     }
    ]
   }

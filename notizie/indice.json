@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-11",
+ "aggiornato": "2026-11-12",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-12-pensioni",
+   "data": "2026-11-12",
+   "cat": "Pensioni",
+   "titolo": "Pensioni, l'aumento di gennaio arriverà a tutti",
+   "nastro": "Pensioni: l'aumento di gennaio per tutti",
+   "numero": "3,6 mln",
+   "min": 3
+  },
+  {
+   "id": "2026-11-12-istat-previsioni",
+   "data": "2026-11-12",
+   "cat": "Economia",
+   "titolo": "Istat: l'economia cresce dello 0,9%, ma nel 2027 frena",
+   "nastro": "Istat: Pil +0,9% nel 2026, poi frena",
+   "numero": "+0,9%",
+   "min": 3
+  },
+  {
+   "id": "2026-11-12-nvidia",
+   "data": "2026-11-12",
+   "cat": "Borsa",
+   "titolo": "Nvidia cade in Borsa mentre il consiglio discute del suo capo",
+   "nastro": "Nvidia giù dopo la chiusura di Wall Street",
+   "numero": "−8%",
+   "min": 3
+  },
   {
    "id": "2026-11-11-educazione-finanziaria",
    "data": "2026-11-11",
