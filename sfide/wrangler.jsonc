@@ -1,0 +1,16 @@
+// Arbitro delle sfide dal vivo di FinLearn: un Worker di Cloudflare con una "stanza" (Durable Object) per ogni sfida.
+// Su Cloudflare il Worker deve chiamarsi esattamente come "name" qui sotto.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "finlearn-sfide",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-20",
+  "durable_objects": {
+    "bindings": [{ "name": "STANZE", "class_name": "Stanza" }]
+  },
+  // il piano gratuito vuole le stanze con il salvataggio SQLite
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Stanza"] }],
+  // da dove si accettano collegamenti: solo il sito dell'app (in prova sul computer vale .dev.vars)
+  "vars": { "ORIGINI": "https://stefanocoran6-dotcom.github.io" },
+  "observability": { "enabled": true }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "finlearn-sfide",
+  "private": true,
+  "description": "Arbitro delle sfide dal vivo di FinLearn (Cloudflare Worker con una stanza per ogni sfida)",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.155.0"
+  }
+}
