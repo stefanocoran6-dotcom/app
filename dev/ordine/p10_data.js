@@ -44,6 +44,28 @@ const GLOSS_DEF = {
   'liquidità': ['Liquidità', 'Quanto in fretta puoi trasformare qualcosa in denaro senza perderci. Si chiamano liquidità anche i soldi pronti da usare.'],
   'conto corrente': ['Conto corrente', 'Il conto di tutti i giorni: serve per incassare lo stipendio e per pagare. Rende poco o niente.'],
   'conto deposito': ['Conto deposito', 'Un conto fatto per lasciare ferma una somma in cambio di un interesse. Può essere libero, se ritiri quando vuoi, oppure vincolato per un certo tempo.'],
+  // ---- la banca e i pagamenti ----
+  'imposta di bollo': ['Imposta di bollo', 'Una tassa in cifra fissa che la banca incassa per lo Stato. Sul conto corrente di una persona è di 34,20 € l\'anno, dovuta solo se la giacenza media supera 5.000 €.'],
+  'giacenza media': ['Giacenza media', 'La media dei saldi di tutti i giorni di un periodo: si sommano i saldi di ogni giorno e si divide per il numero dei giorni.'],
+  'riepilogo delle spese': ['Riepilogo delle spese', 'Il documento che la banca ti manda una volta l\'anno con tutte le spese che hai pagato per il conto, voce per voce.'],
+  'carta di debito': ['Carta di debito', 'Una carta legata al conto corrente: quando paghi o prelevi, i soldi escono quasi subito dal conto.'],
+  'carta di credito': ['Carta di credito', 'Una carta con cui paghi usando soldi che la banca ti anticipa, fino a un tetto mensile. Li restituisci il mese dopo tutti insieme, oppure a rate pagando interessi.'],
+  prepagata: ['Carta prepagata', 'Una carta che carichi tu in anticipo: puoi spendere solo quello che ci hai messo sopra.'],
+  plafond: ['Plafond', 'Un tetto massimo. Per una carta di credito è il massimo che puoi spendere in un mese.'],
+  'a saldo': ['A saldo', 'Il modo di usare la carta di credito senza interessi: le spese del mese vengono addebitate tutte insieme il mese dopo.'],
+  'pre-autorizzazione': ['Pre-autorizzazione', 'Un blocco temporaneo di una somma sulla carta, usato come cauzione da hotel, noleggi e distributori. I soldi non escono, ma non li puoi usare finché il blocco non viene tolto.'],
+  'anticipo di contante': ['Anticipo di contante', 'Il prelievo di contanti fatto con una carta di credito. È un piccolo prestito e ha una commissione a parte.'],
+  'bonifico istantaneo': ['Bonifico istantaneo', 'Un bonifico che arriva in dieci secondi, a ogni ora e in ogni giorno dell\'anno. Una volta partito non si può fermare.'],
+  iban: ['IBAN', 'Il codice che identifica un conto. In Italia ha 27 caratteri: la sigla del Paese, i caratteri di controllo, la banca, la filiale e il numero del conto.'],
+  'orario limite': ['Orario limite', 'L\'ora oltre la quale la banca tratta un ordine come se fosse arrivato il giorno lavorativo seguente.'],
+  'verifica del beneficiario': ['Verifica del beneficiario', 'Il controllo che la banca fa prima di un bonifico: confronta il nome che hai scritto con quello a cui è intestato l\'IBAN e ti dice se corrispondono.'],
+  'addebito diretto': ['Addebito diretto', 'Un pagamento in cui è l\'azienda a prelevare i soldi dal tuo conto, perché le hai firmato un permesso. Si usa per bollette, rate e abbonamenti.'],
+  'fondo di garanzia': ['Fondo di garanzia dei depositi', 'Il fondo, finanziato dalle banche, che rimborsa i depositi quando una banca fallisce: fino a 100.000 € per persona e per banca.'],
+  depositi: ['Depositi', 'I soldi affidati a una banca, che la banca deve restituirti: conto corrente, conto deposito, libretto di risparmio.'],
+  'istituti di pagamento': ['Istituti di pagamento', 'Società autorizzate a offrire conti e carte per pagare senza essere banche. Devono tenere i soldi dei clienti separati dai propri.'],
+  'autenticazione forte': ['Autenticazione forte', 'La conferma di un pagamento con due prove di tipo diverso: qualcosa che sai (il PIN), che hai (la carta, il telefono) o che sei (l\'impronta, il volto).'],
+  'colpa grave': ['Colpa grave', 'Una disattenzione seria nel custodire carta e codici: per esempio tenere il PIN insieme alla carta, o dare a qualcuno i codici di conferma. Può far perdere il diritto al rimborso.'],
+  chargeback: ['Chargeback', 'La contestazione di un pagamento fatto con la carta, per esempio se la merce non arriva. La apre la tua banca presso il circuito della carta. È una regola dei circuiti, non un diritto scritto nella legge.'],
   // ---- debiti e prestiti ----
   rata: ['Rata', 'La cifra che versi a ogni scadenza per restituire un prestito. Dentro ci sono una parte di interessi e una parte di capitale.'],
   'quota interessi': ['Quota interessi', 'La parte della rata che paga gli interessi di quel periodo. Non fa scendere il debito.'],
@@ -131,7 +153,8 @@ const GLOSS_DEF = {
   'wall street': ['Wall Street', 'La via di New York dove ha sede la Borsa. Per estensione indica il mercato azionario americano.']
 };
 const GLOSS_ALIAS = { indice: 'indice di borsa', interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile', 'interessi sugli interessi': 'interesse composto', azione: 'azioni', obbligazione: 'obbligazioni',
-  rc: 'responsabilità civile', 'prezzo/utili': 'p/e', esclusione: 'esclusioni', quota: 'quote', 'schema di ponzi': 'schema ponzi', investimento: 'investimenti', commissioni: 'commissione', 'spesa fissa': 'spese fisse', 'spesa variabile': 'spese variabili' };
+  rc: 'responsabilità civile', 'prezzo/utili': 'p/e', esclusione: 'esclusioni', quota: 'quote', 'schema di ponzi': 'schema ponzi', investimento: 'investimenti', commissioni: 'commissione', 'spesa fissa': 'spese fisse', 'spesa variabile': 'spese variabili',
+  'carta prepagata': 'prepagata', 'carte di credito': 'carta di credito', 'carte di debito': 'carta di debito', 'bonifici istantanei': 'bonifico istantaneo', 'addebiti diretti': 'addebito diretto', 'fondo di garanzia dei depositi': 'fondo di garanzia', deposito: 'depositi', 'istituto di pagamento': 'istituti di pagamento' };
 const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?()«»“”]/g, '').replace(/\s+/g, ' ').trim(); return GLOSS_DEF[k] ? k : GLOSS_ALIAS[k] || null; };
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
 
@@ -183,7 +206,7 @@ const MIS_SOON = {
   'w-valuta': ['Valutare un\'azienda', 'i multipli e l\'idea del DCF']
 };
 // una riga su cosa c'è dentro ogni unità delle Basi (schermata "Ecco la tua FinLearn")
-const MIS_SUB = { 'basi-u1': 'Interessi, inflazione, tasso reale', 'basi-u7': 'Budget, fondo di emergenza, obiettivi', 'basi-u4': 'Prestiti, TAN e TAEG, mutuo', 'basi-u8': 'Assicurazioni e truffe da riconoscere', 'basi-u2': 'Azioni, obbligazioni, fondi, conti',
+const MIS_SUB = { 'basi-u1': 'Interessi, inflazione, tasso reale', 'basi-u7': 'Budget, fondo di emergenza, obiettivi', 'basi-u11': 'Conto, carte, bonifici, garanzia dei depositi', 'basi-u4': 'Prestiti, TAN e TAEG, mutuo', 'basi-u8': 'Assicurazioni e truffe da riconoscere', 'basi-u2': 'Azioni, obbligazioni, fondi, conti',
   'basi-u3': 'Rendimento, diversificare, orizzonte temporale', 'basi-u9': 'Un po\' alla volta, regola del 72', 'basi-u10': 'Paura di perdere, seguire la massa', 'basi-u5': 'Bilancio, utile, cassa, prezzo e valore', 'basi-u6': 'Banche centrali, cambi, ciclo economico' };
 // stops: le unità del percorso in ordine; "+nome" è un'unità in arrivo. null = tutto il corso.
 const MIS_PATHS = {

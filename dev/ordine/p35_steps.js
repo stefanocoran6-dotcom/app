@@ -101,9 +101,24 @@ const LEVERS = {
   inflazione: {
     calc: (v, p) => { const reale = p.C / Math.pow(1 + v.infl / 100, v.anni); return { reale, perso: (1 - reale / p.C) * 100, persi: p.C - reale, infl: v.infl, anni: v.anni }; },
     view: o => ({ lab: 'Quello che comprano', big: eur0(o.reale), sideLab: "Potere d'acquisto perso", side: fmtN(o.perso, 0) + '%', bar: [o.reale, o.persi], barLab: ['Resta', 'Perso'], barCol: [AZ, PESCA] })
+  },
+  // costo di un conto corrente in un anno: leve "canone" (€ al mese), "ops" (operazioni a pagamento al mese), "giac" (giacenza media, €).
+  // Parametri: op = costo di una operazione, bollo = imposta di bollo di un anno, soglia = giacenza media oltre la quale il bollo è dovuto
+  conto: {
+    calc: (v, p) => { const banca = 12 * v.canone + 12 * v.ops * p.op, bollo = v.giac > p.soglia ? p.bollo : 0; return { costo: banca + bollo, banca, bollo, canone: v.canone, ops: v.ops, giac: v.giac }; },
+    view: o => ({ lab: 'Costo in un anno', big: eur0(o.costo), sideLab: 'Canone e operazioni', side: eur0(o.banca), side2Lab: 'Imposta di bollo', side2: o.bollo > 0 ? fmtN(o.bollo, 2) + NBSP + '€' : 'non dovuta',
+      bar: o.costo > 0 ? [o.banca, o.bollo] : null, barLab: ['Alla banca', 'Allo Stato'], barCol: [AZ, PESCA] })
+  },
+  // garanzia dei depositi: leve "a" (conto tuo in banca A), "co" (conto cointestato in due, banca A), "b" (conto tuo in banca B); parametro lim = limite per persona e per banca.
+  // Il cointestato conta per metà; la tua parte in banca A è il tuo conto più quella metà.
+  garanzia: {
+    calc: (v, p) => { const parteA = v.a + v.co / 2, protA = Math.min(p.lim, parteA), protB = Math.min(p.lim, v.b); return { fuori: parteA - protA + v.b - protB, protetti: protA + protB, tuoi: parteA + v.b, parteA, b: v.b }; },
+    view: o => ({ lab: 'Fuori dalla garanzia', big: eur0(o.fuori), sideLab: 'La tua parte in banca A', side: eur0(o.parteA), side2Lab: 'I tuoi soldi in tutto', side2: eur0(o.tuoi),
+      bar: o.tuoi > 0 ? [o.protetti, o.fuori] : null, barLab: ['Protetti', 'Fuori'], barCol: [MENTA, PESCA] })
   }
 };
 // "Muovi le leve": i numeri cambiano sotto il dito; si va avanti quando gli obiettivi sono raggiunti, uno alla volta
+// La scheda con il risultato resta ferma in alto mentre scorri: su uno schermo basso si vedono insieme il numero e la leva che stai muovendo.
 function LeverStep({ st, top, onNext, scrollRef }) {
   const M = LEVERS[st.model];
   const [vals, setVals] = useState(() => { const o = {}; st.sliders.forEach(s => { o[s.id] = s.start; }); return o; });
@@ -119,14 +134,15 @@ function LeverStep({ st, top, onNext, scrollRef }) {
   const tot = w.bar ? w.bar[0] + w.bar[1] : 1;
   const body = html`<div class="o-pad" style="padding-top:18px;padding-bottom:24px">
     <div class="o-col" style="gap:6px"><span class="o-lab">Muovi le leve</span><h1 class="o-q">${st.t}</h1><${Rich} text=${st.x} cls="sm"/></div>
-    <div class="o-card s o-col" style="margin-top:14px;padding:14px 16px 14px;gap:10px" aria-live="polite">
+    <div style="position:sticky;top:0;z-index:2;margin:6px -8px 0;padding:8px;background:#fff;box-shadow:0 8px 8px -2px #fff"><div class="o-card s o-col" style="padding:14px 16px 14px;gap:10px" aria-live="polite">
       <div class="o-col"><span class="o-s">${w.lab}</span><span class="o-bign" style="font-size:38px;line-height:44px">${w.big}</span></div>
       <div class="o-rowf" style="justify-content:space-between;gap:12px;padding-top:8px;border-top:2px solid ${SEP}"><span class="o-s">${w.sideLab}</span><span style="font-size:17px;line-height:22px;font-weight:800;text-align:right">${w.side}</span></div>
+      ${w.side2Lab && html`<div class="o-rowf" style="justify-content:space-between;gap:12px;margin-top:-4px"><span class="o-s">${w.side2Lab}</span><span style="font-size:17px;line-height:22px;font-weight:800;text-align:right">${w.side2}</span></div>`}
       <div class="o-col" style=${{ gap: 4, opacity: w.bar ? 1 : 0.35 }}><div style=${{ display: 'flex', height: 16, border: `2px solid ${INK}`, borderRadius: 99, overflow: 'hidden', background: w.barCol ? w.barCol[1] : AZ }}>
           ${w.bar && html`<i style=${{ width: w.bar[0] / tot * 100 + '%', background: w.barCol ? w.barCol[0] : '#fff', borderRight: w.bar[1] > 0 ? `2px solid ${INK}` : 0 }}></i>`}</div>
         <div class="o-rowf" style="justify-content:space-between"><span class="o-s">${w.barLab[0]}</span><span class="o-s">${w.barLab[1]}</span></div></div>
-    </div>
-    <div class="o-col" style="gap:12px;margin-top:16px">${st.sliders.map(s => html`<div key=${s.id} class="o-col" style="gap:2px">
+    </div></div>
+    <div class="o-col" style="gap:12px;margin-top:8px">${st.sliders.map(s => html`<div key=${s.id} class="o-col" style="gap:2px">
       <div class="o-rowf" style="justify-content:space-between"><span class="o-t">${s.label}</span><span class="o-t" style="font-weight:800">${withUnit(vals[s.id], s.unit, s.dec || 0)}</span></div>
       <${Slider} value=${vals[s.id]} min=${s.min} max=${s.max} step=${s.step} label=${s.label} onChange=${x => setVals(q => Object.assign({}, q, { [s.id]: x }))}/></div>`)}</div>
     <div class="o-col" style="gap:8px;margin-top:16px" aria-live="polite">
@@ -159,7 +175,7 @@ function BucketStep({ st, top, onNext, scrollRef }) {
     <div style=${{ display: 'grid', gridTemplateColumns: `repeat(${nb}, minmax(0, 1fr))`, gap: 10, marginTop: 8 }}>
       ${st.buckets.map((name, b) => html`<button key=${b} type="button" class=${'o-bucket' + (flash && flash.b === b ? (flash.ok ? ' ok' : ' ko') : '')} disabled=${!cur} aria-label=${'Metti in: ' + name} onClick=${() => tap(b)}>
         <span style=${{ fontSize: nb > 2 ? 15 : 16, lineHeight: '20px', fontWeight: 800, textAlign: 'center', padding: '2px 0 4px' }}>${name}</span>
-        ${put.filter(i => st.items[i][1] === b).map(i => html`<span key=${i} class="o-chip2 o-pop">${st.items[i][0]}</span>`)}</button>`)}
+        ${put.filter(i => st.items[i][1] === b).map(i => html`<span key=${i} class="o-chip2 o-pop" style=${nb > 2 ? { padding: '5px 6px', fontSize: 12, lineHeight: '16px' } : null}>${st.items[i][0]}</span>`)}</button>`)}
     </div>
   </div>`;
   return html`<${Flow} scrollRef=${scrollRef} top=${top} foot=${html`<${Btn} cls="lg" disabled=${!!cur} onClick=${() => onNext()}>Continua<//>`}>${body}<//>`;

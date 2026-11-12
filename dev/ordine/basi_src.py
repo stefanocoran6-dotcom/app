@@ -1,4 +1,4 @@
-# Contenuti del percorso "Basi della finanza": 40 lezioni in 10 unità. Scrive basi.json, che build.sh inserisce in ordine.js.
+# Contenuti del percorso "Basi della finanza": 45 lezioni in 11 unità. Scrive basi.json, che build.sh inserisce in ordine.js.
 # Ogni lezione: pagine (titolo + testo), una frase "In breve", esercizi (scelta tra tre risposte, oppure abbina le coppie).
 # Le lezioni a passi corti (LF) alternano pagine brevi e cose da fare: stima, leve, metti a posto, metti in ordine, calcola.
 # Nel testo: **grassetto**, righe che iniziano con "• ", tabelle con |, formule tra $$ ... $$ (su una riga a sé) o \( ... \).
@@ -1547,9 +1547,312 @@ Sono le idee di tutto questo percorso, messe in fila. Nessuna richiede di preved
   ], "Sentirsi più bravi della media fa muovere troppo, e muoversi costa. Un piano scritto, automatico e a basso costo batte quasi sempre l'istinto."),
 ])
 
-# Ordine del percorso: prima i soldi di tutti i giorni (tempo, budget, debiti, protezione), poi gli investimenti (strumenti, rischio, come si investe, gli errori della testa), poi aziende ed economia.
+# Unità 11: la banca e i pagamenti. Qui le regole contano più dei conti: ogni cifra viene da una fonte (elenco in dev/ordine/FONTI_BASI.md)
+# e va ricontrollata quando la regola cambia. Regole in vigore a novembre 2026: servizi di pagamento (d.lgs. 11/2010), bonifici istantanei
+# (Reg. UE 2024/886), garanzia dei depositi (100.000 €), imposta di bollo (34,20 €), indagine della Banca d'Italia sui costi dei conti (dati 2024).
+U11 = dict(id='basi-u11', sid='basi-banca', name='La banca e i pagamenti', lessons=[
+  LF('basi-11-1', 'C/C', 'Quanto ti costa il conto', 7, [
+    G('Pensa a un conto corrente in una banca tradizionale, di quelle con lo sportello. Tra canone, carte e commissioni, quanto costa in media in un anno?',
+      "Nel 2024 la spesa media è stata di **101 €**, secondo l'indagine della Banca d'Italia. Per i conti solo online è stata di **31 €**: 70 € di differenza ogni anno, 700 € in dieci anni. Quasi nessuno sa quanto paga, perché il costo non arriva tutto insieme. Arriva a pezzi.",
+      lo=0, hi=300, step=5, truth=101, near=15),
+    P('I quattro pezzi del costo', r'''
+**Il costo di un conto non è una cifra sola: sono quattro pezzi, e ognuno si abbassa in un modo diverso.**
+
+• Il **canone**: una cifra fissa, di solito al mese. La paghi anche se il conto non lo usi.
+• Le **operazioni**: bonifici, prelievi, pagamenti. Spesso sono gratis dall'app e a pagamento allo sportello, o al bancomat di un'altra banca.
+• Le **carte**: alcune hanno un canone a parte, una volta l'anno.
+• L'**imposta di bollo**: 34,20 € l'anno che la banca incassa per lo Stato. È dovuta solo se sul conto tieni in media più di 5.000 €.
+
+[fig]
+
+I primi tre pezzi li decide la banca e cambiano da un conto all'altro. Il quarto è uguale in tutte le banche.''',
+      fig=F([('Conto con sportello', '101 €', [(101, 'Spesa media in un anno', CAP)]), ('Conto solo online', '31 €', [(31, 'Spesa media in un anno', OK)])],
+            cap="Banca d'Italia, indagine sul costo dei conti correnti nel 2024. L'imposta di bollo non è compresa.")),
+    LV('Il conto di Marta', "Ogni operazione a pagamento le costa 1,50 €. Muovi le leve e guarda quanto spende in un anno.", 'conto', dict(op=1.5, bollo=34.2, soglia=5000),
+      [dict(id='canone', label='Canone al mese', min=0, max=10, step=1, start=6, unit='€'),
+       dict(id='ops', label='Operazioni a pagamento al mese', min=0, max=8, step=1, start=4, unit=''),
+       dict(id='giac', label='Giacenza media sul conto', min=1000, max=10000, step=500, start=7000, unit='€')],
+      [dict(label="Porta il costo sotto 100 € l'anno", cond=[['costo', '<', 100]], hint='Canone e operazioni si pagano ogni mese: ogni euro al mese fa 12 € in un anno.'),
+       dict(label='Ora scendi sotto 31 €, la media dei conti online', cond=[['costo', '<', 31]], hint='Finché la giacenza media supera 5.000 €, il bollo da solo fa 34,20 €.')],
+      "Tre leve, tre mosse: un canone più basso, le operazioni fatte dal canale gratuito, una giacenza media entro i 5.000 €. L'ultima non vuol dire avere meno soldi: vuol dire non lasciarli tutti fermi sul conto di tutti i giorni."),
+    P('Conta la media, non il picco', r'''
+La soglia del bollo non guarda il saldo di un giorno. Guarda la **giacenza media**: si sommano i saldi di tutti i giorni del periodo e si divide per il numero dei giorni.
+
+$$\text{giacenza media} = \frac{\text{somma dei saldi}}{\text{numero dei giorni}}$$
+
+Il periodo è quello dell'estratto conto, spesso un trimestre. Se in quel trimestre la media supera 5.000 €, paghi la quota di quel trimestre: circa 8,55 €, un quarto di 34,20 €.
+
+Due dettagli che pochi conoscono.
+
+• Se hai più conti nella stessa banca, le giacenze **si sommano**. E superata la soglia il bollo è dovuto su ciascun conto.
+• Sul **conto deposito** il bollo funziona in un altro modo: è lo 0,2% l'anno della somma, senza soglia. Su 2.000 € sono 4 €.
+
+Lasciare molti soldi fermi sul conto di tutti i giorni costa quindi due volte: il bollo, e gli interessi a cui rinunci.'''),
+    N(r'''
+La banca di Piero manda l'estratto conto ogni tre mesi. In questo trimestre sul conto ci sono stati:
+
+• 7.500 € per un mese
+• 3.000 € per gli altri due mesi
+
+Quanto vale la giacenza media del trimestre? Per semplicità conta i tre mesi come se fossero lunghi uguali.''', 4500, '€',
+      r"\(\dfrac{7.500 + 3.000 + 3.000}{3} =\) **4.500 €**. È sotto 5.000 €: per questo trimestre il bollo non è dovuto, anche se per un mese sul conto c'erano 7.500 €. Conta la media, non il picco."),
+    P('Tre strumenti che quasi nessuno usa', r'''
+**Sapere quanto hai pagato.** Una volta l'anno la banca ti manda il **Riepilogo delle spese**: tutte le spese del conto sommate, voce per voce. È lì che trovi la cifra vera.
+
+**Confrontare prima di scegliere.** Ogni conto ha un Documento informativo sulle spese, fatto allo stesso modo in tutte le banche: due conti si confrontano mettendo i due fogli uno accanto all'altro.
+
+**Cambiare banca senza fare niente.** Il trasferimento lo chiedi alla banca nuova: è lei a farsi mandare dalla vecchia saldo, addebiti e bonifici ricorrenti. Non costa nulla e deve finire entro 12 giorni lavorativi.
+
+C'è poi una voce che conviene evitare: andare **in rosso** senza un accordo con la banca. Oltre agli interessi, a ogni sconfinamento può scattare una commissione fissa: in media 16 € nel 2024. Ne sei esente una volta a trimestre, se lo sconfinamento è piccolo e breve: fino a 500 € e per non più di 7 giorni.'''),
+    Q('Senza un accordo con la banca, il conto di Luca va in rosso di 40 € per tre giorni. È la prima volta in questo trimestre. Che cosa paga?', ['Interessi e commissione fissa', 'Solo gli interessi', 'Niente'], 1,
+      'Di norma chi sconfina paga gli interessi e una commissione fissa. Ma uno sconfinamento fino a 500 €, che dura al massimo 7 giorni, una volta a trimestre è esente dalla commissione. Gli interessi sui 40 € restano dovuti: per tre giorni sono pochi centesimi.'),
+    Q('Vuoi cambiare banca e portarti dietro saldo, bollette e accredito dello stipendio. A chi lo chiedi?', ['Alla banca nuova', 'Alla banca vecchia', "Alla Banca d'Italia"], 0,
+      'Il trasferimento si chiede alla **banca nuova**: è lei a occuparsi di tutto con la vecchia, entro 12 giorni lavorativi e senza spese. Se sfora ti spetta un indennizzo. Il conto vecchio viene chiuso solo se lo chiedi tu nel modulo.'),
+    Q('Chiara ha due conti correnti nella stessa banca: su uno tiene in media 3.500 €, sull\'altro 2.500 €. Paga l\'imposta di bollo?', ['No: nessuno dei due supera 5.000 €', 'Sì, ma solo sul conto più grande', 'Sì, su tutti e due: insieme superano 5.000 €'], 2,
+      r"Per la soglia contano insieme i conti che la stessa persona ha nella stessa banca: \(3.500 + 2.500 = 6.000\) €, più di 5.000 €. E superata la soglia il bollo è dovuto su ognuno dei due: \(34{,}20 \times 2 =\) **68,40 €** l'anno."),
+  ], 'Il costo del conto ha quattro pezzi: canone, operazioni, carte, bollo. Il bollo scatta sopra 5.000 € di giacenza media. Il Riepilogo delle spese ti dice quanto hai pagato davvero.'),
+
+  LF('basi-11-2', 'CARTE', 'Debito, credito, prepagata', 7, [
+    G("Arrivi in hotel e alla reception ti chiedono una carta a garanzia: bloccano 300 €. Dai la tua carta di debito. Che cosa succede a quei 300 €?",
+      "Si chiama **pre-autorizzazione**. I soldi restano tuoi ma sono bloccati, e lo sblocco può richiedere giorni anche dopo che sei ripartito. Con una carta di debito il blocco cade sui soldi del conto. Con una carta di credito cade sul tetto di spesa della carta, e il conto non se ne accorge. È una delle differenze che non si vedono finché non servono.",
+      options=['Escono dal conto e tornano alla partenza', "Restano sul conto, ma non li puoi usare finché l'hotel non li sblocca", 'Niente: è solo una formalità'], ans=1),
+    P('Tre carte, tre momenti', r'''
+**Le tre carte si distinguono per una cosa sola: il momento in cui i soldi escono dalle tue tasche.**
+
+| Carta | Paghi | Limite |
+|---|---|---|
+| Debito | subito | i soldi sul conto |
+| Credito | il mese dopo | un tetto mensile |
+| Prepagata | prima | quello che carichi |
+
+Con la **carta di debito** paghi con soldi tuoi, che lasciano il conto quasi subito.
+
+Con la **carta di credito** paghi con soldi che la banca ti anticipa fino a un tetto, il **plafond**. Il mese dopo li restituisci tutti insieme, senza interessi: è il pagamento **a saldo**.
+
+La **prepagata** non è legata al conto: ci carichi una cifra e spendi quella.
+
+Da qui viene anche che cosa è esposto se la carta finisce in mani sbagliate: con il debito il conto, con il credito il plafond, con la prepagata solo quello che c'è sopra.'''),
+    BK('Quale carta ha più senso?', ['Debito', 'Credito', 'Prepagata'], [
+      ('La spesa di tutti i giorni', 0, 'I soldi escono subito dal conto: vedi sempre quanto ti resta.'),
+      ("La cauzione per un'auto a noleggio", 1, 'Il blocco cade sul plafond e non sui soldi del conto. Molti noleggi accettano solo carte di credito.'),
+      ('Un acquisto su un sito che non conosci', 2, 'Se qualcosa va storto è esposto solo quello che hai caricato, non il conto.'),
+      ('Un prelievo di contanti al bancomat', 0, 'Con la carta di credito il prelievo è un piccolo prestito, e paga una commissione a parte.'),
+      ('La paghetta di un figlio di 14 anni', 2, 'La carichi tu, e non può spendere più di quello che c\'è sopra.'),
+      ('Una spesa grossa da pagare il mese dopo', 1, 'La carta di credito a saldo addebita il mese dopo, senza interessi.')],
+      after='Non esiste la carta migliore: ognuna sposta il momento in cui escono i soldi, e quello che metti a rischio.'),
+    P('Dove la carta di credito costa', r'''
+Usata a saldo, la carta di credito non costa interessi. I costi arrivano da tre punti che è facile non vedere.
+
+• **Le rate.** Se invece di restituire tutto il mese dopo scegli di pagare a rate, la carta diventa **revolving**: sul debito che resta paghi interessi, spesso molto alti.
+• **Il contante.** Prelevare con la carta di credito non è un prelievo normale: è un **anticipo di contante**, cioè un piccolo prestito, e ha una commissione a parte. Con una commissione del 4%, per esempio, 250 € prelevati ne costano 10.
+• **Il canone.** Molte carte di credito hanno un costo fisso ogni anno.
+
+Regola pratica: la carta di credito conviene se la usi a saldo e non ci prelevi mai contanti.'''),
+    P("All'estero: in che valuta paghi?", r'''
+Fuori dall'area dell'euro, il terminale del negozio o il bancomat spesso ti fanno una domanda: vuoi pagare nella valuta del posto, o direttamente in euro?
+
+Sembra una gentilezza, ma è un servizio a pagamento.
+
+• Se scegli gli **euro**, il cambio lo decide chi gestisce il terminale, e ci aggiunge un suo margine.
+• Se scegli la **valuta del posto**, il cambio lo fa il circuito della tua carta. La tua banca aggiunge la sua commissione, che trovi nel contratto.
+
+Di solito la seconda strada costa meno. Nell'Unione europea chi ti propone gli euro deve mostrarti prima il ricarico che applica, e tu hai sempre il diritto di rifiutare.
+
+Lo stesso vale quando prelevi a un bancomat all'estero.'''),
+    N(r'''
+A Londra il conto del ristorante è di 100 sterline. Il terminale ti mostra due scelte:
+
+• pagare 100 sterline
+• pagare 129 €
+
+Se scegli le sterline, il circuito della tua carta le converte a 1,20 € per sterlina e la tua banca aggiunge una commissione del 2,5%. Quanti euro risparmi scegliendo le sterline?''', 6, '€',
+      r'In sterline: \(100 \times 1{,}20 = 120\) €, più la commissione del 2,5%, cioè 3 €. In tutto 123 €. In euro il terminale chiedeva 129 €: \(129 - 123 =\) **6 €** in più per lo stesso pranzo. È il margine di chi gestisce il terminale.'),
+    Q('Che differenza c\'è tra pagare a saldo e pagare a rate (revolving) con una carta di credito?', ['A saldo restituisci tutto il mese dopo senza interessi, a rate paghi interessi sul debito che resta', 'A saldo i soldi escono subito dal conto, a rate il mese dopo', 'Nessuna: sono due nomi della stessa cosa'], 0,
+      'A saldo la banca ti anticipa le spese del mese e le addebita tutte insieme il mese dopo, senza interessi. Con il rimborso a rate il debito resta aperto e ogni mese produce interessi, spesso alti.'),
+    Q("A New York un bancomat ti chiede se vuoi l'addebito in dollari o in euro. Di solito che cosa conviene?", ['In euro: vedi subito la cifra esatta', 'In dollari: il cambio lo fa il circuito della tua carta', 'È uguale: il cambio è lo stesso'], 1,
+      "Se scegli gli euro, il cambio lo decide chi gestisce il bancomat, con un suo margine. Scegliendo la valuta del posto, il cambio lo fa il circuito della tua carta, e di solito costa meno. Vedere subito la cifra in euro è comodo, ma quella comodità si paga."),
+    Q("Per un'auto a noleggio devi lasciare una cauzione di 500 €. Perché in questo caso è più comoda la carta di credito?", ['Perché la cauzione costa meno', 'Perché non serve il PIN', 'Perché il blocco cade sul plafond e non sui soldi del conto'], 2,
+      'La cauzione è una pre-autorizzazione: i soldi non escono, ma restano bloccati per giorni. Con la carta di debito quei 500 € spariscono dal saldo che puoi usare. Con la carta di credito si riduce solo il plafond.'),
+  ], 'Debito: i soldi escono subito. Credito: il mese dopo, e a rate diventa cara. Prepagata: è esposto solo quello che carichi. All\'estero scegli la valuta del posto.'),
+
+  LF('basi-11-3', 'IBAN', 'Bonifici, IBAN e addebiti diretti', 7, [
+    G('Venerdì sera alle 22 ordini dall\'app un bonifico normale, non istantaneo. Entro quando, al più tardi, i soldi devono arrivare alla banca di chi li riceve?',
+      "Ogni banca ha un **orario limite**: un ordine che arriva dopo vale come ricevuto il giorno lavorativo seguente, cioè lunedì. Da lì la banca ha tempo fino alla fine del giorno lavorativo successivo: **martedì**. Sabato e domenica non contano. Con un **bonifico istantaneo** gli stessi soldi arrivano in dieci secondi, anche di notte e la domenica.",
+      options=['Sabato', 'Lunedì', 'Martedì'], ans=2),
+    P('Due velocità', r'''
+**Un bonifico sposta soldi dal tuo conto a un altro. Oggi ha due velocità, e per legge la più veloce non può costare di più.**
+
+| Bonifico | Ordinario | Istantaneo |
+|---|---|---|
+| Arriva | entro un giorno lavorativo | in 10 secondi |
+| Quando | nei giorni lavorativi | sempre |
+| Si ferma? | a volte, finché non parte | no |
+
+Dal 2025, nei Paesi dell'euro, ogni banca deve offrire il **bonifico istantaneo** e non può farlo pagare più di quello ordinario.
+
+La velocità ha un rovescio. Dopo dieci secondi i soldi sono sul conto dell'altro e non si torna indietro: per riaverli serve che sia lui a restituirli. Per questo l'istantaneo va bene con chi conosci, meno con uno sconosciuto.
+
+Hai anche un diritto poco noto: puoi chiedere alla banca di fissare un **tetto** ai tuoi bonifici istantanei, al giorno o per singola operazione. Se qualcuno entra nel tuo conto, con un istantaneo più di quello non esce.'''),
+    G("Stai preparando un bonifico e sbagli a battere una cifra dell'IBAN. Che cosa succede?",
+      "L'**IBAN** è l'indirizzo del conto, e contiene due cifre di controllo calcolate su tutte le altre. Se sbagli una cifra il conto non torna, e la banca rifiuta l'IBAN prima ancora che il bonifico parta. L'errore davvero pericoloso è un altro: un IBAN scritto giusto, ma di un'altra persona. Quello passa. Per anni, infatti, la banca non ha guardato il nome: guardava solo l'IBAN.",
+      options=['I soldi finiscono sul conto di uno sconosciuto', "La banca rifiuta l'IBAN prima che il bonifico parta", 'Il bonifico parte e torna indietro dopo qualche giorno'], ans=1),
+    P('Il controllo del nome', r'''
+**Dal 9 ottobre 2025 la banca non guarda più solo l'IBAN: controlla anche il nome.**
+
+Prima che tu confermi un bonifico fa la **verifica del beneficiario**: confronta il nome che hai scritto con quello a cui è intestato il conto. È gratis e vale per tutti i bonifici in euro. Gli esiti possibili sono quattro:
+
+• il nome **corrisponde**;
+• corrisponde **in parte**, e la banca ti mostra il nome giusto;
+• **non corrisponde**;
+• verifica **non possibile**.
+
+Puoi confermare in ogni caso. Ma se ignori un avviso e i soldi finiscono sul conto sbagliato, la responsabilità è tua.
+
+C'è poi una regola sull'IBAN che molti ignorano: un IBAN di un altro Paese europeo vale quanto uno italiano. Nessuna azienda può rifiutarlo per pagarti lo stipendio o per addebitarti una bolletta.'''),
+    Q("Un fornitore ti scrive per email che ha cambiato banca e ti manda il nuovo IBAN. Prepari il bonifico e la banca ti avvisa: il nome non corrisponde. Che cosa fai?", ["Confermo: l'IBAN è valido, quindi il bonifico arriva", 'Lo rifaccio come istantaneo, così arriva subito', 'Mi fermo e chiamo il fornitore a un numero che conosco già'], 2,
+      "È lo schema di una truffa molto diffusa: qualcuno si inserisce nella corrispondenza e sostituisce l'IBAN. Un IBAN valido dice solo che quel conto esiste, non di chi è. Chiama il fornitore a un numero che avevi già, non a quello scritto nell'email. Con un istantaneo, poi, i soldi non tornerebbero indietro."),
+    P("L'addebito diretto: quando preleva l'altro", r'''
+Con un bonifico sei tu a **spingere** i soldi. Con un **addebito diretto**, quello di bollette, rate e abbonamenti, è l'azienda a **tirarli** dal tuo conto, perché le hai firmato un permesso: il mandato.
+
+È comodo, ma stai dando a un altro le chiavi. Per questo hai tre protezioni.
+
+• **8 settimane.** Per un addebito in euro che avevi autorizzato puoi chiedere il rimborso alla tua banca entro 8 settimane, senza spiegare il motivo. La banca ha 10 giorni lavorativi per rimborsare o dirti perché no.
+• **13 mesi.** Se l'addebito non l'avevi mai autorizzato, il tempo sale a 13 mesi.
+• **Limiti e blocchi.** Puoi chiedere alla banca di fissare un importo massimo, di bloccare una certa azienda, o di accettare addebiti solo da quelle che indichi tu.
+
+Attenzione: il rimborso non cancella il debito. Se la bolletta era giusta, l'azienda può chiederti comunque di pagarla.'''),
+    BK('Entro quando puoi chiedere i soldi indietro alla banca?', ['8 settimane', '13 mesi', 'Non è previsto'], [
+      ('La bolletta addebitata è il doppio del solito', 0, "L'addebito era autorizzato da un mandato: hai 8 settimane, e non devi spiegare il motivo."),
+      ('Un addebito da una società mai autorizzata', 1, 'Senza un mandato firmato da te non è autorizzato: hai 13 mesi.'),
+      ('Un bonifico istantaneo a un venditore sparito', 2, "L'hai ordinato tu, e la banca lo ha solo eseguito. Resta la denuncia, non un rimborso dalla banca."),
+      ('Una palestra che non usi più ti preleva 30 €', 0, "Il mandato c'era: valgono le 8 settimane. Poi però il contratto va disdetto."),
+      ("Un bonifico confermato ignorando l'avviso sul nome", 2, "Hai ignorato l'avviso: la banca può solo provare a farsi restituire i soldi, senza garanzie."),
+      ('Un addebito attivato da un altro usando il tuo IBAN', 1, 'Il permesso non lo hai dato tu: non è autorizzato, hai 13 mesi.')],
+      after='Se a prelevare è un altro, hai tempo per farti ridare i soldi. Se li hai spinti tu, tornano solo se chi li ha ricevuti li restituisce.'),
+    Q("Hai un conto con IBAN tedesco. Il tuo datore di lavoro dice che può accreditare lo stipendio solo su un IBAN italiano. Ha ragione?", ['No: un IBAN di un altro Paese europeo vale quanto uno italiano', 'Sì: per lo stipendio serve un IBAN italiano', "Sì, ma solo se l'azienda è piccola"], 0,
+      "Per bonifici e addebiti in euro le regole europee vietano di rifiutare un IBAN solo perché è di un altro Paese dell'area. Vale per stipendi, pensioni, bollette e rimborsi."),
+    Q('Perché un bonifico istantaneo chiede più attenzione di uno ordinario?', ['Perché per legge costa di più', 'Perché dopo pochi secondi non si può più fermare', 'Perché funziona solo tra clienti della stessa banca'], 1,
+      "Costa come un bonifico ordinario e funziona tra banche diverse. La differenza è il tempo: in dieci secondi i soldi sono sul conto dell'altro, e da lì tornano solo se è lui a restituirli."),
+  ], "L'istantaneo arriva in 10 secondi e non si ferma: guarda l'esito della verifica del nome prima di confermare. Addebiti diretti: 8 settimane per il rimborso, 13 mesi se non li avevi autorizzati."),
+
+  LF('basi-11-4', '100k', 'Se la banca fallisce', 7, [
+    G('Hai 130.000 € su un conto corrente e la banca fallisce. Quanti di quei soldi ti restituisce il fondo di garanzia dei depositi?',
+      "Il **fondo di garanzia** rimborsa fino a **100.000 €** per ogni persona e per ogni banca, di norma entro 7 giorni lavorativi. Gli altri 30.000 € non spariscono, ma entrano nella procedura di fallimento: puoi riaverne una parte, e ci vogliono anni. La regola è la stessa in tutta l'Unione europea. Sono i dettagli a cambiare il risultato.",
+      lo=0, hi=130000, step=5000, truth=100000, near=5000),
+    P('Per persona e per banca', r'''
+**Il limite di 100.000 € non vale per ogni conto: vale per persona e per banca.**
+
+Da qui vengono tre conseguenze poco intuitive.
+
+• **Più conti nella stessa banca si sommano.** Con 90.000 € sul conto corrente e 20.000 € sul conto deposito della stessa banca, i soldi protetti sono 100.000 €, non 110.000 €.
+• **Banche diverse, limiti diversi.** Gli stessi 110.000 € divisi tra due banche sono protetti tutti.
+• **Un conto cointestato si divide.** Se è intestato a due persone, metà conta per te e metà per l'altro, e ognuno ha il suo limite. La tua metà si somma agli altri conti che hai in quella banca.
+
+[fig]
+
+Attenzione ai nomi: due marchi diversi possono essere la stessa banca. Conta la banca scritta nel contratto.''',
+      fig=F([('Tutto in una banca', '110.000 €', [(100000, 'Protetti', OK, '100.000 €'), (10000, 'Fuori', INT, '10.000 €')]), ('Diviso tra due banche', '110.000 €', [(110000, 'Protetti', OK, '110.000 €')])])),
+    LV('Metti i soldi al riparo', 'In banca A hai un conto tuo e uno cointestato con tua sorella. Puoi aprirne uno in banca B.', 'garanzia', dict(lim=100000),
+      [dict(id='a', label='Conto tuo, banca A', min=0, max=150000, step=10000, start=90000, unit='€'),
+       dict(id='co', label='Cointestato in due, banca A', min=0, max=200000, step=10000, start=100000, unit='€'),
+       dict(id='b', label='Conto tuo, banca B', min=0, max=150000, step=10000, start=0, unit='€')],
+      [dict(label='Azzera i soldi fuori dalla garanzia, tenendo almeno 140.000 € tuoi', cond=[['fuori', '<=', 0], ['tuoi', '>=', 140000]], hint='In banca A la tua parte è il tuo conto più metà del cointestato. Sposta in banca B quello che supera 100.000 €.'),
+       dict(label='Ora arriva a 200.000 € tuoi, tutti protetti', cond=[['fuori', '<=', 0], ['tuoi', '>=', 200000]], hint='Servono 100.000 € di parte tua in banca A e 100.000 € in banca B.')],
+      'Con due banche il massimo protetto è 200.000 €: per andare oltre serve una terza banca. E del conto cointestato conta solo la tua metà.'),
+    P('Che cosa è coperto, e che cosa no', r'''
+La garanzia copre i **depositi**: conti correnti, conti deposito, libretti di risparmio, assegni circolari.
+
+Non copre quello che deposito non è. E qui i casi sono molto diversi tra loro.
+
+• **I titoli che la banca custodisce per te**, come titoli di Stato, quote di fondi, azioni di altre società. Non hanno bisogno della garanzia: sono tuoi, non della banca, e restano fuori dal fallimento. Lo stesso vale per una cassetta di sicurezza.
+• **Le obbligazioni e le azioni della banca stessa.** Se hai le sue **obbligazioni** le hai prestato dei soldi. Se hai le sue **azioni** ne sei socio. In una crisi gli azionisti sono i primi a perdere, e le obbligazioni possono essere ridotte o trasformate in azioni.
+• **La parte dei depositi oltre 100.000 €.** Non è garantita, ma è l'ultima a essere toccata: prima vengono azionisti e obbligazionisti.
+
+Quindi la domanda giusta non è solo quanto hai in banca, ma che cosa hai.'''),
+    BK('La banca fallisce. Che cosa succede a...', ['Garantito', 'Resta tuo', 'A rischio'], [
+      ('Il saldo del conto corrente', 0, 'È un deposito: garantito fino a 100.000 €.'),
+      ('Un conto deposito vincolato', 0, 'Anche questo è un deposito. Si somma agli altri conti che hai in quella banca.'),
+      ('Titoli di Stato nel deposito titoli', 1, 'La banca li custodisce, ma sono tuoi: non entrano nel fallimento.'),
+      ('Obbligazioni emesse dalla banca stessa', 2, 'Sono un prestito che hai fatto alla banca: possono essere ridotte o trasformate in azioni.'),
+      ('Azioni della banca stessa', 2, 'Sei socio della banca: gli azionisti sono i primi a perdere.'),
+      ('Quote di un fondo nel deposito titoli', 1, 'Come i titoli di Stato: sono tue, la banca le custodisce soltanto.'),
+      ('La parte del conto oltre 100.000 €', 2, 'Sopra il limite la garanzia non arriva: quei soldi entrano nella procedura di fallimento.')],
+      after='I depositi sono garantiti fino al limite. I titoli emessi da altri restano tuoi. Quello che ha emesso la banca segue la sorte della banca.'),
+    P('Tre casi da conoscere', r'''
+**Banche di altri Paesi europei.** Molte banche online lavorano in Italia con la licenza di un altro Paese dell'Unione. I tuoi depositi sono garantiti dal fondo di quel Paese, con lo stesso limite di 100.000 €.
+
+**Somme alte per poco tempo.** Hai venduto casa, incassato una liquidazione o un risarcimento, e per qualche mese sul conto c'è molto più di 100.000 €. Per nove mesi dall'accredito quelle somme sono protette anche oltre il limite.
+
+**App e carte che non sono banche.** Alcuni conti e alcune carte prepagate sono di **istituti di pagamento** o di moneta elettronica, che banche non sono. Lì il fondo di garanzia non c'entra. La tutela è un'altra: l'istituto deve tenere i soldi dei clienti separati dai propri, così restano dei clienti anche se l'istituto fallisce.
+
+Per sapere chi hai davanti guarda il contratto, oppure cerca il nome negli albi sul sito della Banca d'Italia.'''),
+    Q('Luca ha 80.000 € sul conto corrente e 40.000 € su un conto deposito, nella stessa banca. Se la banca fallisce, quanto gli rimborsa il fondo di garanzia?', ['120.000 €', '100.000 €', '80.000 €'], 1,
+      r"I conti nella stessa banca si sommano: \(80.000 + 40.000 = 120.000\) €. Il limite è **100.000 €** per persona e per banca: i 20.000 € in più restano fuori. Con il conto deposito in un'altra banca sarebbero stati protetti tutti."),
+    Q('Anna e Paolo hanno un conto cointestato con 180.000 € e nessun altro conto in quella banca. Se la banca fallisce, quanto è protetto in tutto?', ['180.000 €', '100.000 €', '90.000 €'], 0,
+      r'Il conto cointestato si divide: \(\dfrac{180.000}{2} = 90.000\) € a testa. Ognuno ha il suo limite di 100.000 €, quindi i 90.000 € di ciascuno sono protetti. In tutto **180.000 €**.'),
+    Q("Tieni 3.000 € su una carta prepagata emessa da un istituto di moneta elettronica, che non è una banca. Se l'istituto fallisce, che cosa succede a quei soldi?", ['Li rimborsa il fondo di garanzia dei depositi', 'Sono persi', "Restano tuoi: l'istituto deve tenerli separati dai propri"], 2,
+      "Il fondo di garanzia dei depositi riguarda le banche. Gli istituti di pagamento e di moneta elettronica hanno una tutela diversa: i soldi dei clienti vanno tenuti separati dal patrimonio dell'istituto, e per questo non finiscono nel suo fallimento."),
+  ], 'Garanzia dei depositi: 100.000 € per persona e per banca. I conti nella stessa banca si sommano, il cointestato si divide. I titoli in custodia restano tuoi, quelli emessi dalla banca seguono la sua sorte.'),
+
+  LF('basi-11-5', 'PIN', 'Pagare online e con il telefono', 7, [
+    G('Perdi la carta contactless. Chi la trova non conosce il PIN. Quanto riesce a spendere, al massimo, prima che la carta lo chieda?',
+      "Ogni pagamento senza PIN può arrivare a 50 €. Ma la carta tiene il conto: dopo **150 €** in tutto, oppure dopo **cinque pagamenti** di fila (lo sceglie la banca), torna a chiedere il PIN. Nel caso peggiore sono cinque pagamenti da 50 €. E quei soldi, come vedrai, tornano quasi tutti indietro.",
+      options=['Un solo pagamento, fino a 50 €', 'Qualche centinaio di euro', "Tutto quello che c'è sul conto"], ans=1),
+    P('Due prove su tre', r'''
+**Per far partire un pagamento la banca deve essere sicura che sei tu. La regola europea chiede due prove di tipo diverso.**
+
+• Qualcosa che **sai**: il PIN, una password.
+• Qualcosa che **hai**: la carta, il telefono.
+• Qualcosa che **sei**: l'impronta, il volto.
+
+Si chiama **autenticazione forte**. Al negozio sono carta e PIN. Online sono, per esempio, l'app della banca sul tuo telefono e l'impronta.
+
+Ci sono eccezioni pensate per la comodità: i pagamenti contactless piccoli, gli acquisti online di pochi euro, gli abbonamenti dopo il primo addebito.
+
+Con il telefono è diverso. Nel portafoglio digitale non c'è il numero vero della carta, ma un numero sostitutivo che vale solo per quel dispositivo. E di norma ogni pagamento passa dallo sblocco con impronta, volto o codice. Una carta contactless persa può fare qualche pagamento senza PIN. Un telefono bloccato, no.'''),
+    P('Chi paga, se non sei stato tu', r'''
+**Se un pagamento non l'hai autorizzato tu, per legge i soldi te li ridà la banca.**
+
+• Hai **13 mesi** dall'addebito per dire alla banca che non lo riconosci. Prima lo fai, meglio è.
+• La banca deve rimborsarti subito: al più tardi entro la fine del giorno lavorativo successivo.
+• Se la carta era stata persa o rubata, può restare a tuo carico **al massimo 50 €**, e solo per quello che è successo prima della tua segnalazione. Dopo il blocco, niente.
+• Se il pagamento è passato senza autenticazione forte, la perdita è della banca.
+
+C'è un'eccezione, ed è larga: la banca può rifiutare il rimborso se dimostra una tua **colpa grave**. Gli esempi tipici: tenere il PIN scritto insieme alla carta, oppure dare a qualcuno i codici di conferma.
+
+Ed è qui che lavorano i truffatori di oggi. Non rubano la carta: convincono te a dare il via. Un pagamento confermato da te, anche con l'inganno, per la banca è un pagamento autorizzato.'''),
+    BK('Chi rischia di rimetterci?', ['Rimborsa la banca', 'Rischi di pagare tu'], [
+      ('Clonano la carta e comprano online. Tu non hai confermato niente', 0, 'Non lo hai autorizzato: la banca deve rimborsare entro il giorno lavorativo successivo alla tua segnalazione.'),
+      ('Un finto operatore della banca ti chiama e gli detti il codice arrivato per SMS', 1, 'Con quel codice il pagamento risulta confermato da te. La banca può parlare di colpa grave e rifiutare il rimborso.'),
+      ('Ti rubano il portafoglio: tre pagamenti contactless prima che tu blocchi la carta', 0, 'Sono pagamenti non autorizzati: a tuo carico restano al massimo 50 €, e niente dopo il blocco.'),
+      ('Fai un bonifico a un venditore che poi sparisce', 1, "Lo hai ordinato tu: per la banca è autorizzato. Resta la denuncia, ma non c'è un rimborso automatico."),
+      ('Tenevi il PIN su un foglietto insieme alla carta, e ti rubano tutto', 1, 'PIN e carta custoditi insieme sono il caso classico di colpa grave: la banca può lasciarti tutta la perdita.'),
+      ('Un acquisto online passa senza che ti arrivi nessuna richiesta di conferma', 0, 'Senza autenticazione forte, e senza che tu abbia fatto nulla, la perdita è della banca.')],
+      after='Il confine è uno solo: chi ha dato il via. Se non sei stato tu, rimborsa la banca. Se sei stato tu, anche ingannato, riavere i soldi è molto più difficile.'),
+    OR('Un pagamento che non hai fatto: in che ordine ti muovi?', ["Blocchi la carta dall'app", 'Dici alla banca che non lo riconosci', 'Se rifiuta il rimborso, fai reclamo scritto', "Se non basta, vai dall'Arbitro Bancario"],
+      x='Tocca le mosse dalla prima all\'ultima.',
+      after="Al reclamo su un pagamento la banca deve rispondere entro 15 giorni lavorativi. Il ricorso all'Arbitro Bancario Finanziario costa 20 €, che tornano indietro se hai ragione, e non serve un avvocato."),
+    P('Carta o bonifico: la tutela non è la stessa', r'''
+Altro caso: hai pagato tu, ma il pacco non arriva o il venditore sparisce. Non è un pagamento non autorizzato, perché lo hai fatto tu. Quello che puoi fare dipende da come hai pagato.
+
+• **Con la carta** puoi chiedere alla tua banca di aprire una contestazione presso il circuito, il **chargeback**. Non è un diritto scritto nella legge: è una regola dei circuiti delle carte, e di solito va chiesto entro 120 giorni dall'addebito.
+• **Con un bonifico** la banca ha solo eseguito il tuo ordine: non ha niente da contestare. Puoi rivalerti solo sul venditore.
+
+Per questo chi truffa chiede bonifici, ricariche di carte prepagate o buoni regalo: sono pagamenti che non tornano indietro.
+
+Regola pratica: con chi non conosci paga con la carta. E diffida di chi offre uno sconto in cambio di un bonifico.'''),
+    Q('Ti rubano la carta e, prima che tu la blocchi, spendono 400 €. Non hai colpe gravi. Quanto può restare a tuo carico, al massimo?', ['Niente, in ogni caso', '50 €', '400 €'], 1,
+      'Per i pagamenti fatti con una carta persa o rubata prima della tua segnalazione, la legge lascia a tuo carico al massimo **50 €**. Il resto lo rimborsa la banca. Dopo il blocco non rispondi più di nulla.'),
+    Q('Ti chiama la banca: c\'è un pagamento sospetto, e per bloccarlo serve il codice che ti è appena arrivato per SMS. Che cosa fai?', ['Detto il codice: serve a bloccare la frode', 'Detto solo le prime cifre', 'Riattacco e chiamo io la banca, al numero scritto sulla carta'], 2,
+      'Un codice serve ad autorizzare un pagamento, mai a bloccarlo. La banca non chiede codici al telefono, e il numero che compare sullo schermo può essere falsificato. Se detti il codice, il pagamento risulta confermato da te e il rimborso diventa difficile.'),
+    Q('Compri un telefono su un sito che non conosci. Quale pagamento ti lascia una strada per riavere i soldi, se il pacco non arriva?', ['Con la carta', 'Con un bonifico istantaneo', 'Ricaricando la carta prepagata del venditore'], 0,
+      'Con la carta puoi chiedere alla banca il chargeback, di solito entro 120 giorni. Bonifico e ricarica sono soldi che hai spinto tu: tornano solo se il venditore li restituisce.'),
+  ], 'Se non hai autorizzato tu, rimborsa la banca: a tuo carico al massimo 50 €. Se hai dato tu il via, anche ingannato, è molto più difficile. Con chi non conosci paga con la carta, non con un bonifico.'),
+])
+
+# Ordine del percorso: prima i soldi di tutti i giorni (tempo, budget, banca e pagamenti, debiti, protezione), poi gli investimenti (strumenti, rischio, come si investe, gli errori della testa), poi aziende ed economia.
 # L'ordine si può cambiare liberamente: i progressi sono legati alle chiavi delle lezioni, non alla posizione.
-UNITS = [U1, U7, U4, U8, U2, U3, U9, U10, U5, U6]
+UNITS = [U1, U7, U11, U4, U8, U2, U3, U9, U10, U5, U6]
 # ---- controlli di forma ----
 keys = [l['key'] for u in UNITS for l in u['lessons']]
 assert len(keys) == len(set(keys)), 'chiavi doppie'
@@ -1565,7 +1868,7 @@ for u in UNITS:
                 if isinstance(s.get(k), str): assert '—' not in s[k] and '"' not in s[k], (l['key'], T, k)
             if T == 'guess' and 'options' in s: assert len(s['options']) == 3 and 0 <= s['ans'] < 3, l['key']
             elif T == 'guess': assert s['min'] < s['truth'] < s['max'] and s['near'] > 0 and (s['max'] - s['min']) % s['step'] == 0, l['key']
-            elif T == 'lever': assert s['model'] in ('mutuo', 'carta', 'piano', 'obiettivo', 'budget', 'inflazione') and s['goals'] and all(g['cond'] and g['label'] for g in s['goals']) and all(x['min'] <= x['start'] <= x['max'] for x in s['sliders']), l['key']
+            elif T == 'lever': assert s['model'] in ('mutuo', 'carta', 'piano', 'obiettivo', 'budget', 'inflazione', 'conto', 'garanzia') and s['goals'] and all(g['cond'] and g['label'] for g in s['goals']) and all(x['min'] <= x['start'] <= x['max'] for x in s['sliders']), l['key']
             elif T == 'bucket': assert 2 <= len(s['buckets']) <= 3 and len(s['items']) >= 3 and all(0 <= i[1] < len(s['buckets']) for i in s['items']) and set(i[1] for i in s['items']) == set(range(len(s['buckets']))), l['key']
             elif T == 'order': assert len(s['items']) >= 3 and len(set(s['items'])) == len(s['items']), l['key']
             elif T == 'num': assert isinstance(s['ans'], (int, float)) and s['tol'] >= 0 and s['unit'] in ('€', '%', '', 'anni', 'mesi', 'quote'), l['key']
@@ -1581,6 +1884,11 @@ for u in UNITS:
                 assert len(e['options']) == 3 and 0 <= e['ans'] < 3 and len(set(e['options'])) == 3, l['key']; pos[e['ans']] += 1; nq += 1
             else:
                 assert len(e['pairs']) == 4, l['key']; nm += 1
+def _apici(o, dove=''):
+    if isinstance(o, str): assert "\\'" not in o, ('barra rovesciata davanti a un apice', dove, o[:60])
+    elif isinstance(o, list): [_apici(x, dove) for x in o]
+    elif isinstance(o, dict): [_apici(v, o.get('key') or dove) for v in o.values()]
+_apici(UNITS)
 # spazio che non va a capo tra la cifra e la valuta ("150 €" resta sulla stessa riga)
 def nb(o):
     if isinstance(o, str): return re.sub(r'(?<=\\\)) (?=[€$])', '\u00a0', re.sub(r'(?<=\d) (?=[€$])', '\u00a0', o))

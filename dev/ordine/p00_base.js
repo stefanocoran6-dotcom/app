@@ -168,7 +168,7 @@ html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(saf
 .o-bucket.ok{background:${MENTA}}
 .o-bucket.ko{background:${ROSA}}
 .o-bucket:disabled{box-shadow:none}
-.o-chip2{display:block;padding:5px 9px;background:${T_GR};border-radius:10px;font-size:13px;line-height:17px;font-weight:700;text-align:left}
+.o-chip2{display:block;padding:5px 9px;background:${T_GR};border-radius:10px;font-size:13px;line-height:17px;font-weight:700;text-align:left;overflow-wrap:anywhere}
 .o-goal{display:flex;align-items:center;gap:12px;padding:12px 14px;background:${T_GIALLO};border:2.5px solid ${INK};border-radius:18px}
 .o-goal.ok{background:${MENTA}}
 .o-term{text-decoration:underline dotted ${INK};text-decoration-thickness:2px;text-underline-offset:4px;cursor:pointer}

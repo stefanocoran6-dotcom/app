@@ -256,7 +256,8 @@ function LessonScreen({ nav, lessonKey, at, ask }) {
     const xp = first ? 10 + 10 * okN : 5 * okN; addXp(xp);
     setDone({ xp, okN, qn: qi.length, first, wrong: qi.filter(k => steps[k].k === 'q' && !(R[k] && R[k].ok)) });
   };
-  const next = () => { if (i < steps.length - 1) setI(i + 1); else finish(); };
+  // esito e scelta si azzerano insieme al cambio di passo: così una domanda può stare anche a metà lezione, seguita da una pagina
+  const next = () => { if (i < steps.length - 1) { setSel(null); setFb(null); setI(i + 1); } else finish(); };
   useEffect(() => { if (!steps.length) finish({}); }, []);
   // "Chiedi a Rally": la chat conosce la pagina (o la domanda) che hai davanti. Una chat per pagina, che si riapre.
   const askHere = () => {
@@ -322,7 +323,7 @@ function LessonScreen({ nav, lessonKey, at, ask }) {
     foot = html`<div class="o-rowf" style="gap:12px">${l.kind === 'los' && calcBtn}<div class="o-grow">${cs && tab === 'case'
       ? html`<${Btn} cls="lg" onClick=${() => setTab('ask')}>Vai alla domanda<//>` : html`<${Btn} cls="lg" disabled=${sel == null || locked} onClick=${check}>Controlla<//>`}</div></div>`;
   }
-  const over = fb === 'ok' ? html`<${FeedbackSheet} ok=${true} q=${st.q} xp=${isDone(l.key) ? 5 : 10} onNext=${next}/>`
+  const over = st.k !== 'q' ? null : fb === 'ok' ? html`<${FeedbackSheet} ok=${true} q=${st.q} xp=${isDone(l.key) ? 5 : 10} onNext=${next}/>`
     : fb === 'ko' ? html`<${FeedbackSheet} ok=${false} q=${st.q} left=${left} onNext=${next}/>`
     : fb === 'limit' ? html`<${LimitSheet} onPro=${() => { startPro(); setLeft(null); setFb('ko'); }} onSkip=${next}/>` : null;
   const askBtn = st.k === 'page' || st.k === 'recap' || st.k === 'q' ? html`<${IBtn} icon=${PathIco(D_TABS.coach, 22, 2.4)} onClick=${askHere} label="Chiedi a Rally"/>` : null;
