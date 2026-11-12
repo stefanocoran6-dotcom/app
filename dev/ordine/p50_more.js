@@ -114,7 +114,7 @@ function CoachScreen({ nav }) {
       <div class="o-rowf" style="gap:8px"><button type="button" onClick=${() => newChat()} aria-label="Nuova conversazione"><${Pill}>${active ? 'Nuova chat' : 'Chiedimi tutto'}<//></button>
         ${chats.length > 0 && html`<button type="button" class="o-ib" style="width:34px;height:34px;border-radius:11px" onClick=${() => setHist(true)} aria-label="Conversazioni">${Ico(History, 17, 2.4)}</button>`}</div></div>`}>
     <${Sheet} pad=${false} style=${{ paddingTop: 18 }}>
-      ${active && Chat ? html`<div class="o-coach"><${Chat} key=${active.id} variant="page" chatId=${active.id} chats=${chats} setChats=${K.setChats} onClose=${() => {}} initialMessage=${pending && pending.id === active.id ? pending.text : null} onInitialSent=${() => setPending(null)}/></div>`
+      ${active && Chat ? html`<div class="o-coach"><${Chat} key=${active.id} variant="page" chatId=${active.id} chats=${chats} setChats=${K.setChats} onClose=${() => {}} initialMessage=${pending && pending.id === active.id ? pending.text : null} onInitialSent=${() => setPending(null)} orBack=${{ tab: 'coach', chat: active.id }}/></div>`
         : html`<div class="o-col" style="gap:10px;padding-bottom:140px"><h2 class="o-h2">Cosa vuoi capire oggi?</h2><p class="o-body o-mut" style="margin-bottom:6px">Concetti spiegati da zero, esercizi passo per passo, domande come all'esame.</p>
           ${COACH_ASK.map(t => html`<button key=${t} type="button" class="o-rowf" onClick=${() => newChat(t)} style="gap:12px;width:100%;min-height:54px;padding:8px 14px;border:2.5px solid ${INK};border-radius:18px;font-size:15px;line-height:20px;font-weight:700"><span class="o-grow">${t}</span>${PathIco(D_NEXT, 20, 2.6)}</button>`)}
           <div style="margin-top:8px"><${Btn} bg=${LILLA} onClick=${() => newChat()}>Scrivi tu la domanda<//></div></div>`}
@@ -177,20 +177,72 @@ function AlbumScreen({ nav }) {
 // ---- impostazioni ----
 function downloadData() {
   try {
-    const out = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(finlearn_|fl2_)/.test(k) && k !== 'finlearn_users') out[k] = localStorage.getItem(k); }
+    // nel file non finiscono le password degli account di prova né la chiave di OpenRouter
+    const out = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(finlearn_|fl2_)/.test(k) && k !== 'finlearn_users' && !/^finlearn_or_(key|pkce)$/.test(k)) out[k] = localStorage.getItem(k); }
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' })); a.download = `finlearn-dati-${dayKey()}.json`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   } catch (e) {}
 }
-function SettingsScreen({ nav }) {
-  const s = useS2(), set = s.settings, u = K.user || {};
-  const [sheet, setSheet] = useState(null), [nm, setNm] = useState(userName());
+// ---- AI Coach con OpenRouter: collega, scegli il modello, scollega ----
+const orModelLabel = id => { const t = id === K.FL_OR_FREE ? 'Automatico (gratis)' : K.flOrModelName(id); return t.length > 28 ? t.slice(0, 27) + '…' : t; };
+function OrSheet({ onClose }) {
+  const or = K.useFlOr(), F = K.flOR;
+  const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [paste, setPaste] = useState(false), [txt, setTxt] = useState(''), [page, setPage] = useState(null);
+  // pagina della chiave su OpenRouter: l'indirizzo si prepara prima, così il tocco apre subito la pagina
+  useEffect(() => { let on = true; if (or.on) F.keyPage().then(u => { if (on) setPage(u); }, () => {}); return () => { on = false; }; }, [or.on]);
+  const connect = async () => { setBusy(true); setErr(null); try { await F.start({ screen: 'impostazioni' }); } catch (e) { setErr(K.flOrMsg(e)); setBusy(false); } };
+  const use = async () => { setBusy(true); setErr(null); try { await F.paste(txt); setTxt(''); setPaste(false); } catch (e) { setErr(K.flOrMsg(e)); } setBusy(false); };
+  if (or.on) return html`<${BSheet} onClose=${onClose} label="OpenRouter"><div class="o-scroll" style="flex:0 1 auto"><h2 class="o-big">OpenRouter è collegato</h2>
+    <p class="o-body o-mut" style="margin-top:6px">Rally risponde con il tuo account OpenRouter. La chiave resta su questo dispositivo.</p>
+    <div class="o-row last" style="min-height:64px;gap:12px;margin-top:6px"><span class="o-grow o-col" style="gap:2px"><span class="o-t" style="font-size:15px">Solo fornitori che non tengono le domande</span><span class="o-s">Con i modelli gratis spesso non ce ne sono: Rally potrebbe non rispondere.</span></span><${Sw} on=${F.priv()} onChange=${v => F.setPriv(v)} label="Solo fornitori che non tengono le domande"/></div>
+    <div class="o-col" style="gap:10px;margin-top:10px">
+      <a class="o-btn lg flat" href=${page || 'https://openrouter.ai/keys'} target="_blank" rel="noopener noreferrer" style="background:#fff;text-decoration:none">Gestisci la chiave su OpenRouter</a>
+      <${Btn} cls="lg flat" bg=${ROSA} onClick=${() => { F.disconnect(); onClose(); }}>Scollega da questo dispositivo<//></div>
+    <p class="o-s" style="margin-top:10px">Scollegando, la chiave resta nel tuo account OpenRouter: la cancelli dalla pagina delle chiavi.</p></div><//>`;
+  return html`<${BSheet} onClose=${onClose} label="Collega OpenRouter"><div class="o-scroll" style="flex:0 1 auto"><h2 class="o-big">Collega OpenRouter</h2>
+    <div class="o-col o-body" style="gap:8px;margin-top:8px">
+      <p>Rally ti risponde con un modello AI che gira sul tuo account OpenRouter. Con i modelli gratis non paghi niente: OpenRouter mette solo un limite di domande al minuto e al giorno.</p>
+      <p>La chiave resta su questo dispositivo e le domande vanno da qui a OpenRouter, senza passare da FinLearn.</p>
+      <p>Con i modelli gratis, chi fa girare il modello può conservare le domande e usarle: non scriverci dati personali.</p></div>
+    ${err && html`<p class="o-s" role="alert" style="color:#B3261E;font-weight:700;margin-top:10px">${err}</p>`}
+    <div style="margin-top:14px"><${Btn} cls="lg" bg=${LILLA} disabled=${busy} onClick=${connect}>${busy && !paste ? 'Apro OpenRouter…' : 'Collega OpenRouter'}<//></div>
+    ${paste ? html`<div class="o-col" style="gap:10px;margin-top:14px"><input class="o-inp" type="password" value=${txt} onChange=${e => setTxt(e.target.value)} placeholder="sk-or-… oppure il codice" aria-label="Chiave o codice di OpenRouter" autocomplete="off" autocapitalize="off" spellcheck="false"/>
+      <${Btn} cls="lg flat" bg="#fff" disabled=${busy || !txt.trim()} onClick=${use}>${busy ? 'Controllo…' : 'Usa questa'}<//></div>`
+      : html`<div style="text-align:center"><button type="button" class="o-link" onClick=${() => setPaste(true)}>Ho una chiave o un codice</button></div>`}
+  </div><//>`;
+}
+function ModelSheet({ onClose }) {
+  const or = K.useFlOr(), F = K.flOR;
+  const [list, setList] = useState(null), [err, setErr] = useState(null), [all, setAll] = useState(false), [q, setQ] = useState('');
+  useEffect(() => { let on = true; F.models().then(m => { if (on) setList(m); }, e => { if (on) setErr(K.flOrMsg(e)); }); return () => { on = false; }; }, []);
+  const pick = id => { F.setModel(id); onClose(); };
+  const money = x => (x * 1e6).toLocaleString('it-IT', { maximumFractionDigits: 2 });
+  const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean), MAX = 120;
+  const shown = (list || []).filter(m => (all || m.free) && words.every(w => (m.name + ' ' + m.id).toLowerCase().includes(w)));
+  const tick = id => (or.model === id ? html`<span style="flex:none;margin-right:4px">${PathIco(D_CHECK, 22, 3)}</span>` : null);
+  return html`<${BSheet} onClose=${onClose} label="Modello"><h2 class="o-big" style="flex:none">Modello</h2>
+    <p class="o-s" style="margin-top:4px;flex:none">I modelli gratis non costano niente. Quelli a pagamento usano i crediti del tuo account OpenRouter.</p>
+    <div class="o-rowf" style="gap:8px;margin-top:12px;flex:none">${[[false, 'Gratis'], [true, 'Tutti']].map(([v, t]) => html`<button key=${t} type="button" class=${'o-chip' + (all === v ? ' on' : '')} aria-pressed=${all === v ? 'true' : 'false'} onClick=${() => setAll(v)}>${t}</button>`)}</div>
+    <input class="o-inp" value=${q} onChange=${e => setQ(e.target.value)} placeholder="Cerca un modello" aria-label="Cerca un modello" style="margin-top:10px;flex:none;height:48px"/>
+    <div class="o-scroll" style="flex:0 1 auto;max-height:52vh;margin-top:6px">
+      <${Row} title="Automatico (gratis)" sub="Ogni volta OpenRouter sceglie un modello gratis libero." onClick=${() => pick(K.FL_OR_FREE)} right=${tick(K.FL_OR_FREE)}/>
+      ${err && html`<p class="o-s" role="alert" style="color:#B3261E;font-weight:700;padding:10px 0">${err}</p>`}
+      ${!list && !err && html`<p class="o-s" style="padding:10px 0">Carico l'elenco dei modelli…</p>`}
+      ${shown.slice(0, MAX).map((m, k) => html`<${Row} key=${m.id} title=${m.name} sub=${m.free ? 'gratis' : `a pagamento: ${money(m.pin)} $ per milione di token letti, ${money(m.pout)} $ scritti`} last=${k === Math.min(shown.length, MAX) - 1} onClick=${() => pick(m.id)} right=${tick(m.id)}/>`)}
+      ${list && shown.length > MAX && html`<p class="o-s" style="padding:10px 0">Ce ne sono altri ${shown.length - MAX}: scrivi per cercarli.</p>`}
+      ${list && !shown.length && html`<p class="o-s" style="padding:10px 0">Nessun modello con questo nome.</p>`}
+    </div><//>`;
+}
+function SettingsScreen({ nav, sheet: sheet0 }) {
+  const s = useS2(), set = s.settings, u = K.user || {}, or = K.useFlOr();
+  const [sheet, setSheet] = useState(sheet0 || null), [nm, setNm] = useState(userName());
   const upd = p => s2set(x => ({ settings: Object.assign({}, x.settings, p) }));
   const flags = Object.keys(s.flags || {}).length;
   const access = u.guest ? 'Ospite' : u.provider === 'apple' ? 'Con Apple' : /^google_/.test(u.uid || '') || u.provider === 'google' ? 'Con Google' : 'Con l\'email';
   const H = t => html`<h2 class="o-h2" style="font-size:18px;margin:26px 0 2px">${t}</h2>`;
   const R = (label, value, onClick, right, last) => html`<${onClick ? 'button' : 'div'} type=${onClick ? 'button' : undefined} class=${'o-row' + (last ? ' last' : '')} style="min-height:52px;gap:10px" onClick=${onClick}>
     <span class="o-grow o-t" style="font-size:16px">${label}</span>${value != null && html`<span style="font-size:15px;font-weight:600;color:${MUT};text-align:right">${value}</span>`}${right || (onClick && PathIco(D_NEXT, 20, 2.6))}<//>`;
-  const wipe = () => { try { const uid = u.uid; ['fl2_state', 'finlearn_los_progress', 'finlearn_album', 'finlearn_album_v1', 'finlearn_activity', 'finlearn_quiz_stats', 'finlearn_exam_date', 'finlearn_data_' + uid, 'finlearn_chats_' + uid].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
+  const wipe = () => { try { const uid = u.uid; ['fl2_state', 'finlearn_los_progress', 'finlearn_album', 'finlearn_album_v1', 'finlearn_activity', 'finlearn_quiz_stats', 'finlearn_exam_date', 'finlearn_data_' + uid, 'finlearn_chats_' + uid,
+    'finlearn_or_key', 'finlearn_or_pkce', 'finlearn_or_model', 'finlearn_or_private', 'finlearn_ai_engine'].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Impostazioni</h1>`}/>`}>
     <div class="o-pad" style="padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
       ${H('Studio')}
@@ -198,6 +250,9 @@ function SettingsScreen({ nav }) {
       ${R('Promemoria', 'In arrivo', null)}
       ${R('Lingua delle spiegazioni', set.lang, () => setSheet('lang'))}
       ${R('Domande d\'esame', 'In inglese, come all\'esame', null, null, true)}
+      ${H('AI Coach')}
+      ${R('OpenRouter', or.on ? 'Collegato' : 'Da collegare', () => setSheet('or'))}
+      ${R('Modello', orModelLabel(or.model), () => setSheet('model'), null, true)}
       ${H('Account')}
       ${R('Nome', userName() || 'Aggiungi', () => setSheet('name'))}
       ${R('Accesso', access, () => (u.guest ? nav.go('salva') : setSheet('account')))}
@@ -228,8 +283,10 @@ function SettingsScreen({ nav }) {
       <div class="o-scroll" style="flex:0 1 auto;max-height:50vh">${Object.keys(s.flags || {}).map(k => { const l = lessonByKey(k.split('#')[0]); return html`<div key=${k} class="o-row" style="min-height:48px"><span class="o-grow o-t" style="font-size:15px">${l ? l.title : k}</span><span class="o-s">${l && l.code ? l.code : ''}</span></div>`; })}</div>
       <div style="margin-top:12px;flex:none"><${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set({ flags: {} }); setSheet(null); }}>Svuota l'elenco<//></div><//>`}
     ${sheet === 'priv' && html`<${BSheet} onClose=${() => setSheet(null)} label="Regole e privacy"><h2 class="o-big">Regole e privacy</h2>
-      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>I tuoi progressi, le risposte e le conversazioni sono salvati solo su questo dispositivo.</p><p>Niente pubblicità e nessun dato venduto.</p><p>FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute.</p></div>
+      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>I tuoi progressi, le risposte e le conversazioni sono salvati solo su questo dispositivo.</p><p>Se colleghi OpenRouter, le domande che fai all'AI Coach partono da qui verso OpenRouter e il fornitore del modello scelto. FinLearn non le riceve.</p><p>Niente pubblicità e nessun dato venduto.</p><p>FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute.</p></div>
       <div style="margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Ho capito<//></div><//>`}
+    ${sheet === 'or' && html`<${OrSheet} onClose=${() => setSheet(null)}/>`}
+    ${sheet === 'model' && html`<${ModelSheet} onClose=${() => setSheet(null)}/>`}
     ${sheet === 'del' && html`<${BSheet} onClose=${() => setSheet(null)} label="Elimina l'account"><h2 class="o-big">Eliminare tutto?</h2><p class="o-body o-mut" style="margin-top:6px">Cancelli da questo dispositivo progressi, figurine, punti e conversazioni. Non si può annullare.</p>
       <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Tengo tutto<//><${Btn} cls="lg flat" bg=${ROSA} onClick=${wipe}>${Ico(Trash2, 20)} Elimina account e dati<//></div><//>`}
   <//>`;

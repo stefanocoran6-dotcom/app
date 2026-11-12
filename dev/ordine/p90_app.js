@@ -4,7 +4,7 @@
 // =====================================================================================================
 const SCREENS = {
   percorso: p => html`<${PercorsoScreen} ...${p}/>`,
-  lezione: p => html`<${LessonScreen} nav=${p.nav} lessonKey=${p.key}/>`,
+  lezione: p => html`<${LessonScreen} nav=${p.nav} lessonKey=${p.key} at=${p.at} ask=${p.ask}/>`,
   testInizio: p => html`<${TestIntro} ...${p}/>`,
   testRun: p => html`<${TestRun} ...${p}/>`,
   testFine: p => html`<${TestDone} ...${p}/>`,
@@ -31,6 +31,7 @@ export function OrdineApp({ kit }) {
   useOrdFit();
   const [tab, setTab] = useState('home'), [sub, setSub] = useState('allenati'), [stack, setStack] = useState([]);
   const [calc, setCalc] = useState(false), [ai, setAi] = useState(null), [toast, setToast] = useState(null);
+  const tabRef = useRef(tab); tabRef.current = tab;
   const nav = useMemo(() => ({
     tab: id => { setStack([]); setTab(id); if (id === 'allenati') setSub('allenati'); },
     sub: id => setSub(id),
@@ -44,9 +45,25 @@ export function OrdineApp({ kit }) {
       const cq = { picked, correct: right, q: plain, opts: q.options.map(K.flPlain), topic: `${q.lesson.unit.name} · ${q.lesson.title}${picked ? ` (lo studente ha già risposto ${picked}; la risposta corretta è ${right}: puoi spiegarla apertamente)` : ''}` };
       const first = picked ? `Domanda: "${plain}"\n\nHai risposto ${picked}, la giusta è ${right}. Cosa vuoi capire? Posso spiegarti il perché, rifare i conti o darti un trucco per ricordarla.` : `Stai lavorando su:\n\n"${plain}"\n\nCome posso aiutarti?`;
       K.setChats(prev => [{ id, title: `Quiz: ${plain.slice(0, 35)}...`, createdAt: now, updatedAt: now, isQuizChat: true, quizQuestion: plain, messages: [{ role: 'assistant', content: first, timestamp: now }] }, ...prev].slice(0, 50));
-      setAi({ id, q: cq, preset: preset || null });
+      setAi({ id, q: cq, preset: preset || null, back: { tab: tabRef.current, chat: id } });
+    },
+    // chat su una pagina (o una domanda) di lezione: una sola per pagina, se c'è già si riapre
+    askAbout: ({ id, title, ctx, first, back }) => {
+      const now = new Date().toISOString();
+      if (!(K.chats || []).some(c => c.id === id)) K.setChats(prev => [{ id, title, createdAt: now, updatedAt: now, isLessonChat: true, messages: [{ role: 'assistant', content: first, timestamp: now }] }, ...prev].slice(0, 50));
+      setAi({ id, q: ctx, preset: null, back: back || null });
     }
   }), []);
+  // ritorno da OpenRouter (la pagina si è ricaricata): si riapre il punto da cui era partito il collegamento
+  useEffect(() => {
+    const go = () => {
+      const b = K.flOR && K.flOR.takeBack(); if (!b) return;
+      if (b.lesson && lessonByKey(b.lesson)) { setStack([]); setTab('home'); nav.go('lezione', { key: b.lesson, at: b.at || 0, ask: true }); }
+      else if (b.screen === 'impostazioni') { setStack([]); setTab('profilo'); nav.go('impostazioni', { sheet: 'or' }); }
+      else if (b.tab) { nav.tab(b.tab); if (b.tab === 'coach' && b.chat && (K.chats || []).some(c => c.id === b.chat)) K.setActiveChatId(b.chat); }
+    };
+    go(); window.addEventListener('fl-or', go); return () => window.removeEventListener('fl-or', go);
+  }, []);
   // primo ingresso: nome per chi usava già l'app, test di livello per chi ha detto "so già qualcosa"
   useEffect(() => {
     const st = s2get(), u = kit.user || {};
@@ -65,5 +82,5 @@ export function OrdineApp({ kit }) {
     ${toast && html`<div class="o-toast o-fade" role="status">${toast}</div>`}
   </div>
   ${calc && Calc && html`<${Calc} onClose=${() => setCalc(false)}/>`}
-  ${ai && Chat && html`<${Chat} key=${ai.id} variant="quiz" chatId=${ai.id} chats=${K.chats} setChats=${K.setChats} currentQuestion=${ai.q} initialMessage=${ai.preset} onClose=${() => setAi(null)}/>`}<//>`;
+  ${ai && Chat && html`<${Chat} key=${ai.id} variant="quiz" chatId=${ai.id} chats=${K.chats} setChats=${K.setChats} currentQuestion=${ai.q} initialMessage=${ai.preset} orBack=${ai.back} onClose=${() => setAi(null)}/>`}<//>`;
 }

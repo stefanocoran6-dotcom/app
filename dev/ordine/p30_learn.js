@@ -245,10 +245,10 @@ function CompoundWidget() {
 }
 
 // ---- la lezione: pagine, riepilogo, esercizi, e alla fine la figurina ----
-function LessonScreen({ nav, lessonKey }) {
+function LessonScreen({ nav, lessonKey, at, ask }) {
   const l = lessonByKey(lessonKey);
   const steps = useMemo(() => lessonSteps(l), [lessonKey]);
-  const [i, setI] = useState(0), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [res, setRes] = useState({}), [tab, setTab] = useState('case');
+  const [i, setI] = useState(() => clamp(at | 0, 0, Math.max(0, steps.length - 1))), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [res, setRes] = useState({}), [tab, setTab] = useState('case');
   const [matched, setMatched] = useState(false), [done, setDone] = useState(null), [left, setLeft] = useState(null);
   const scrollRef = useRef(null);
   // parole da toccare: solo nelle lezioni di base, e si spengono quando esci dalla lezione
@@ -268,6 +268,26 @@ function LessonScreen({ nav, lessonKey }) {
   };
   const next = () => { if (i < steps.length - 1) setI(i + 1); else finish(); };
   useEffect(() => { if (!steps.length) finish({}); }, []);
+  // "Chiedi a Rally": la chat conosce la pagina (o la domanda) che hai davanti. Una chat per pagina, che si riapre.
+  const askHere = () => {
+    if (!st) return;
+    const id = `lez_${l.key}_${i}`, back = { lesson: l.key, at: i, chat: id };
+    if (st.k === 'q') {
+      const plain = K.flPlain(st.q.q), picked = fb && sel != null ? L3[sel] : null, right = L3[st.q.ans];
+      return nav.askAbout({ id, back, title: 'Domanda: ' + plain.slice(0, 40),
+        first: picked ? `Domanda: "${plain}"\n\nHai risposto ${picked}, la giusta è ${right}. Cosa vuoi capire?` : `Stai lavorando su:\n\n"${plain}"\n\nTi guido io, senza dirti subito la risposta. Da dove partiamo?`,
+        ctx: { picked, correct: right, q: plain, opts: st.q.options.map(K.flPlain), topic: `${l.unit.name} · ${l.title}` } });
+    }
+    const page = st.k === 'recap' ? 'In breve' : st.title;
+    const text = st.k === 'recap' ? [...st.points.map(p => '• ' + p), ...(st.tips.length ? ['All\'esame:', ...st.tips.map(p => '• ' + p)] : [])].join('\n')
+      : [st.text, st.note ? 'In breve: ' + st.note : ''].filter(Boolean).join('\n\n');
+    const others = steps.filter((s, k) => k !== i && s.k === 'page' && s.title).map(s => s.title).join('; ');
+    nav.askAbout({ id, back, title: 'Lezione: ' + l.title,
+      first: `Stai leggendo "${page}". Cosa non ti torna? Posso spiegartelo più semplice, farti un esempio con i numeri o interrogarti.`,
+      ctx: { kind: 'lesson', title: l.title, where: [l.course && l.course.name, l.unit && l.unit.name].filter(Boolean).join(' · '), page, text: String(text).slice(0, 6000), others: others.slice(0, 800) } });
+  };
+  // ritorno da OpenRouter: la lezione si riapre alla stessa pagina, con la chat aperta
+  useEffect(() => { if (ask) askHere(); }, []);
   if (done) return html`<${LessonDone} nav=${nav} l=${l} done=${done} steps=${steps} res=${res}/>`;
   if (!st) return html`<div class="o-scr"></div>`;
   // passi interattivi (stima, leve, metti a posto, ordina, calcola): ognuno disegna il suo corpo e il suo piede
@@ -315,7 +335,8 @@ function LessonScreen({ nav, lessonKey }) {
   const over = fb === 'ok' ? html`<${FeedbackSheet} ok=${true} q=${st.q} xp=${isDone(l.key) ? 5 : 10} onNext=${next}/>`
     : fb === 'ko' ? html`<${FeedbackSheet} ok=${false} q=${st.q} left=${left} onNext=${next}/>`
     : fb === 'limit' ? html`<${LimitSheet} onPro=${() => { startPro(); setLeft(null); setFb('ko'); }} onSkip=${next}/>` : null;
-  return html`<${Flow} scrollRef=${scrollRef} top=${html`<${TopBar} onClose=${nav.back} n=${steps.length} i=${i}/>`} foot=${foot} over=${over}>${body}<//>`;
+  const askBtn = st.k === 'page' || st.k === 'recap' || st.k === 'q' ? html`<${IBtn} icon=${PathIco(D_TABS.coach, 22, 2.4)} onClick=${askHere} label="Chiedi a Rally"/>` : null;
+  return html`<${Flow} scrollRef=${scrollRef} top=${html`<${TopBar} onClose=${nav.back} n=${steps.length} i=${i} right=${askBtn}/>`} foot=${foot} over=${over}>${body}<//>`;
 }
 // lezione finita: figurina, punti, giorni di fila
 function LessonDone({ nav, l, done, steps, res }) {

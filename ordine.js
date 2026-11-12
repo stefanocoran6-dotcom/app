@@ -959,10 +959,10 @@ function CompoundWidget() {
 }
 
 // ---- la lezione: pagine, riepilogo, esercizi, e alla fine la figurina ----
-function LessonScreen({ nav, lessonKey }) {
+function LessonScreen({ nav, lessonKey, at, ask }) {
   const l = lessonByKey(lessonKey);
   const steps = useMemo(() => lessonSteps(l), [lessonKey]);
-  const [i, setI] = useState(0), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [res, setRes] = useState({}), [tab, setTab] = useState('case');
+  const [i, setI] = useState(() => clamp(at | 0, 0, Math.max(0, steps.length - 1))), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [res, setRes] = useState({}), [tab, setTab] = useState('case');
   const [matched, setMatched] = useState(false), [done, setDone] = useState(null), [left, setLeft] = useState(null);
   const scrollRef = useRef(null);
   // parole da toccare: solo nelle lezioni di base, e si spengono quando esci dalla lezione
@@ -982,6 +982,26 @@ function LessonScreen({ nav, lessonKey }) {
   };
   const next = () => { if (i < steps.length - 1) setI(i + 1); else finish(); };
   useEffect(() => { if (!steps.length) finish({}); }, []);
+  // "Chiedi a Rally": la chat conosce la pagina (o la domanda) che hai davanti. Una chat per pagina, che si riapre.
+  const askHere = () => {
+    if (!st) return;
+    const id = `lez_${l.key}_${i}`, back = { lesson: l.key, at: i, chat: id };
+    if (st.k === 'q') {
+      const plain = K.flPlain(st.q.q), picked = fb && sel != null ? L3[sel] : null, right = L3[st.q.ans];
+      return nav.askAbout({ id, back, title: 'Domanda: ' + plain.slice(0, 40),
+        first: picked ? `Domanda: "${plain}"\n\nHai risposto ${picked}, la giusta è ${right}. Cosa vuoi capire?` : `Stai lavorando su:\n\n"${plain}"\n\nTi guido io, senza dirti subito la risposta. Da dove partiamo?`,
+        ctx: { picked, correct: right, q: plain, opts: st.q.options.map(K.flPlain), topic: `${l.unit.name} · ${l.title}` } });
+    }
+    const page = st.k === 'recap' ? 'In breve' : st.title;
+    const text = st.k === 'recap' ? [...st.points.map(p => '• ' + p), ...(st.tips.length ? ['All\'esame:', ...st.tips.map(p => '• ' + p)] : [])].join('\n')
+      : [st.text, st.note ? 'In breve: ' + st.note : ''].filter(Boolean).join('\n\n');
+    const others = steps.filter((s, k) => k !== i && s.k === 'page' && s.title).map(s => s.title).join('; ');
+    nav.askAbout({ id, back, title: 'Lezione: ' + l.title,
+      first: `Stai leggendo "${page}". Cosa non ti torna? Posso spiegartelo più semplice, farti un esempio con i numeri o interrogarti.`,
+      ctx: { kind: 'lesson', title: l.title, where: [l.course && l.course.name, l.unit && l.unit.name].filter(Boolean).join(' · '), page, text: String(text).slice(0, 6000), others: others.slice(0, 800) } });
+  };
+  // ritorno da OpenRouter: la lezione si riapre alla stessa pagina, con la chat aperta
+  useEffect(() => { if (ask) askHere(); }, []);
   if (done) return html`<${LessonDone} nav=${nav} l=${l} done=${done} steps=${steps} res=${res}/>`;
   if (!st) return html`<div class="o-scr"></div>`;
   // passi interattivi (stima, leve, metti a posto, ordina, calcola): ognuno disegna il suo corpo e il suo piede
@@ -1029,7 +1049,8 @@ function LessonScreen({ nav, lessonKey }) {
   const over = fb === 'ok' ? html`<${FeedbackSheet} ok=${true} q=${st.q} xp=${isDone(l.key) ? 5 : 10} onNext=${next}/>`
     : fb === 'ko' ? html`<${FeedbackSheet} ok=${false} q=${st.q} left=${left} onNext=${next}/>`
     : fb === 'limit' ? html`<${LimitSheet} onPro=${() => { startPro(); setLeft(null); setFb('ko'); }} onSkip=${next}/>` : null;
-  return html`<${Flow} scrollRef=${scrollRef} top=${html`<${TopBar} onClose=${nav.back} n=${steps.length} i=${i}/>`} foot=${foot} over=${over}>${body}<//>`;
+  const askBtn = st.k === 'page' || st.k === 'recap' || st.k === 'q' ? html`<${IBtn} icon=${PathIco(D_TABS.coach, 22, 2.4)} onClick=${askHere} label="Chiedi a Rally"/>` : null;
+  return html`<${Flow} scrollRef=${scrollRef} top=${html`<${TopBar} onClose=${nav.back} n=${steps.length} i=${i} right=${askBtn}/>`} foot=${foot} over=${over}>${body}<//>`;
 }
 // lezione finita: figurina, punti, giorni di fila
 function LessonDone({ nav, l, done, steps, res }) {
@@ -1866,7 +1887,7 @@ function CoachScreen({ nav }) {
       <div class="o-rowf" style="gap:8px"><button type="button" onClick=${() => newChat()} aria-label="Nuova conversazione"><${Pill}>${active ? 'Nuova chat' : 'Chiedimi tutto'}<//></button>
         ${chats.length > 0 && html`<button type="button" class="o-ib" style="width:34px;height:34px;border-radius:11px" onClick=${() => setHist(true)} aria-label="Conversazioni">${Ico(History, 17, 2.4)}</button>`}</div></div>`}>
     <${Sheet} pad=${false} style=${{ paddingTop: 18 }}>
-      ${active && Chat ? html`<div class="o-coach"><${Chat} key=${active.id} variant="page" chatId=${active.id} chats=${chats} setChats=${K.setChats} onClose=${() => {}} initialMessage=${pending && pending.id === active.id ? pending.text : null} onInitialSent=${() => setPending(null)}/></div>`
+      ${active && Chat ? html`<div class="o-coach"><${Chat} key=${active.id} variant="page" chatId=${active.id} chats=${chats} setChats=${K.setChats} onClose=${() => {}} initialMessage=${pending && pending.id === active.id ? pending.text : null} onInitialSent=${() => setPending(null)} orBack=${{ tab: 'coach', chat: active.id }}/></div>`
         : html`<div class="o-col" style="gap:10px;padding-bottom:140px"><h2 class="o-h2">Cosa vuoi capire oggi?</h2><p class="o-body o-mut" style="margin-bottom:6px">Concetti spiegati da zero, esercizi passo per passo, domande come all'esame.</p>
           ${COACH_ASK.map(t => html`<button key=${t} type="button" class="o-rowf" onClick=${() => newChat(t)} style="gap:12px;width:100%;min-height:54px;padding:8px 14px;border:2.5px solid ${INK};border-radius:18px;font-size:15px;line-height:20px;font-weight:700"><span class="o-grow">${t}</span>${PathIco(D_NEXT, 20, 2.6)}</button>`)}
           <div style="margin-top:8px"><${Btn} bg=${LILLA} onClick=${() => newChat()}>Scrivi tu la domanda<//></div></div>`}
@@ -1929,20 +1950,72 @@ function AlbumScreen({ nav }) {
 // ---- impostazioni ----
 function downloadData() {
   try {
-    const out = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(finlearn_|fl2_)/.test(k) && k !== 'finlearn_users') out[k] = localStorage.getItem(k); }
+    // nel file non finiscono le password degli account di prova né la chiave di OpenRouter
+    const out = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(finlearn_|fl2_)/.test(k) && k !== 'finlearn_users' && !/^finlearn_or_(key|pkce)$/.test(k)) out[k] = localStorage.getItem(k); }
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' })); a.download = `finlearn-dati-${dayKey()}.json`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   } catch (e) {}
 }
-function SettingsScreen({ nav }) {
-  const s = useS2(), set = s.settings, u = K.user || {};
-  const [sheet, setSheet] = useState(null), [nm, setNm] = useState(userName());
+// ---- AI Coach con OpenRouter: collega, scegli il modello, scollega ----
+const orModelLabel = id => { const t = id === K.FL_OR_FREE ? 'Automatico (gratis)' : K.flOrModelName(id); return t.length > 28 ? t.slice(0, 27) + '…' : t; };
+function OrSheet({ onClose }) {
+  const or = K.useFlOr(), F = K.flOR;
+  const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [paste, setPaste] = useState(false), [txt, setTxt] = useState(''), [page, setPage] = useState(null);
+  // pagina della chiave su OpenRouter: l'indirizzo si prepara prima, così il tocco apre subito la pagina
+  useEffect(() => { let on = true; if (or.on) F.keyPage().then(u => { if (on) setPage(u); }, () => {}); return () => { on = false; }; }, [or.on]);
+  const connect = async () => { setBusy(true); setErr(null); try { await F.start({ screen: 'impostazioni' }); } catch (e) { setErr(K.flOrMsg(e)); setBusy(false); } };
+  const use = async () => { setBusy(true); setErr(null); try { await F.paste(txt); setTxt(''); setPaste(false); } catch (e) { setErr(K.flOrMsg(e)); } setBusy(false); };
+  if (or.on) return html`<${BSheet} onClose=${onClose} label="OpenRouter"><div class="o-scroll" style="flex:0 1 auto"><h2 class="o-big">OpenRouter è collegato</h2>
+    <p class="o-body o-mut" style="margin-top:6px">Rally risponde con il tuo account OpenRouter. La chiave resta su questo dispositivo.</p>
+    <div class="o-row last" style="min-height:64px;gap:12px;margin-top:6px"><span class="o-grow o-col" style="gap:2px"><span class="o-t" style="font-size:15px">Solo fornitori che non tengono le domande</span><span class="o-s">Con i modelli gratis spesso non ce ne sono: Rally potrebbe non rispondere.</span></span><${Sw} on=${F.priv()} onChange=${v => F.setPriv(v)} label="Solo fornitori che non tengono le domande"/></div>
+    <div class="o-col" style="gap:10px;margin-top:10px">
+      <a class="o-btn lg flat" href=${page || 'https://openrouter.ai/keys'} target="_blank" rel="noopener noreferrer" style="background:#fff;text-decoration:none">Gestisci la chiave su OpenRouter</a>
+      <${Btn} cls="lg flat" bg=${ROSA} onClick=${() => { F.disconnect(); onClose(); }}>Scollega da questo dispositivo<//></div>
+    <p class="o-s" style="margin-top:10px">Scollegando, la chiave resta nel tuo account OpenRouter: la cancelli dalla pagina delle chiavi.</p></div><//>`;
+  return html`<${BSheet} onClose=${onClose} label="Collega OpenRouter"><div class="o-scroll" style="flex:0 1 auto"><h2 class="o-big">Collega OpenRouter</h2>
+    <div class="o-col o-body" style="gap:8px;margin-top:8px">
+      <p>Rally ti risponde con un modello AI che gira sul tuo account OpenRouter. Con i modelli gratis non paghi niente: OpenRouter mette solo un limite di domande al minuto e al giorno.</p>
+      <p>La chiave resta su questo dispositivo e le domande vanno da qui a OpenRouter, senza passare da FinLearn.</p>
+      <p>Con i modelli gratis, chi fa girare il modello può conservare le domande e usarle: non scriverci dati personali.</p></div>
+    ${err && html`<p class="o-s" role="alert" style="color:#B3261E;font-weight:700;margin-top:10px">${err}</p>`}
+    <div style="margin-top:14px"><${Btn} cls="lg" bg=${LILLA} disabled=${busy} onClick=${connect}>${busy && !paste ? 'Apro OpenRouter…' : 'Collega OpenRouter'}<//></div>
+    ${paste ? html`<div class="o-col" style="gap:10px;margin-top:14px"><input class="o-inp" type="password" value=${txt} onChange=${e => setTxt(e.target.value)} placeholder="sk-or-… oppure il codice" aria-label="Chiave o codice di OpenRouter" autocomplete="off" autocapitalize="off" spellcheck="false"/>
+      <${Btn} cls="lg flat" bg="#fff" disabled=${busy || !txt.trim()} onClick=${use}>${busy ? 'Controllo…' : 'Usa questa'}<//></div>`
+      : html`<div style="text-align:center"><button type="button" class="o-link" onClick=${() => setPaste(true)}>Ho una chiave o un codice</button></div>`}
+  </div><//>`;
+}
+function ModelSheet({ onClose }) {
+  const or = K.useFlOr(), F = K.flOR;
+  const [list, setList] = useState(null), [err, setErr] = useState(null), [all, setAll] = useState(false), [q, setQ] = useState('');
+  useEffect(() => { let on = true; F.models().then(m => { if (on) setList(m); }, e => { if (on) setErr(K.flOrMsg(e)); }); return () => { on = false; }; }, []);
+  const pick = id => { F.setModel(id); onClose(); };
+  const money = x => (x * 1e6).toLocaleString('it-IT', { maximumFractionDigits: 2 });
+  const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean), MAX = 120;
+  const shown = (list || []).filter(m => (all || m.free) && words.every(w => (m.name + ' ' + m.id).toLowerCase().includes(w)));
+  const tick = id => (or.model === id ? html`<span style="flex:none;margin-right:4px">${PathIco(D_CHECK, 22, 3)}</span>` : null);
+  return html`<${BSheet} onClose=${onClose} label="Modello"><h2 class="o-big" style="flex:none">Modello</h2>
+    <p class="o-s" style="margin-top:4px;flex:none">I modelli gratis non costano niente. Quelli a pagamento usano i crediti del tuo account OpenRouter.</p>
+    <div class="o-rowf" style="gap:8px;margin-top:12px;flex:none">${[[false, 'Gratis'], [true, 'Tutti']].map(([v, t]) => html`<button key=${t} type="button" class=${'o-chip' + (all === v ? ' on' : '')} aria-pressed=${all === v ? 'true' : 'false'} onClick=${() => setAll(v)}>${t}</button>`)}</div>
+    <input class="o-inp" value=${q} onChange=${e => setQ(e.target.value)} placeholder="Cerca un modello" aria-label="Cerca un modello" style="margin-top:10px;flex:none;height:48px"/>
+    <div class="o-scroll" style="flex:0 1 auto;max-height:52vh;margin-top:6px">
+      <${Row} title="Automatico (gratis)" sub="Ogni volta OpenRouter sceglie un modello gratis libero." onClick=${() => pick(K.FL_OR_FREE)} right=${tick(K.FL_OR_FREE)}/>
+      ${err && html`<p class="o-s" role="alert" style="color:#B3261E;font-weight:700;padding:10px 0">${err}</p>`}
+      ${!list && !err && html`<p class="o-s" style="padding:10px 0">Carico l'elenco dei modelli…</p>`}
+      ${shown.slice(0, MAX).map((m, k) => html`<${Row} key=${m.id} title=${m.name} sub=${m.free ? 'gratis' : `a pagamento: ${money(m.pin)} $ per milione di token letti, ${money(m.pout)} $ scritti`} last=${k === Math.min(shown.length, MAX) - 1} onClick=${() => pick(m.id)} right=${tick(m.id)}/>`)}
+      ${list && shown.length > MAX && html`<p class="o-s" style="padding:10px 0">Ce ne sono altri ${shown.length - MAX}: scrivi per cercarli.</p>`}
+      ${list && !shown.length && html`<p class="o-s" style="padding:10px 0">Nessun modello con questo nome.</p>`}
+    </div><//>`;
+}
+function SettingsScreen({ nav, sheet: sheet0 }) {
+  const s = useS2(), set = s.settings, u = K.user || {}, or = K.useFlOr();
+  const [sheet, setSheet] = useState(sheet0 || null), [nm, setNm] = useState(userName());
   const upd = p => s2set(x => ({ settings: Object.assign({}, x.settings, p) }));
   const flags = Object.keys(s.flags || {}).length;
   const access = u.guest ? 'Ospite' : u.provider === 'apple' ? 'Con Apple' : /^google_/.test(u.uid || '') || u.provider === 'google' ? 'Con Google' : 'Con l\'email';
   const H = t => html`<h2 class="o-h2" style="font-size:18px;margin:26px 0 2px">${t}</h2>`;
   const R = (label, value, onClick, right, last) => html`<${onClick ? 'button' : 'div'} type=${onClick ? 'button' : undefined} class=${'o-row' + (last ? ' last' : '')} style="min-height:52px;gap:10px" onClick=${onClick}>
     <span class="o-grow o-t" style="font-size:16px">${label}</span>${value != null && html`<span style="font-size:15px;font-weight:600;color:${MUT};text-align:right">${value}</span>`}${right || (onClick && PathIco(D_NEXT, 20, 2.6))}<//>`;
-  const wipe = () => { try { const uid = u.uid; ['fl2_state', 'finlearn_los_progress', 'finlearn_album', 'finlearn_album_v1', 'finlearn_activity', 'finlearn_quiz_stats', 'finlearn_exam_date', 'finlearn_data_' + uid, 'finlearn_chats_' + uid].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
+  const wipe = () => { try { const uid = u.uid; ['fl2_state', 'finlearn_los_progress', 'finlearn_album', 'finlearn_album_v1', 'finlearn_activity', 'finlearn_quiz_stats', 'finlearn_exam_date', 'finlearn_data_' + uid, 'finlearn_chats_' + uid,
+    'finlearn_or_key', 'finlearn_or_pkce', 'finlearn_or_model', 'finlearn_or_private', 'finlearn_ai_engine'].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Impostazioni</h1>`}/>`}>
     <div class="o-pad" style="padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
       ${H('Studio')}
@@ -1950,6 +2023,9 @@ function SettingsScreen({ nav }) {
       ${R('Promemoria', 'In arrivo', null)}
       ${R('Lingua delle spiegazioni', set.lang, () => setSheet('lang'))}
       ${R('Domande d\'esame', 'In inglese, come all\'esame', null, null, true)}
+      ${H('AI Coach')}
+      ${R('OpenRouter', or.on ? 'Collegato' : 'Da collegare', () => setSheet('or'))}
+      ${R('Modello', orModelLabel(or.model), () => setSheet('model'), null, true)}
       ${H('Account')}
       ${R('Nome', userName() || 'Aggiungi', () => setSheet('name'))}
       ${R('Accesso', access, () => (u.guest ? nav.go('salva') : setSheet('account')))}
@@ -1980,8 +2056,10 @@ function SettingsScreen({ nav }) {
       <div class="o-scroll" style="flex:0 1 auto;max-height:50vh">${Object.keys(s.flags || {}).map(k => { const l = lessonByKey(k.split('#')[0]); return html`<div key=${k} class="o-row" style="min-height:48px"><span class="o-grow o-t" style="font-size:15px">${l ? l.title : k}</span><span class="o-s">${l && l.code ? l.code : ''}</span></div>`; })}</div>
       <div style="margin-top:12px;flex:none"><${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set({ flags: {} }); setSheet(null); }}>Svuota l'elenco<//></div><//>`}
     ${sheet === 'priv' && html`<${BSheet} onClose=${() => setSheet(null)} label="Regole e privacy"><h2 class="o-big">Regole e privacy</h2>
-      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>I tuoi progressi, le risposte e le conversazioni sono salvati solo su questo dispositivo.</p><p>Niente pubblicità e nessun dato venduto.</p><p>FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute.</p></div>
+      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>I tuoi progressi, le risposte e le conversazioni sono salvati solo su questo dispositivo.</p><p>Se colleghi OpenRouter, le domande che fai all'AI Coach partono da qui verso OpenRouter e il fornitore del modello scelto. FinLearn non le riceve.</p><p>Niente pubblicità e nessun dato venduto.</p><p>FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute.</p></div>
       <div style="margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Ho capito<//></div><//>`}
+    ${sheet === 'or' && html`<${OrSheet} onClose=${() => setSheet(null)}/>`}
+    ${sheet === 'model' && html`<${ModelSheet} onClose=${() => setSheet(null)}/>`}
     ${sheet === 'del' && html`<${BSheet} onClose=${() => setSheet(null)} label="Elimina l'account"><h2 class="o-big">Eliminare tutto?</h2><p class="o-body o-mut" style="margin-top:6px">Cancelli da questo dispositivo progressi, figurine, punti e conversazioni. Non si può annullare.</p>
       <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Tengo tutto<//><${Btn} cls="lg flat" bg=${ROSA} onClick=${wipe}>${Ico(Trash2, 20)} Elimina account e dati<//></div><//>`}
   <//>`;
@@ -2226,7 +2304,7 @@ export function OrdineWelcome({ auth, onAuth }) {
 // =====================================================================================================
 const SCREENS = {
   percorso: p => html`<${PercorsoScreen} ...${p}/>`,
-  lezione: p => html`<${LessonScreen} nav=${p.nav} lessonKey=${p.key}/>`,
+  lezione: p => html`<${LessonScreen} nav=${p.nav} lessonKey=${p.key} at=${p.at} ask=${p.ask}/>`,
   testInizio: p => html`<${TestIntro} ...${p}/>`,
   testRun: p => html`<${TestRun} ...${p}/>`,
   testFine: p => html`<${TestDone} ...${p}/>`,
@@ -2253,6 +2331,7 @@ export function OrdineApp({ kit }) {
   useOrdFit();
   const [tab, setTab] = useState('home'), [sub, setSub] = useState('allenati'), [stack, setStack] = useState([]);
   const [calc, setCalc] = useState(false), [ai, setAi] = useState(null), [toast, setToast] = useState(null);
+  const tabRef = useRef(tab); tabRef.current = tab;
   const nav = useMemo(() => ({
     tab: id => { setStack([]); setTab(id); if (id === 'allenati') setSub('allenati'); },
     sub: id => setSub(id),
@@ -2266,9 +2345,25 @@ export function OrdineApp({ kit }) {
       const cq = { picked, correct: right, q: plain, opts: q.options.map(K.flPlain), topic: `${q.lesson.unit.name} · ${q.lesson.title}${picked ? ` (lo studente ha già risposto ${picked}; la risposta corretta è ${right}: puoi spiegarla apertamente)` : ''}` };
       const first = picked ? `Domanda: "${plain}"\n\nHai risposto ${picked}, la giusta è ${right}. Cosa vuoi capire? Posso spiegarti il perché, rifare i conti o darti un trucco per ricordarla.` : `Stai lavorando su:\n\n"${plain}"\n\nCome posso aiutarti?`;
       K.setChats(prev => [{ id, title: `Quiz: ${plain.slice(0, 35)}...`, createdAt: now, updatedAt: now, isQuizChat: true, quizQuestion: plain, messages: [{ role: 'assistant', content: first, timestamp: now }] }, ...prev].slice(0, 50));
-      setAi({ id, q: cq, preset: preset || null });
+      setAi({ id, q: cq, preset: preset || null, back: { tab: tabRef.current, chat: id } });
+    },
+    // chat su una pagina (o una domanda) di lezione: una sola per pagina, se c'è già si riapre
+    askAbout: ({ id, title, ctx, first, back }) => {
+      const now = new Date().toISOString();
+      if (!(K.chats || []).some(c => c.id === id)) K.setChats(prev => [{ id, title, createdAt: now, updatedAt: now, isLessonChat: true, messages: [{ role: 'assistant', content: first, timestamp: now }] }, ...prev].slice(0, 50));
+      setAi({ id, q: ctx, preset: null, back: back || null });
     }
   }), []);
+  // ritorno da OpenRouter (la pagina si è ricaricata): si riapre il punto da cui era partito il collegamento
+  useEffect(() => {
+    const go = () => {
+      const b = K.flOR && K.flOR.takeBack(); if (!b) return;
+      if (b.lesson && lessonByKey(b.lesson)) { setStack([]); setTab('home'); nav.go('lezione', { key: b.lesson, at: b.at || 0, ask: true }); }
+      else if (b.screen === 'impostazioni') { setStack([]); setTab('profilo'); nav.go('impostazioni', { sheet: 'or' }); }
+      else if (b.tab) { nav.tab(b.tab); if (b.tab === 'coach' && b.chat && (K.chats || []).some(c => c.id === b.chat)) K.setActiveChatId(b.chat); }
+    };
+    go(); window.addEventListener('fl-or', go); return () => window.removeEventListener('fl-or', go);
+  }, []);
   // primo ingresso: nome per chi usava già l'app, test di livello per chi ha detto "so già qualcosa"
   useEffect(() => {
     const st = s2get(), u = kit.user || {};
@@ -2287,5 +2382,5 @@ export function OrdineApp({ kit }) {
     ${toast && html`<div class="o-toast o-fade" role="status">${toast}</div>`}
   </div>
   ${calc && Calc && html`<${Calc} onClose=${() => setCalc(false)}/>`}
-  ${ai && Chat && html`<${Chat} key=${ai.id} variant="quiz" chatId=${ai.id} chats=${K.chats} setChats=${K.setChats} currentQuestion=${ai.q} initialMessage=${ai.preset} onClose=${() => setAi(null)}/>`}<//>`;
+  ${ai && Chat && html`<${Chat} key=${ai.id} variant="quiz" chatId=${ai.id} chats=${K.chats} setChats=${K.setChats} currentQuestion=${ai.q} initialMessage=${ai.preset} orBack=${ai.back} onClose=${() => setAi(null)}/>`}<//>`;
 }

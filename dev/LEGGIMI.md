@@ -40,3 +40,15 @@ Ogni formula, anche una sola lettera usata come variabile, si scrive in LaTeX: i
 - in una formula che lega grandezze a parole va tutto in LaTeX (`\(\text{EV} = \text{equity} + \text{debito} - \text{cassa}\)`); una definizione a parole ("\(H\) = metà del periodo") resta testo.
 
 L'app spezza da sola le formule lunghe in mezzo al testo dopo `=`, `+`, `-`, `\times`, così su un telefono vanno a capo; le formule su riga a sé che sono appena più larghe dello schermo vengono rimpicciolite fino al 70%, oltre si scorrono di lato. Una formula su riga a sé conviene tenerla entro circa 35 caratteri visibili per riga, andando a capo con `aligned`.
+
+## AI Coach con OpenRouter
+
+Ogni studente collega il suo account OpenRouter: nell'app non c'è nessuna chiave e non c'è un server nostro. Il codice sta in `app.js`, nel blocco `OPENROUTER` sopra `AiChatModal`.
+
+- Collegamento (OAuth con PKCE): `flOR.start()` salva verificatore e `state` (`finlearn_or_pkce`) e apre `openrouter.ai/auth` con `callback_url` = la pagina dell'app. OpenRouter rimanda con `?code=…`: `FL_OR_BOOT` toglie subito il codice dall'indirizzo e `FlOrReturn` lo scambia con la chiave (`POST /api/v1/auth/keys` con il verificatore). La chiave sta in `finlearn_or_key`, solo su quel dispositivo; uscire dall'account la toglie.
+- Dove tornare: `start()` riceve dove si era (`{ tab, chat }`, `{ lesson, at, chat }` o `{ screen: 'impostazioni' }`) e `p90_app.js` lo riapre quando torna la chiave.
+- Domande: `flOR.chat()` manda a `/api/v1/chat/completions` con `stream: true` e legge la risposta a pezzi. Il modello di partenza è `openrouter/free` (OpenRouter sceglie un modello gratis); lo studente può sceglierne un altro in Impostazioni → AI Coach → Modello (`finlearn_or_model`). Con l'interruttore "Solo fornitori che non tengono le domande" si aggiunge `provider: { data_collection: 'deny' }`.
+- Risposte: `flAiTidy` porta il markdown dei modelli alle regole di `RichText` (titoli → grassetto, trattini → •, `$…$` → `\(…\)`, `\[…\]` → `$$…$$`, via HTML e link cliccabili). Le istruzioni del modello (`getSystemPrompt` + `FL_AI_FORMAT`) chiedono le stesse regole delle formule scritte sopra.
+- Errori: `flOrMsg` li spiega in italiano (limite dei modelli gratis, crediti, privacy, modello non disponibile); con una chiave non più valida (401) l'app la toglie e torna "Collega OpenRouter".
+- Nelle lezioni il tasto in alto a destra apre la chat sulla pagina che si sta leggendo (una chat per pagina, che si riapre). Nel file di "Scarica i miei dati" la chiave non c'è.
+- `sw.js` non mette mai in cache le richieste a openrouter.ai, né le pagine con parametri (il ritorno con `?code=`).
