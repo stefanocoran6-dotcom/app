@@ -28,7 +28,13 @@ function SfideScreen({ nav }) {
       <div class="o-col" style="gap:4px"><div style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">${rival} ti ha sfidato</div><div class="o-body o-mut">5 domande dai tuoi percorsi.<br/>Vince chi ne fa giuste di più.</div></div>
       <div class="o-rowf" style="gap:10px;width:100%"><div class="o-grow"><${Btn} bg=${PESCA} onClick=${() => nav.go('sfida', { rival })}>Accetta la sfida<//></div>
         <button type="button" class="o-btn flat" style="width:auto;background:#fff" onClick=${() => setSkip(skip + 1)}>Dopo</button></div>
-    </div></div>
+    </div>
+    ${SFIDE_ON && html`<div class="o-card o-col" style="gap:10px;margin-top:16px">
+      <div style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">Sfida un amico dal vivo</div>
+      <p class="o-body o-mut">Lampo: le stesse 5 domande sui due telefoni. Il punto va a chi risponde giusto per primo.</p>
+      <div class="o-col" style="gap:2px;width:100%;margin-top:4px;align-items:center"><${Btn} bg=${PESCA} onClick=${() => nav.go('live', { nuova: true })}>Crea una sfida<//>
+        <button type="button" class="o-link" onClick=${() => nav.go('live', {})}>Ho già un codice</button></div>
+    </div>`}</div>
     <div style="height:24px;flex:none"></div>
     <${Sheet}>
       <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px"><h2 class="o-h2">${lg.name}</h2><span class="o-lab">Finisce domenica</span></div>
@@ -90,8 +96,8 @@ function DuelDone({ nav, rival, a, b, xp }) {
       <div class="o-col" style="align-items:center;padding:10px;background:#fff;border:2.5px solid ${INK};border-radius:18px"><span style="font-size:20px;line-height:24px;font-weight:800">${lg.me.pos}° posto</span><span style="font-size:13px;font-weight:700">in ${lg.name}</span></div></div>
     <div style="flex:1 1 16px;min-height:16px"></div>
     <div class="o-col" style="gap:12px;width:100%"><${Btn} cls="lg" bg="#fff" onClick=${() => nav.replace('sfida', { rival })}>Rivincita<//>
-      <${Btn} cls="lg ink" onClick=${() => setMsg(true)}>${Ico(Link2, 20)} Sfida un amico con un link<//></div>
-    ${msg && html`<p class="o-s o-fade" style="text-align:center;margin-top:8px;color:${INK}">Le sfide con gli amici arrivano insieme agli account online.</p>`}
+      <${Btn} cls="lg ink" onClick=${() => (SFIDE_ON ? nav.replace('live', { nuova: true }) : setMsg(true))}>${Ico(Link2, 20)} Sfida un amico dal vivo<//></div>
+    ${msg && html`<p class="o-s o-fade" style="text-align:center;margin-top:8px;color:${INK}">Le sfide con gli amici partono appena l'arbitro è online.</p>`}
     <div style="padding:2px 0 max(22px,calc(env(safe-area-inset-bottom) + 8px))"><button type="button" class="o-link" onClick=${nav.back}>Torna alle sfide</button></div>
   </div></div></div>`;
 }
@@ -242,7 +248,7 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
   const R = (label, value, onClick, right, last) => html`<${onClick ? 'button' : 'div'} type=${onClick ? 'button' : undefined} class=${'o-row' + (last ? ' last' : '')} style="min-height:52px;gap:10px" onClick=${onClick}>
     <span class="o-grow o-t" style="font-size:16px">${label}</span>${value != null && html`<span style="font-size:15px;font-weight:600;color:${MUT};text-align:right">${value}</span>`}${right || (onClick && PathIco(D_NEXT, 20, 2.6))}<//>`;
   const wipe = () => { try { const uid = u.uid; ['fl2_state', 'finlearn_los_progress', 'finlearn_album', 'finlearn_album_v1', 'finlearn_activity', 'finlearn_quiz_stats', 'finlearn_exam_date', 'finlearn_data_' + uid, 'finlearn_chats_' + uid,
-    'finlearn_or_key', 'finlearn_or_pkce', 'finlearn_or_model', 'finlearn_or_private', 'finlearn_ai_engine'].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
+    'finlearn_or_key', 'finlearn_or_pkce', 'finlearn_or_model', 'finlearn_or_private', 'finlearn_ai_engine', 'finlearn_sfide_pid'].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Impostazioni</h1>`}/>`}>
     <div class="o-pad" style="padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
       ${H('Studio')}
@@ -283,7 +289,7 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
       <div class="o-scroll" style="flex:0 1 auto;max-height:50vh">${Object.keys(s.flags || {}).map(k => { const l = lessonByKey(k.split('#')[0]); return html`<div key=${k} class="o-row" style="min-height:48px"><span class="o-grow o-t" style="font-size:15px">${l ? l.title : k}</span><span class="o-s">${l && l.code ? l.code : ''}</span></div>`; })}</div>
       <div style="margin-top:12px;flex:none"><${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set({ flags: {} }); setSheet(null); }}>Svuota l'elenco<//></div><//>`}
     ${sheet === 'priv' && html`<${BSheet} onClose=${() => setSheet(null)} label="Regole e privacy"><h2 class="o-big">Regole e privacy</h2>
-      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>I tuoi progressi, le risposte e le conversazioni sono salvati solo su questo dispositivo.</p><p>Se colleghi OpenRouter, le domande che fai all'AI Coach partono da qui verso OpenRouter e il fornitore del modello scelto. FinLearn non le riceve.</p><p>Niente pubblicità e nessun dato venduto.</p><p>FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute.</p></div>
+      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>I tuoi progressi, le risposte e le conversazioni sono salvati solo su questo dispositivo.</p><p>Se colleghi OpenRouter, le domande che fai all'AI Coach partono da qui verso OpenRouter e il fornitore del modello scelto. FinLearn non le riceve.</p><p>Nelle sfide dal vivo il tuo nome e le tue risposte passano dall'arbitro di FinLearn, su Cloudflare, solo per la durata della partita: alla fine si cancella tutto.</p><p>Niente pubblicità e nessun dato venduto.</p><p>FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute.</p></div>
       <div style="margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Ho capito<//></div><//>`}
     ${sheet === 'or' && html`<${OrSheet} onClose=${() => setSheet(null)}/>`}
     ${sheet === 'model' && html`<${ModelSheet} onClose=${() => setSheet(null)}/>`}

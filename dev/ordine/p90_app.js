@@ -13,6 +13,7 @@ const SCREENS = {
   deboli: p => html`<${WeakScreen} ...${p}/>`,
   sfida: p => html`<${DuelRun} ...${p}/>`,
   sfidaFine: p => html`<${DuelDone} ...${p}/>`,
+  live: p => html`<${LiveScreen} ...${p}/>`,
   album: p => html`<${AlbumScreen} ...${p}/>`,
   articolo: p => html`<${ArticleScreen} ...${p}/>`,
   notizie: p => html`<${NewsArchiveScreen} ...${p}/>`,
@@ -64,6 +65,8 @@ export function OrdineApp({ kit }) {
     };
     go(); window.addEventListener('fl-or', go); return () => window.removeEventListener('fl-or', go);
   }, []);
+  // link di una sfida dal vivo (…#sfida=CODICE): si apre direttamente la stanza
+  useEffect(() => { const c = liveInvito(); if (c) { setStack([]); setTab('sfide'); nav.go('live', { codice: c }); } }, []);
   // primo ingresso: nome per chi usava già l'app, test di livello per chi ha detto "so già qualcosa"
   useEffect(() => {
     const st = s2get(), u = kit.user || {};
