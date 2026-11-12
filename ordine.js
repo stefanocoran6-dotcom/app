@@ -1988,9 +1988,9 @@ function ModelSheet({ onClose }) {
   const [list, setList] = useState(null), [err, setErr] = useState(null), [all, setAll] = useState(false), [q, setQ] = useState('');
   useEffect(() => { let on = true; F.models().then(m => { if (on) setList(m); }, e => { if (on) setErr(K.flOrMsg(e)); }); return () => { on = false; }; }, []);
   const pick = id => { F.setModel(id); onClose(); };
-  const money = x => (x * 1e6).toLocaleString('it-IT', { maximumFractionDigits: 2 });
   const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean), MAX = 120;
-  const shown = (list || []).filter(m => (all || m.free) && words.every(w => (m.name + ' ' + m.id).toLowerCase().includes(w)));
+  // prima i gratis, poi quelli a pagamento dal più economico
+  const shown = (list || []).filter(m => (all || m.free) && words.every(w => (m.name + ' ' + m.id).toLowerCase().includes(w))).sort((a, b) => (a.free === b.free ? (a.free ? 0 : K.flOrCost(a) - K.flOrCost(b)) : a.free ? -1 : 1));
   const tick = id => (or.model === id ? html`<span style="flex:none;margin-right:4px">${PathIco(D_CHECK, 22, 3)}</span>` : null);
   return html`<${BSheet} onClose=${onClose} label="Modello"><h2 class="o-big" style="flex:none">Modello</h2>
     <p class="o-s" style="margin-top:4px;flex:none">I modelli gratis non costano niente. Quelli a pagamento usano i crediti del tuo account OpenRouter.</p>
@@ -2000,7 +2000,7 @@ function ModelSheet({ onClose }) {
       <${Row} title="Automatico (gratis)" sub="Ogni volta OpenRouter sceglie un modello gratis libero." onClick=${() => pick(K.FL_OR_FREE)} right=${tick(K.FL_OR_FREE)}/>
       ${err && html`<p class="o-s" role="alert" style="color:#B3261E;font-weight:700;padding:10px 0">${err}</p>`}
       ${!list && !err && html`<p class="o-s" style="padding:10px 0">Carico l'elenco dei modelli…</p>`}
-      ${shown.slice(0, MAX).map((m, k) => html`<${Row} key=${m.id} title=${m.name} sub=${m.free ? 'gratis' : `a pagamento: ${money(m.pin)} $ per milione di token letti, ${money(m.pout)} $ scritti`} last=${k === Math.min(shown.length, MAX) - 1} onClick=${() => pick(m.id)} right=${tick(m.id)}/>`)}
+      ${shown.slice(0, MAX).map((m, k) => html`<${Row} key=${m.id} title=${m.free ? K.flOrNice(m.name) + ' · gratis' : m.name + ' · a pagamento'} sub=${K.flOrPrice(m)} last=${k === Math.min(shown.length, MAX) - 1} onClick=${() => pick(m.id)} right=${tick(m.id)}/>`)}
       ${list && shown.length > MAX && html`<p class="o-s" style="padding:10px 0">Ce ne sono altri ${shown.length - MAX}: scrivi per cercarli.</p>`}
       ${list && !shown.length && html`<p class="o-s" style="padding:10px 0">Nessun modello con questo nome.</p>`}
     </div><//>`;

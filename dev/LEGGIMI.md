@@ -43,7 +43,7 @@ L'app spezza da sola le formule lunghe in mezzo al testo dopo `=`, `+`, `-`, `\t
 
 ## AI Coach con OpenRouter
 
-Ogni studente collega il suo account OpenRouter: nell'app non c'è nessuna chiave e non c'è un server nostro. Il codice sta in `app.js`, nel blocco `OPENROUTER` sopra `AiChatModal`.
+Ogni studente collega il suo account OpenRouter: nell'app non c'è nessuna chiave e non c'è un server nostro. Il Coach usa solo OpenRouter: i vecchi motori (Claude, "Sul telefono", Ollama) non si scelgono più; il modello si cambia dal tasto "Modello" nella chat o da Impostazioni. Il codice sta in `app.js`, nel blocco `OPENROUTER` sopra `AiChatModal`.
 
 - Collegamento (OAuth con PKCE): `flOR.start()` salva verificatore e `state` (`finlearn_or_pkce`) e apre `openrouter.ai/auth` con `callback_url` = la pagina dell'app. OpenRouter rimanda con `?code=…`: `FL_OR_BOOT` toglie subito il codice dall'indirizzo e `FlOrReturn` lo scambia con la chiave (`POST /api/v1/auth/keys` con il verificatore). La chiave sta in `finlearn_or_key`, solo su quel dispositivo; uscire dall'account la toglie.
 - Dove tornare: `start()` riceve dove si era (`{ tab, chat }`, `{ lesson, at, chat }` o `{ screen: 'impostazioni' }`) e `p90_app.js` lo riapre quando torna la chiave.
