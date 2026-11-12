@@ -167,8 +167,92 @@ let LESSON_MAP = null;
 const lessonByKey = key => { if (!LESSON_MAP) { LESSON_MAP = {}; courses().forEach(c => c.lessons.forEach(l => { LESSON_MAP[l.key] = l; })); } return LESSON_MAP[key]; };
 const isDone = key => (K.losProgress || []).includes(key) || s2get().basi.includes(key);
 const doneCount = list => list.filter(l => isDone(l.key)).length;
-const coursePct = c => c.lessons.length ? Math.round(doneCount(c.lessons) / c.lessons.length * 100) : 0;
 const unitLessons = u => u.sections.flatMap(s => s.lessons);
+
+// ---- su misura: l'obiettivo scelto alla registrazione decide che cosa c'è nell'app ----
+// Un obiettivo porta un percorso di partenza: un corso intero, oppure una scelta ordinata delle sue unità più quelle ancora da scrivere ("in arrivo").
+// Tutte le schede leggono da qui: chi parte da zero non trova il CFA finché non lo aggiunge da "Scopri".
+const MIS_SOON = {
+  azob: ['Azioni e obbligazioni', 'tutti i tipi di azioni, BOT, BTP e obbligazioni societarie, ognuno con un esempio in cifre'],
+  fondi: ['Fondi ed ETF', 'fondi attivi e indicizzati, ad accumulo o a distribuzione, con i costi in cifre'],
+  'w-salute': ['Capire se un\'azienda sta bene', 'margini, EBITDA, ROE, debito'],
+  'w-cassa': ['La cassa', 'crediti, magazzino, fornitori'],
+  'w-costi': ['Costi, prezzi e margini', 'punto di pareggio, budget'],
+  'w-invest': ['Decidere un investimento', 'VAN, TIR, tempo di rientro'],
+  'w-finanz': ['Finanziare l\'azienda', 'debito o capitale, banca, leasing'],
+  'w-valuta': ['Valutare un\'azienda', 'i multipli e l\'idea del DCF']
+};
+// una riga su cosa c'è dentro ogni unità delle Basi (schermata "Ecco la tua FinLearn")
+const MIS_SUB = { 'basi-u1': 'Interessi, inflazione, tasso reale', 'basi-u7': 'Budget, fondo di emergenza, obiettivi', 'basi-u4': 'Prestiti, TAN e TAEG, mutuo', 'basi-u8': 'Assicurazioni e truffe da riconoscere', 'basi-u2': 'Azioni, obbligazioni, fondi, conti',
+  'basi-u3': 'Rendimento, diversificare, orizzonte temporale', 'basi-u9': 'Un po\' alla volta, regola del 72', 'basi-u10': 'Paura di perdere, seguire la massa', 'basi-u5': 'Bilancio, utile, cassa, prezzo e valore', 'basi-u6': 'Banche centrali, cambi, ciclo economico' };
+// stops: le unità del percorso in ordine; "+nome" è un'unità in arrivo. null = tutto il corso.
+const MIS_PATHS = {
+  zero: { goal: 'Capire la finanza da zero', name: 'Basi della finanza', pill: 'Per chi parte da zero', course: 'basi', color: AZ, stops: null },
+  invest: { goal: 'Investire i miei risparmi', name: 'Investire i miei risparmi', pill: 'Per chi vuole investire', course: 'basi', color: PESCA, ico: TrendingUp, stops: ['basi-u1', 'basi-u2', 'basi-u3', '+azob', '+fondi', 'basi-u9', 'basi-u10'] },
+  work: { goal: 'Usarla al lavoro', name: 'Finanza per il lavoro', pill: 'Per chi la usa al lavoro', course: 'basi', color: MENTA, ico: Briefcase, stops: ['basi-u5', '+w-salute', '+w-cassa', '+w-costi', 'basi-u1', '+w-invest', '+w-finanz', 'basi-u6', '+w-valuta'] },
+  exam: { goal: 'Preparare un esame', name: 'CFA Level II', pill: 'Per l\'esame CFA Level II', course: 'cfa2', color: AZ, stops: null }
+};
+// Chi usava l'app prima di "su misura": l'obiettivo si ricava da quello che aveva scelto o iniziato, e i percorsi iniziati restano tutti.
+function misDerive(s) {
+  const ob = s.onboard || {}, st = new Set(s.started || []), done = s.basi || [];
+  const cfa = st.has('cfa2') || !!(K && (K.losProgress || []).length), basi = st.has('basi') || done.length > 0;
+  const goal = MIS_PATHS[ob.goal] ? ob.goal : cfa ? 'exam' : 'zero', P = MIS_PATHS[goal], add = [];
+  if (cfa && P.course !== 'cfa2') add.push('cfa2');
+  if (basi && P.course !== 'basi') add.push('basi');
+  const more = P.stops ? BASI.units.filter(u => !P.stops.includes(u.id) && unitLessons(u).some(l => done.includes(l.key))).map(u => u.id) : [];
+  return { goal, level: ob.start === 'some' ? 'some' : 'zero', known: [], more, add, t: 0 };
+}
+let MIS_MEMO = null, MIS_DRAFT = null;   // MIS_DRAFT: la registrazione mostra il percorso prima di salvarlo
+function misGet() {
+  if (MIS_DRAFT) return MIS_DRAFT;
+  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal]) return s.mis;
+  const n = (K && (K.losProgress || []).length) || 0;
+  if (!MIS_MEMO || MIS_MEMO.s !== s || MIS_MEMO.n !== n) MIS_MEMO = { s, n, m: misDerive(s) };
+  return MIS_MEMO.m;
+}
+const misP = () => MIS_PATHS[misGet().goal];
+function misCourses() { const ids = [misP().course, ...(misGet().add || [])]; return ids.filter((x, i) => ids.indexOf(x) === i).map(id => courseById(id)).filter(Boolean); }
+const inMyApp = id => misCourses().some(c => c.id === id);
+// le unità di un corso che fanno parte del percorso, in ordine (per i corsi aggiunti interi: tutte)
+function misUnits(c) {
+  if (!c) return [];
+  const P = misP(); if (c.id !== P.course || !P.stops) return c.units;
+  const ids = P.stops.filter(x => x[0] !== '+'), more = misGet().more || [];
+  return [...ids, ...c.units.map(u => u.id).filter(x => more.includes(x) && !ids.includes(x))].map(id => c.units.find(u => u.id === id)).filter(Boolean);
+}
+const misLessons = c => misUnits(c).flatMap(unitLessons);
+// come misUnits, ma con le unità "in arrivo" al loro posto: [{ u }] oppure [{ soon: { id, name, sub } }]
+function misStops(c) {
+  if (!c) return [];
+  const P = misP(); if (c.id !== P.course || !P.stops) return c.units.map(u => ({ u }));
+  const out = P.stops.map(x => (x[0] === '+' ? { soon: { id: x.slice(1), name: MIS_SOON[x.slice(1)][0], sub: MIS_SOON[x.slice(1)][1] } } : { u: c.units.find(u => u.id === x) })).filter(x => x.soon || x.u);
+  const more = misGet().more || []; c.units.forEach(u => { if (more.includes(u.id) && !P.stops.includes(u.id)) out.push({ u }); });
+  return out;
+}
+const misRest = c => { const inP = misUnits(c); return c.units.filter(u => !inP.includes(u)); };   // unità del corso che il percorso non usa
+const misName = c => (c && c.id === misP().course ? misP().name : c ? c.name : '');
+const misIcon = (c, size = 22) => (c && c.id === misP().course && misP().ico ? Ico(misP().ico, size) : c ? c.badge : null);
+const misAll = () => misCourses().flatMap(misLessons);
+// le lezioni pronte del percorso di un obiettivo (per dire quante sono prima di cambiare)
+const misGoalLessons = goal => { const P = MIS_PATHS[goal], c = courseById(P.course); return (P.stops ? P.stops.filter(x => x[0] !== '+').map(id => c.units.find(u => u.id === id)).filter(Boolean) : c.units).flatMap(unitLessons); };
+// unità segnate "la sai già" dalle 5 domande della registrazione: contano come fatte nel percorso, ma la figurina si prende solo facendo la lezione
+let KNOWN_MEMO = { k: null, set: new Set() };
+function knownKeys() {
+  const k = misGet().known || null;
+  if (KNOWN_MEMO.k !== k) { const set = new Set(); if (k && k.length) courses().forEach(c => c.units.forEach(u => { if (k.includes(u.id)) unitLessons(u).forEach(l => set.add(l.key)); })); KNOWN_MEMO = { k, set }; }
+  return KNOWN_MEMO.set;
+}
+const isHad = key => isDone(key) || knownKeys().has(key);
+const hadCount = list => list.filter(l => isHad(l.key)).length;
+const coursePct = c => { const ls = misLessons(c); return ls.length ? Math.round(hadCount(ls) / ls.length * 100) : 0; };
+// cambia obiettivo: cambia quello che si vede, non quello che si è fatto. Le unità "la sai già" restano solo se stanno nel nuovo percorso.
+function misSetGoal(goal) {
+  const P = MIS_PATHS[goal]; if (!P) return;
+  s2set(s => { const old = misGet(), c = courseById(P.course), keep = P.stops ? P.stops : c.units.map(u => u.id);
+    return { mis: Object.assign({}, old, { goal, known: (old.known || []).filter(id => keep.includes(id)), more: P.stops ? BASI.units.filter(u => !P.stops.includes(u.id) && unitLessons(u).some(l => isDone(l.key))).map(u => u.id) : [], add: (old.add || []).filter(id => id !== P.course), t: Date.now() }), cur: P.course }; });
+}
+const misAddCourse = id => s2set(s => { const m = misGet(); return m.add.includes(id) || MIS_PATHS[m.goal].course === id ? {} : { mis: Object.assign({}, m, { add: [...m.add, id] }) }; });
+const misAddUnits = ids => s2set(s => { const m = misGet(); return { mis: Object.assign({}, m, { more: Array.from(new Set([...(m.more || []), ...ids])) }) }; });
 const fmtDur = min => { if (min < 60) return `${min} minuti`; const h = Math.floor(min / 60), m = min % 60; return `${h} ${h === 1 ? 'ora' : 'ore'}${m ? ` e ${m} minuti` : ''}`; };
 // domande di una lezione (LOS: la domanda d'esame; basi: gli esercizi a scelta)
 function lessonQuestions(l) {
@@ -202,24 +286,24 @@ function lessonSteps(l) {
   return steps;
 }
 // percorso attuale e prossima lezione
-function startedCourses() { const s = s2get(); const out = new Set(s.started || []); if ((K.losProgress || []).length) out.add('cfa2'); if (s.basi.length) out.add('basi'); return courses().filter(c => out.has(c.id)); }
+// i percorsi dell'utente sono quelli del suo obiettivo più quelli aggiunti: il primo è sempre quello dell'obiettivo
+function startedCourses() { const s = s2get(); const out = new Set(s.started || []); if ((K.losProgress || []).length) out.add('cfa2'); if (s.basi.length) out.add('basi'); return misCourses().filter(c => out.has(c.id)); }
 function currentCourse() {
-  const s = s2get(); const st = startedCourses();
-  if (s.cur && courseById(s.cur) && (st.some(c => c.id === s.cur))) return courseById(s.cur);
-  return st[0] || null;
+  const s = s2get(); const mine = misCourses();
+  return mine.find(c => c.id === s.cur) || mine[0] || null;
 }
 function nextLesson(c, unitId) {
-  const s = s2get(); const album = K.albumLoad();
+  const s = s2get(); const album = K.albumLoad(), units = misUnits(c);
   let u = unitId ? c.units.find(x => x.id === unitId) : null;
   if (!u) {
     const lastKey = s.seen && s.seen[c.id]; const ll = lastKey && lessonByKey(lastKey);
-    if (ll && ll.course === c) u = ll.unit;
+    if (ll && ll.course === c && units.includes(ll.unit)) u = ll.unit;
     else { // unità della figurina presa più di recente
-      let best = null; c.lessons.forEach(l => { const a = album[l.key]; if (a && (!best || a.t > best.t)) best = { t: a.t, u: l.unit }; }); u = best ? best.u : c.units[0];
+      let best = null; misLessons(c).forEach(l => { const a = album[l.key]; if (a && (!best || a.t > best.t)) best = { t: a.t, u: l.unit }; }); u = best ? best.u : units[0];
     }
   }
-  const order = [u, ...c.units.filter(x => x !== u)];
-  for (const x of order) { const l = unitLessons(x).find(z => !isDone(z.key)); if (l) return l; }
+  const order = [u, ...units.filter(x => x !== u)];
+  for (const x of order) { const l = unitLessons(x).find(z => !isHad(z.key)); if (l) return l; }
   return null;
 }
 function markSeen(l) { s2set(s => ({ cur: l.course.id, started: Array.from(new Set([...(s.started || []), l.course.id])), seen: Object.assign({}, s.seen, { [l.course.id]: l.key }) })); }
@@ -243,7 +327,7 @@ function stickerState(l, album, now) {
   if (s2get().gold[l.section.id]) return 'dorata';
   return now < a.due ? 'viva' : 'sbiadisce';
 }
-function dueLessons() { const album = K.albumLoad(), now = Date.now(); return courses().flatMap(c => c.lessons).filter(l => stickerState(l, album, now) === 'sbiadisce').sort((x, y) => album[x.key].due - album[y.key].due); }
+function dueLessons() { const album = K.albumLoad(), now = Date.now(); return misCourses().flatMap(c => c.lessons).filter(l => stickerState(l, album, now) === 'sbiadisce').sort((x, y) => album[x.key].due - album[y.key].due); }
 const stickerSym = l => l.sym || l.code || '?';
 const lessonEmoji = l => { if (l.kind !== 'los') return null; const ic = ((l.los.content && l.los.content.sections) || []).map(x => x.icon).find(Boolean); return ic && !String(ic).startsWith('data:') ? ic : null; };
 
@@ -274,12 +358,29 @@ const FREE_EXPL = 3;
 function explState() { const s = s2get(); const today = dayKey(); const n = s.expl && s.expl.d === today ? s.expl.n : 0; return { n, left: Math.max(0, FREE_EXPL - n), pro: !!K.isPro }; }
 function spendExplanation() { const today = dayKey(); s2set(s => ({ expl: { d: today, n: (s.expl && s.expl.d === today ? s.expl.n : 0) + 1 } })); }
 
+// ---- le 5 domande della registrazione: servono a saltare le unità che si sanno già ----
+// Una domanda per unità (di più se le unità sono poche). Per l'esame non si salta niente: le unità sono materie intere.
+function placementFor(goal) {
+  const P = MIS_PATHS[goal], c = courseById(P.course), sh = K.flShuffle;
+  if (P.course === 'cfa2') { const u = c.units[0]; return { course: c, units: [], items: sh(allQuestions(unitLessons(u))).slice(0, 5).map(q => ({ q, u })) }; }
+  const units = (P.stops ? P.stops.filter(x => x[0] !== '+').map(id => c.units.find(u => u.id === id)) : c.units).filter(Boolean);
+  const pick = units.slice(0, 5), items = [];
+  for (let i = 0; i < 5; i++) { const u = pick[Math.floor(i * pick.length / 5)], used = items.map(x => x.q.key); const q = sh(allQuestions(unitLessons(u))).find(x => !used.includes(x.key)); if (q) items.push({ q, u }); }
+  return { course: c, units, items };
+}
+// le unità iniziali con tutte le risposte giuste sono "la sai già"; ne resta sempre almeno una da fare
+function placementKnown(pl, res) {
+  const known = [];
+  for (const u of pl.units) { const mine = pl.items.map((x, i) => [x, res[i]]).filter(([x]) => x.u === u); if (!mine.length || !mine.every(([, ok]) => ok)) break; known.push(u.id); }
+  return known.slice(0, Math.max(0, pl.units.length - 1));
+}
+
 // ---- test ----
 // kind: 'unit' (verifica di una sezione), 'level' (test di livello), 'mock' (simulazione), 'weak' (allenamento punti deboli), 'mix' (quiz misto)
 function buildTest(kind, c, sec) {
   const sh = K.flShuffle;
   if (kind === 'unit') { const qs = sh(allQuestions(sec.lessons)).slice(0, 10); return { id: 'unit:' + sec.id, kind, course: c, section: sec, title: 'Verifica: ' + sec.name, qs, secs: qs.length * c.pace, pass: Math.ceil(qs.length * 0.7), timed: true }; }
-  if (kind === 'level') { const qs = sh(allQuestions(c.lessons)).slice(0, 5); return { id: 'level:' + c.id, kind, course: c, title: 'Test di livello', qs, secs: qs.length * c.pace, pass: Math.ceil(qs.length * 0.6), timed: true }; }
+  if (kind === 'level') { const qs = sh(allQuestions(misLessons(c))).slice(0, 5); return { id: 'level:' + c.id, kind, course: c, title: 'Test di livello', qs, secs: qs.length * c.pace, pass: Math.ceil(qs.length * 0.6), timed: true }; }
   if (kind === 'mock') { const qs = sh(allQuestions(c.lessons)).slice(0, 44); return { id: 'mock:' + c.id, kind, course: c, title: 'Simulazione d\'esame', qs, secs: qs.length * 180, pass: Math.ceil(qs.length * 0.7), timed: true }; }
   return null;
 }

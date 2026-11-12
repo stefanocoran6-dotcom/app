@@ -28,7 +28,7 @@ function IBtn({ d, icon, onClick, label, lg, style }) {
 const Pill = ({ children, bg, rot = -3, style }) => html`<span class="o-pill" style=${Object.assign({ transform: `rotate(${rot}deg)` }, bg ? { background: bg } : {}, style || {})}>${children}</span>`;
 function Seg({ n, i }) {
   if (n > 14) return html`<div class="o-bar o-grow" role="img" aria-label=${`Passo ${i + 1} di ${n}`} style="height:10px"><i style=${{ width: Math.round((i + 1) / n * 100) + '%', background: INK, borderRight: 0 }}></i></div>`;
-  return html`<div class="o-seg" role="img" aria-label=${`Passo ${i + 1} di ${n}`} style=${{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+  return html`<div class="o-seg" role="img" aria-label=${`Passo ${Math.min(i + 1, n)} di ${n}`} style=${{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
     ${Array.from({ length: n }, (_, k) => html`<i key=${k} class=${k < i ? 'd' : k === i ? 'c' : ''}></i>`)}</div>`;
 }
 // barra in alto delle schermate "a passi": chiudi/indietro + avanzamento (o titolo) + eventuale elemento a destra

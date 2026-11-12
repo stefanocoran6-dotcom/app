@@ -20,6 +20,7 @@ const SCREENS = {
   impostazioni: p => html`<${SettingsScreen} ...${p}/>`,
   pro: p => html`<${ProScreen} ...${p}/>`,
   catalogo: p => html`<${CatalogScreen} ...${p}/>`,
+  livello: p => html`<${LevelScreen} ...${p}/>`,
   scheda: p => html`<${CourseSheetScreen} ...${p}/>`,
   salva: p => html`<${SaveScreen} ...${p}/>`
 };
@@ -27,6 +28,7 @@ let NAV_ID = 0;
 export function OrdineApp({ kit }) {
   const s = useS2();
   K = Object.assign({}, kit, { isPro: !!kit.isPro || !!s.pro });
+  MIS_DRAFT = null;   // la bozza della registrazione non deve restare viva dentro l'app
   ordInjectCss();
   kit.useFlScreenLock();
   useOrdFit();
@@ -71,7 +73,10 @@ export function OrdineApp({ kit }) {
   useEffect(() => {
     const st = s2get(), u = kit.user || {};
     if (!st.name && (!u.displayName || u.displayName === 'Google User') && !u.guest && ((kit.losProgress || []).length || Object.keys(kit.albumLoad()).length)) s2set({ name: 'Stefano' });
-    if (st.onboard && st.onboard.start === 'some' && !st.onboard.level) { s2set(x => ({ onboard: Object.assign({}, x.onboard, { level: true }) })); const c = st.onboard.goal === 'exam' ? 'cfa2' : 'basi'; nav.go('testInizio', { kind: 'level', course: c }); }
+    // su misura: chi usava già l'app riceve il percorso ricavato da quello che aveva scelto o iniziato (non perde niente)
+    if (!st.mis || !MIS_PATHS[st.mis.goal]) s2set({ mis: misDerive(st) });
+    // appena registrato: "Inizia la prima lezione" porta dritto alla lezione
+    else if (st.mis.go) { const k = st.mis.go; s2set(x => ({ mis: Object.assign({}, x.mis, { go: null }) })); if (lessonByKey(k)) nav.go('lezione', { key: k }); }
   }, []);
   const top = stack.length - 1;
   const tabScreen = tab === 'home' ? html`<${HomeScreen} nav=${nav}/>` : tab === 'allenati' ? (sub === 'test' ? html`<${TestScreen} nav=${nav}/>` : html`<${AllenatiScreen} nav=${nav}/>`)

@@ -45,7 +45,7 @@ function SfideScreen({ nav }) {
     <//>
   <//>`;
 }
-function duelQuestions() { const st = startedCourses(); const pool = (st.length ? st : courses()).flatMap(c => c.lessons); const done = pool.filter(l => isDone(l.key)); const src = allQuestions(done).length >= 5 ? done : pool; return K.flShuffle(allQuestions(src)).slice(0, 5); }
+function duelQuestions() { const st = startedCourses(); const pool = (st.length ? st : misCourses()).flatMap(misLessons); const done = pool.filter(l => isHad(l.key)); const src = allQuestions(done).length >= 5 ? done : pool; return K.flShuffle(allQuestions(src)).slice(0, 5); }
 function DuelRun({ nav, rival }) {
   const qs = useMemo(duelQuestions, []);
   const [i, setI] = useState(0), [sel, setSel] = useState(null), [show, setShow] = useState(false), [mine, setMine] = useState([]), [his, setHis] = useState([]), [el, setEl] = useState(0);
@@ -103,14 +103,21 @@ function DuelDone({ nav, rival, a, b, xp }) {
 }
 
 // ---- AI Coach: la chat è quella dell'app, dentro la nuova cornice ----
-const COACH_ASK = ['Spiegami il residual income da zero', 'Differenza tra FCFF e FCFE', 'Come si calcola il VaR parametrico?', 'Interrogami con domande A, B, C'];
+// I suggerimenti seguono l'obiettivo: chi parte da zero non trova le domande del CFA.
+const COACH = {
+  zero: ['Rally ti risponde con parole semplici ed esempi di tutti i giorni.', ['Cos\'è l\'inflazione, con un esempio', 'Interesse semplice o composto: che differenza c\'è?', 'Perché i soldi nel cassetto perdono valore?']],
+  invest: ['Rally ti spiega gli strumenti con esempi in cifre: rendimenti, costi, tempo.', ['Che differenza c\'è tra un\'azione e un\'obbligazione?', 'Quanto pesano i costi di un fondo in vent\'anni?', 'Cosa vuol dire diversificare, con un esempio']],
+  work: ['Rally ti aiuta a leggere un bilancio o una notizia di economia.', ['Come capisco se un\'azienda guadagna davvero?', 'Perché un\'azienda in utile può restare senza cassa?', 'Cosa cambia per un\'azienda se salgono i tassi?']],
+  exam: ['Rally ti risponde con formule, passaggi e domande come all\'esame.', ['Spiegami il residual income da zero', 'Differenza tra FCFF e FCFE', 'Come si calcola il VaR parametrico?']]
+};
+function coachAsk() { const g = misGet().goal; return { exam: g === 'exam', lead: COACH[g][0], ask: [...COACH[g][1], g === 'exam' ? 'Interrogami con domande A, B, C' : 'Fammi tre domande sulle ultime lezioni'] }; }
 function CoachScreen({ nav }) {
   const [hist, setHist] = useState(false), [pending, setPending] = useState(null);
   const chats = K.chats || [], active = chats.find(c => c.id === K.activeChatId);
-  const Chat = K.AiChatModal;
+  const Chat = K.AiChatModal, coach = coachAsk();
   const newChat = first => {
     const now = new Date().toISOString(), nm = userName();
-    const c = { id: `chat_${Date.now()}`, title: first ? first.slice(0, 40) : 'Nuova conversazione', createdAt: now, updatedAt: now, messages: [{ role: 'assistant', content: `Ciao${nm ? ' ' + nm : ''}! Chiedimi un concetto da spiegare da zero, un esercizio o una domanda d'esame.`, timestamp: now }] };
+    const c = { id: `chat_${Date.now()}`, title: first ? first.slice(0, 40) : 'Nuova conversazione', createdAt: now, updatedAt: now, messages: [{ role: 'assistant', content: `Ciao${nm ? ' ' + nm : ''}! ${coach.exam ? 'Chiedimi un concetto da spiegare da zero, un esercizio o una domanda d\'esame.' : 'Chiedimi una parola che non conosci, un dubbio sui soldi o un esempio con le cifre.'}`, timestamp: now }] };
     K.setChats(prev => [c, ...prev].slice(0, 50)); K.setActiveChatId(c.id); setPending(first ? { id: c.id, text: first } : null); setHist(false);
   };
   const fmt = d => { try { return new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
@@ -121,9 +128,9 @@ function CoachScreen({ nav }) {
         ${chats.length > 0 && html`<button type="button" class="o-ib" style="width:34px;height:34px;border-radius:11px" onClick=${() => setHist(true)} aria-label="Conversazioni">${Ico(History, 17, 2.4)}</button>`}</div></div>`}>
     <${Sheet} pad=${false} style=${{ paddingTop: 18 }}>
       ${active && Chat ? html`<div class="o-coach"><${Chat} key=${active.id} variant="page" chatId=${active.id} chats=${chats} setChats=${K.setChats} onClose=${() => {}} initialMessage=${pending && pending.id === active.id ? pending.text : null} onInitialSent=${() => setPending(null)} orBack=${{ tab: 'coach', chat: active.id }}/></div>`
-        : html`<div class="o-col" style="gap:10px;padding-bottom:140px"><h2 class="o-h2">Cosa vuoi capire oggi?</h2><p class="o-body o-mut" style="margin-bottom:6px">Concetti spiegati da zero, esercizi passo per passo, domande come all'esame.</p>
-          ${COACH_ASK.map(t => html`<button key=${t} type="button" class="o-rowf" onClick=${() => newChat(t)} style="gap:12px;width:100%;min-height:54px;padding:8px 14px;border:2.5px solid ${INK};border-radius:18px;font-size:15px;line-height:20px;font-weight:700"><span class="o-grow">${t}</span>${PathIco(D_NEXT, 20, 2.6)}</button>`)}
-          <div style="margin-top:8px"><${Btn} bg=${LILLA} onClick=${() => newChat()}>Scrivi tu la domanda<//></div></div>`}
+        : html`<div class="o-col" style="gap:10px;padding-bottom:140px"><h2 class="o-h2">Cosa vuoi capire oggi?</h2><p class="o-body o-mut" style="margin-bottom:6px">${coach.lead}</p>
+          ${coach.ask.map(t => html`<button key=${t} type="button" class="o-rowf" onClick=${() => newChat(t)} style="gap:12px;width:100%;min-height:54px;padding:8px 14px;border:2.5px solid ${INK};border-radius:18px;font-size:15px;line-height:20px;font-weight:700"><span class="o-grow">${t}</span>${PathIco(D_NEXT, 20, 2.6)}</button>`)}
+          <div style="margin-top:8px"><${Btn} bg=${LILLA} onClick=${() => newChat()}>Scrivi tu la domanda<//></div><p class="o-s" style="text-align:center;margin-top:6px">I suggerimenti seguono il tuo percorso.</p></div>`}
     <//>
     ${hist && html`<${BSheet} onClose=${() => setHist(false)} label="Conversazioni"><h2 class="o-big" style="margin-bottom:6px;flex:none">Conversazioni</h2>
       <div class="o-scroll" style="flex:0 1 auto;max-height:60vh">${chats.map((c, k) => html`<${Row} key=${c.id} icon=${PathIco(D_TABS.coach, 20, 2.4)} ibg=${c.id === K.activeChatId ? LILLA : null} title=${(c.isQuizChat ? 'Domanda: ' : '') + (c.title || 'Conversazione')} sub=${fmt(c.updatedAt || c.createdAt)}
@@ -132,7 +139,8 @@ function CoachScreen({ nav }) {
 }
 
 // ---- profilo e album ----
-const allStickers = () => courses().flatMap(c => c.lessons);
+// le figurine dell'album: quelle del proprio percorso, più quelle già prese nelle altre unità dei propri percorsi
+const allStickers = () => { const album = K.albumLoad(), mine = new Set(misAll()); return misCourses().flatMap(c => c.lessons).filter(l => mine.has(l) || album[l.key]); };
 function ProfiloScreen({ nav }) {
   useS2(); useTick();
   const album = K.albumLoad(), now = Date.now(), all = allStickers(), have = all.filter(l => album[l.key]);
@@ -151,17 +159,17 @@ function ProfiloScreen({ nav }) {
     </div></div>
     <div style="height:24px;flex:none"></div>
     <${Sheet}>
-      <${Stats3} items=${[[streakDays(), 'giorni di fila'], [fmtInt((K.stats && K.stats.xp) || 0), 'punti XP'], [(cur ? coursePct(cur) : 0) + '%', cur ? 'di ' + cur.name : 'del percorso']]}/>
+      <${Stats3} items=${[[streakDays(), 'giorni di fila'], [fmtInt((K.stats && K.stats.xp) || 0), 'punti XP'], [(cur ? coursePct(cur) : 0) + '%', cur ? 'di ' + misName(cur) : 'del percorso']]}/>
       <div style="height:2px;background:${SEP};margin:18px 0 0"></div>
       <${Row} icon=${Ico(Crown, 22)} ibg=${GIALLO} title="FinLearn Pro" sub=${K.isPro ? 'Attivo' : 'Provalo gratis per 7 giorni'} chev=${true} onClick=${() => nav.go('pro')}/>
-      <${Row} icon=${Ico(SlidersHorizontal, 22)} title="Impostazioni" sub="Obiettivo, account e grafica" chev=${true} last=${true} onClick=${() => nav.go('impostazioni')}/>
+      <${Row} icon=${Ico(SlidersHorizontal, 22)} title="Impostazioni" sub="Il tuo percorso, account e grafica" chev=${true} last=${true} onClick=${() => nav.go('impostazioni')}/>
     <//>
   <//>`;
 }
 function AlbumScreen({ nav }) {
   useS2(); useTick();
   const album = K.albumLoad(), now = Date.now(), all = allStickers(), have = all.filter(l => album[l.key]).length;
-  const groups = courses().flatMap(c => c.units.map(u => ({ id: u.id, name: u.name.replace('Management', 'Mgmt'), lessons: unitLessons(u) })));
+  const groups = misCourses().flatMap(c => c.units.filter(u => misUnits(c).includes(u) || unitLessons(u).some(l => album[l.key])).map(u => ({ id: u.id, name: u.name.replace('Management', 'Mgmt'), lessons: unitLessons(u) })));
   const firstWith = groups.find(g => g.lessons.some(l => album[l.key])) || groups[0];
   const [gid, setGid] = useState(firstWith.id);
   const g = groups.find(x => x.id === gid) || groups[0], due = dueLessons();
@@ -241,6 +249,7 @@ function ModelSheet({ onClose }) {
 function SettingsScreen({ nav, sheet: sheet0 }) {
   const s = useS2(), set = s.settings, u = K.user || {}, or = K.useFlOr();
   const [sheet, setSheet] = useState(sheet0 || null), [nm, setNm] = useState(userName());
+  const m = misGet(), P = misP(), nk = (m.known || []).length, [pick, setPick] = useState(m.goal);
   const upd = p => s2set(x => ({ settings: Object.assign({}, x.settings, p) }));
   const flags = Object.keys(s.flags || {}).length;
   const access = u.guest ? 'Ospite' : u.provider === 'apple' ? 'Con Apple' : /^google_/.test(u.uid || '') || u.provider === 'google' ? 'Con Google' : 'Con l\'email';
@@ -251,11 +260,17 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
     'finlearn_or_key', 'finlearn_or_pkce', 'finlearn_or_model', 'finlearn_or_private', 'finlearn_ai_engine', 'finlearn_sfide_pid'].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Impostazioni</h1>`}/>`}>
     <div class="o-pad" style="padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
+      <div style="margin-top:18px;padding:14px 16px 12px;border:2.5px solid ${INK};border-radius:24px;box-shadow:4px 4px 0 ${INK}">
+        <h2 class="o-h2" style="margin-bottom:2px">Il tuo percorso</h2>
+        ${R('Obiettivo', P.goal, () => { setPick(m.goal); setSheet('obiettivo'); })}
+        ${R('Livello', nk ? 'So già qualcosa' : 'Parto da zero', () => setSheet('livello'))}
+        ${R('I tuoi percorsi', misCourses().map(misName).join(', '), () => nav.go('catalogo'))}
+        ${R('Minuti al giorno', `${set.goalMin} minuti`, () => setSheet('goal'), null, true)}
+        <p style="margin-top:4px;padding:10px 14px;background:${T_GR};border-radius:14px;font-size:13px;line-height:18px;font-weight:600">Da qui dipende cosa trovi in Impara, Allenati, Sfide e AI Coach. Se cambi, i progressi restano.</p></div>
       ${H('Studio')}
-      ${R('Obiettivo al giorno', `${set.goalMin} minuti`, () => setSheet('goal'))}
       ${R('Promemoria', 'In arrivo', null)}
-      ${R('Lingua delle spiegazioni', set.lang, () => setSheet('lang'))}
-      ${R('Domande d\'esame', 'In inglese, come all\'esame', null, null, true)}
+      ${R('Lingua delle spiegazioni', set.lang, () => setSheet('lang'), null, !inMyApp('cfa2'))}
+      ${inMyApp('cfa2') && R('Domande d\'esame', 'In inglese, come all\'esame', null, null, true)}
       ${H('AI Coach')}
       ${R('OpenRouter', or.on ? 'Collegato' : 'Da collegare', () => setSheet('or'))}
       ${R('Modello', orModelLabel(or.model), () => setSheet('model'), null, true)}
@@ -272,7 +287,21 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
       ${R('Regole e privacy', null, () => setSheet('priv'), null, true)}
       <p class="o-s" style="text-align:center;margin-top:26px">FinLearn 2.0 · ${K.VERSION || ''}</p>
     </div>
-    ${sheet === 'goal' && html`<${BSheet} onClose=${() => setSheet(null)} label="Obiettivo"><h2 class="o-big">Quanto tempo hai al giorno?</h2>
+    ${sheet === 'obiettivo' && (() => { const tp = MIS_PATHS[pick], tn = misGoalLessons(pick).length, dn = courses().flatMap(c => c.lessons).filter(l => isDone(l.key)).length, same = pick === m.goal;
+      return html`<${BSheet} onClose=${() => setSheet(null)} label="Cambia obiettivo"><h2 class="o-big">Cosa vuoi fare adesso?</h2>
+        <p class="o-body o-mut" style="margin:6px 0 16px">Cambia quello che vedi nell'app, non quello che hai già fatto.</p>
+        <div role="radiogroup" aria-label="Obiettivo" class="o-col" style="gap:10px">${GOALS.map(([id, t, , I]) => html`<button key=${id} type="button" role="radio" aria-checked=${pick === id ? 'true' : 'false'} onClick=${() => setPick(id)} class="o-rowf"
+          style=${{ gap: 12, width: '100%', minHeight: 60, padding: '8px 14px', border: `2.5px solid ${INK}`, borderRadius: 18, background: pick === id ? T_AZ : '#fff', boxShadow: pick === id ? `4px 4px 0 ${INK}` : 'none', textAlign: 'left' }}>
+          <span class="o-ibox" style="width:36px;height:36px;border-radius:11px">${Ico(I, 20)}</span><span class="o-grow" style="font-size:16px;line-height:20px;font-weight:800">${t}</span>
+          ${id === m.goal && pick !== id ? html`<span class="o-tag" style="background:${T_GR}">Adesso</span>`
+            : html`<span style=${{ width: 26, height: 26, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', border: `2.5px solid ${INK}`, background: pick === id ? INK : '#fff', color: '#fff' }}>${pick === id && PathIco(D_CHECK, 14, 3.6)}</span>`}</button>`)}</div>
+        <p style="margin:14px 0 16px;padding:12px 16px;background:${T_GR};border-radius:16px;font-size:14px;line-height:20px;font-weight:600">${same ? 'Adesso il tuo percorso è ' : 'Il percorso diventa '}<b style="font-weight:800">${tp.name}</b>, ${plural(tn, 'lezione', 'lezioni')}.${!same && dn ? (dn === 1 ? ' La lezione che hai già fatto resta fatta, con la sua figurina.' : ` Le ${dn} che hai già fatto restano fatte, con le loro figurine.`) : ''}${!same && tp.course !== P.course ? ` ${courseById(P.course).name} esce dall'app: si riaggiunge quando vuoi da Scopri, con i progressi.` : ''}</p>
+        <div class="o-col" style="gap:10px"><${Btn} cls="lg" disabled=${same} onClick=${() => { misSetGoal(pick); setSheet(null); nav.toast(`Fatto: adesso il tuo percorso è ${tp.name}.`); }}>Cambia obiettivo<//><${Btn} cls="lg flat" bg="#fff" onClick=${() => setSheet(null)}>Annulla<//></div><//>`; })()}
+    ${sheet === 'livello' && html`<${BSheet} onClose=${() => setSheet(null)} label="Livello"><h2 class="o-big">Da dove parti?</h2>
+      <p class="o-body o-mut" style="margin:6px 0 16px">${nk ? `Rally ti ha segnato come già ${nk === 1 ? 'nota un\'unità' : 'note ' + (NUM_IT[nk] || nk) + ' unità'}. Con le 5 domande ricalcola da dove parti.` : 'Stai seguendo il percorso dalla prima unità. Con 5 domande Rally ti fa saltare quello che sai già.'}</p>
+      <div class="o-col" style="gap:10px"><${Btn} cls="lg" onClick=${() => { setSheet(null); nav.go('livello'); }}>Fai le 5 domande<//>
+        ${nk > 0 && html`<${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set(() => ({ mis: Object.assign({}, misGet(), { known: [], level: 'zero' }) })); setSheet(null); }}>Riparto dall'inizio<//>`}</div><//>`}
+    ${sheet === 'goal' && html`<${BSheet} onClose=${() => setSheet(null)} label="Minuti al giorno"><h2 class="o-big">Quanto tempo hai al giorno?</h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px">${[5, 10, 20].map(m => html`<button key=${m} type="button" class="o-col" onClick=${() => { upd({ goalMin: m }); setSheet(null); }} style=${{ alignItems: 'center', padding: '12px 0', border: `2.5px solid ${INK}`, borderRadius: 18, background: set.goalMin === m ? AZ : '#fff', boxShadow: set.goalMin === m ? `3px 3px 0 ${INK}` : 'none' }}><span style="font-size:26px;line-height:30px;font-weight:800">${m}</span><span class="o-s" style="color:${INK}">minuti</span></button>`)}</div><//>`}
     ${sheet === 'lang' && html`<${BSheet} onClose=${() => setSheet(null)} label="Lingua"><h2 class="o-big" style="margin-bottom:6px">Lingua delle spiegazioni</h2>
       ${[['Italiano', true], ['English', false], ['Français', false], ['Español', false], ['Deutsch', false], ['中文', false]].map(([l, ok], k) => html`<div key=${l} class="o-row" style=${{ minHeight: 50, borderBottom: k < 5 ? `2px solid ${SEP}` : 0 }}><span class="o-grow o-t" style=${{ color: ok ? INK : DIMT }}>${l}</span>${ok ? PathIco(D_CHECK, 22, 3) : html`<span class="o-s">In arrivo</span>`}</div>`)}<//>`}
@@ -322,30 +351,61 @@ function ProScreen({ nav }) {
     </div></div></div></div>`;
 }
 
-// ---- catalogo e scheda di un percorso ----
-const CAT_ICON = { wallet: Wallet, trend: TrendingUp, pie: PieChart };
+// ---- Scopri: i percorsi della propria app, quelli che si possono aggiungere, quelli in arrivo ----
+const CAT_ADD = { cfa2: 'È un percorso da esame. Se lo aggiungi, entrano anche la simulazione d\'esame in Allenati e le domande d\'esame nelle Sfide.',
+  basi: 'Sono le basi, in italiano: interessi, budget, debiti, strumenti, bilanci. Utili anche per un ripasso da capo.' };
 function CatalogScreen({ nav }) {
+  useS2();
   const [f, setF] = useState('all');
-  const ready = courses(), groups = [['basi', 'Finanza di base'], ['invest', 'Investire'], ['cert', 'Certificazioni']];
   const chips = [['all', 'Tutti'], ['basi', 'Basi'], ['invest', 'Investire'], ['cert', 'Esami']];
-  const tile = c => { const isReady = !!c.ready, I = CAT_ICON[c.icon];
-    return html`<button key=${c.id} type="button" disabled=${!isReady} onClick=${() => nav.go('scheda', { course: c.id })} class="o-col" style=${{ gap: 8, padding: 8, minHeight: c.group === 'cert' ? 0 : 132, borderRadius: 18, background: isReady ? '#fff' : T_BG, border: isReady ? `2.5px solid ${INK}` : `2px dashed ${INK}`, boxShadow: isReady ? `4px 4px 0 ${INK}` : 'none' }}>
-      ${c.group !== 'cert' && html`<span style=${{ height: 52, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: isReady ? (c.color || AZ) : 'transparent', border: isReady ? `2px solid ${INK}` : `2px dashed ${DIM}`, borderRadius: 11, fontSize: 24, fontWeight: 800, color: isReady ? INK : DIMT }}>${I ? Ico(I, 24) : c.badge}</span>`}
-      <span class="o-col" style=${{ gap: 2, padding: c.group === 'cert' ? '6px 8px' : '0 4px 4px' }}><span class="o-t" style=${{ fontSize: 15, color: isReady ? INK : MUT }}>${c.name}</span><span class="o-s">${isReady ? (c.group === 'cert' ? plural(c.units.length, 'argomento pronto', 'argomenti pronti') : plural(c.lessons.length, 'lezione', 'lezioni')) : 'In arrivo'}</span></span></button>`; };
+  const show = c => f === 'all' || c.group === f;
+  const mine = misCourses().filter(show), can = courses().filter(c => !inMyApp(c.id)).filter(show), soon = COMING.filter(show);
+  const H = t => html`<h2 class="o-h2" style="font-size:18px;margin:22px 0 10px">${t}</h2>`;
+  const tile = (c, own) => html`<span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, fontSize: c.group === 'cert' ? 18 : 22, background: own ? (c.id === misP().course ? misP().color : c.color || AZ) : '#fff' }}>${own ? misIcon(c, 24) : c.badge}</span>`;
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Percorsi</h1>`}/>`}>
     <div class="o-pad" style="padding-top:14px;padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
-      <div class="o-rowf" style="gap:8px;flex-wrap:wrap">${chips.map(([id, t]) => html`<button key=${id} type="button" class=${'o-chip' + (f === id ? ' on' : '')} onClick=${() => setF(id)}>${t}</button>`)}</div>
-      ${groups.filter(([g]) => f === 'all' || f === g).map(([g, t]) => html`<section key=${g}><h2 class="o-h2" style="font-size:18px;margin:22px 0 10px">${t}</h2>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${[...ready.filter(c => c.group === g), ...COMING.filter(c => c.group === g)].map(tile)}</div></section>`)}
-      <button type="button" class="o-rowf" onClick=${() => nav.tab('coach')} style="gap:12px;width:100%;padding:14px 16px;margin-top:26px;background:${T_GR};border-radius:16px"><span class="o-grow o-t">Non trovi un argomento? Chiedilo a Rally.</span>${PathIco(D_NEXT, 22, 2.6)}</button>
+      <div class="o-rowf" style="gap:8px;flex-wrap:wrap">${chips.map(([id, t]) => html`<button key=${id} type="button" class=${'o-chip' + (f === id ? ' on' : '')} aria-pressed=${f === id ? 'true' : 'false'} onClick=${() => setF(id)}>${t}</button>`)}</div>
+      ${mine.length > 0 && html`${H('Nella tua app')}<div class="o-col" style="gap:12px">${mine.map(c => { const ls = misLessons(c), d = hadCount(ls), pct = coursePct(c);
+        return html`<button key=${c.id} type="button" class="o-col" onClick=${() => { s2set({ cur: c.id }); nav.go('percorso', { course: c.id }); }} style="gap:10px;width:100%;padding:14px 16px;border:2.5px solid ${INK};border-radius:22px;box-shadow:4px 4px 0 ${INK};text-align:left">
+          <span class="o-rowf" style="gap:12px;width:100%">${tile(c, true)}<span class="o-grow o-col" style="gap:1px"><span style="font-size:17px;line-height:22px;font-weight:800">${misName(c)}</span><span class="o-s">${d} ${d === 1 ? 'lezione fatta' : 'lezioni fatte'} su ${ls.length}</span></span><span style="font-size:15px;font-weight:800">${pct}%</span></span>
+          <span style="display:block;width:100%"><${Bar} pct=${pct} label=${`${pct} per cento del percorso`}/></span></button>`; })}</div>`}
+      ${can.length > 0 && html`${H('Puoi aggiungere')}<div class="o-col" style="gap:12px">${can.map(c => html`<div key=${c.id} class="o-col" style="gap:10px;padding:14px 16px 16px;border:2.5px solid ${INK};border-radius:22px">
+        <button type="button" class="o-rowf" onClick=${() => nav.go('scheda', { course: c.id })} style="gap:12px;width:100%;text-align:left" aria-label=${`Apri la scheda di ${c.name}`}>${tile(c, false)}
+          <span class="o-grow o-col" style="gap:1px"><span style="font-size:17px;line-height:22px;font-weight:800">${c.name}</span><span class="o-s">${c.group === 'cert' ? `${plural(c.lessons.length, 'lezione', 'lezioni')}, domande in inglese` : plural(c.lessons.length, 'lezione breve', 'lezioni brevi')}</span></span>${PathIco(D_NEXT, 20, 2.6)}</button>
+        <p class="o-s" style="line-height:19px">${CAT_ADD[c.id] || c.tagline}</p>
+        <${Btn} cls="flat" bg="#fff" onClick=${() => { misAddCourse(c.id); nav.toast(`${c.name} adesso è nella tua app.`); }}>${PathIco(D_PLUS, 18, 2.8)} Aggiungi alla mia app<//></div>`)}</div>`}
+      ${soon.length > 0 && html`${H('In arrivo')}<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">${soon.map(c => html`<span key=${c.id} class="o-rowf" style="min-height:50px;padding:6px 14px;border:2px dashed ${INK};border-radius:16px;background:${T_BG};font-size:14px;line-height:18px;font-weight:700;color:${MUT}">${c.name}</span>`)}</div>`}
+      <button type="button" class="o-rowf" onClick=${() => nav.tab('coach')} style="gap:12px;width:100%;padding:14px 16px;margin-top:26px;background:${T_GR};border-radius:16px;text-align:left"><span class="o-grow o-t">Non trovi un argomento? Chiedilo a Rally.</span>${PathIco(D_NEXT, 22, 2.6)}</button>
     </div>
   <//>`;
 }
+// Le 5 domande rifatte dalle Impostazioni: stessa regola della registrazione
+function LevelScreen({ nav }) {
+  const m = misGet(), pl = useMemo(() => placementFor(m.goal), []), n = pl.items.length, exam = pl.course.group === 'cert';
+  const [qi, setQi] = useState(0), [sel, setSel] = useState(null), [res, setRes] = useState([]), [known, setKnown] = useState(null);
+  const answer = () => { const it = pl.items[qi], ok = sel === it.q.ans, r = [...res, ok]; recordAnswer(it.q, ok); setRes(r); setSel(null); if (qi < n - 1) setQi(qi + 1); else setKnown(placementKnown(pl, r)); };
+  const apply = k => { s2set(() => ({ mis: Object.assign({}, misGet(), { known: k, level: k.length ? 'some' : 'zero' }) })); nav.back(); };
+  if (known) { const ok = res.filter(Boolean).length, nk = known.length, startU = pl.units[nk] || pl.course.units[0];
+    const text = exam ? 'Per un esame non si salta niente. Le domande che hai sbagliato le ritrovi tra i punti deboli, in Allenati.'
+      : nk ? `${nk === 1 ? 'La prima unità la sai già: Rally te la segna come fatta' : `Le prime ${NUM_IT[nk] || nk} unità le sai già: Rally te le segna come fatte`}. Restano aperte, le ripassi quando vuoi.` : 'Meglio partire dalla prima unità, così non resta nessun buco.';
+    return html`<${Flow} top=${html`<${TopBar} onClose=${nav.back} title=""/>`}
+      foot=${html`<div class="o-col" style="align-items:center;gap:2px"><div style="width:100%"><${Btn} cls="lg" onClick=${() => (exam ? nav.back() : apply(known))}>${exam ? 'Ho capito' : nk ? 'Parto da qui' : 'Parto dall\'inizio'}<//></div>
+        ${!exam && html`<button type="button" class="o-link" onClick=${nav.back}>Lascio tutto com'è</button>`}</div>`}>
+      <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px"><${Rally} pose="occhiolino" w=${190} alt="" style="position:absolute;right:-14px;top:-10px"/>
+        <div class="o-col" style="position:relative;align-items:flex-start;gap:12px;min-height:162px;max-width:214px"><${Pill}>${ok} ${ok === 1 ? 'giusta' : 'giuste'} su ${res.length}<//><h1 class="o-big">${nk || exam ? 'Parti da ' + startU.name : 'Parti dall\'inizio'}</h1></div>
+        <p class="o-body o-mut" style="position:relative">${text}</p></div><//>`; }
+  const q = pl.items[qi].q;
+  return html`<${Flow} top=${html`<${TopBar} onClose=${nav.back} n=${n} i=${qi}/>`} foot=${html`<${Btn} cls="lg" disabled=${sel == null} onClick=${answer}>${qi < n - 1 ? 'Avanti' : 'Vedi da dove parti'}<//>`}>
+    <div class="o-test"><div class="o-pad" style="padding-top:18px;padding-bottom:20px"><span class="o-lab">Domanda ${qi + 1} di ${n}</span>
+      <div style="margin-top:6px"><${Rich} key=${'q' + qi} text=${q.q} cls="q" lang=${q.lang}/></div>
+      <div style="margin-top:14px"><${Options} key=${'o' + qi} q=${q} sel=${sel} onSel=${setSel} locked=${false}/></div></div></div><//>`;
+}
+// ---- scheda di un percorso ----
 function CourseSheetScreen({ nav, course }) {
   useS2(); useTick();
-  const c = courseById(course) || courses()[0], album = K.albumLoad(), now = Date.now();
+  const c = courseById(course) || currentCourse(), album = K.albumLoad(), now = Date.now(), mineC = inMyApp(c.id);
   const mins = c.lessons.reduce((n, l) => n + l.minutes, 0), started = doneCount(c.lessons) > 0, nx = nextLesson(c);
-  const go = () => { s2set(x => ({ cur: c.id, started: Array.from(new Set([...(x.started || []), c.id])) })); if (nx) nav.replace('lezione', { key: nx.key }); else nav.replace('percorso', { course: c.id }); };
+  const go = () => { misAddCourse(c.id); s2set(x => ({ cur: c.id, started: Array.from(new Set([...(x.started || []), c.id])) })); if (nx) nav.replace('lezione', { key: nx.key }); else nav.replace('percorso', { course: c.id }); };
   return html`<${Room} color=${c.color || AZ} tabs=${false} headH=${176}
     rally=${html`<${Rally} pose="insegna" alt="" style="position:absolute;right:-14px;top:calc(var(--otop) + 27px)"/>`}
     head=${html`<div class="o-rowf" style="height:44px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Indietro"/></div>
@@ -360,7 +420,7 @@ function CourseSheetScreen({ nav, course }) {
         return html`<span key=${l.key} style=${{ width: 50, height: 50, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 14, fontSize: em ? 22 : 16, fontWeight: 800, background: st !== 'manca' || k === 0 ? (c.color || AZ) : 'transparent', border: st !== 'manca' || k === 0 ? `2.5px solid ${INK}` : `2px dashed ${INK}`, boxShadow: st !== 'manca' || k === 0 ? `3px 3px 0 ${INK}` : 'none', transform: k === 0 ? 'rotate(-4deg)' : 'none' }}>${st !== 'manca' || k < 2 ? (em || stickerSym(l)) : '?'}</span>`; })}</div>
       <div style="flex:1 1 20px;min-height:20px"></div>
       <p class="o-s" style="text-align:center;font-size:14px;font-weight:700;color:${INK};margin-top:22px">Tutte le lezioni sono gratis.</p>
-      <div style="padding:12px 0 max(30px,calc(env(safe-area-inset-bottom) + 12px))"><${Btn} cls="lg" onClick=${go}>${started ? 'Continua il percorso' : 'Inizia il percorso'}<//></div>
+      <div style="padding:12px 0 max(30px,calc(env(safe-area-inset-bottom) + 12px))"><${Btn} cls="lg" onClick=${go}>${!mineC ? 'Aggiungi alla mia app e inizia' : started ? 'Continua il percorso' : 'Inizia il percorso'}<//></div>
     <//>
   <//>`;
 }

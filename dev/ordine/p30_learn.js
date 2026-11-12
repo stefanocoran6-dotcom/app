@@ -18,16 +18,19 @@ function ExamDateSheet({ onClose }) {
   <//>`;
 }
 
+const unitInitials = name => String(name).split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+// Home: il percorso dell'obiettivo scelto, la prossima lezione e le unità in fila (quelle che si sanno già, quella in corso, quelle in arrivo)
 function HomeScreen({ nav }) {
   useS2(); useTick();
-  const [dateOpen, setDateOpen] = useState(false);
+  const [dateOpen, setDateOpen] = useState(false), [addOpen, setAddOpen] = useState(false);
   const cur = currentCourse();
-  if (!cur) return html`<${HomeEmpty} nav=${nav}/>`;
   const name = userName(), streak = streakDays(), xp = (K.stats && K.stats.xp) || 0;
-  const next = nextLesson(cur), pct = coursePct(cur), ed = examDays();
-  const isExam = cur.group === 'cert';
+  const next = nextLesson(cur), pct = coursePct(cur), ed = examDays(), begun = doneCount(misLessons(cur)) > 0;
+  const isExam = cur.group === 'cert', title = misName(cur);
   const pill = isExam ? (ed != null && ed >= 0 ? (ed === 0 ? 'Esame oggi' : `Esame tra ${plural(ed, 'giorno', 'giorni')}`) : 'Metti la data dell\'esame') : (streak > 1 ? `${streak} giorni di fila` : 'Giorno ' + Math.max(1, streak));
-  const others = startedCourses().filter(c => c !== cur);
+  const others = misCourses().filter(c => c !== cur), stops = misStops(cur), known = misGet().known || [];
+  const rest = isExam ? [] : misRest(cur), restN = rest.reduce((n, u) => n + unitLessons(u).length, 0);
+  const open = u => nav.go('percorso', { course: cur.id, unit: u.id });
   return html`<${Room} color=${AZ} tab="home" go=${nav.tab}
     rally=${html`<${Rally} pose="saluta" alt="Rally saluta" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div style="position:absolute;right:20px;top:0"><${StatPill} streak=${streak} xp=${xp}/></div>
@@ -36,67 +39,54 @@ function HomeScreen({ nav }) {
         ${isExam ? html`<button type="button" onClick=${() => setDateOpen(true)}><${Pill}>${pill}<//></button>` : html`<${Pill}>${pill}<//>`}
       </div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:16px">
-      <button type="button" class="o-col" style="gap:10px;width:100%" onClick=${() => nav.go('percorso', { course: cur.id, unit: next ? next.unit.id : null })} aria-label=${`Apri ${cur.name}`}>
-        <span class="o-rowf" style="gap:10px;width:100%"><span class="o-ibox" style="width:36px;height:36px;border-radius:11px;font-size:14px;background:${AZ}">${cur.badge}</span>
-          <span class="o-grow" style="font-size:16px;line-height:20px;font-weight:800">${cur.name}</span><span style="font-size:14px;line-height:20px;font-weight:800">${pct}%</span></span>
+      <button type="button" class="o-col" style="gap:10px;width:100%" onClick=${() => nav.go('percorso', { course: cur.id, unit: next ? next.unit.id : null })} aria-label=${`Apri ${title}`}>
+        <span class="o-rowf" style="gap:10px;width:100%"><span class="o-ibox" style="width:36px;height:36px;border-radius:11px;font-size:14px;background:${misP().course === cur.id ? misP().color : AZ}">${misIcon(cur, 18)}</span>
+          <span class="o-grow" style="font-size:16px;line-height:20px;font-weight:800;text-align:left">${title}</span><span style="font-size:14px;line-height:20px;font-weight:800">${pct}%</span></span>
         <span style="display:block;width:100%"><${Bar} pct=${pct} label=${`Percorso completato al ${pct}%`}/></span>
       </button>
       ${next ? html`<div class="o-col" style="gap:4px"><div class="o-big" style=${Object.assign({ overflowWrap: 'anywhere', display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 3, overflow: 'hidden' }, next.title.length > 44 ? { fontSize: 22, lineHeight: '27px', letterSpacing: '-.01em' } : null)}>${next.title}</div>
-          <div class="o-body o-mut">${doneCount(cur.lessons) ? 'Prossima lezione' : 'Prima lezione'} di ${next.unit.name}, ${next.minutes} minuti</div></div>
-        <${Btn} onClick=${() => nav.go('lezione', { key: next.key })}>${doneCount(cur.lessons) ? 'Riprendi la lezione' : 'Inizia la prima lezione'}<//>`
-      : html`<div class="o-col" style="gap:4px"><div class="o-big">Percorso completato</div><div class="o-body o-mut">Hai preso tutte le figurine. Tienile vive con il ripasso.</div></div>
+          <div class="o-body o-mut">${begun ? 'Prossima lezione' : 'Prima lezione'} di ${next.unit.name}, ${next.minutes} minuti</div></div>
+        <${Btn} onClick=${() => nav.go('lezione', { key: next.key })}>${begun ? 'Riprendi la lezione' : 'Inizia la lezione'}<//>`
+      : html`<div class="o-col" style="gap:4px"><div class="o-big">Percorso completato</div><div class="o-body o-mut">Hai finito le lezioni pronte. Tieni vive le figurine con il ripasso.</div></div>
         <${Btn} onClick=${() => nav.tab('allenati')}>Vai al ripasso<//>`}
     </div></div>
     <${NewsTicker} nav=${nav}/>
     <${Sheet}>
-      <h2 class="o-h2" style="margin-bottom:4px">Gli argomenti di ${cur.name}</h2>
-      ${cur.units.map(u => { const ls = unitLessons(u), d = doneCount(ls); return html`<${Row} key=${u.id} icon=${html`<span style="font-size:15px">${u.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase()}</span>`}
-        title=${u.name} sub=${`${d} di ${plural(ls.length, 'lezione', 'lezioni')}`} right=${html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} onClick=${() => nav.go('percorso', { course: cur.id, unit: u.id })}/>`; })}
+      <h2 class="o-h2" style="margin-bottom:4px">${isExam ? `Gli argomenti di ${title}` : 'Il tuo percorso, unità per unità'}</h2>
+      ${stops.map(s => {
+        if (s.soon) return html`<div key=${s.soon.id} class="o-row"><span class="o-ibox" style="font-size:15px;background:${T_BG};border-style:dashed;color:${MUT}">${unitInitials(s.soon.name)}</span>
+          <span class="o-grow o-col" style="gap:1px"><span class="o-t" style="color:${MUT}">${s.soon.name}</span><span class="o-s">In arrivo</span></span></div>`;
+        const u = s.u, ls = unitLessons(u), d = hadCount(ls), kn = known.includes(u.id) && doneCount(ls) < ls.length, here = next && next.unit === u;
+        if (here) return html`<button key=${u.id} type="button" class="o-rowf" onClick=${() => open(u)} style="gap:14px;width:calc(100% + 20px);min-height:62px;margin:4px -10px;padding:0 10px;background:${T_AZ};border:2.5px solid ${INK};border-radius:16px;text-align:left">
+          <span class="o-ibox" style="font-size:15px">${unitInitials(u.name)}</span><span class="o-grow o-col" style="gap:1px"><span class="o-t" style="font-weight:800">${u.name}</span><span class="o-s" style="color:${INK}">Sei qui: ${d} di ${plural(ls.length, 'lezione', 'lezioni')}</span></span>${PathIco(D_NEXT, 22, 2.6)}</button>`;
+        return html`<${Row} key=${u.id} icon=${html`<span style="font-size:15px">${unitInitials(u.name)}</span>`} title=${u.name}
+          sub=${kn ? `La sai già: ${plural(ls.length, 'lezione', 'lezioni')}` : `${d} di ${plural(ls.length, 'lezione', 'lezioni')}`}
+          right=${kn ? html`<span style="width:36px;height:36px;flex:none;display:flex;align-items:center;justify-content:center;background:${MENTA};border:2px solid ${INK};border-radius:50%" role="img" aria-label="La sai già">${PathIco(D_CHECK, 18, 3)}</span>` : html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} onClick=${() => open(u)}/>`; })}
+      ${rest.length > 0 && html`<${Row} icon=${PathIco(D_PLUS, 20, 2.6)} title="Aggiungi altre unità" sub=${`${rest.length === 1 ? 'Un\'altra unità' : 'Altre ' + rest.length + ' unità'} delle Basi, ${plural(restN, 'lezione', 'lezioni')}`} chev=${true} onClick=${() => setAddOpen(true)}/>`}
       ${others.length > 0 && html`<h2 class="o-h2" style="margin:22px 0 4px">Gli altri tuoi percorsi</h2>`}
-      ${others.map(c => html`<${Row} key=${c.id} icon=${c.badge} title=${c.name} sub=${`${doneCount(c.lessons)} di ${plural(c.lessons.length, 'lezione', 'lezioni')}`} right=${html`<${Ring} pct=${coursePct(c)}/>`} onClick=${() => { s2set({ cur: c.id }); }}/>`)}
+      ${others.map(c => { const ls = misLessons(c); return html`<${Row} key=${c.id} icon=${c.badge} title=${c.name} sub=${`${hadCount(ls)} di ${plural(ls.length, 'lezione', 'lezioni')}`} right=${html`<${Ring} pct=${coursePct(c)}/>`} onClick=${() => { s2set({ cur: c.id }); }}/>`; })}
       <${NewsHomeRow} nav=${nav}/>
-      <${Row} icon=${PathIco(D_PLUS, 22, 2.6)} ibg=${AZ} title="Scopri altri percorsi" sub="Dalle basi alle certificazioni" chev=${true} last=${true} onClick=${() => nav.go('catalogo')}/>
+      <${Row} icon=${Ico(LayoutGrid, 22)} ibg=${AZ} title="Scopri tutti i percorsi" sub="Da aggiungere e in arrivo" chev=${true} last=${true} onClick=${() => nav.go('catalogo')}/>
     <//>
     ${dateOpen && html`<${ExamDateSheet} onClose=${() => setDateOpen(false)}/>`}
-  <//>`;
-}
-
-// Home del primo giorno: nessun percorso iniziato
-function HomeEmpty({ nav }) {
-  const s = useS2();
-  const goal = (s.onboard && s.onboard.goal) || 'zero';
-  const rec = goal === 'exam' ? courseById('cfa2') : courseById('basi');
-  const first = rec.lessons[0], name = userName();
-  const start = () => { s2set(x => ({ cur: rec.id, started: Array.from(new Set([...(x.started || []), rec.id])) })); nav.go('lezione', { key: first.key }); };
-  return html`<${Room} color=${AZ} tab="home" go=${nav.tab}
-    rally=${html`<${Rally} pose="saluta" alt="Rally saluta" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
-    head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">Ciao${name ? html`,<br/>${name}` : '!'}</h1><${Pill}>Giorno 1<//></div>`}>
-    <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:16px">
-      <div class="o-rowf" style="gap:14px;align-items:flex-start"><span class="o-ibox" style="width:56px;height:56px;border-width:2.5px;border-radius:16px;font-size:26px;background:${AZ};box-shadow:3px 3px 0 ${INK};transform:rotate(-4deg)">${rec.badge}</span>
-        <div class="o-grow o-col" style="gap:2px"><span class="o-s">Il tuo primo percorso</span><span style="font-size:24px;line-height:28px;font-weight:800;letter-spacing:-.01em">${rec.name}</span><span class="o-s">${plural(rec.lessons.length, 'lezione breve', 'lezioni brevi')}${rec.id === 'basi' ? ', da zero' : ''}</span></div></div>
-      <div class="o-rowf" style="gap:12px;justify-content:space-between;padding:12px 16px;background:${T_GR};border-radius:14px"><span class="o-t">${first.title}</span><span class="o-s" style="flex:none">${first.minutes} minuti</span></div>
-      <${Btn} onClick=${start}>Inizia la prima lezione<//>
-    </div></div>
-    <${NewsTicker} nav=${nav}/>
-    <${Sheet}>
-      <h2 class="o-h2" style="margin-bottom:4px">Oppure parti da qui</h2>
-      ${rec.id !== 'cfa2' && html`<${Row} icon=${Ico(GraduationCap, 22)} ibg=${LILLA} title="Preparare un esame" sub="CFA Level II, domande come all'esame" chev=${true} onClick=${() => nav.go('scheda', { course: 'cfa2' })}/>`}
-      ${rec.id !== 'basi' && html`<${Row} icon=${Ico(Sprout, 22)} ibg=${AZ} title="Capire la finanza da zero" sub="Soldi, interessi, inflazione" chev=${true} onClick=${() => nav.go('scheda', { course: 'basi' })}/>`}
-      <${Row} icon=${Ico(TrendingUp, 22)} ibg=${PESCA} title="Investire i miei risparmi" sub="Azioni, obbligazioni, fondi: in arrivo" chev=${true} onClick=${() => nav.go('catalogo')}/>
-      <${NewsHomeRow} nav=${nav}/>
-      <${Row} icon=${Ico(LayoutGrid, 22)} title="Scopri tutti i percorsi" sub="Dalle basi agli esami" chev=${true} last=${true} onClick=${() => nav.go('catalogo')}/>
-    <//>
+    ${addOpen && html`<${BSheet} onClose=${() => setAddOpen(false)} label="Aggiungi altre unità">
+      <h2 class="o-big" style="flex:none">Aggiungi altre unità</h2><p class="o-body o-mut" style="margin:6px 0 8px;flex:none">Sono le altre unità delle Basi della finanza. Quelle che aggiungi vanno in fondo al tuo percorso.</p>
+      <div class="o-scroll" style="flex:0 1 auto;max-height:56vh">${rest.map((u, k) => html`<div key=${u.id} class=${'o-row' + (k === rest.length - 1 ? ' last' : '')}><span class="o-ibox" style="font-size:15px">${unitInitials(u.name)}</span>
+        <span class="o-grow o-col" style="gap:1px"><span class="o-t">${u.name}</span><span class="o-s">${MIS_SUB[u.id] || plural(unitLessons(u).length, 'lezione', 'lezioni')}</span></span>
+        <button type="button" class="o-chip" onClick=${() => { misAddUnits([u.id]); if (rest.length === 1) setAddOpen(false); }} aria-label=${`Aggiungi ${u.name}`}>Aggiungi</button></div>`)}</div>
+      ${rest.length > 1 && html`<div style="margin-top:12px;flex:none"><${Btn} cls="lg" onClick=${() => { misAddUnits(rest.map(u => u.id)); setAddOpen(false); }}>Aggiungile tutte<//></div>`}<//>`}
   <//>`;
 }
 
 // ---- dentro un percorso: le sezioni dell'unità e le lezioni in fila ----
 function PercorsoScreen({ nav, course, unit }) {
   useS2(); useTick();
-  const c = courseById(course) || currentCourse() || courses()[0];
+  const c = courseById(course) || currentCourse();
   const nx = nextLesson(c, unit);
-  const [uid, setUid] = useState(unit || (nx ? nx.unit.id : c.units[0].id));
+  const [uid, setUid] = useState(unit || (nx ? nx.unit.id : misUnits(c)[0].id));
   const [pick, setPick] = useState(false);
-  const u = c.units.find(x => x.id === uid) || c.units[0], ui = c.units.indexOf(u);
+  // le unità del percorso; se se ne apre una che il percorso non usa, compare in fondo
+  const u = c.units.find(x => x.id === uid) || misUnits(c)[0], units = misUnits(c).includes(u) ? misUnits(c) : [...misUnits(c), u], ui = units.indexOf(u);
   const album = K.albumLoad(), now = Date.now(), tests = s2get().tests;
   const curL = unitLessons(u).find(l => !isDone(l.key));
   const curRef = useRef(null), scrollRef = useRef(null);
@@ -105,10 +95,10 @@ function PercorsoScreen({ nav, course, unit }) {
   const subOf = l => { const st = stickerState(l, album, now); return st === 'sbiadisce' ? 'Sta sbiadendo, ripassala' : st === 'dorata' ? 'Figurina dorata' : 'Figurina presa'; };
   return html`<${Room} color=${c.color || AZ} tab="home" go=${nav.tab} headH=${156} scrollRef=${scrollRef}
     rally=${html`<${Rally} pose="indica" w=${206} alt="Rally indica la prossima lezione" style="position:absolute;right:-20px;top:calc(var(--otop) + 6px)"/>`}
-    head=${html`<div class="o-rowf" style="height:44px;gap:12px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Torna a Impara"/><span style="font-size:15px;line-height:20px;font-weight:800">${c.name}</span></div>
+    head=${html`<div class="o-rowf" style="height:44px;gap:12px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Torna a Impara"/><span style="font-size:15px;line-height:20px;font-weight:800">${misName(c)}</span></div>
       <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:12px;max-width:225px">
         <h1 class="o-h1m" style=${u.name.length > 14 ? { fontSize: 26, lineHeight: '28px' } : null}>${u.name}</h1>
-        <button type="button" onClick=${() => setPick(true)} aria-label="Cambia argomento"><${Pill}>Unità ${ui + 1} di ${c.units.length}<//></button>
+        <button type="button" onClick=${() => setPick(true)} aria-label="Cambia argomento"><${Pill}>Unità ${ui + 1} di ${units.length}<//></button>
       </div>`}>
     <${Sheet} style=${{ paddingTop: 22 }}>
       ${u.sections.map((sec, si) => { const d = doneCount(sec.lessons), qn = allQuestions(sec.lessons).length, tid = 'unit:' + sec.id, tr = tests[tid];
@@ -133,8 +123,8 @@ function PercorsoScreen({ nav, course, unit }) {
           </div></section>`; })}
     <//>
     ${pick && html`<${BSheet} onClose=${() => setPick(false)} label="Argomenti">
-      <h2 class="o-big" style="margin-bottom:6px">${c.name}</h2>
-      ${c.units.map((x, k) => { const ls = unitLessons(x), d = doneCount(ls); return html`<${Row} key=${x.id} icon=${k + 1} ibg=${x === u ? AZ : null} title=${x.name} sub=${`${d} di ${ls.length} lezioni`} right=${html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} last=${k === c.units.length - 1} onClick=${() => { setUid(x.id); setPick(false); }}/>`; })}
+      <h2 class="o-big" style="margin-bottom:6px">${misName(c)}</h2>
+      ${units.map((x, k) => { const ls = unitLessons(x), d = doneCount(ls); return html`<${Row} key=${x.id} icon=${k + 1} ibg=${x === u ? AZ : null} title=${x.name} sub=${`${d} di ${ls.length} lezioni`} right=${html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} last=${k === units.length - 1} onClick=${() => { setUid(x.id); setPick(false); }}/>`; })}
     <//>`}
   <//>`;
 }

@@ -241,7 +241,7 @@ const LS = {
   raw(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 };
 const S2_KEY = 'fl2_state';
-const S2_DEF = { v: 1, name: '', onboard: null, started: [], cur: null, basi: [], expl: { d: '', n: 0 }, tests: {}, ans: {}, duel: { w: 0, l: 0, last: null }, xp: {}, gold: {}, seen: {},
+const S2_DEF = { v: 1, name: '', onboard: null, mis: null, started: [], cur: null, basi: [], expl: { d: '', n: 0 }, tests: {}, ans: {}, duel: { w: 0, l: 0, last: null }, xp: {}, gold: {}, seen: {},
   settings: { goalMin: 10, remind: false, remindAt: '19:30', lang: 'Italiano', examEn: true } };
 let s2 = null; const s2subs = new Set();
 // dati salvati con una forma sbagliata (versioni vecchie, memoria rovinata): si torna al valore di partenza di quel campo

@@ -22,7 +22,7 @@ function AllenatiScreen({ nav }) {
   useS2(); useTick();
   const album = K.albumLoad(), now = Date.now();
   const due = dueLessons(), have = Object.keys(album).length, streak = streakDays();
-  const cur = currentCourse() || courses()[1];
+  const cur = currentCourse(), exam = inMyApp('cfa2');   // la simulazione d'esame c'è solo per chi ha il CFA nella sua app
   const weak = topicScores(cur)[0], mock = s2get().tests['mock:cfa2'];
   const mins = Math.max(2, Math.round(due.reduce((n, l) => n + (lessonQuestions(l).length ? 1.5 : 0.7), 0)));
   return html`<${Room} color=${MENTA} tab="allenati" go=${nav.tab}
@@ -41,9 +41,10 @@ function AllenatiScreen({ nav }) {
     <div style="height:24px;flex:none"></div>
     <${Sheet}>
       <h2 class="o-h2" style="margin-bottom:4px">Oppure scegli tu</h2>
-      <${Row} icon=${PathIco(D_TABS.allenati, 22, 2.4)} title="Quiz misto" sub="10 domande dai tuoi percorsi" chev=${true} onClick=${() => nav.go('pratica', { mode: 'mix' })}/>
+      <${Row} icon=${PathIco(D_TABS.allenati, 22, 2.4)} title="Quiz misto" sub=${misCourses().length > 1 ? '10 domande dai tuoi percorsi' : '10 domande dal tuo percorso'} chev=${true} onClick=${() => nav.go('pratica', { mode: 'mix' })}/>
       <${Row} icon=${Ico(Target, 22)} title="Punti deboli" sub=${weak ? weak.name : 'Rally li trova dalle tue risposte'} chev=${true} onClick=${() => nav.go('deboli')}/>
-      <${Row} icon=${Ico(Timer, 22)} title="Simulazione d'esame" sub=${mock ? `CFA Level II, ultimo punteggio ${Math.round(mock.ok / mock.n * 100)}%` : 'CFA Level II, 44 domande a tempo'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>
+      ${exam ? html`<${Row} icon=${Ico(Timer, 22)} title="Simulazione d'esame" sub=${mock ? `CFA Level II, ultimo punteggio ${Math.round(mock.ok / mock.n * 100)}%` : 'CFA Level II, 44 domande a tempo'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>`
+        : html`<${Row} icon=${Ico(Compass, 22)} title="Test di livello" sub="5 domande per capire a che punto sei" chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'level', course: cur.id })}/>`}
     <//>
   <//>`;
 }
@@ -51,14 +52,14 @@ function AllenatiScreen({ nav }) {
 // sezione consigliata per la prossima verifica: quella con più lezioni fatte tra le non ancora superate
 function suggestedTest(c) {
   const tests = s2get().tests; let best = null;
-  c.units.forEach(u => u.sections.forEach(sec => { if (allQuestions(sec.lessons).length < 3) return; const t = tests['unit:' + sec.id]; if (t && t.passedEver) return; const d = doneCount(sec.lessons); if (!best || d > best.d) best = { sec, d }; }));
+  misUnits(c).forEach(u => u.sections.forEach(sec => { if (allQuestions(sec.lessons).length < 3) return; const t = tests['unit:' + sec.id]; if (t && t.passedEver) return; const d = doneCount(sec.lessons); if (!best || d > best.d) best = { sec, d }; }));
   return best ? best.sec : null;
 }
-const testableSections = c => c.units.flatMap(u => u.sections).filter(sec => allQuestions(sec.lessons).length >= 3);
+const testableSections = c => misUnits(c).flatMap(u => u.sections).filter(sec => allQuestions(sec.lessons).length >= 3);
 function TestScreen({ nav }) {
   useS2();
   const [list, setList] = useState(false);
-  const c = currentCourse() || courses()[1], tests = s2get().tests, last = tests._last;
+  const c = currentCourse(), exam = inMyApp('cfa2'), tests = s2get().tests, last = tests._last;
   const sug = suggestedTest(c), secs = testableSections(c), passed = secs.filter(x => tests['unit:' + x.id] && tests['unit:' + x.id].passedEver).length;
   const qn = sug ? Math.min(10, allQuestions(sug.lessons).length) : 0;
   return html`<${Room} color=${MENTA} tab="allenati" go=${nav.tab} headH=${176}
@@ -67,17 +68,17 @@ function TestScreen({ nav }) {
       <div class="o-col" style="align-items:flex-start;gap:14px;margin-top:14px;max-width:200px"><h1 class="o-h1m">Mettiti alla prova</h1><${Pill}>${last ? `Ultimo test: ${last.ok} su ${last.n}` : 'Nessun test, per ora'}<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px">
       ${sug ? html`<div class="o-col" style="gap:3px"><span class="o-s">Consigliato adesso</span><div style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere">Verifica: ${sug.name}</div>
-          <div class="o-body o-mut">${c.name}, ${qn} domande, ${Math.round(qn * c.pace / 60)} minuti</div></div>
+          <div class="o-body o-mut">${misName(c)}, ${qn} domande, ${Math.round(qn * c.pace / 60)} minuti</div></div>
         <div class="o-rowf" style="gap:12px;padding:10px 14px;background:${T_GIALLO};border-radius:14px"><span style="width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;background:${GIALLO};border:2px solid ${INK};border-radius:9px">${PathIco(D_STAR, 16, 2, INK, INK)}</span><span class="o-t" style="font-size:15px">Se passi, le figurine diventano dorate.</span></div>
         <${Btn} bg=${MENTA} onClick=${() => nav.go('testInizio', { kind: 'unit', course: c.id, section: sug.id })}>Inizia la verifica<//>`
-      : html`<div class="o-col" style="gap:4px"><div style="font-size:22px;line-height:26px;font-weight:800">Hai superato tutte le verifiche</div><div class="o-body o-mut">Resta la simulazione d'esame, quando ti senti pronto.</div></div>`}
+      : html`<div class="o-col" style="gap:4px"><div style="font-size:22px;line-height:26px;font-weight:800">Hai superato tutte le verifiche</div><div class="o-body o-mut">${exam ? 'Resta la simulazione d\'esame, quando ti senti pronto.' : 'Tieniti in forma con il quiz misto, in Allenati.'}</div></div>`}
     </div></div>
     <div style="height:24px;flex:none"></div>
     <${Sheet}>
       <h2 class="o-h2" style="margin-bottom:4px">Tutti i test</h2>
       <${Row} icon=${Ico(Compass, 22)} title="Test di livello" sub="5 domande per capire a che punto sei" chev=${true} onClick=${() => nav.go('testInizio', { kind: 'level', course: c.id })}/>
-      <${Row} icon=${Ico(Flag, 22)} title="Verifiche di unità" sub=${`${c.name}: ${passed} ${passed === 1 ? 'superata' : 'superate'} su ${secs.length}`} chev=${true} onClick=${() => setList(true)}/>
-      <${Row} icon=${Ico(Timer, 22)} title="Simulazione d'esame" sub="CFA Level II, 44 domande a tempo" tag=${K.isPro ? null : 'Pro'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>
+      <${Row} icon=${Ico(Flag, 22)} title="Verifiche di unità" sub=${`${misName(c)}: ${passed} ${passed === 1 ? 'superata' : 'superate'} su ${secs.length}`} chev=${true} last=${!exam} onClick=${() => setList(true)}/>
+      ${exam && html`<${Row} icon=${Ico(Timer, 22)} title="Simulazione d'esame" sub="CFA Level II, 44 domande a tempo" tag=${K.isPro ? null : 'Pro'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>`}
     <//>
     ${list && html`<${BSheet} onClose=${() => setList(false)} label="Verifiche di unità">
       <h2 class="o-big" style="margin-bottom:6px;flex:none">Verifiche di unità</h2>
@@ -88,7 +89,7 @@ function TestScreen({ nav }) {
 }
 
 function TestIntro({ nav, kind, course, section }) {
-  const c = courseById(course) || courses()[1];
+  const c = courseById(course) || currentCourse();
   const sec = section ? c.units.flatMap(u => u.sections).find(s => s.id === section) : null;
   const t = useMemo(() => buildTest(kind, c, sec), [kind, course, section]);
   const needPro = kind === 'mock' && !K.isPro;
@@ -212,8 +213,8 @@ function buildPractice(mode, sectionId) {
   if (mode === 'ravviva') return dueLessons().slice(0, 12).map(l => { const qs = lessonQuestions(l); return qs.length ? { q: qs[0], l } : { l, recap: true }; });
   if (mode === 'weak') { const sec = all.map(l => l.section).find(s => s.id === sectionId); const st = K.qStatsLoad(); const qs = allQuestions(sec ? sec.lessons : []);
     return sh(qs).sort((a, b) => ((st[a.key] && st[a.key].last === 0) ? 0 : 1) - ((st[b.key] && st[b.key].last === 0) ? 0 : 1)).slice(0, 8).map(q => ({ q, l: q.lesson })); }
-  const started = startedCourses(); const pool = (started.length ? started : courses()).flatMap(c => c.lessons);
-  const done = pool.filter(l => isDone(l.key)); const src = allQuestions(done).length >= 5 ? done : pool;
+  const started = startedCourses(); const pool = (started.length ? started : misCourses()).flatMap(misLessons);   // solo le lezioni del proprio percorso
+  const done = pool.filter(l => isHad(l.key)); const src = allQuestions(done).length >= 5 ? done : pool;
   return sh(allQuestions(src)).slice(0, 10).map(q => ({ q, l: q.lesson }));
 }
 function PracticeRun({ nav, mode, section }) {
@@ -262,7 +263,7 @@ function PracticeRun({ nav, mode, section }) {
 
 function WeakScreen({ nav }) {
   useS2();
-  const c = currentCourse() || courses()[1];
+  const c = currentCourse();
   const sc = topicScores(c), weak = sc[0], pro = !!K.isPro;
   const col = s => s >= 80 ? MENTA : s >= 55 ? GIALLO : ROSA;
   const train = () => { if (!pro) return nav.go('pro', { why: 'deboli' }); nav.go('pratica', { mode: 'weak', section: weak.id }); };

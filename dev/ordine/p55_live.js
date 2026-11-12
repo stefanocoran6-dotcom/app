@@ -71,7 +71,9 @@ class LiveConn {
 function LiveScreen({ nav, codice: cod0, nuova }) {
   const known = userName();
   const [vista, setVista] = useState(cod0 ? 'entra' : nuova ? 'scegli' : 'codice');
-  const [corso, setCorso] = useState(() => { const c = currentCourse(); return c && c.id === 'cfa2' ? 'cfa2' : 'basi'; });
+  // le domande arrivano dai percorsi che si hanno nell'app: chi non ha il CFA non lo vede tra le scelte
+  const corsi = LIVE_CORSI.filter(c => inMyApp(c.id)).length ? LIVE_CORSI.filter(c => inMyApp(c.id)) : LIVE_CORSI;
+  const [corso, setCorso] = useState(() => { const c = currentCourse(); return c && corsi.some(x => x.id === c.id) ? c.id : corsi[0].id; });
   const [cod, setCod] = useState(cod0 || ''), [nm, setNm] = useState(known);
   const [st, setSt] = useState({}), [net, setNet] = useState(''), [ask, setAsk] = useState(false), [xp, setXp] = useState(null), [, tick] = useState(0);
   const conn = useRef(null), last = useRef(null), t0 = useRef({}), pend = useRef(null), ioRef = useRef(0), xpDone = useRef(null);
@@ -157,9 +159,9 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
     <div class="o-pad o-col o-duel" style="gap:22px;padding-top:12px;padding-bottom:20px">
       <div class="o-col" style="gap:8px"><h1 class="o-h1m">Lampo</h1>
         <p class="o-body o-mut">5 domande, le stesse sui due telefoni. Il punto va a chi risponde giusto per primo. Se sbagli perdi un punto, e l'altro può ancora rispondere.</p></div>
-      <div class="o-col" style="gap:10px" role="radiogroup" aria-label="Da quale percorso arrivano le domande">
-        ${LIVE_CORSI.map(c => html`<button key=${c.id} type="button" role="radio" aria-checked=${corso === c.id ? 'true' : 'false'} class=${'o-opt' + (corso === c.id ? ' sel' : '')} onClick=${() => setCorso(c.id)}>
-          <span class="l">${corso === c.id ? PathIco(D_CHECK, 20, 3) : ''}</span><span class="x"><span style="display:block">${c.name}</span><span class="o-s" style="display:block;margin-top:2px;font-weight:600">${c.sub}</span></span></button>`)}</div>
+      ${corsi.length > 1 ? html`<div class="o-col" style="gap:10px" role="radiogroup" aria-label="Da quale percorso arrivano le domande">
+        ${corsi.map(c => html`<button key=${c.id} type="button" role="radio" aria-checked=${corso === c.id ? 'true' : 'false'} class=${'o-opt' + (corso === c.id ? ' sel' : '')} onClick=${() => setCorso(c.id)}>
+          <span class="l">${corso === c.id ? PathIco(D_CHECK, 20, 3) : ''}</span><span class="x"><span style="display:block">${c.name}</span><span class="o-s" style="display:block;margin-top:2px;font-weight:600">${c.sub}</span></span></button>`)}</div>` : html`<p class="o-s" style="font-size:14px;line-height:20px">Le domande arrivano da ${corsi[0].name}. ${corsi[0].sub}.</p>`}
       ${nameField}
     </div><//>`;
   if (vista === 'codice' || (vista === 'entra' && !known)) {

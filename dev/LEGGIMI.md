@@ -65,3 +65,16 @@ Due telefoni giocano le stesse 5 domande nello stesso momento. In mezzo c'è un 
 - Indirizzo: `SFIDE_HOST` in `p55_live.js` (`finlearn-sfide.finlearn27.workers.dev`). Finché c'è `SOTTODOMINIO` la scheda Sfide non mostra la sfida dal vivo. In prova sul computer l'app usa `ws://127.0.0.1:8787`.
 - Prova sul computer: in `sfide/` `npm install`, poi `npx wrangler dev --port 8787` con un file `.dev.vars` che contiene `ORIGINI=http://127.0.0.1:8765` (non va pubblicato).
 - Pubblicazione: su Cloudflare (piano gratuito) si crea un Worker chiamato `finlearn-sfide` collegato a questo repository, con cartella `sfide`. A ogni pubblicazione su `main` Cloudflare aggiorna l'arbitro da solo. Se cambiano i messaggi tra app e arbitro va alzato `SFIDE_V` / `VERSIONE` in tutti e due.
+
+## Su misura (obiettivo e percorso)
+
+Alla registrazione si sceglie che cosa fare con l'app (da zero, investire, lavoro, esame) e da dove si parte. Da lì dipende che cosa mostrano tutte le schede: chi non prepara un esame non trova il CFA finché non lo aggiunge da "Scopri".
+
+- Il modello sta in `dev/ordine/p10_data.js`, blocco "su misura": `MIS_PATHS` dice, per ogni obiettivo, il corso e le unità in ordine (`stops`). Un nome che comincia con `+` è un'unità ancora da scrivere, mostrata come "in arrivo" (testi in `MIS_SOON`).
+- Lo stato salvato è `mis` dentro `fl2_state`: `goal`, `level`, `known` (unità "la sai già"), `more` (unità aggiunte al percorso), `add` (percorsi aggiunti interi).
+- Le schede non leggono più `courses()` direttamente: usano `misCourses()`, `misUnits(c)`, `misLessons(c)`, `misStops(c)`, `misName(c)`. Chi aggiunge una scheda nuova deve fare lo stesso, altrimenti il CFA torna a comparire ai principianti.
+- Le 5 domande della registrazione (`placementFor`, `placementKnown`) segnano come note le prime unità con tutte le risposte giuste. Le unità note contano nel percorso (`isHad`), ma la figurina si prende solo facendo la lezione (`isDone`).
+- Chi usava l'app prima di questa versione riceve un percorso ricavato da quello che aveva scelto o iniziato (`misDerive`): i percorsi iniziati restano tutti.
+- Quando un'unità "in arrivo" viene scritta: aggiungerla alle Basi in `basi_src.py`, poi sostituire il suo `+nome` in `stops` con l'id dell'unità.
+- La registrazione è in `dev/ordine/p60_start.js` (`OrdineWelcome`). Prima dell'accesso i dati dei percorsi arrivano da `app.js` con la proprietà `pre`.
+
