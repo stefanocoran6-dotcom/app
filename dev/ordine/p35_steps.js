@@ -115,7 +115,128 @@ const LEVERS = {
     calc: (v, p) => { const parteA = v.a + v.co / 2, protA = Math.min(p.lim, parteA), protB = Math.min(p.lim, v.b); return { fuori: parteA - protA + v.b - protB, protetti: protA + protB, tuoi: parteA + v.b, parteA, b: v.b }; },
     view: o => ({ lab: 'Fuori dalla garanzia', big: eur0(o.fuori), sideLab: 'La tua parte in banca A', side: eur0(o.parteA), side2Lab: 'I tuoi soldi in tutto', side2: eur0(o.tuoi),
       bar: o.tuoi > 0 ? [o.protetti, o.fuori] : null, barLab: ['Protetti', 'Fuori'], barCol: [MENTA, PESCA] })
+  },
+  // dal lordo al netto, regole 2026 (fonti in FONTI_BASI.md): leva "ral". Dipendente privato senza familiari a carico, residente a Milano, 13 mensilità.
+  // Contributi 9,19% (+1% oltre 56.224 €), IRPEF 23/33/43%, detrazione per lavoro dipendente, taglio del cuneo (somma fino a 20.000 €, detrazione fino a 40.000 €), addizionali di Lombardia e Milano.
+  netto: {
+    calc: (v, p) => { const N = STIP.netto(v.ral), N2 = STIP.netto(v.ral + 1000), mens = (p && p.mens) || 13;
+      return { netto: N.annuo / mens, annuo: N.annuo, contributi: N.contr, imposte: v.ral - N.contr - N.annuo, trattenute: v.ral - N.annuo, resta: N2.annuo - N.annuo, ral: v.ral }; },
+    view: o => ({ lab: 'Netto al mese', big: eur0(o.netto), sideLab: 'Trattenute in un anno', side: eur0(o.trattenute), side2Lab: 'Di 1.000 € lordi in più ti restano', side2: eur0(o.resta),
+      bar: [o.annuo, o.trattenute], barLab: ['A te', 'Contributi e imposte'], barCol: [MENTA, PESCA] })
+  },
+  // IRPEF lorda a scaglioni 2026: leva "reddito" (imponibile). media10 = aliquota media in decimi di punto, per gli obiettivi
+  irpef: {
+    calc: v => { const im = STIP.irpef(v.reddito), marg = v.reddito > 50000 ? 43 : v.reddito > 28000 ? 33 : 23; return { imposta: im, media: im / v.reddito * 100, media10: im / v.reddito * 1000, marginale: marg, resto: v.reddito - im, reddito: v.reddito }; },
+    view: o => ({ lab: 'IRPEF lorda', big: eur0(o.imposta), sideLab: 'Aliquota media', side: fmtN(o.media, 1) + '%', side2Lab: "Aliquota sull'ultimo euro", side2: o.marginale + '%',
+      bar: [o.imposta, o.resto], barLab: ['Imposta', 'Resto del reddito'], barCol: [PESCA, '#fff'] })
+  },
+  // quanto vale uno sconto fiscale: leve "reddito" (imponibile) e "spesa". Deduzione = imposta in meno togliendo la spesa dal reddito; detrazione = 19% della spesa
+  sconto: {
+    calc: v => { const ded = STIP.irpef(v.reddito) - STIP.irpef(Math.max(0, v.reddito - v.spesa)), det = 0.19 * v.spesa; return { ded, det, rapporto100: det > 0 ? ded / det * 100 : 0, reddito: v.reddito, spesa: v.spesa }; },
+    view: o => ({ lab: 'Se la deduci, risparmi', big: eur0(o.ded), sideLab: 'Se la detrai al 19%, risparmi', side: eur0(o.det), bar: [Math.min(o.ded, o.det), Math.abs(o.ded - o.det)], barLab: ['Detrazione', 'In più con la deduzione'], barCol: [AZ, MENTA] })
+  },
+  // TFR lasciato in azienda: leve "ral", "anni", "infl" (inflazione annua in %). Quota annua = RAL / 13,5 meno lo 0,5% della RAL;
+  // ogni anno quello che c'era a fine anno prima si rivaluta dell'1,5% più il 75% dell'inflazione, meno l'imposta del 17% sulla rivalutazione. RAL costante.
+  tfr: {
+    calc: (v, p) => { const ral = v.ral != null ? v.ral : p.ral, quota = ral / 13.5 - 0.005 * ral, lordo = 1.5 + 0.75 * v.infl, riv = lordo * 0.83; let T = 0; for (let k = 0; k < v.anni; k++) T = T * (1 + riv / 100) + quota;
+      return { tfr: T, versato: quota * v.anni, crescita: T - quota * v.anni, riv, scarto10: (riv - v.infl) * 10, quota, anni: v.anni, infl: v.infl }; },
+    view: o => ({ lab: 'TFR maturato', big: eur0(o.tfr), sideLab: 'Rivalutazione netta di un anno', side: fmtN(o.riv, 2) + '%', side2Lab: "Rispetto all'inflazione", side2: (o.riv - o.infl >= 0 ? '+' : '') + fmtN(o.riv - o.infl, 2) + ' punti',
+      bar: [o.versato, o.crescita], barLab: ['Quote annue', 'Rivalutazioni'], barCol: [AZ, MENTA] })
+  },
+  // acquisto a rate a tasso zero con spese: leve "pratica" (spese all'inizio, €), "incasso" (spesa per ogni rata, €), "mesi". Parametro prezzo.
+  // Il TAEG è il tasso annuo che rende uguali la cifra finanziata (prezzo meno le spese iniziali) e le rate, spese comprese; si trova per tentativi.
+  rate: {
+    calc: (v, p) => { const rata = p.prezzo / v.mesi + v.incasso, netto = p.prezzo - v.pratica, costo = v.pratica + v.incasso * v.mesi; let lo = 0, hi = 1;
+      if (costo > 0) for (let k = 0; k < 80; k++) { const m = (lo + hi) / 2; let pv = 0; for (let j = 1; j <= v.mesi; j++) pv += rata / Math.pow(1 + m, j); if (pv > netto) lo = m; else hi = m; }
+      const taeg = costo > 0 ? (Math.pow(1 + lo, 12) - 1) * 100 : 0; return { taeg, taeg10: taeg * 10, costo, totale: p.prezzo + costo, prezzo: p.prezzo, mesi: v.mesi, pratica: v.pratica, incasso: v.incasso }; },
+    view: o => ({ lab: 'TAEG', big: fmtN(o.taeg, 1) + '%', sideLab: 'Spese in tutto', side: eur0(o.costo), side2Lab: 'Totale pagato', side2: eur0(o.totale), bar: [o.prezzo, o.costo], barLab: ['Prezzo', 'Spese'], barCol: [AZ, PESCA] })
+  },
+  // cessione del quinto: leve "netto" (stipendio netto medio al mese), "anni", "taeg" (% annuo). La rata è un quinto del netto;
+  // la somma che si riceve è il valore di oggi delle rate al TAEG scelto (tasso del mese = (1 + TAEG)^(1/12) - 1).
+  quinto: {
+    calc: v => { const rata = v.netto / 5, n = v.anni * 12, i = Math.pow(1 + v.taeg / 100, 1 / 12) - 1, somma = rata * (1 - Math.pow(1 + i, -n)) / i; return { rata, somma, totale: rata * n, costo: rata * n - somma, anni: v.anni, taeg: v.taeg }; },
+    view: o => ({ lab: 'Somma che ricevi', big: eur0(o.somma), sideLab: 'Rata trattenuta ogni mese', side: eur0(o.rata), side2Lab: 'Restituisci in tutto', side2: eur0(o.totale), bar: [o.somma, o.costo], barLab: ['Ricevi', 'Costo del prestito'], barCol: [AZ, PESCA] })
+  },
+  // affitto o acquisto dopo un certo numero di anni: leve "anni", "affitto" (€ al mese), "crescita" (% annuo del valore della casa).
+  // Parametri: prezzo, costi (% del prezzo pagata una volta), anticipo (%), tasso e anniMutuo, manut (% del prezzo all'anno), rend (% annuo che avrebbero reso i soldi impegnati).
+  // Costo di comprare = costi d'acquisto + interessi pagati + manutenzione - aumento di valore + rendimento perso su anticipo e costi. Costo di affittare = affitti pagati.
+  casa: {
+    calc: (v, p) => { const M = p.prezzo * (1 - p.anticipo / 100), j = p.tasso / 1200, n = p.anniMutuo * 12, rata = M * j / (1 - Math.pow(1 + j, -n)), k = v.anni * 12;
+      const D = M * Math.pow(1 + j, k) - rata * (Math.pow(1 + j, k) - 1) / j, interessi = rata * k - (M - D), fermo = p.prezzo * (p.anticipo + p.costi) / 100;
+      const compra = p.prezzo * p.costi / 100 + interessi + p.prezzo * p.manut / 100 * v.anni - p.prezzo * (Math.pow(1 + v.crescita / 100, v.anni) - 1) + fermo * (Math.pow(1 + p.rend / 100, v.anni) - 1), affitta = v.affitto * 12 * v.anni;
+      return { compra, affitta, diff: affitta - compra, anni: v.anni, affitto: v.affitto, crescita: v.crescita }; },
+    view: o => ({ lab: o.diff >= 0 ? 'Comprando risparmi' : 'Affittando risparmi', big: eur0(Math.abs(o.diff)), sideLab: 'Costo di comprare', side: eur0(o.compra), side2Lab: 'Costo di affittare', side2: eur0(o.affitta),
+      bar: o.compra > 0 ? [o.compra, o.affitta] : null, barLab: ['Comprare', 'Affittare'], barCol: [AZ, GIALLO] })
+  },
+  // quanto mutuo regge un reddito: leve "reddito" (netto al mese), "tasso" (% annuo), "anni". Rata = un terzo del reddito; il mutuo è l'80% del prezzo della casa.
+  mutuomax: {
+    calc: v => { const rata = v.reddito / 3, j = v.tasso / 1200, n = v.anni * 12, mutuo = rata * (1 - Math.pow(1 + j, -n)) / j; return { rata, mutuo, prezzo: mutuo / 0.8, interessi: rata * n - mutuo, anni: v.anni }; },
+    view: o => ({ lab: 'Mutuo che puoi sostenere', big: eur0(o.mutuo), sideLab: 'Rata, un terzo del reddito', side: eur0(o.rata), side2Lab: 'Casa che ci compri, con il 20% tuo', side2: eur0(o.prezzo), bar: [o.mutuo, o.interessi], barLab: ['Mutuo', 'Interessi in tutto'] })
+  },
+  // cambiare mutuo: leve "tasso" (nuovo, % annuo) e "anni" (nuova durata). Parametri: debito che resta, anni che restano e tasso del mutuo di oggi.
+  surroga: {
+    calc: (v, p) => { const R = (C, t, a) => { const j = t / 1200; return C * j / (1 - Math.pow(1 + j, -a * 12)); }, vecchia = R(p.debito, p.vecchio, p.anni), nuova = R(p.debito, v.tasso, v.anni);
+      return { nuova, vecchia, rispMese: vecchia - nuova, rispTot: vecchia * p.anni * 12 - nuova * v.anni * 12, intNuovi: nuova * v.anni * 12 - p.debito, debito: p.debito }; },
+    view: o => ({ lab: 'Rata nuova', big: eur0(o.nuova), sideLab: 'Rispetto alla rata di oggi', side: (o.rispMese >= 0 ? '−' : '+') + eur0(Math.abs(o.rispMese)), side2Lab: o.rispTot >= 0 ? 'Interessi in meno, in tutto' : 'Interessi in più, in tutto', side2: eur0(Math.abs(o.rispTot)),
+      bar: [o.debito, o.intNuovi], barLab: ['Debito', 'Interessi da pagare'] })
+  },
+  // pensione con il metodo contributivo, in euro di oggi: leve "ral" (stipendio lordo medio di un anno), "anni" (di contributi), "eta" (età alla pensione).
+  // Montante = 33% dello stipendio per ogni anno di lavoro (contributi rivalutati quanto i prezzi); pensione di un anno = montante × coefficiente dell'età (valori 2025-2026).
+  pensione: {
+    calc: v => { const K = { 57: 4.204, 58: 4.308, 59: 4.419, 60: 4.536, 61: 4.661, 62: 4.795, 63: 4.936, 64: 5.088, 65: 5.25, 66: 5.423, 67: 5.608, 68: 5.808, 69: 6.024, 70: 6.258, 71: 6.51 };
+      const montante = 0.33 * v.ral * v.anni, coeff = K[v.eta], pensione = montante * coeff / 100; return { montante, coeff, pensione, mese: pensione / 13, tasso: pensione / v.ral * 100, manca: Math.max(0, v.ral - pensione), anni: v.anni, eta: v.eta, ral: v.ral }; },
+    view: o => ({ lab: 'Pensione lorda al mese', big: eur0(o.mese), sideLab: 'In percentuale dello stipendio', side: fmtN(o.tasso, 0) + '%', side2Lab: 'Montante messo da parte', side2: eur0(o.montante),
+      bar: [o.pensione, o.manca], barLab: ["Pensione di un anno", 'Differenza con lo stipendio'], barCol: [AZ, PESCA] })
+  },
+  // fondo pensione: leve "versi" (€ al mese tuoi), "anni", "isc" (costo annuo in %). Parametri: tfr (€ al mese che entra comunque), soglia (versamento minimo per avere il contributo del datore),
+  // datore (€ al mese), rend (% annuo prima dei costi), aliq (% di IRPEF risparmiata sui tuoi versamenti). Capitale prima delle imposte.
+  fondo: {
+    calc: (v, p) => { const dat = v.versi >= p.soglia ? p.datore : 0, c = p.tfr + v.versi + dat, n = v.anni * 12, F = r => { const i = Math.pow(1 + r / 100, 1 / 12) - 1; return Math.abs(i) < 1e-9 ? c * n : c * (Math.pow(1 + i, n) - 1) / i; };
+      const capitale = F(p.rend - v.isc), pieno = F(p.rend), tuoi = v.versi * n, fisco = tuoi * p.aliq / 100;
+      return { capitale, persi: pieno - capitale, tuoi, fisco, costo: tuoi - fisco, datoreTot: dat * n, tfrTot: p.tfr * n, isc10: v.isc * 10, versi: v.versi, anni: v.anni }; },
+    view: o => ({ lab: 'Capitale alla pensione', big: eur0(o.capitale), sideLab: 'Versi tu, tolto lo sconto fiscale', side: eur0(o.costo), side2Lab: 'Aggiunge il datore', side2: eur0(o.datoreTot),
+      bar: [o.capitale, o.persi], barLab: ['Capitale', 'Mangiato dai costi'], barCol: [AZ, PESCA] })
+  },
+  // TFR in azienda o nel fondo pensione, al netto delle imposte finali: leve "anni", "rend" (% annuo netto del fondo), "infl" (inflazione annua in %). Parametri: ral, aliqTfr (% sul TFR in azienda).
+  // Azienda: quota annua rivalutata dell'1,5% più il 75% dell'inflazione, meno il 17%; alla fine imposta aliqTfr sulle quote. Fondo: stessa quota al rendimento scelto;
+  // alla fine sulle quote si paga il 15%, meno 0,3 punti per ogni anno oltre il quindicesimo, con un minimo del 9%.
+  tfrscelta: {
+    calc: (v, p) => { const quota = p.ral / 13.5 - 0.005 * p.ral, riv = (1.5 + 0.75 * v.infl) * 0.83, vers = quota * v.anni; let A = 0, F = 0; for (let k = 0; k < v.anni; k++) { A = A * (1 + riv / 100) + quota; F = F * (1 + v.rend / 100) + quota; }
+      const aliqF = Math.max(9, 15 - 0.3 * Math.max(0, v.anni - 15)), az = A - vers * p.aliqTfr / 100, fo = F - vers * aliqF / 100;
+      return { az, fo, diff: fo - az, aliqF, riv, anni: v.anni, infl: v.infl, infl10: v.infl * 10, rend: v.rend }; },
+    view: o => ({ lab: o.diff >= 0 ? 'Il fondo ti dà in più' : "L'azienda ti dà in più", big: eur0(Math.abs(o.diff)), sideLab: 'TFR in azienda, netto', side: eur0(o.az), side2Lab: 'TFR nel fondo, netto', side2: eur0(o.fo),
+      bar: [o.az, o.fo], barLab: ['In azienda', 'Nel fondo'], barCol: [GIALLO, AZ] })
+  },
+  // mercato del lavoro su 100 persone tra 15 e 64 anni: leve "occ" (occupati) e "dis" (disoccupati: non lavorano e cercano lavoro). Gli altri sono inattivi.
+  lavoro: {
+    calc: v => { const forze = v.occ + v.dis, tasso = v.dis / forze * 100; return { tasso, tasso10: tasso * 10, occ: v.occ, dis: v.dis, inattivi: 100 - forze, forze }; },
+    view: o => ({ lab: 'Tasso di disoccupazione', big: fmtN(o.tasso, 1) + '%', sideLab: 'Tasso di occupazione', side: fmtN(o.occ, 0) + '%', side2Lab: 'Inattivi: non lavorano e non cercano', side2: fmtN(o.inattivi, 0) + ' su 100',
+      bar: [o.occ, o.dis + o.inattivi], barLab: ['Occupati', 'Senza lavoro: disoccupati e inattivi'], barCol: [MENTA, GIALLO] })
+  },
+  // debito pubblico in rapporto al PIL dopo "anni" anni: leve "crescita" (PIL nominale, % annuo), "tasso" (costo medio del debito, %), "primario" (saldo prima degli interessi, % del PIL: positivo = avanzo).
+  // Ogni anno: debito = debito × (1 + tasso) / (1 + crescita) − primario. Parametri: debito (% del PIL di partenza), anni.
+  debito: {
+    calc: (v, p) => { let d = p.debito; for (let k = 0; k < p.anni; k++) d = d * (1 + v.tasso / 100) / (1 + v.crescita / 100) - v.primario; const interessi = p.debito * v.tasso / 100;
+      return { finale: d, delta: d - p.debito, interessi, deficit: interessi - v.primario, crescita: v.crescita, tasso: v.tasso, primario: v.primario, debito: p.debito }; },
+    view: o => ({ lab: 'Debito tra dieci anni, sul PIL', big: fmtN(o.finale, 0) + '%', sideLab: 'Spesa per interessi, sul PIL', side: fmtN(o.interessi, 1) + '%', side2Lab: 'Deficit del primo anno, sul PIL', side2: fmtN(o.deficit, 1) + '%',
+      bar: [o.debito, Math.max(0, o.finale)], barLab: ['Oggi', 'Tra dieci anni'], barCol: [GIALLO, AZ] })
+  },
+  // indice di Borsa pesato per valore di mercato, con tre società: leve "a", "b", "c" (variazione del giorno di ciascuna, in %). Parametri pa, pb, pc: i pesi, che sommano a 100.
+  indice: {
+    calc: (v, p) => { const ind = (p.pa * v.a + p.pb * v.b + p.pc * v.c) / 100, su = (v.a > 0 ? 1 : 0) + (v.b > 0 ? 1 : 0) + (v.c > 0 ? 1 : 0), media = (v.a + v.b + v.c) / 3; return { ind, ind10: ind * 10, media, su, a: v.a, b: v.b, c: v.c }; },
+    view: o => ({ lab: "L'indice oggi", big: (o.ind > 0 ? '+' : '') + fmtN(o.ind, 1) + '%', sideLab: 'Titoli in rialzo', side: o.su + ' su 3', side2Lab: 'Media semplice dei tre', side2: (o.media > 0 ? '+' : '') + fmtN(o.media, 1) + '%', bar: null })
   }
+};
+// i conti dello stipendio 2026, usati dalle leve "netto", "irpef" e "sconto" (stesse formule di dev/ordine/FONTI_BASI.md)
+const STIP = {
+  irpef: x => 0.23 * Math.min(x, 28000) + 0.33 * Math.max(0, Math.min(x, 50000) - 28000) + 0.43 * Math.max(0, x - 50000),
+  detrLav: r => (r <= 15000 ? 1955 : r <= 28000 ? 1910 + 1190 * (28000 - r) / 13000 : r <= 50000 ? 1910 * (50000 - r) / 22000 : 0) + (r > 25000 && r <= 35000 ? 65 : 0),
+  cuneoDetr: r => (r > 20000 && r <= 32000 ? 1000 : r > 32000 && r <= 40000 ? 1000 * (40000 - r) / 8000 : 0),
+  cuneoBonus: r => (r > 20000 ? 0 : r * (r <= 8500 ? 0.071 : r <= 15000 ? 0.053 : 0.048)),
+  addReg: r => 0.0123 * Math.min(r, 15000) + 0.0158 * Math.max(0, Math.min(r, 28000) - 15000) + 0.0172 * Math.max(0, Math.min(r, 50000) - 28000) + 0.0173 * Math.max(0, r - 50000),
+  addCom: r => (r <= 23000 ? 0 : 0.008 * r),
+  netto: ral => { const contr = 0.0919 * ral + 0.01 * Math.max(0, ral - 56224), r = ral - contr, lorda = STIP.irpef(r), irpef = Math.max(0, lorda - STIP.detrLav(r) - STIP.cuneoDetr(r)), add = STIP.addReg(r) + STIP.addCom(r);
+    return { contr, imp: r, lorda, irpef, add, bonus: STIP.cuneoBonus(r), annuo: ral - contr - irpef - add + STIP.cuneoBonus(r) }; }
 };
 // "Muovi le leve": i numeri cambiano sotto il dito; si va avanti quando gli obiettivi sono raggiunti, uno alla volta
 // La scheda con il risultato resta ferma in alto mentre scorri: su uno schermo basso si vedono insieme il numero e la leva che stai muovendo.
@@ -138,9 +259,9 @@ function LeverStep({ st, top, onNext, scrollRef }) {
       <div class="o-col"><span class="o-s">${w.lab}</span><span class="o-bign" style="font-size:38px;line-height:44px">${w.big}</span></div>
       <div class="o-rowf" style="justify-content:space-between;gap:12px;padding-top:8px;border-top:2px solid ${SEP}"><span class="o-s">${w.sideLab}</span><span style="font-size:17px;line-height:22px;font-weight:800;text-align:right">${w.side}</span></div>
       ${w.side2Lab && html`<div class="o-rowf" style="justify-content:space-between;gap:12px;margin-top:-4px"><span class="o-s">${w.side2Lab}</span><span style="font-size:17px;line-height:22px;font-weight:800;text-align:right">${w.side2}</span></div>`}
-      <div class="o-col" style=${{ gap: 4, opacity: w.bar ? 1 : 0.35 }}><div style=${{ display: 'flex', height: 16, border: `2px solid ${INK}`, borderRadius: 99, overflow: 'hidden', background: w.barCol ? w.barCol[1] : AZ }}>
+      ${w.barLab && html`<div class="o-col" style=${{ gap: 4, opacity: w.bar ? 1 : 0.35 }}><div style=${{ display: 'flex', height: 16, border: `2px solid ${INK}`, borderRadius: 99, overflow: 'hidden', background: w.barCol ? w.barCol[1] : AZ }}>
           ${w.bar && html`<i style=${{ width: w.bar[0] / tot * 100 + '%', background: w.barCol ? w.barCol[0] : '#fff', borderRight: w.bar[1] > 0 ? `2px solid ${INK}` : 0 }}></i>`}</div>
-        <div class="o-rowf" style="justify-content:space-between"><span class="o-s">${w.barLab[0]}</span><span class="o-s">${w.barLab[1]}</span></div></div>
+        <div class="o-rowf" style="justify-content:space-between"><span class="o-s">${w.barLab[0]}</span><span class="o-s">${w.barLab[1]}</span></div></div>`}
     </div></div>
     <div class="o-col" style="gap:12px;margin-top:8px">${st.sliders.map(s => html`<div key=${s.id} class="o-col" style="gap:2px">
       <div class="o-rowf" style="justify-content:space-between"><span class="o-t">${s.label}</span><span class="o-t" style="font-weight:800">${withUnit(vals[s.id], s.unit, s.dec || 0)}</span></div>

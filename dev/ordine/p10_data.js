@@ -7,7 +7,7 @@
 const BASI = {
   id: 'basi', name: 'Basi della finanza', badge: '€', color: AZ, group: 'basi', ready: true, pace: 48,
   tagline: 'Per chi parte da zero',
-  learn: ['Come lavorano interessi, inflazione e tempo', 'Come tenere in ordine entrate, uscite e risparmio', 'Quanto costano i debiti e come proteggersi da imprevisti e truffe', 'Cosa sono azioni, obbligazioni, fondi ed ETF, e come si investe un po\' alla volta', 'Quali errori fa la nostra testa quando investe', 'Come si leggono un bilancio e le notizie di economia'],
+  learn: ['Come lavorano interessi, inflazione e tempo', 'Come tenere in ordine entrate, uscite e risparmio', 'Come si leggono la busta paga, il conto e le carte', 'Quanto costano prestiti e mutuo, e i conti da fare prima di comprare casa', 'Come proteggersi da imprevisti e truffe', 'Cosa sono azioni, obbligazioni, fondi ed ETF, e come si investe un po\' alla volta', 'Quali errori fa la nostra testa quando investe', 'Come funzionano pensione, fondi pensione e TFR', 'Come si leggono un bilancio e le notizie di economia'],
   units: BASI_UNITS.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
 };
 // Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
@@ -44,6 +44,25 @@ const GLOSS_DEF = {
   'liquidità': ['Liquidità', 'Quanto in fretta puoi trasformare qualcosa in denaro senza perderci. Si chiamano liquidità anche i soldi pronti da usare.'],
   'conto corrente': ['Conto corrente', 'Il conto di tutti i giorni: serve per incassare lo stipendio e per pagare. Rende poco o niente.'],
   'conto deposito': ['Conto deposito', 'Un conto fatto per lasciare ferma una somma in cambio di un interesse. Può essere libero, se ritiri quando vuoi, oppure vincolato per un certo tempo.'],
+  // ---- lo stipendio ----
+  ral: ['RAL', 'Retribuzione annua lorda: lo stipendio di un anno prima di contributi e imposte. È la cifra scritta nel contratto.'],
+  contributi: ['Contributi', 'La parte dello stipendio versata all\'INPS, da te e dall\'azienda, per pagare la pensione e tutele come malattia e disoccupazione.'],
+  'imponibile fiscale': ['Imponibile fiscale', 'Il reddito su cui si calcola l\'IRPEF: la retribuzione lorda meno i contributi.'],
+  'imponibile previdenziale': ['Imponibile previdenziale', 'La retribuzione su cui si calcolano i contributi, e quindi la pensione.'],
+  irpef: ['IRPEF', 'L\'imposta sul reddito delle persone fisiche. Si paga a scaglioni: ogni parte del reddito ha la sua aliquota.'],
+  'irpef lorda': ['IRPEF lorda', 'L\'imposta calcolata sul reddito con gli scaglioni, prima di togliere le detrazioni.'],
+  addizionali: ['Addizionali', 'Due imposte sul reddito che si aggiungono all\'IRPEF: una va alla Regione, una al Comune. Cambiano secondo dove vivi.'],
+  conguaglio: ['Conguaglio', 'Il ricalcolo dell\'IRPEF sull\'anno intero, fatto dall\'azienda a fine anno: la differenza viene tolta o aggiunta in busta paga.'],
+  naspi: ['NASpI', 'L\'indennità di disoccupazione per chi perde il lavoro senza averlo scelto. La paga l\'INPS, per un periodo pari alla metà di quello lavorato negli ultimi quattro anni.'],
+  'estratto conto contributivo': ['Estratto conto contributivo', 'L\'elenco, anno per anno, dei contributi versati a tuo nome. Si consulta gratis sul sito dell\'INPS.'],
+  'a scaglioni': ['A scaglioni', 'Il reddito viene diviso in fasce, e ogni fascia paga la sua aliquota. Salire di scaglione fa pagare di più solo sulla parte che supera la soglia.'],
+  'aliquota media': ['Aliquota media', 'L\'imposta divisa per il reddito: dice quanto pesa l\'imposta su tutto quello che guadagni.'],
+  'aliquota marginale': ['Aliquota marginale', 'L\'aliquota che colpisce l\'ultimo euro guadagnato: dice quanto ti resta di un euro in più.'],
+  detrazioni: ['Detrazioni', 'Sconti che si tolgono direttamente dall\'imposta da pagare. Molte valgono il 19% di una spesa.'],
+  deduzione: ['Deduzione', 'Una spesa che si toglie dal reddito prima di calcolare l\'imposta. Fa risparmiare quanto la tua aliquota marginale.'],
+  'taglio del cuneo': ['Taglio del cuneo', 'Uno sconto sulle imposte dei lavoratori dipendenti con redditi fino a 40.000 €, in vigore dal 2025.'],
+  tfr: ['TFR', 'Trattamento di fine rapporto: una parte dello stipendio che matura ogni anno e viene pagata quando il rapporto di lavoro finisce.'],
+  'tassazione separata': ['Tassazione separata', 'Un modo di tassare le somme maturate in molti anni e pagate tutte insieme, come il TFR: non si sommano al reddito dell\'anno e pagano un\'aliquota media a parte.'],
   // ---- la banca e i pagamenti ----
   'imposta di bollo': ['Imposta di bollo', 'Una tassa in cifra fissa che la banca incassa per lo Stato. Sul conto corrente di una persona è di 34,20 € l\'anno, dovuta solo se la giacenza media supera 5.000 €.'],
   'giacenza media': ['Giacenza media', 'La media dei saldi di tutti i giorni di un periodo: si sommano i saldi di ogni giorno e si divide per il numero dei giorni.'],
@@ -78,8 +97,53 @@ const GLOSS_DEF = {
   ipoteca: ['Ipoteca', 'La garanzia che dai alla banca quando fai un mutuo: se smetti di pagare, la banca può far vendere la casa per riprendersi i soldi.'],
   'tasso fisso': ['Tasso fisso', 'Un tasso che resta uguale per tutta la durata del prestito. Anche la rata non cambia.'],
   'tasso variabile': ['Tasso variabile', 'Un tasso che segue un tasso di riferimento del mercato: quando quello sale o scende, cambia anche la tua rata.'],
-  spread: ['Spread', 'La maggiorazione fissa che la banca aggiunge al tasso di riferimento. È il suo guadagno sul prestito.'],
+  spread: ['Spread', 'La differenza tra due tassi. In un mutuo è la maggiorazione che la banca aggiunge al tasso di riferimento. Nelle notizie è la distanza tra il rendimento dei BTP e quello dei Bund tedeschi.'],
   revolving: ['Carta revolving', 'Una carta di credito che ti fa restituire le spese a rate, pagando interessi sul debito che resta. Il tasso è spesso alto.'],
+  'sistemi di informazioni creditizie': ['Sistemi di informazioni creditizie', 'Banche dati in cui banche e finanziarie registrano le richieste di prestito e i pagamenti, puntuali o in ritardo. Le consultano prima di concedere un credito.'],
+  'assicurazione obbligatoria': ['Assicurazione obbligatoria', 'Una polizza che la legge o il contratto ti impone. Nella cessione del quinto copre la finanziaria se muori o perdi il lavoro.'],
+  // ---- capire le notizie ----
+  inattivi: ['Inattivi', 'Le persone che non hanno un lavoro e non lo cercano: studenti, pensionati, chi si occupa della casa, chi ha smesso di cercare. Non contano tra i disoccupati.'],
+  'tasso di disoccupazione': ['Tasso di disoccupazione', 'I disoccupati in percentuale di chi lavora o cerca lavoro. Non conta chi un lavoro non lo cerca.'],
+  'tasso di occupazione': ['Tasso di occupazione', 'Quante persone lavorano ogni 100 in età da lavoro, di solito tra i 15 e i 64 anni.'],
+  'pil pro capite': ['PIL pro capite', 'Il PIL diviso per il numero di abitanti. Serve a confrontare il tenore di vita tra Paesi di dimensioni diverse.'],
+  'carrello della spesa': ['Carrello della spesa', 'L\'andamento dei prezzi di alimentari e prodotti per la cura della casa e della persona: gli acquisti più frequenti.'],
+  deficit: ['Deficit', 'Quanto lo Stato spende in più di quanto incassa in un anno. Si misura in percentuale del PIL.'],
+  'debito pubblico': ['Debito pubblico', 'Tutto quello che lo Stato deve ancora restituire a chi gli ha prestato soldi, per esempio comprando BOT e BTP. Si misura in percentuale del PIL.'],
+  'saldo primario': ['Saldo primario', 'La differenza tra le entrate e le spese dello Stato, senza contare gli interessi sul debito. Se è positivo si chiama avanzo primario.'],
+  'punti base': ['Punti base', 'Centesimi di punto percentuale: 100 punti base sono l\'1%. Si usano per misurare piccole differenze tra tassi.'],
+  rating: ['Rating', 'Il voto che un\'agenzia dà alla capacità di uno Stato o di un\'azienda di restituire i debiti. Va da AAA, il massimo, a D.'],
+  'investment grade': ['Investment grade', 'La fascia dei rating più alti, da AAA a BBB−: debito considerato affidabile. Sotto questa linea i titoli si dicono speculativi.'],
+  outlook: ['Outlook', 'La direzione attesa. Accanto a un rating può essere positivo, stabile o negativo: dice dove il voto potrebbe muoversi.'],
+  capitalizzazione: ['Capitalizzazione', 'Il valore di una società in Borsa: il prezzo di un\'azione moltiplicato per il numero di azioni.'],
+  btp: ['BTP', 'Buoni del Tesoro Poliennali: titoli di Stato italiani che durano da 18 mesi a 50 anni e pagano una cedola fissa ogni sei mesi.'],
+  bot: ['BOT', 'Buoni Ordinari del Tesoro: titoli di Stato italiani che durano al massimo un anno e non pagano cedole.'],
+  bund: ['Bund', 'I titoli di Stato tedeschi. Sono il termine di paragone per misurare il rischio dei titoli degli altri Paesi dell\'area euro.'],
+  // ---- la pensione ----
+  'a ripartizione': ['Sistema a ripartizione', 'Sistema in cui i contributi versati oggi da chi lavora pagano subito le pensioni di chi è in pensione. Non si accumula un capitale a nome di ciascuno.'],
+  'pensione di vecchiaia': ['Pensione di vecchiaia', 'La pensione che si ottiene raggiungendo un\'età minima con almeno 20 anni di contributi. Nel 2026 l\'età è 67 anni.'],
+  'pensione anticipata': ['Pensione anticipata', 'La pensione che si ottiene con molti anni di contributi, a qualsiasi età. Nel 2026 servono 42 anni e 10 mesi, un anno in meno per le donne.'],
+  'tasso di sostituzione': ['Tasso di sostituzione', 'Quanta parte dell\'ultimo stipendio viene coperta dalla pensione. Se è il 65%, chi guadagnava 2.000 € al mese ne riceve 1.300.'],
+  'montante contributivo': ['Montante contributivo', 'La somma dei contributi versati in tutta la carriera, rivalutata ogni anno. È la base su cui si calcola la pensione.'],
+  'coefficiente di trasformazione': ['Coefficiente di trasformazione', 'Il numero che trasforma il montante contributivo in pensione annua. Dipende dall\'età: più tardi si esce, più è alto.'],
+  'fondo pensione': ['Fondo pensione', 'Uno strumento di risparmio a tuo nome, con vantaggi fiscali, che si ritira quando vai in pensione. Si aggiunge alla pensione pubblica.'],
+  'fondi negoziali': ['Fondi negoziali', 'Fondi pensione nati dai contratti collettivi di una categoria di lavoratori. In media sono i meno costosi, e possono ricevere il contributo del datore.'],
+  'fondi aperti': ['Fondi aperti', 'Fondi pensione creati da banche, assicurazioni e società di gestione. Può aderire chiunque.'],
+  pip: ['PIP', 'Piano individuale pensionistico: una polizza di assicurazione usata come fondo pensione. In media è la forma più costosa.'],
+  isc: ['ISC', 'Indicatore sintetico dei costi: dice quanto pesano ogni anno, in percentuale, tutti i costi di un fondo pensione.'],
+  covip: ['COVIP', 'L\'autorità pubblica che vigila sui fondi pensione. Sul suo sito pubblica costi e rendimenti di tutti i fondi.'],
+  // ---- la casa ----
+  anticipo: ['Anticipo', 'La parte del prezzo che paghi con i tuoi risparmi, perché la banca non la finanzia. Per una casa è di norma almeno il 20%.'],
+  perizia: ['Perizia', 'La stima del valore della casa fatta da un tecnico scelto dalla banca. Il mutuo si calcola su questa cifra, non sul prezzo concordato.'],
+  caparra: ['Caparra', 'Somma versata quando ci si impegna a comprare. Se rinuncia chi l\'ha data, la perde. Se rinuncia chi l\'ha ricevuta, deve restituire il doppio.'],
+  'contratto preliminare': ['Contratto preliminare', 'Detto anche compromesso: venditore e compratore si impegnano a firmare la vendita entro una certa data. Di solito si versa una caparra.'],
+  garante: ['Garante', 'Chi firma una fideiussione: si impegna a pagare il debito di un altro, con i propri soldi e i propri beni, se quello non paga.'],
+  'fondo prima casa': ['Fondo prima casa', 'Il Fondo di garanzia per la prima casa: un fondo dello Stato che garantisce alla banca una parte del mutuo. Permette di ottenere un mutuo anche oltre l\'80% del valore.'],
+  'prima casa': ['Prima casa', 'Per il fisco: un\'abitazione non di lusso, nel Comune in cui vivi o lavori, comprata da chi non ne ha altre con lo stesso sconto. Dà diritto a imposte ridotte.'],
+  'rendita catastale': ['Rendita catastale', 'Il valore che il catasto attribuisce a un immobile. Si legge nella visura e serve a calcolare le imposte sull\'acquisto e quelle sulla casa.'],
+  'prezzo-valore': ['Prezzo-valore', 'Regola per chi compra un\'abitazione da un privato: le imposte si pagano sul valore catastale invece che sul prezzo. Si chiede al notaio.'],
+  surroga: ['Surroga', 'Spostare il mutuo in un\'altra banca che offre condizioni migliori. Per legge è gratuita e la vecchia banca non può opporsi. Si chiama anche portabilità.'],
+  rinegoziazione: ['Rinegoziazione', 'Accordo con la propria banca per cambiare le condizioni del mutuo, come il tasso o la durata. Non serve il notaio, ma la banca può dire di no.'],
+  'sostituzione del mutuo': ['Sostituzione del mutuo', 'Chiudere il mutuo e aprirne uno nuovo, anche per una cifra più alta. A differenza della surroga ha i costi di un mutuo nuovo.'],
   // ---- proteggersi ----
   assicurazione: ['Assicurazione', 'Un accordo in cui paghi una cifra piccola e certa a una compagnia, che in cambio ti risarcisce se subisci un danno previsto dal contratto.'],
   premio: ['Premio', 'Il prezzo dell\'assicurazione: la cifra che paghi alla compagnia, di solito una volta l\'anno.'],
@@ -92,6 +156,20 @@ const GLOSS_DEF = {
   'responsabilità civile': ['Responsabilità civile', 'L\'obbligo di risarcire i danni che fai ad altre persone o alle loro cose. L\'assicurazione che la copre si indica con la sigla RC.'],
   'rc auto': ['RC auto', 'L\'assicurazione obbligatoria per chi guida: paga i danni che fai agli altri con il tuo veicolo.'],
   'schema ponzi': ['Schema Ponzi', 'Una truffa in cui non esiste nessun investimento: i guadagni pagati ai primi arrivati sono i soldi versati da chi entra dopo. Quando i nuovi arrivi finiscono, crolla.'],
+  phishing: ['Phishing', 'Una mail falsa che imita la banca, un corriere o un ente, per farti aprire un link e inserire dati o codici.'],
+  smishing: ['Smishing', 'Il phishing fatto con un SMS o un messaggio in chat. Può comparire nella stessa conversazione dei messaggi veri della banca.'],
+  vishing: ['Vishing', 'La truffa fatta al telefono: un finto operatore della banca, o di un altro servizio, ti convince a dare codici o a spostare soldi.'],
+  spoofing: ['Spoofing', 'Falsificare il nome del mittente di un messaggio o il numero di chi chiama, così sembra che scriva o telefoni qualcuno di cui ti fidi.'],
+  'furto d\'identità': ['Furto d\'identità', 'Usare i dati di un\'altra persona, come documento e codice fiscale, per ottenere prestiti o aprire conti a suo nome.'],
+  'temporanea caso morte': ['Temporanea caso morte', 'Polizza che paga un capitale alle persone indicate se l\'assicurato muore entro una certa data. Se alla scadenza è vivo non paga nulla.'],
+  'polizza rivalutabile': ['Polizza rivalutabile', 'Polizza vita di investimento legata a una gestione prudente della compagnia. Il capitale cresce piano, di solito con una garanzia scritta nel contratto.'],
+  'unit-linked': ['Unit-linked', 'Polizza vita di investimento il cui valore segue quello dei fondi a cui è collegata. Il rischio che i fondi scendano è di chi la sottoscrive.'],
+  caricamento: ['Caricamento', 'La parte di ogni versamento che una polizza trattiene per coprire i costi, prima di investire il resto.'],
+  kid: ['KID', 'Documento di tre pagine al massimo con le informazioni chiave di un prodotto di investimento: rischi, scenari e costi. Va consegnato prima della firma.'],
+  reclamo: ['Reclamo', 'La contestazione scritta mandata a una banca, a un\'assicurazione o a un fornitore. È il primo passo obbligato: senza, non si può ricorrere a un arbitro.'],
+  abf: ['ABF', 'Arbitro Bancario Finanziario: decide le controversie con banche e finanziarie su conti, pagamenti e prestiti. Il ricorso costa 20 € e non serve un avvocato.'],
+  acf: ['ACF', 'Arbitro per le Controversie Finanziarie, presso la Consob: decide le controversie sugli investimenti. Il ricorso è gratuito.'],
+  'arbitro assicurativo': ['Arbitro Assicurativo', 'Organismo presso l\'IVASS che decide le controversie con le compagnie di assicurazione. È attivo dal 15 gennaio 2026 e il ricorso costa 20 €.'],
   // ---- gli strumenti ----
   azioni: ['Azioni', 'Quote di proprietà di un\'azienda. Rendono con i dividendi e con l\'aumento del prezzo, ma niente è garantito.'],
   dividendo: ['Dividendo', 'La parte di utile che un\'azienda distribuisce ai suoi soci, cioè a chi possiede le azioni.'],
@@ -154,7 +232,12 @@ const GLOSS_DEF = {
 };
 const GLOSS_ALIAS = { indice: 'indice di borsa', interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile', 'interessi sugli interessi': 'interesse composto', azione: 'azioni', obbligazione: 'obbligazioni',
   rc: 'responsabilità civile', 'prezzo/utili': 'p/e', esclusione: 'esclusioni', quota: 'quote', 'schema di ponzi': 'schema ponzi', investimento: 'investimenti', commissioni: 'commissione', 'spesa fissa': 'spese fisse', 'spesa variabile': 'spese variabili',
-  'carta prepagata': 'prepagata', 'carte di credito': 'carta di credito', 'carte di debito': 'carta di debito', 'bonifici istantanei': 'bonifico istantaneo', 'addebiti diretti': 'addebito diretto', 'fondo di garanzia dei depositi': 'fondo di garanzia', deposito: 'depositi', 'istituto di pagamento': 'istituti di pagamento' };
+  'carta prepagata': 'prepagata', 'carte di credito': 'carta di credito', 'carte di debito': 'carta di debito', 'bonifici istantanei': 'bonifico istantaneo', 'addebiti diretti': 'addebito diretto', 'fondo di garanzia dei depositi': 'fondo di garanzia', deposito: 'depositi', 'istituto di pagamento': 'istituti di pagamento',
+  detrazione: 'detrazioni', deduzioni: 'deduzione', scaglioni: 'a scaglioni', contributo: 'contributi', addizionale: 'addizionali',
+  compromesso: 'contratto preliminare', 'portabilità': 'surroga', 'portabilità del mutuo': 'surroga', garanti: 'garante', 'fondo di garanzia prima casa': 'fondo prima casa', 'fondo di garanzia per la prima casa': 'fondo prima casa',
+  'arbitro bancario finanziario': 'abf', 'arbitro per le controversie finanziarie': 'acf', 'reclamo scritto': 'reclamo', 'furto di identità': 'furto d\'identità', 'unit linked': 'unit-linked', tcm: 'temporanea caso morte', 'polizze rivalutabili': 'polizza rivalutabile', caricamenti: 'caricamento',
+  ripartizione: 'a ripartizione', 'sistema a ripartizione': 'a ripartizione', 'fondi pensione': 'fondo pensione', 'fondo negoziale': 'fondi negoziali', 'fondo aperto': 'fondi aperti', 'coefficienti di trasformazione': 'coefficiente di trasformazione', 'previdenza complementare': 'fondo pensione',
+  inattivo: 'inattivi', 'avanzo primario': 'saldo primario', 'punto base': 'punti base', 'disavanzo': 'deficit', 'capitalizzazione di mercato': 'capitalizzazione' };
 const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?()«»“”]/g, '').replace(/\s+/g, ' ').trim(); return GLOSS_DEF[k] ? k : GLOSS_ALIAS[k] || null; };
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
 
@@ -206,7 +289,7 @@ const MIS_SOON = {
   'w-valuta': ['Valutare un\'azienda', 'i multipli e l\'idea del DCF']
 };
 // una riga su cosa c'è dentro ogni unità delle Basi (schermata "Ecco la tua FinLearn")
-const MIS_SUB = { 'basi-u1': 'Interessi, inflazione, tasso reale', 'basi-u7': 'Budget, fondo di emergenza, obiettivi', 'basi-u11': 'Conto, carte, bonifici, garanzia dei depositi', 'basi-u4': 'Prestiti, TAN e TAEG, mutuo', 'basi-u8': 'Assicurazioni e truffe da riconoscere', 'basi-u2': 'Azioni, obbligazioni, fondi, conti',
+const MIS_SUB = { 'basi-u1': 'Interessi, inflazione, tasso reale', 'basi-u7': 'Budget, fondo di emergenza, obiettivi', 'basi-u11': 'Conto, carte, bonifici, garanzia dei depositi', 'basi-u12': 'Busta paga, IRPEF, detrazioni, TFR', 'basi-u4': 'Prestiti, TAN e TAEG, mutuo', 'basi-u13': 'Affitto o acquisto, mutuo, costi, surroga', 'basi-u14': 'Pensione pubblica, fondi pensione, TFR', 'basi-u15': 'PIL, debito pubblico, spread, indici di Borsa', 'basi-u8': 'Assicurazioni, truffe, polizze vita, reclami', 'basi-u2': 'Azioni, obbligazioni, fondi, conti',
   'basi-u3': 'Rendimento, diversificare, orizzonte temporale', 'basi-u9': 'Un po\' alla volta, regola del 72', 'basi-u10': 'Paura di perdere, seguire la massa', 'basi-u5': 'Bilancio, utile, cassa, prezzo e valore', 'basi-u6': 'Banche centrali, cambi, ciclo economico' };
 // stops: le unità del percorso in ordine; "+nome" è un'unità in arrivo. null = tutto il corso.
 const MIS_PATHS = {
