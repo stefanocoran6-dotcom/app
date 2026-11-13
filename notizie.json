@@ -1,230 +1,232 @@
 {
  "v": 1,
- "data": "2026-11-12",
+ "data": "2026-11-13",
  "articoli": [
   {
-   "id": "2026-11-12-pensioni",
-   "cat": "Pensioni",
-   "nastro": "Pensioni: l'aumento di gennaio per tutti",
-   "titolo": "Pensioni, l'aumento di gennaio arriverà a tutti",
-   "evid": "arriverà a tutti",
-   "sommario": "Martedì 10 novembre l'INPS aveva parlato di un rinvio a marzo per circa 3,6 milioni di pensionati. Mercoledì 11 ha corretto: dalla rata di gennaio 2027 tutte le pensioni saranno adeguate ai prezzi.",
-   "numero": "3,6 mln",
-   "nota": "i pensionati sopra soglia",
-   "didascalia": "I pensionati con assegni oltre quattro volte il minimo, secondo le stime dell'INPS: per loro si era parlato di un aumento rinviato a marzo",
+   "id": "2026-11-13-irpef",
+   "cat": "Tasse",
+   "nastro": "Taglio Irpef: a chi va, secondo l'Upb",
+   "titolo": "Taglio Irpef, riguarda 8 contribuenti su 100: i conti dell'Upb",
+   "evid": "8 contribuenti su 100",
+   "sommario": "L'Ufficio parlamentare di bilancio ha calcolato chi guadagna dal taglio dell'Irpef previsto dalla manovra per il 2027: circa 3,25 milioni di persone, soprattutto tra i redditi più alti.",
+   "numero": "3,25 mln",
+   "nota": "l'8% del totale",
+   "didascalia": "I contribuenti toccati dal taglio dell'Irpef sui redditi tra 50.000 e 55.000 €, secondo le stime dell'Ufficio parlamentare di bilancio",
    "breve": [
-    "Dalla rata di gennaio 2027 l'INPS adeguerà ai prezzi tutte le pensioni, anche quelle oltre quattro volte il minimo, cioè sopra circa 2.447 € lordi al mese.",
-    "Il giorno prima l'Istituto aveva parlato di un aumento pagato entro marzo, con gli arretrati, per circa 3,6 milioni di pensionati.",
-    "La manovra, ancora in discussione, riduce l'adeguamento per le pensioni più alte. Le differenze saranno sistemate più avanti con un conguaglio."
+    "La manovra per il 2027 abbassa dal 43% al 33% l'Irpef sulla parte di reddito tra 50.000 e 55.000 € l'anno.",
+    "Secondo l'Ufficio parlamentare di bilancio la misura riguarda circa 3,25 milioni di contribuenti, l'8% del totale, e costa allo Stato 1,45 miliardi di euro.",
+    "Ne beneficia l'89% dei dirigenti, il 12% degli impiegati e l'1% degli operai. Il testo è ancora all'esame del Parlamento."
    ],
    "corpo": [
     {
-     "h": "Che cosa è successo",
+     "h": "Che cosa prevede la manovra",
      "p": [
-      "Ogni anno, a gennaio, le pensioni vengono adeguate all'aumento dei prezzi. Questo meccanismo si chiama rivalutazione, o perequazione, e serve a difendere il **potere d'acquisto**, cioè quanto si riesce a comprare con l'assegno.",
-      "Martedì 10 novembre, in un'audizione sulla manovra davanti alle commissioni Bilancio di Camera e Senato, la direttrice generale dell'INPS ha spiegato che a gennaio l'aumento sarebbe arrivato subito solo per le pensioni fino a quattro volte il minimo. Per quelle più alte, circa 3,6 milioni secondo le stime dell'Istituto, sarebbe stato pagato con gli arretrati entro la fine di marzo."
+      "L'**Irpef** è l'imposta sui redditi delle persone: stipendi, pensioni, guadagni di chi lavora in proprio. Funziona a scaglioni, cioè a fasce di reddito: su ogni fascia si applica una percentuale diversa, chiamata aliquota.",
+      "Nel 2026 le aliquote sono tre: 23% fino a 28.000 € l'anno, 33% da 28.000 a 50.000 €, 43% sulla parte che supera i 50.000 €. La manovra, cioè la legge di bilancio per il 2027 ora in Parlamento, allarga la seconda fascia fino a 55.000 €: sulla parte di reddito tra 50.000 e 55.000 € l'aliquota scende dal 43% al 33%.",
+      "Chi guadagna meno di 50.000 € non vede cambiamenti. Chi supera quella soglia paga dieci punti in meno su un massimo di 5.000 €: il risparmio può arrivare quindi fino a 500 € l'anno."
      ]
     },
     {
-     "h": "La correzione del giorno dopo",
+     "h": "I conti dell'Ufficio parlamentare di bilancio",
      "p": [
-      "Mercoledì 11 novembre l'INPS ha cambiato strada con una nota. Dalla rata di gennaio 2027 l'aumento comparirà nel cedolino di tutti i pensionati, compresi quelli con gli assegni più alti. L'Istituto dice di aver seguito le indicazioni del governo: nei primi mesi dell'anno nessuna pensione resterà ferma.",
-      "Le differenze dovute alle nuove regole, che il Parlamento sta ancora esaminando, saranno sistemate in un secondo momento con un conguaglio, cioè un ricalcolo che serve a fissare gli importi esatti."
+      "L'Ufficio parlamentare di bilancio, in sigla Upb, è un organismo indipendente che controlla i conti pubblici. Giovedì 12 novembre la sua presidente, Lilia Cavallari, è stata ascoltata sulla manovra dalle commissioni Bilancio di Camera e Senato.",
+      "Secondo le stime dell'Upb, il taglio riguarda circa 3,25 milioni di contribuenti, l'8% del totale. Per lo Stato significa incassare 1,45 miliardi di euro in meno.",
+      "Il vantaggio non si distribuisce in modo uguale. Ne beneficia l'89% dei dirigenti, con un risparmio medio di 444 € l'anno. Tra gli impiegati ne beneficia il 12%, con una media di 52 €. Tra gli operai l'1%, con una media di 4 €."
      ]
     },
     {
-     "h": "Che cosa cambia con la manovra",
+     "h": "Chi resta fuori",
      "p": [
-      "La manovra è la legge di bilancio per il 2027, ora in discussione in Parlamento. Cambia il modo di calcolare l'adeguamento e prevede sei fasce, in base a quante volte la pensione supera il trattamento minimo, che nel 2026 è di 611,85 € al mese.",
-      "Fino a quattro volte il minimo, circa 2.447 € al mese al **lordo**, cioè prima delle tasse, l'assegno recupera tutto l'aumento dei prezzi. Sopra quella soglia la quota scende: 85% tra quattro e cinque volte il minimo, 53% tra cinque e sei, 47% tra sei e otto, 37% tra otto e dieci, 32% oltre. La percentuale si applica all'intero assegno, secondo la fascia in cui cade.",
-      "Il testo può ancora cambiare durante l'esame in Parlamento. La percentuale esatta dell'aumento sarà fissata con un decreto, in base ai prezzi misurati dall'Istat. Chi è sopra la soglia vedrà comunque l'aumento già a gennaio, ma l'importo definitivo dipenderà dalle regole approvate."
+      "Sempre secondo l'Upb, i giovani fino a 35 anni sono di fatto esclusi. Nel Mezzogiorno il vantaggio medio è meno della metà di quello del Centro-Nord.",
+      "Guardando alle famiglie, l'Upb stima che il beneficio vada quasi tutto al decimo più ricco: lì lo riceve il 79% dei nuclei, con una media di 423 € l'anno. La metà delle famiglie con i redditi più bassi non riceve nulla.",
+      "Il giudizio dell'Upb è che l'intervento non risolve i problemi di fondo dell'Irpef e, anzi, li accentua."
+     ]
+    },
+    {
+     "h": "Che cosa succede adesso",
+     "p": [
+      "Giovedì 12 novembre si sono chiuse le audizioni sulla manovra. Ora il Parlamento può modificare il testo, che va approvato entro la fine dell'anno: fino ad allora soglie e percentuali possono cambiare."
      ]
     }
    ],
-   "perche": "Se tu o qualcuno in famiglia prende una pensione, a gennaio l'assegno salirà come ogni anno. Per gli importi più alti vale la pena guardare il cedolino dei primi mesi del 2027: con il conguaglio la cifra potrà cambiare quando le regole saranno definitive.",
+   "perche": "L'Irpef si paga su stipendi e pensioni, quindi ogni modifica cambia il **netto** in busta paga. Per capire se una misura ti riguarda conta il tuo reddito **lordo** annuo: in questo caso, solo la parte sopra i 50.000 €.",
    "fonti": [
     {
-     "nome": "INPS",
-     "titolo": "La nota dell'11 novembre: perequazione da gennaio per tutti",
-     "url": "https://www.inps.it/it/it/inps-comunica/notizie/dettaglio-news-page.news.2026.11.pensioni-perequazione-da-gennaio-aumento-subito-nel-cedolino.html"
-    },
-    {
      "nome": "ANSA",
-     "titolo": "A gennaio rivalutazione per tutte le pensioni",
-     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/11/inps-a-gennaio-rivalutazione-per-tutte-le-pensioni-nessuna-restera-ferma_dcf3eb8d-6420-483b-a4c8-fb0dfb8e1ef0.html"
-    },
-    {
-     "nome": "il Giornale",
-     "titolo": "L'audizione dell'INPS e il rinvio a marzo per 3,6 milioni di pensionati",
-     "url": "https://www.ilgiornale.it/news/previdenza-e-pensioni/pensioni-la-sorpresa-sugli-aumenti-del-2027-per-36-milioni-di-italiani-slittano-a-marzo-chi-dovra-aspettare/"
-    },
-    {
-     "nome": "QuiFinanza",
-     "titolo": "Rivalutazione da gennaio anche sopra quattro volte il minimo",
-     "url": "https://quifinanza.it/pensioni/rivalutazione-pensioni-2027-inps/1023834/"
-    },
-    {
-     "nome": "MF Milano Finanza",
-     "titolo": "Le sei fasce della rivalutazione previste dalla manovra",
-     "url": "https://www.milanofinanza.it/news/pensioni-dal-2027-cambia-la-rivalutazione-ecco-chi-perdera-di-piu-e-quanto-202611061610254119"
-    },
-    {
-     "nome": "Il Tirreno",
-     "titolo": "Come cambia dal 2027 il calcolo degli aumenti delle pensioni",
-     "url": "https://www.iltirreno.it/toscana/2026/10/31/news/pensioni-2027-cambia-il-calcolo-degli-aumenti-chi-avra-la-rivalutazione-piena-e-chi-meno-1.100936771"
-    }
-   ]
-  },
-  {
-   "id": "2026-11-12-istat-previsioni",
-   "cat": "Economia",
-   "nastro": "Istat: Pil +0,9% nel 2026, poi frena",
-   "titolo": "Istat: l'economia cresce dello 0,9%, ma nel 2027 frena",
-   "evid": "nel 2027 frena",
-   "sommario": "Secondo le nuove previsioni dell'Istat, il Pil italiano crescerà dello 0,9% nel 2026 e dello 0,6% nel 2027. I prezzi della spesa delle famiglie salgono più di quanto l'Istituto stimava a giugno.",
-   "numero": "+0,9%",
-   "nota": "nel 2027 +0,6%",
-   "didascalia": "La crescita del Pil italiano prevista dall'Istat per il 2026",
-   "breve": [
-    "L'Istat prevede una crescita del Pil dello 0,9% nel 2026 e dello 0,6% nel 2027.",
-    "I prezzi della spesa delle famiglie salirebbero del 3,3% nel 2026 e del 2,8% nel 2027: a giugno le stime erano del 2,9% e del 2%.",
-    "La disoccupazione scenderebbe al 6% nel 2026 e al 5,9% nel 2027."
-   ],
-   "corpo": [
-    {
-     "h": "Le previsioni",
-     "p": [
-      "Mercoledì 11 novembre l'Istat, l'istituto nazionale di statistica, ha pubblicato le sue previsioni sull'economia italiana. Il **Pil**, cioè il valore di tutto quello che il Paese produce in un anno, dovrebbe crescere dello 0,9% nel 2026 e dello 0,6% nel 2027. Nel 2025 era cresciuto dello 0,6%.",
-      "A giugno l'Istat prevedeva lo 0,7% per tutti e due gli anni. La stima per il 2026 è quindi salita, quella per il 2027 è scesa."
-     ]
-    },
-    {
-     "h": "Che cosa spinge e che cosa frena",
-     "p": [
-      "A far crescere l'economia è soprattutto la domanda interna, cioè quello che spendono in Italia famiglie, imprese e Stato. Il saldo con l'estero, cioè la differenza tra quello che vendiamo agli altri Paesi e quello che compriamo da loro, nel 2026 è nullo.",
-      "I consumi delle famiglie crescerebbero dell'1% nel 2026 e dello 0,6% nel 2027, dopo l'1,2% del 2025: secondo l'Istat li frena l'aumento dei prezzi. Rallentano anche gli **investimenti**, cioè le spese per macchinari, edifici e tecnologia: +2,9% nel 2026 e +1% nel 2027, soprattutto perché si riducono gli aiuti pubblici.",
-      "Lo stesso giorno l'Istat ha comunicato che a settembre la produzione dell'industria è salita dell'1,2% rispetto ad agosto, ma nel terzo trimestre è calata dello 0,4%."
-     ]
-    },
-    {
-     "h": "Prezzi e lavoro",
-     "p": [
-      "Per l'**inflazione**, cioè l'aumento dei prezzi, l'Istat usa un indicatore della spesa delle famiglie. Dopo l'1,5% del 2025 salirebbe al 3,3% nel 2026, per poi scendere al 2,8% nel 2027. La causa indicata è il rincaro delle materie prime sui mercati internazionali.",
-      "Le previsioni partono da un petrolio Brent in media a 97,8 dollari al barile nel 2026 e a 96,1 nel 2027.",
-      "Sul lavoro, l'occupazione, misurata in posti a tempo pieno, crescerebbe dello 0,9% nel 2026 e dello 0,5% nel 2027. La disoccupazione, cioè la quota di chi cerca lavoro e non lo trova, scenderebbe dal 6,1% del 2025 al 6% e poi al 5,9%."
-     ]
-    },
-    {
-     "h": "I rischi",
-     "p": [
-      "Secondo l'Istat i rischi sono soprattutto al ribasso: è più probabile che le cose vadano peggio delle previsioni che meglio. Le tensioni internazionali potrebbero far risalire i prezzi. E se le attese sui guadagni legati all'intelligenza artificiale venissero ridimensionate, le Borse potrebbero scendere con forza, con effetti anche sull'economia di tutti i giorni."
-     ]
-    }
-   ],
-   "perche": "Se i prezzi salgono più degli stipendi, con gli stessi soldi si compra meno. Le previsioni dell'Istat aiutano a capire che cosa aspettarsi nei prossimi mesi su prezzi, lavoro e consumi.",
-   "fonti": [
-    {
-     "nome": "Istat",
-     "titolo": "Le previsioni sull'economia italiana per il 2026 e il 2027 (comunicato in inglese)",
-     "url": "https://www.istat.it/en/press-release/note-on-the-performance-and-outlook-of-the-italian-economy-years-2026-2027-2/"
-    },
-    {
-     "nome": "Istat",
-     "titolo": "Le previsioni di giugno 2026, per il confronto",
-     "url": "https://www.istat.it/comunicato-stampa/prospettive-delleconomia-italiana-anni-2026-2027/"
-    },
-    {
-     "nome": "Istat",
-     "titolo": "La produzione industriale di settembre 2026",
-     "url": "https://www.istat.it/comunicato-stampa/produzione-industriale-settembre-2026/"
-    },
-    {
-     "nome": "ANSA",
-     "titolo": "Pil +0,9% nel 2026, +0,6% nel 2027",
-     "url": "https://www.ansa.it/sito/notizie/economia/aziende/2026/11/11/nel-2026-il-pil-09-scende-a-06-lanno-prossimo_1cdb337a-67bc-484f-9ac1-be18d2a68df2.html"
+     "titolo": "Le stime dell'Upb: benefici per l'89% dei dirigenti e l'1% degli operai",
+     "url": "https://www.ladige.it/attualita/upb-benefici-taglio-irpef-per-l89-dei-dirigenti-e-l1-degli-operai-uduhs95c"
     },
     {
      "nome": "Teleborsa",
-     "titolo": "Istat: Pil atteso in crescita dello 0,9% nel 2026",
-     "url": "https://www.teleborsa.it/News/2026/11/11/istat-pil-atteso-in-crescita-dello-0-9percent-nel-2026-e-dello-0-6percent-nel-2027-69.html"
+     "titolo": "L'audizione dell'Upb sulla manovra: Irpef, sanità e coperture",
+     "url": "https://www.teleborsa.it/News/2026/11/12/manovra-upb-manca-visione-strutturale-criticita-per-irpef-sanita-e-coperture-199.html"
     },
     {
-     "nome": "Askanews",
-     "titolo": "Le previsioni Istat su Pil, lavoro e prezzi",
-     "url": "https://askanews.it/2026/11/11/istat-prevede-09-del-pil-dellitalia-2026-e-06-nel-2027/"
+     "nome": "ItaliaOggi",
+     "titolo": "Il taglio Irpef per categorie di lavoratori e per fasce di famiglie",
+     "url": "https://www.italiaoggi.it/diritto-e-fisco/manovra-2027-per-i-dirigenti-il-taglio-irpef-vale-444-euro-lanno-h2xsfzbn"
+    },
+    {
+     "nome": "Il Fatto Quotidiano",
+     "titolo": "I numeri della memoria depositata dall'Upb in Parlamento",
+     "url": "https://www.ilfattoquotidiano.it/2026/11/12/irpef-manovra-2027-redditi-medi-stangata-drenaggio-fiscale/8569607/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "L'ultimo giorno di audizioni sulla manovra",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/12/giorgetti-apre-sulla-manovra-i-giochi-non-sono-fatti-ma-trovate-le-coperture_ba7f7462-173e-4722-85ec-2383cb73ecfd.html"
     }
    ]
   },
   {
-   "id": "2026-11-12-nvidia",
-   "cat": "Borsa",
-   "nastro": "Nvidia giù dopo la chiusura di Wall Street",
-   "titolo": "Nvidia cade in Borsa mentre il consiglio discute del suo capo",
-   "evid": "discute del suo capo",
-   "sommario": "Le azioni di Nvidia, l'azienda americana dei chip per l'intelligenza artificiale, sono scese di circa l'8% negli scambi dopo la chiusura di mercoledì 11 novembre. Pesa l'incertezza sul futuro del fondatore e amministratore delegato, Jensen Huang.",
-   "numero": "−8%",
-   "nota": "negli scambi serali",
-   "didascalia": "Il calo, arrotondato, delle azioni Nvidia negli scambi dopo la chiusura di Wall Street di mercoledì 11 novembre",
+   "id": "2026-11-13-bce-bollettino",
+   "cat": "Tassi",
+   "nastro": "Bce: l'energia spinge ancora i prezzi",
+   "titolo": "Bce: il caro energia spingerà ancora i prezzi e frena la crescita",
+   "evid": "spingerà ancora i prezzi",
+   "sommario": "Nel bollettino economico pubblicato giovedì 12 novembre la Banca centrale europea spiega perché ha lasciato fermi i tassi e avverte: l'inflazione resterà sopra l'obiettivo del 2% nei prossimi mesi.",
+   "numero": "4,0%",
+   "nota": "a settembre 3,8%",
+   "didascalia": "L'inflazione nell'area dell'euro a ottobre, secondo la stima rapida di Eurostat: la Bce punta al 2%",
    "breve": [
-    "Mercoledì 11 novembre il Wall Street Journal ha scritto che il consiglio di amministrazione di Nvidia si preparava a sostituire Jensen Huang.",
-    "Dopo la chiusura di Wall Street il titolo è sceso di circa l'8%. Durante la seduta normale era salito di quasi il 3%.",
-    "Fino alla mattina di giovedì 12 novembre Nvidia non aveva annunciato decisioni."
+    "Giovedì 12 novembre la Bce ha pubblicato il bollettino economico, che spiega la decisione del 29 ottobre di lasciare fermi i tassi di interesse.",
+    "L'inflazione nell'area dell'euro è salita al 3,8% a settembre e al 4,0% a ottobre, spinta dall'energia. La Bce si aspetta che salga ancora nel breve periodo.",
+    "Per la Bce i rischi sono due: prezzi più alti del previsto e crescita più debole. Le prossime decisioni sui tassi saranno prese riunione per riunione."
    ],
    "corpo": [
     {
-     "h": "Che cosa è successo",
+     "h": "Che cos'è il bollettino",
      "p": [
-      "Nvidia è una società americana che progetta chip, in particolare quelli usati per far funzionare l'intelligenza artificiale. In Borsa vale circa 4.000 miliardi di dollari ed è guidata dal suo fondatore, Jensen Huang.",
-      "Domenica 8 novembre il consiglio di amministrazione, cioè l'organo che sceglie e controlla chi dirige l'azienda, ha aperto un'indagine, affidata ai consiglieri indipendenti con l'aiuto di avvocati esterni. Lo ha fatto dopo notizie di stampa secondo cui Huang sarebbe stato preso di mira dai servizi segreti di un altro Paese. Il consiglio ha detto di non avere motivo di credere che la sicurezza degli Stati Uniti o i segreti dell'azienda siano stati compromessi, e di avere fiducia in Huang. Lui, in un messaggio ai dipendenti, ha ammesso una relazione fuori dal matrimonio e ha chiesto scusa.",
-      "Mercoledì 11 novembre il Wall Street Journal ha scritto che il consiglio si preparava a sostituirlo, dopo nuove notizie di stampa sulla sua vita privata. Secondo l'agenzia Reuters, il consiglio si sarebbe riunito la sera stessa per decidere."
+      "La Banca centrale europea, in sigla Bce, è la **banca centrale** dei Paesi che usano l'euro. Il suo compito principale è tenere stabili i prezzi: l'obiettivo è un'**inflazione**, cioè un aumento generale dei prezzi, del 2% l'anno.",
+      "Dopo ogni riunione sui tassi di interesse la Bce pubblica un bollettino economico, un rapporto che spiega i dati su cui si è basata. Quello uscito giovedì 12 novembre riguarda la riunione del 29 ottobre, quando i tassi sono rimasti fermi. Il tasso sui depositi è al 2,50%. L'ultimo aumento, di 0,25 punti, risale al 10 settembre."
      ]
     },
     {
-     "h": "La reazione della Borsa",
+     "h": "Prezzi: pesa l'energia",
      "p": [
-      "Durante la seduta normale di mercoledì le **azioni** Nvidia erano salite di quasi il 3%. Dopo la chiusura di **Wall Street** gli scambi continuano, anche se sono meno numerosi: lì il titolo è sceso di circa l'8%. Anche i future sul Nasdaq, contratti che anticipano l'andamento della Borsa tecnologica americana, perdevano intorno all'1%.",
-      "Fino alla mattina di giovedì 12 novembre Nvidia non aveva comunicato decisioni sul suo amministratore delegato."
+      "Secondo il bollettino, a settembre l'inflazione nell'area dell'euro è salita al 3,8%, dal 3,2% di agosto. Pesa soprattutto l'energia, i cui prezzi sono cresciuti del 18,9% in un anno. Per ottobre la stima rapida di Eurostat, l'ufficio statistico europeo, indica un altro aumento, al 4,0%. In Italia è al 5,6%.",
+      "La Bce si aspetta che l'inflazione aumenti ancora nel breve periodo. Nota però che l'**inflazione di fondo**, quella calcolata senza le voci più instabili come l'energia, è rimasta più o meno stabile, e che per ora gli stipendi non hanno reagito in modo significativo."
      ]
     },
     {
-     "h": "Perché il capo conta così tanto",
+     "h": "Crescita e prestiti",
      "p": [
-      "Il prezzo di un'azione riflette quello che gli investitori si aspettano dall'azienda negli anni. Quando una società è molto legata a una persona, anche il dubbio su chi la guiderà può far cambiare idea a molti. Secondo un analista citato da Reuters, Nvidia non ha un piano per la successione.",
-      "Conta anche la dimensione. Con il suo valore, Nvidia è una delle società più grandi della Borsa americana e pesa molto negli indici come l'S&P 500 e il Nasdaq. Per questo i suoi movimenti si sentono anche nei fondi e negli **ETF** che seguono quegli indici."
+      "L'economia dell'area dell'euro continua a crescere: nel terzo trimestre il **Pil**, cioè il valore di tutto quello che si produce, è aumentato dello 0,4% rispetto ai tre mesi precedenti. Per la fine dell'anno la Bce vede una crescita che prosegue, ma moderata.",
+      "Intanto chiedere soldi in prestito costa di più. Il bollettino riporta che il tasso medio sui nuovi mutui per comprare casa è salito al 3,6% ad agosto, dal 3,5% di luglio."
+     ]
+    },
+    {
+     "h": "I rischi e le prossime mosse",
+     "p": [
+      "Per la Bce l'incertezza è molto alta, a causa delle guerre in Medio Oriente e in Ucraina. Se le forniture di energia restassero in difficoltà a lungo, i prezzi potrebbero salire più del previsto, a danno di consumi e investimenti.",
+      "La Bce non anticipa che cosa farà con i tassi: deciderà riunione per riunione, in base ai dati. Ai governi suggerisce che gli aiuti contro il caro energia siano temporanei e mirati."
      ]
     }
    ],
-   "perche": "Se hai un fondo o un ETF sulle Borse americane o mondiali, è molto probabile che dentro ci sia anche Nvidia. La vicenda mostra che cos'è il **rischio** legato a una singola azienda, e perché **diversificare**, cioè distribuire i soldi su tante aziende diverse, ne riduce il peso.",
+   "perche": "I tassi della Bce influenzano le rate dei mutui a **tasso variabile**, il costo dei nuovi prestiti e gli interessi sui risparmi. L'inflazione, invece, dice quanto valore perde il denaro che hai.",
    "fonti": [
     {
-     "nome": "Nvidia",
-     "titolo": "Il comunicato del consiglio di amministrazione dell'8 novembre",
-     "url": "https://nvidianews.nvidia.com/news/statement-from-nvidia-board-of-directors"
+     "nome": "BCE",
+     "titolo": "Bollettino economico n. 7 del 2026",
+     "url": "https://www.ecb.europa.eu/pub/pdf/ecbu/eb202607.it.pdf"
     },
     {
-     "nome": "Reuters (Internazionale)",
-     "titolo": "Il consiglio di Nvidia si riunisce sul futuro di Huang",
-     "url": "https://www.internazionale.it/ultime-notizie-reuters/2026/11/12/nvidia-is-preparing-to-oust-ceo-jensen-huang-wsj-reports"
+     "nome": "Teleborsa",
+     "titolo": "Il bollettino Bce: rischi al rialzo per l'inflazione, al ribasso per la crescita",
+     "url": "https://www.teleborsa.it/News/2026/11/12/bce-rischi-al-rialzo-per-l-inflazione-e-al-ribasso-per-la-crescita-71.html"
     },
     {
-     "nome": "Al Jazeera",
-     "titolo": "Le azioni Nvidia scendono dopo le notizie sul consiglio",
-     "url": "https://www.aljazeera.com/economy/2026/11/12/nvidia-shares-plunge-amid-reports-board-to-discuss-ceo-huangs-future"
+     "nome": "askanews",
+     "titolo": "Bce: lo shock dell'energia rischia di alzare l'inflazione e indebolire la crescita",
+     "url": "https://askanews.it/2026/11/12/bce-shock-energia-rischia-di-far-salire-inflazione-e-abbassare-crescita/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Eurostat, 4 novembre: inflazione al 4% nell'area dell'euro a ottobre, in Italia 5,6%",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/04/linflazione-e-salita-al-4-nelleurozona-a-ottobre_322a1cda-fea3-4327-b408-42a920c45bfc.html"
+    }
+   ]
+  },
+  {
+   "id": "2026-11-13-borsa",
+   "cat": "Borsa",
+   "nastro": "Piazza Affari chiude in lieve calo",
+   "titolo": "Piazza Affari chiude in lieve calo: pesano i titoli tecnologici",
+   "evid": "in lieve calo",
+   "sommario": "Giovedì 12 novembre la Borsa di Milano ha perso lo 0,27%, mentre le altre grandi Borse europee hanno chiuso poco sopra lo zero. A frenare è stato il settore dei chip, dopo le dimissioni del capo di Nvidia.",
+   "numero": "−0,27%",
+   "nota": "a 51.808 punti",
+   "didascalia": "La variazione del Ftse Mib, l'indice principale della Borsa di Milano, nella seduta di giovedì 12 novembre",
+   "breve": [
+    "Giovedì 12 novembre il Ftse Mib, l'indice principale della Borsa di Milano, ha chiuso a 51.808 punti, in calo dello 0,27%.",
+    "Hanno pesato i titoli legati alla tecnologia, dopo le dimissioni del fondatore e amministratore delegato di Nvidia. A New York Nvidia ha chiuso a −4,3%.",
+    "Lo spread tra titoli di Stato italiani e tedeschi è salito di poco, intorno a 104 punti."
+   ],
+   "corpo": [
+    {
+     "h": "La seduta a Milano",
+     "p": [
+      "Piazza Affari è il nome con cui si chiama la Borsa di Milano. Il suo termometro è il Ftse Mib, un **indice** che riassume l'andamento delle 40 società più grandi. Giovedì 12 novembre ha chiuso a 51.808 punti, lo 0,27% in meno rispetto a mercoledì 11, quando era salito dello 0,37%.",
+      "In mattinata l'indice era sopra i 52.000 punti, poi è sceso. Le altre grandi Borse europee hanno chiuso in lieve rialzo: Francoforte, per esempio, ha guadagnato lo 0,41%."
+     ]
+    },
+    {
+     "h": "Perché la tecnologia ha frenato",
+     "p": [
+      "Giovedì 12 novembre Nvidia, l'azienda americana che produce i chip più usati per l'intelligenza artificiale, ha comunicato che il fondatore Jensen Huang lascia con effetto immediato la guida della società. Il posto di amministratore delegato passa in via provvisoria alla direttrice finanziaria, Colette Kress, mentre il consiglio cerca un sostituto.",
+      "Le vendite hanno colpito i titoli della tecnologia. A Milano ne ha risentito Technoprobe, che lavora per l'industria dei chip: le sue **azioni** hanno perso il 4,73%. Tra i cali più forti anche Amplifon (−5,29%) e Stellantis (−4,33%). Dall'altra parte, Italgas ha guadagnato l'1,86%."
+     ]
+    },
+    {
+     "h": "Che cosa è successo a New York",
+     "p": [
+      "A **Wall Street**, la Borsa di New York, le azioni Nvidia nei primi scambi hanno perso circa il 14% e hanno poi recuperato in parte, chiudendo a −4,3%. Altre aziende dei chip sono invece salite: AMD e Broadcom hanno guadagnato quasi il 6%. I tre indici principali americani hanno chiuso in calo di circa lo 0,4%.",
+      "Martedì 17 novembre Nvidia pubblicherà i risultati del trimestre, come già previsto."
+     ]
+    },
+    {
+     "h": "Lo spread",
+     "p": [
+      "Lo **spread** è la differenza tra il rendimento dei titoli di Stato italiani a dieci anni, i **Btp**, e quello dei titoli tedeschi. Misura quanto costa in più all'Italia farsi prestare denaro rispetto alla Germania. Giovedì 12 novembre ha chiuso intorno a 104 **punti base**, cioè 1,04 punti percentuali, un paio di punti base in più del giorno prima."
+     ]
+    }
+   ],
+   "perche": "Una seduta in calo non dice dove andranno i prezzi. Mostra però come una notizia su una sola grande azienda possa muovere un intero settore, anche a Milano: è uno dei motivi per cui l'andamento di un indice e quello di un singolo titolo possono essere molto diversi.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Milano chiude a −0,27%, giù Technoprobe",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/12/borsa-milano-chiude-a-027-technoprobe-giu-su-tonfo-nvidia_d4b86315-48e2-44d1-b891-169061d4b61b.html"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "La chiusura del Ftse Mib a 51.808,67 punti, titolo per titolo",
+     "url": "https://www.money.it/piazza-affari-chiude-in-calo-ftse-mib-12-11-2026"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "L'Europa chiude in lieve rialzo, debole Milano; spread a 104 punti",
+     "url": "https://teleborsa.ansa.it/notiziario/finanza/europa-chiude-in-frazionale-rialzo-debole-invece-milano/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Lo spread chiude in rialzo a 104,4 punti base",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/12/lo-spread-tra-btp-e-bund-chiude-in-rialzo-a-1044-punti-base_96944f20-b9b4-4f06-afc6-4fdfa2327db7.html"
+    },
+    {
+     "nome": "SEC",
+     "titolo": "Il comunicato di Nvidia sul cambio al vertice",
+     "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000082/nvidiaannouncesceotransiti.htm"
+    },
+    {
+     "nome": "askanews",
+     "titolo": "Wall Street chiude in calo dopo l'addio del capo di Nvidia",
+     "url": "https://askanews.it/2026/11/12/wall-street-chiude-in-calo-dopo-addio-huang-a-nvidia-dj-036/"
     },
     {
      "nome": "Yahoo Finance",
-     "titolo": "La chiusura e gli scambi serali di Nvidia dell'11 novembre",
-     "url": "https://finance.yahoo.com/technology/live/nvidia-live-updates-nvidia-stock-tanks-in-after-hours-after-allegations-of-a-second-affair-surface-222438011.html"
-    },
-    {
-     "nome": "Investing.com Italia",
-     "titolo": "Perché il titolo Nvidia scende dopo la chiusura",
-     "url": "https://it.investing.com/news/stock-market-news/perche-il-titolo-nvidia-crolla-nellafterhours-oggi-93CH-3644372"
-    },
-    {
-     "nome": "Sky TG24",
-     "titolo": "Il consiglio valuta la sostituzione del capo di Nvidia",
-     "url": "https://tg24.sky.it/mondo/2026/11/12/nvidia-jensen-huang-nuovo-affaire-board-rimozione"
+     "titolo": "La seduta del 12 novembre a Wall Street",
+     "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nasdaq-p-131805045.html"
     }
    ]
   }

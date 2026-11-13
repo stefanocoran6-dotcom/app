@@ -3,6 +3,237 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-13-irpef",
+   "cat": "Tasse",
+   "nastro": "Taglio Irpef: a chi va, secondo l'Upb",
+   "titolo": "Taglio Irpef, riguarda 8 contribuenti su 100: i conti dell'Upb",
+   "evid": "8 contribuenti su 100",
+   "sommario": "L'Ufficio parlamentare di bilancio ha calcolato chi guadagna dal taglio dell'Irpef previsto dalla manovra per il 2027: circa 3,25 milioni di persone, soprattutto tra i redditi più alti.",
+   "numero": "3,25 mln",
+   "nota": "l'8% del totale",
+   "didascalia": "I contribuenti toccati dal taglio dell'Irpef sui redditi tra 50.000 e 55.000 €, secondo le stime dell'Ufficio parlamentare di bilancio",
+   "breve": [
+    "La manovra per il 2027 abbassa dal 43% al 33% l'Irpef sulla parte di reddito tra 50.000 e 55.000 € l'anno.",
+    "Secondo l'Ufficio parlamentare di bilancio la misura riguarda circa 3,25 milioni di contribuenti, l'8% del totale, e costa allo Stato 1,45 miliardi di euro.",
+    "Ne beneficia l'89% dei dirigenti, il 12% degli impiegati e l'1% degli operai. Il testo è ancora all'esame del Parlamento."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa prevede la manovra",
+     "p": [
+      "L'**Irpef** è l'imposta sui redditi delle persone: stipendi, pensioni, guadagni di chi lavora in proprio. Funziona a scaglioni, cioè a fasce di reddito: su ogni fascia si applica una percentuale diversa, chiamata aliquota.",
+      "Nel 2026 le aliquote sono tre: 23% fino a 28.000 € l'anno, 33% da 28.000 a 50.000 €, 43% sulla parte che supera i 50.000 €. La manovra, cioè la legge di bilancio per il 2027 ora in Parlamento, allarga la seconda fascia fino a 55.000 €: sulla parte di reddito tra 50.000 e 55.000 € l'aliquota scende dal 43% al 33%.",
+      "Chi guadagna meno di 50.000 € non vede cambiamenti. Chi supera quella soglia paga dieci punti in meno su un massimo di 5.000 €: il risparmio può arrivare quindi fino a 500 € l'anno."
+     ]
+    },
+    {
+     "h": "I conti dell'Ufficio parlamentare di bilancio",
+     "p": [
+      "L'Ufficio parlamentare di bilancio, in sigla Upb, è un organismo indipendente che controlla i conti pubblici. Giovedì 12 novembre la sua presidente, Lilia Cavallari, è stata ascoltata sulla manovra dalle commissioni Bilancio di Camera e Senato.",
+      "Secondo le stime dell'Upb, il taglio riguarda circa 3,25 milioni di contribuenti, l'8% del totale. Per lo Stato significa incassare 1,45 miliardi di euro in meno.",
+      "Il vantaggio non si distribuisce in modo uguale. Ne beneficia l'89% dei dirigenti, con un risparmio medio di 444 € l'anno. Tra gli impiegati ne beneficia il 12%, con una media di 52 €. Tra gli operai l'1%, con una media di 4 €."
+     ]
+    },
+    {
+     "h": "Chi resta fuori",
+     "p": [
+      "Sempre secondo l'Upb, i giovani fino a 35 anni sono di fatto esclusi. Nel Mezzogiorno il vantaggio medio è meno della metà di quello del Centro-Nord.",
+      "Guardando alle famiglie, l'Upb stima che il beneficio vada quasi tutto al decimo più ricco: lì lo riceve il 79% dei nuclei, con una media di 423 € l'anno. La metà delle famiglie con i redditi più bassi non riceve nulla.",
+      "Il giudizio dell'Upb è che l'intervento non risolve i problemi di fondo dell'Irpef e, anzi, li accentua."
+     ]
+    },
+    {
+     "h": "Che cosa succede adesso",
+     "p": [
+      "Giovedì 12 novembre si sono chiuse le audizioni sulla manovra. Ora il Parlamento può modificare il testo, che va approvato entro la fine dell'anno: fino ad allora soglie e percentuali possono cambiare."
+     ]
+    }
+   ],
+   "perche": "L'Irpef si paga su stipendi e pensioni, quindi ogni modifica cambia il **netto** in busta paga. Per capire se una misura ti riguarda conta il tuo reddito **lordo** annuo: in questo caso, solo la parte sopra i 50.000 €.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Le stime dell'Upb: benefici per l'89% dei dirigenti e l'1% degli operai",
+     "url": "https://www.ladige.it/attualita/upb-benefici-taglio-irpef-per-l89-dei-dirigenti-e-l1-degli-operai-uduhs95c"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "L'audizione dell'Upb sulla manovra: Irpef, sanità e coperture",
+     "url": "https://www.teleborsa.it/News/2026/11/12/manovra-upb-manca-visione-strutturale-criticita-per-irpef-sanita-e-coperture-199.html"
+    },
+    {
+     "nome": "ItaliaOggi",
+     "titolo": "Il taglio Irpef per categorie di lavoratori e per fasce di famiglie",
+     "url": "https://www.italiaoggi.it/diritto-e-fisco/manovra-2027-per-i-dirigenti-il-taglio-irpef-vale-444-euro-lanno-h2xsfzbn"
+    },
+    {
+     "nome": "Il Fatto Quotidiano",
+     "titolo": "I numeri della memoria depositata dall'Upb in Parlamento",
+     "url": "https://www.ilfattoquotidiano.it/2026/11/12/irpef-manovra-2027-redditi-medi-stangata-drenaggio-fiscale/8569607/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "L'ultimo giorno di audizioni sulla manovra",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/12/giorgetti-apre-sulla-manovra-i-giochi-non-sono-fatti-ma-trovate-le-coperture_ba7f7462-173e-4722-85ec-2383cb73ecfd.html"
+    }
+   ],
+   "data": "2026-11-13"
+  },
+  {
+   "id": "2026-11-13-bce-bollettino",
+   "cat": "Tassi",
+   "nastro": "Bce: l'energia spinge ancora i prezzi",
+   "titolo": "Bce: il caro energia spingerà ancora i prezzi e frena la crescita",
+   "evid": "spingerà ancora i prezzi",
+   "sommario": "Nel bollettino economico pubblicato giovedì 12 novembre la Banca centrale europea spiega perché ha lasciato fermi i tassi e avverte: l'inflazione resterà sopra l'obiettivo del 2% nei prossimi mesi.",
+   "numero": "4,0%",
+   "nota": "a settembre 3,8%",
+   "didascalia": "L'inflazione nell'area dell'euro a ottobre, secondo la stima rapida di Eurostat: la Bce punta al 2%",
+   "breve": [
+    "Giovedì 12 novembre la Bce ha pubblicato il bollettino economico, che spiega la decisione del 29 ottobre di lasciare fermi i tassi di interesse.",
+    "L'inflazione nell'area dell'euro è salita al 3,8% a settembre e al 4,0% a ottobre, spinta dall'energia. La Bce si aspetta che salga ancora nel breve periodo.",
+    "Per la Bce i rischi sono due: prezzi più alti del previsto e crescita più debole. Le prossime decisioni sui tassi saranno prese riunione per riunione."
+   ],
+   "corpo": [
+    {
+     "h": "Che cos'è il bollettino",
+     "p": [
+      "La Banca centrale europea, in sigla Bce, è la **banca centrale** dei Paesi che usano l'euro. Il suo compito principale è tenere stabili i prezzi: l'obiettivo è un'**inflazione**, cioè un aumento generale dei prezzi, del 2% l'anno.",
+      "Dopo ogni riunione sui tassi di interesse la Bce pubblica un bollettino economico, un rapporto che spiega i dati su cui si è basata. Quello uscito giovedì 12 novembre riguarda la riunione del 29 ottobre, quando i tassi sono rimasti fermi. Il tasso sui depositi è al 2,50%. L'ultimo aumento, di 0,25 punti, risale al 10 settembre."
+     ]
+    },
+    {
+     "h": "Prezzi: pesa l'energia",
+     "p": [
+      "Secondo il bollettino, a settembre l'inflazione nell'area dell'euro è salita al 3,8%, dal 3,2% di agosto. Pesa soprattutto l'energia, i cui prezzi sono cresciuti del 18,9% in un anno. Per ottobre la stima rapida di Eurostat, l'ufficio statistico europeo, indica un altro aumento, al 4,0%. In Italia è al 5,6%.",
+      "La Bce si aspetta che l'inflazione aumenti ancora nel breve periodo. Nota però che l'**inflazione di fondo**, quella calcolata senza le voci più instabili come l'energia, è rimasta più o meno stabile, e che per ora gli stipendi non hanno reagito in modo significativo."
+     ]
+    },
+    {
+     "h": "Crescita e prestiti",
+     "p": [
+      "L'economia dell'area dell'euro continua a crescere: nel terzo trimestre il **Pil**, cioè il valore di tutto quello che si produce, è aumentato dello 0,4% rispetto ai tre mesi precedenti. Per la fine dell'anno la Bce vede una crescita che prosegue, ma moderata.",
+      "Intanto chiedere soldi in prestito costa di più. Il bollettino riporta che il tasso medio sui nuovi mutui per comprare casa è salito al 3,6% ad agosto, dal 3,5% di luglio."
+     ]
+    },
+    {
+     "h": "I rischi e le prossime mosse",
+     "p": [
+      "Per la Bce l'incertezza è molto alta, a causa delle guerre in Medio Oriente e in Ucraina. Se le forniture di energia restassero in difficoltà a lungo, i prezzi potrebbero salire più del previsto, a danno di consumi e investimenti.",
+      "La Bce non anticipa che cosa farà con i tassi: deciderà riunione per riunione, in base ai dati. Ai governi suggerisce che gli aiuti contro il caro energia siano temporanei e mirati."
+     ]
+    }
+   ],
+   "perche": "I tassi della Bce influenzano le rate dei mutui a **tasso variabile**, il costo dei nuovi prestiti e gli interessi sui risparmi. L'inflazione, invece, dice quanto valore perde il denaro che hai.",
+   "fonti": [
+    {
+     "nome": "BCE",
+     "titolo": "Bollettino economico n. 7 del 2026",
+     "url": "https://www.ecb.europa.eu/pub/pdf/ecbu/eb202607.it.pdf"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Il bollettino Bce: rischi al rialzo per l'inflazione, al ribasso per la crescita",
+     "url": "https://www.teleborsa.it/News/2026/11/12/bce-rischi-al-rialzo-per-l-inflazione-e-al-ribasso-per-la-crescita-71.html"
+    },
+    {
+     "nome": "askanews",
+     "titolo": "Bce: lo shock dell'energia rischia di alzare l'inflazione e indebolire la crescita",
+     "url": "https://askanews.it/2026/11/12/bce-shock-energia-rischia-di-far-salire-inflazione-e-abbassare-crescita/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Eurostat, 4 novembre: inflazione al 4% nell'area dell'euro a ottobre, in Italia 5,6%",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/04/linflazione-e-salita-al-4-nelleurozona-a-ottobre_322a1cda-fea3-4327-b408-42a920c45bfc.html"
+    }
+   ],
+   "data": "2026-11-13"
+  },
+  {
+   "id": "2026-11-13-borsa",
+   "cat": "Borsa",
+   "nastro": "Piazza Affari chiude in lieve calo",
+   "titolo": "Piazza Affari chiude in lieve calo: pesano i titoli tecnologici",
+   "evid": "in lieve calo",
+   "sommario": "Giovedì 12 novembre la Borsa di Milano ha perso lo 0,27%, mentre le altre grandi Borse europee hanno chiuso poco sopra lo zero. A frenare è stato il settore dei chip, dopo le dimissioni del capo di Nvidia.",
+   "numero": "−0,27%",
+   "nota": "a 51.808 punti",
+   "didascalia": "La variazione del Ftse Mib, l'indice principale della Borsa di Milano, nella seduta di giovedì 12 novembre",
+   "breve": [
+    "Giovedì 12 novembre il Ftse Mib, l'indice principale della Borsa di Milano, ha chiuso a 51.808 punti, in calo dello 0,27%.",
+    "Hanno pesato i titoli legati alla tecnologia, dopo le dimissioni del fondatore e amministratore delegato di Nvidia. A New York Nvidia ha chiuso a −4,3%.",
+    "Lo spread tra titoli di Stato italiani e tedeschi è salito di poco, intorno a 104 punti."
+   ],
+   "corpo": [
+    {
+     "h": "La seduta a Milano",
+     "p": [
+      "Piazza Affari è il nome con cui si chiama la Borsa di Milano. Il suo termometro è il Ftse Mib, un **indice** che riassume l'andamento delle 40 società più grandi. Giovedì 12 novembre ha chiuso a 51.808 punti, lo 0,27% in meno rispetto a mercoledì 11, quando era salito dello 0,37%.",
+      "In mattinata l'indice era sopra i 52.000 punti, poi è sceso. Le altre grandi Borse europee hanno chiuso in lieve rialzo: Francoforte, per esempio, ha guadagnato lo 0,41%."
+     ]
+    },
+    {
+     "h": "Perché la tecnologia ha frenato",
+     "p": [
+      "Giovedì 12 novembre Nvidia, l'azienda americana che produce i chip più usati per l'intelligenza artificiale, ha comunicato che il fondatore Jensen Huang lascia con effetto immediato la guida della società. Il posto di amministratore delegato passa in via provvisoria alla direttrice finanziaria, Colette Kress, mentre il consiglio cerca un sostituto.",
+      "Le vendite hanno colpito i titoli della tecnologia. A Milano ne ha risentito Technoprobe, che lavora per l'industria dei chip: le sue **azioni** hanno perso il 4,73%. Tra i cali più forti anche Amplifon (−5,29%) e Stellantis (−4,33%). Dall'altra parte, Italgas ha guadagnato l'1,86%."
+     ]
+    },
+    {
+     "h": "Che cosa è successo a New York",
+     "p": [
+      "A **Wall Street**, la Borsa di New York, le azioni Nvidia nei primi scambi hanno perso circa il 14% e hanno poi recuperato in parte, chiudendo a −4,3%. Altre aziende dei chip sono invece salite: AMD e Broadcom hanno guadagnato quasi il 6%. I tre indici principali americani hanno chiuso in calo di circa lo 0,4%.",
+      "Martedì 17 novembre Nvidia pubblicherà i risultati del trimestre, come già previsto."
+     ]
+    },
+    {
+     "h": "Lo spread",
+     "p": [
+      "Lo **spread** è la differenza tra il rendimento dei titoli di Stato italiani a dieci anni, i **Btp**, e quello dei titoli tedeschi. Misura quanto costa in più all'Italia farsi prestare denaro rispetto alla Germania. Giovedì 12 novembre ha chiuso intorno a 104 **punti base**, cioè 1,04 punti percentuali, un paio di punti base in più del giorno prima."
+     ]
+    }
+   ],
+   "perche": "Una seduta in calo non dice dove andranno i prezzi. Mostra però come una notizia su una sola grande azienda possa muovere un intero settore, anche a Milano: è uno dei motivi per cui l'andamento di un indice e quello di un singolo titolo possono essere molto diversi.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Milano chiude a −0,27%, giù Technoprobe",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/12/borsa-milano-chiude-a-027-technoprobe-giu-su-tonfo-nvidia_d4b86315-48e2-44d1-b891-169061d4b61b.html"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "La chiusura del Ftse Mib a 51.808,67 punti, titolo per titolo",
+     "url": "https://www.money.it/piazza-affari-chiude-in-calo-ftse-mib-12-11-2026"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "L'Europa chiude in lieve rialzo, debole Milano; spread a 104 punti",
+     "url": "https://teleborsa.ansa.it/notiziario/finanza/europa-chiude-in-frazionale-rialzo-debole-invece-milano/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Lo spread chiude in rialzo a 104,4 punti base",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/12/lo-spread-tra-btp-e-bund-chiude-in-rialzo-a-1044-punti-base_96944f20-b9b4-4f06-afc6-4fdfa2327db7.html"
+    },
+    {
+     "nome": "SEC",
+     "titolo": "Il comunicato di Nvidia sul cambio al vertice",
+     "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000082/nvidiaannouncesceotransiti.htm"
+    },
+    {
+     "nome": "askanews",
+     "titolo": "Wall Street chiude in calo dopo l'addio del capo di Nvidia",
+     "url": "https://askanews.it/2026/11/12/wall-street-chiude-in-calo-dopo-addio-huang-a-nvidia-dj-036/"
+    },
+    {
+     "nome": "Yahoo Finance",
+     "titolo": "La seduta del 12 novembre a Wall Street",
+     "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nasdaq-p-131805045.html"
+    }
+   ],
+   "data": "2026-11-13"
+  },
+  {
    "id": "2026-11-12-pensioni",
    "cat": "Pensioni",
    "nastro": "Pensioni: l'aumento di gennaio per tutti",

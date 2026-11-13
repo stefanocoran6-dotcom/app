@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-12",
+ "aggiornato": "2026-11-13",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-13-irpef",
+   "data": "2026-11-13",
+   "cat": "Tasse",
+   "titolo": "Taglio Irpef, riguarda 8 contribuenti su 100: i conti dell'Upb",
+   "nastro": "Taglio Irpef: a chi va, secondo l'Upb",
+   "numero": "3,25 mln",
+   "min": 3
+  },
+  {
+   "id": "2026-11-13-bce-bollettino",
+   "data": "2026-11-13",
+   "cat": "Tassi",
+   "titolo": "Bce: il caro energia spingerà ancora i prezzi e frena la crescita",
+   "nastro": "Bce: l'energia spinge ancora i prezzi",
+   "numero": "4,0%",
+   "min": 3
+  },
+  {
+   "id": "2026-11-13-borsa",
+   "data": "2026-11-13",
+   "cat": "Borsa",
+   "titolo": "Piazza Affari chiude in lieve calo: pesano i titoli tecnologici",
+   "nastro": "Piazza Affari chiude in lieve calo",
+   "numero": "−0,27%",
+   "min": 3
+  },
   {
    "id": "2026-11-12-pensioni",
    "data": "2026-11-12",
