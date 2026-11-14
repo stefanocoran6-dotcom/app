@@ -6,6 +6,23 @@ import { X, ChevronLeft, ChevronRight, ChevronDown, Check, Calculator, Clock, Ti
   GraduationCap, Compass, LayoutGrid, FileText, ArrowUp, Plus, TrendingUp, PieChart, Star, Zap, RotateCcw, Table2, Percent, BarChart3, Scale, Coins, Bell, Languages, Download,
   Trash2, LogOut, Info, Shuffle, User, Palette, History, Lightbulb, Share2 } from 'lucide-react';
 
+// ---- lingua e paese ----
+// LANG: 'it' = app in italiano, 'en' = app in inglese americano. L'inglese si genera con dev/en/compila.mjs (ordine_en.js), che cambia solo questa riga e sostituisce i testi.
+const LANG = 'it';
+// COUNTRY: il paese decide quali lezioni valgono (le regole cambiano da un paese all'altro) e la valuta. IT = Italia, US = Stati Uniti.
+// In italiano è sempre l'Italia; in inglese lo si sceglie all'inizio e dalle Impostazioni (chiave fl_country, letta prima di disegnare).
+function guessCountry() {
+  try { const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || ''), lg = (navigator.language || ''); if (/^Europe\/Rome$/.test(tz) || /-IT$/i.test(lg)) return 'IT'; } catch (e) { /* niente */ }
+  return 'US';
+}
+const COUNTRY = (() => { if (LANG !== 'en') return 'IT'; try { const c = localStorage.getItem('fl_country'); if (c === 'US' || c === 'IT') return c; } catch (e) { /* niente */ } return guessCountry(); })();
+const LOC = LANG === 'en' ? 'en-US' : 'it-IT';        // formato di numeri e date
+const CUR = COUNTRY === 'US' ? '$' : '€';            // simbolo della valuta
+const GRP = LANG === 'en' ? ',' : '.', DEC = LANG === 'en' ? '.' : ',';   // 1.331,5 all'italiana · 1,331.5 all'americana
+// cambiare lingua o paese ricarica la pagina: le lezioni e i testi dell'altra versione stanno in un altro file
+function setLangPref(l) { try { localStorage.setItem('fl_lang', l); localStorage.setItem('fl_lang_chosen', '1'); } catch (e) { /* niente */ } try { document.documentElement.lang = l; location.reload(); } catch (e) { /* niente */ } }
+function setCountryPref(c) { try { localStorage.setItem('fl_country', c); } catch (e) { /* niente */ } try { location.reload(); } catch (e) { /* niente */ } }
+
 const useSyncExternalStore = React.useSyncExternalStore || function (sub, get) { const [, f] = useState(0); useEffect(() => sub(() => f(x => x + 1)), [sub]); return get(); };
 
 // ---- htm 3.1.1 · (c) Jason Miller · Apache License 2.0 · https://github.com/developit/htm ----
@@ -268,7 +285,7 @@ function useTick() {
 let K = null;
 const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const DAY = 864e5;
-const fmtInt = n => Math.round(n).toLocaleString('it-IT');
+const fmtInt = n => Math.round(n).toLocaleString(LOC);
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
@@ -280,11 +297,28 @@ const BASI_UNITS = [{"id":"basi-u1","sid":"basi-tempo","name":"I soldi nel tempo
 // =====================================================================================================
 // "Basi della finanza": primo percorso non d'esame. Contenuti originali, brevi, con un esempio numerico per lezione.
 // Le lezioni stanno in basi_src.py (che le controlla e scrive basi.json): build.sh le mette qui sopra come BASI_UNITS.
+// Quali lezioni valgono nel paese scelto: A = per tutti, B/C/E = regole e fatti italiani (si vedono solo con l'Italia).
+// Senza etichetta (app in italiano) valgono tutte. Per gli Stati Uniti la valuta delle lezioni diventa il dollaro: € -> $ nel testo, \text{€} -> \text{\$} nelle formule.
+const lessonOk = l => !l.lab || l.lab === 'A' || COUNTRY === 'IT';
+function usDollars(x) {
+  if (typeof x === 'string') {
+    if (x.indexOf('€') < 0) return x;
+    const m = [];   // le formule si tengono da parte: lì il dollaro va protetto con la barra
+    const t = x.replace(/\$\$[\s\S]*?\$\$|\\\([\s\S]*?\\\)/g, f => { m.push(f.replace(/€/g, '\\$')); return '\u0001' + (m.length - 1) + '\u0002'; });
+    return t.replace(/€/g, '$').replace(/\u0001(\d+)\u0002/g, (_, i) => m[+i]);
+  }
+  if (Array.isArray(x)) return x.map(usDollars);
+  if (x && typeof x === 'object') { const o = {}; for (const k in x) o[k] = usDollars(x[k]); return o; }
+  return x;
+}
+// Per gli Stati Uniti ogni lezione passa da usDollars, tranne quelle con una variante americana (campo "us"): sono già scritte in dollari (e in euro dove si parla proprio dell'euro) e prendono il posto dei campi di base.
+const usLesson = l => { const b = usDollars(Object.assign({}, l, { us: undefined })); return l.us ? Object.assign(b, l.us) : b; };
+const BASI_LIST = LANG === 'en' && COUNTRY === 'US' ? BASI_UNITS.map(u => Object.assign({}, u, { lessons: u.lessons.map(usLesson) })) : BASI_UNITS;
 const BASI = {
-  id: 'basi', name: 'Basi della finanza', badge: '€', color: AZ, group: 'basi', ready: true, pace: 48,
+  id: 'basi', name: 'Basi della finanza', badge: CUR, color: AZ, group: 'basi', ready: true, pace: 48,
   tagline: 'Per chi parte da zero',
   learn: ['Come lavorano interessi, inflazione e tempo', 'Come tenere in ordine entrate, uscite e risparmio', 'Come si leggono la busta paga, il conto e le carte', 'Quanto costano prestiti e mutuo, e i conti da fare prima di comprare casa', 'Come proteggersi da imprevisti e truffe', 'Cosa sono azioni, obbligazioni, fondi ed ETF, e come si investe un po\' alla volta', 'Quali errori fa la nostra testa quando investe', 'Come funzionano pensione, fondi pensione e TFR', 'Come si leggono un bilancio e le notizie di economia'],
-  units: BASI_UNITS.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
+  units: BASI_LIST.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons.filter(lessonOk) }] })).filter(u => u.sections[0].lessons.length)
 };
 // Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
 // La chiave è la parola in minuscolo, come compare in grassetto nelle lezioni; le forme diverse (singolare, plurale) stanno in GLOSS_ALIAS.
@@ -529,7 +563,7 @@ let COURSES_MEMO = null;
 const losMinutes = l => { const c = l.content || {}; const n = (c.introduction || '').length + (c.sections || []).reduce((s, x) => s + (x.content || '').length, 0); return clamp(Math.round(n / 900) + (l.question ? 2 : 1), 2, 20); };
 function courses() {
   if (COURSES_MEMO) return COURSES_MEMO;
-  const CFA = (K && K.CFA) || {};
+  const CFA = LANG === 'en' ? {} : (K && K.CFA) || {};   // il CFA ha le domande in italiano e le regole italiane: in inglese per ora non c'è
   const units = ['equityValuation', 'portfolioManagement', 'equity'].filter(k => CFA[k]).map(k => {
     const t = CFA[k];
     return { id: k, name: t.name, sections: t.modules.map(m => ({
@@ -539,7 +573,7 @@ function courses() {
   });
   const cfa2 = { id: 'cfa2', name: 'CFA Level II', badge: 'L2', color: AZ, group: 'cert', ready: true, pace: 90, tagline: 'Per chi prepara l\'esame',
     learn: ['Valutare un\'azione con dividendi, flussi di cassa, multipli e residual income', 'ETF, modelli multifattoriali, VaR e gestione attiva', 'Domande in inglese, come all\'esame'], units };
-  COURSES_MEMO = [BASI, cfa2];
+  COURSES_MEMO = LANG === 'en' ? [BASI] : [BASI, cfa2];
   // indici utili
   COURSES_MEMO.forEach(c => { c.lessons = []; c.units.forEach((u, ui) => u.sections.forEach(s => s.lessons.forEach(l => { l.course = c; l.unit = u; l.ui = ui; l.section = s; if (!l.kind) l.kind = 'base'; c.lessons.push(l); }))); });
   return COURSES_MEMO;
@@ -577,8 +611,8 @@ const MIS_PATHS = {
 // Chi usava l'app prima di "su misura": l'obiettivo si ricava da quello che aveva scelto o iniziato, e i percorsi iniziati restano tutti.
 function misDerive(s) {
   const ob = s.onboard || {}, st = new Set(s.started || []), done = s.basi || [];
-  const cfa = st.has('cfa2') || !!(K && (K.losProgress || []).length), basi = st.has('basi') || done.length > 0;
-  const goal = MIS_PATHS[ob.goal] ? ob.goal : cfa ? 'exam' : 'zero', P = MIS_PATHS[goal], add = [];
+  const cfa = LANG !== 'en' && (st.has('cfa2') || !!(K && (K.losProgress || []).length)), basi = st.has('basi') || done.length > 0;
+  const goal = MIS_PATHS[ob.goal] && (LANG !== 'en' || ob.goal !== 'exam') ? ob.goal : cfa ? 'exam' : 'zero', P = MIS_PATHS[goal], add = [];
   if (cfa && P.course !== 'cfa2') add.push('cfa2');
   if (basi && P.course !== 'basi') add.push('basi');
   const more = P.stops ? BASI.units.filter(u => !P.stops.includes(u.id) && unitLessons(u).some(l => done.includes(l.key))).map(u => u.id) : [];
@@ -587,7 +621,7 @@ function misDerive(s) {
 let MIS_MEMO = null, MIS_DRAFT = null;   // MIS_DRAFT: la registrazione mostra il percorso prima di salvarlo
 function misGet() {
   if (MIS_DRAFT) return MIS_DRAFT;
-  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal]) return s.mis;
+  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal] && (LANG !== 'en' || s.mis.goal !== 'exam')) return s.mis;
   const n = (K && (K.losProgress || []).length) || 0;
   if (!MIS_MEMO || MIS_MEMO.s !== s || MIS_MEMO.n !== n) MIS_MEMO = { s, n, m: misDerive(s) };
   return MIS_MEMO.m;
@@ -806,7 +840,7 @@ const D_TABS = {
   coach: 'M4 5h16v11H9l-5 4z',
   profilo: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0'
 };
-const TAB_NAMES = [['home', 'Impara'], ['allenati', 'Allenati'], ['sfide', 'Sfide'], ['coach', 'AI Coach'], ['profilo', 'Profilo']];
+const TAB_NAMES = [['home', 'Impara'], ['allenati', 'Allenati'], ['sfide', 'Sfide'], ['coach', 'AI Coach'], ['profilo', 'Profilo']].filter(t => LANG !== 'en' || t[0] !== 'sfide');   // le sfide hanno le domande e l'arbitro in italiano: in inglese per ora non ci sono
 
 // Rally: pose disegnate (file in rally/*.svg)
 function Rally({ pose = 'saluta', w = 228, style, alt = '' }) {
@@ -1289,12 +1323,14 @@ function LessonDone({ nav, l, done, steps, res }) {
 // ---- passi interattivi delle lezioni: stima prima di leggere, leve con un obiettivo, metti a posto, metti in ordine, calcola ----
 // I dati di ogni passo stanno nelle lezioni (campo "flow"); qui c'è come si vedono e come rispondono al tocco.
 const NBSP = ' ';
-// numeri all'italiana, scritti allo stesso modo su ogni telefono: 1.331 · 7,5 · 87.584
-const grp = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-const fmtN = (v, d = 0) => { const s = Math.abs(Number(v)).toFixed(d).split('.'); return (v < 0 ? '−' : '') + grp(s[0]) + (s[1] ? ',' + s[1] : ''); };
-const withUnit = (v, unit, d = 0) => fmtN(v, d) + (unit === '%' ? '%' : unit ? NBSP + unit : '');
-const eur0 = x => fmtN(Math.round(x)) + NBSP + '€';
-const mesiTxt = m => { const a = Math.floor(m / 12), r = m % 12; return a ? plural(a, 'anno', 'anni') + (r ? ' e ' + plural(r, 'mese', 'mesi') : '') : plural(r, 'mese', 'mesi'); };
+// numeri scritti allo stesso modo su ogni telefono: all'italiana 1.331 · 7,5 · 87.584 · 1.000 €; all'americana 1,331 · 7.5 · 87,584 · €1,000
+const grp = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, GRP);
+const fmtN = (v, d = 0) => { const s = Math.abs(Number(v)).toFixed(d).split('.'); return (v < 0 ? '−' : '') + grp(s[0]) + (s[1] ? DEC + s[1] : ''); };
+const isMoney = unit => unit === '€' || unit === '$';
+// la valuta in inglese sta davanti alla cifra (€1,000), in italiano dopo (1.000 €)
+const withUnit = (v, unit, d = 0) => (LANG === 'en' && isMoney(unit) ? CUR + fmtN(v, d) : fmtN(v, d) + (unit === '%' ? '%' : unit ? NBSP + unit : ''));
+const eur0 = x => (LANG === 'en' ? CUR + fmtN(Math.round(x)) : fmtN(Math.round(x)) + NBSP + '€');
+const mesiTxt = m => { const a = Math.floor(m / 12), r = m % 12; return a ? plural(a, 'anno', 'anni') + (r ? (LANG === 'en' ? ' and ' : ' e ') + plural(r, 'mese', 'mesi') : '') : plural(r, 'mese', 'mesi'); };
 
 // cursore con i due tasti meno e più: il dito lo trascina, i tasti servono per il passo fine
 function Slider({ value, min, max, step, onChange, label, disabled }) {
@@ -1610,17 +1646,17 @@ function OrderStep({ st, top, onNext, scrollRef }) {
 function NumStep({ st, l, top, onNext, repeat, scrollRef }) {
   const [s, setS] = useState(''), [fb, setFb] = useState(null);
   const dec = st.dec || 0;
-  const press = k => { if (fb) return; setS(x => k === 'del' ? x.slice(0, -1) : k === ',' ? (dec && x && x.indexOf(',') < 0 ? x + ',' : x)
-    : (x.replace(',', '').length >= 8 || (x.indexOf(',') >= 0 && x.split(',')[1].length >= dec)) ? x : x === '0' ? k : x + k); };
-  const val = s ? parseFloat(s.replace(',', '.')) : NaN;
-  const shown = s ? grp(s.split(',')[0]) + (s.indexOf(',') >= 0 ? ',' + (s.split(',')[1] || '') : '') : '';
+  const press = k => { if (fb) return; setS(x => k === 'del' ? x.slice(0, -1) : k === DEC ? (dec && x && x.indexOf(DEC) < 0 ? x + DEC : x)
+    : (x.replace(DEC, '').length >= 8 || (x.indexOf(DEC) >= 0 && x.split(DEC)[1].length >= dec)) ? x : x === '0' ? k : x + k); };
+  const val = s ? parseFloat(s.replace(DEC, '.')) : NaN;
+  const shown = s ? grp(s.split(DEC)[0]) + (s.indexOf(DEC) >= 0 ? DEC + (s.split(DEC)[1] || '') : '') : '';
   const ok = fb === 'ok', ansDec = (String(st.ans).split('.')[1] || '').length;
   const q = { key: l.key + '~' + st.n, exp: ok ? st.exp : `La risposta è **${withUnit(st.ans, st.unit, ansDec)}**.\n\n${st.exp || ''}` };
-  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', dec ? ',' : null, '0', 'del'];
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', dec ? DEC : null, '0', 'del'];
   const body = html`<div class="o-pad" style="padding-top:18px;padding-bottom:20px"><div class="o-col" style="gap:6px"><span class="o-lab">Calcola tu</span><${Rich} text=${st.q} cls="q"/></div></div>`;
   const foot = html`<div class="o-col" style="gap:10px">
     <div class="o-numd" aria-live="polite" aria-label=${s ? `Hai scritto ${shown} ${st.unit}` : 'Scrivi il numero'}><span style=${{ color: s ? INK : DIM }}>${shown || '?'}</span><span style="font-size:22px;line-height:28px;font-weight:800">${st.unit}</span></div>
-    <div class="o-keys">${keys.map((k, j) => k == null ? html`<span key=${j}></span>` : html`<button key=${j} type="button" class="o-key" aria-label=${k === 'del' ? 'Cancella' : k === ',' ? 'Virgola' : k} onClick=${() => press(k)}>${k === 'del' ? PathIco('M20 6H9l-6 6 6 6h11zM12 10l4 4M16 10l-4 4', 24, 2.2) : k}</button>`)}</div>
+    <div class="o-keys">${keys.map((k, j) => k == null ? html`<span key=${j}></span>` : html`<button key=${j} type="button" class="o-key" aria-label=${k === 'del' ? 'Cancella' : k === DEC ? 'Virgola' : k} onClick=${() => press(k)}>${k === 'del' ? PathIco('M20 6H9l-6 6 6 6h11zM12 10l4 4M16 10l-4 4', 24, 2.2) : k}</button>`)}</div>
     <${Btn} cls="lg" disabled=${isNaN(val) || !!fb} onClick=${() => setFb(Math.abs(val - st.ans) <= (st.tol || 0) + 1e-9 ? 'ok' : 'ko')}>Controlla<//></div>`;
   const over = fb ? html`<${FeedbackSheet} ok=${ok} q=${q} xp=${repeat ? 5 : 10} onNext=${() => onNext({ ok })}/>` : null;
   return html`<${Flow} scrollRef=${scrollRef} top=${top} foot=${foot} over=${over}>${body}<//>`;
@@ -1674,8 +1710,8 @@ const newsDate = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); ret
 // sul nastro c'è scritto "Oggi" solo se le notizie sono davvero di oggi, altrimenti il giorno
 const newsDayShort = s => { if (s && s === dayKey()) return 'Oggi'; const d = newsDate(s); return d ? `${d.getDate()} ${NEWS_MESI[d.getMonth()]}` : 'Notizie'; };
 const newsCap = t => t.charAt(0).toUpperCase() + t.slice(1);
-const newsDayLong = s => { const d = newsDate(s); return d ? newsCap(d.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) : ''; };
-const newsDayName = s => { const d = newsDate(s); return d ? d.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }) : ''; };
+const newsDayLong = s => { const d = newsDate(s); return d ? newsCap(d.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) : ''; };
+const newsDayName = s => { const d = newsDate(s); return d ? d.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long' }) : ''; };
 const newsDayHead = s => (s === dayKey() ? 'Oggi · ' + newsDayName(s) : s === dayKey(new Date(Date.now() - DAY)) ? 'Ieri · ' + newsDayName(s) : newsCap(newsDayName(s)));
 const newsWords = a => [a.sommario, ...(a.breve || []), ...a.corpo.reduce((t, s) => t.concat(s.h, s.p || []), []), a.perche].join(' ').split(/\s+/).filter(Boolean).length;
 const newsMinutes = a => Math.max(1, Math.round(newsWords(a) / 180));
@@ -1686,6 +1722,7 @@ const newsLab = (t, w = 600) => html`<span class="o-mono" style=${{ fontSize: 11
 // Il nastro: i titoli del giorno che scorrono sotto la lezione. Ogni titolo apre il suo articolo, l'etichetta del giorno apre l'archivio.
 function NewsTicker({ nav }) {
   const n = useNews();
+  if (LANG === 'en') return html`<div style="height:24px;flex:none"></div>`;   // le notizie sono in italiano e sull'Italia
   if (!n.items.length) return html`<div style="height:24px;flex:none"></div>`;
   const lab = newsDayShort(n.data), chars = n.items.reduce((t, a) => t + String(a.nastro || a.titolo).length + 12, 0);
   const star = html`<svg width="14" height="14" viewBox="0 0 24 24" fill=${INK} aria-hidden="true" style="flex:none"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>`;
@@ -1701,7 +1738,7 @@ function NewsTicker({ nav }) {
 // la riga che dalla home porta all'archivio (compare solo se ci sono notizie)
 function NewsHomeRow({ nav }) {
   const n = useNews();
-  if (!n.items.length) return null;
+  if (LANG === 'en' || !n.items.length) return null;
   return html`<${Row} icon=${PathIco(D_NEWS, 22, 2.2)} ibg=${GIALLO} title="Tutte le notizie" sub="L'archivio, giorno per giorno" chev=${true} onClick=${() => nav.go('notizie')}/>`;
 }
 
@@ -2229,7 +2266,7 @@ function CoachScreen({ nav }) {
     const c = { id: `chat_${Date.now()}`, title: first ? first.slice(0, 40) : 'Nuova conversazione', createdAt: now, updatedAt: now, messages: [{ role: 'assistant', content: `Ciao${nm ? ' ' + nm : ''}! ${coach.exam ? 'Chiedimi un concetto da spiegare da zero, un esercizio o una domanda d\'esame.' : 'Chiedimi una parola che non conosci, un dubbio sui soldi o un esempio con le cifre.'}`, timestamp: now }] };
     K.setChats(prev => [c, ...prev].slice(0, 50)); K.setActiveChatId(c.id); setPending(first ? { id: c.id, text: first } : null); setHist(false);
   };
-  const fmt = d => { try { return new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
+  const fmt = d => { try { return new Date(d).toLocaleDateString(LOC, { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
   return html`<${Room} color=${LILLA} tab="coach" go=${nav.tab} headH=${140}
     rally=${html`<${Rally} pose="coach" alt="Rally con le cuffie" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">AI Coach</h1>
@@ -2378,7 +2415,8 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
         <p style="margin-top:4px;padding:10px 14px;background:${T_GR};border-radius:14px;font-size:13px;line-height:18px;font-weight:600">Da qui dipende cosa trovi in Impara, Allenati, Sfide e AI Coach. Se cambi, i progressi restano.</p></div>
       ${H('Studio')}
       ${R('Promemoria', 'In arrivo', null)}
-      ${R('Lingua delle spiegazioni', set.lang, () => setSheet('lang'), null, !inMyApp('cfa2'))}
+      ${R('Lingua', LANG === 'en' ? 'English' : 'Italiano', () => setSheet('lang'), null, LANG !== 'en' && !inMyApp('cfa2'))}
+      ${LANG === 'en' && R('Paese', COUNTRY === 'US' ? 'Stati Uniti' : 'Italia', () => setSheet('country'), null, !inMyApp('cfa2'))}
       ${inMyApp('cfa2') && R('Domande d\'esame', 'In inglese, come all\'esame', null, null, true)}
       ${H('AI Coach')}
       ${R('OpenRouter', or.on ? 'Collegato' : 'Da collegare', () => setSheet('or'))}
@@ -2412,8 +2450,11 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
         ${nk > 0 && html`<${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set(() => ({ mis: Object.assign({}, misGet(), { known: [], level: 'zero' }) })); setSheet(null); }}>Riparto dall'inizio<//>`}</div><//>`}
     ${sheet === 'goal' && html`<${BSheet} onClose=${() => setSheet(null)} label="Minuti al giorno"><h2 class="o-big">Quanto tempo hai al giorno?</h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px">${[5, 10, 20].map(m => html`<button key=${m} type="button" class="o-col" onClick=${() => { upd({ goalMin: m }); setSheet(null); }} style=${{ alignItems: 'center', padding: '12px 0', border: `2.5px solid ${INK}`, borderRadius: 18, background: set.goalMin === m ? AZ : '#fff', boxShadow: set.goalMin === m ? `3px 3px 0 ${INK}` : 'none' }}><span style="font-size:26px;line-height:30px;font-weight:800">${m}</span><span class="o-s" style="color:${INK}">minuti</span></button>`)}</div><//>`}
-    ${sheet === 'lang' && html`<${BSheet} onClose=${() => setSheet(null)} label="Lingua"><h2 class="o-big" style="margin-bottom:6px">Lingua delle spiegazioni</h2>
-      ${[['Italiano', true], ['English', false], ['Français', false], ['Español', false], ['Deutsch', false], ['中文', false]].map(([l, ok], k) => html`<div key=${l} class="o-row" style=${{ minHeight: 50, borderBottom: k < 5 ? `2px solid ${SEP}` : 0 }}><span class="o-grow o-t" style=${{ color: ok ? INK : DIMT }}>${l}</span>${ok ? PathIco(D_CHECK, 22, 3) : html`<span class="o-s">In arrivo</span>`}</div>`)}<//>`}
+    ${sheet === 'lang' && html`<${BSheet} onClose=${() => setSheet(null)} label="Lingua"><h2 class="o-big" style="margin-bottom:6px">Lingua</h2>
+      ${[['Italiano', 'it'], ['English', 'en'], ['Français', null], ['Español', null], ['Deutsch', null], ['中文', null]].map(([l, code], k) => html`<button key=${l} type="button" class="o-row" disabled=${!code} onClick=${() => { if (code && code !== LANG) setLangPref(code); else setSheet(null); }} style=${{ minHeight: 50, width: '100%', borderBottom: k < 5 ? `2px solid ${SEP}` : 0 }}><span class="o-grow o-t" lang=${code || undefined} style=${{ color: code ? INK : DIMT, textAlign: 'left' }}>${l}</span>${code === LANG ? PathIco(D_CHECK, 22, 3) : code ? null : html`<span class="o-s">In arrivo</span>`}</button>`)}<//>`}
+    ${sheet === 'country' && html`<${BSheet} onClose=${() => setSheet(null)} label="Paese"><h2 class="o-big" style="margin-bottom:6px">Paese</h2>
+      <p class="o-body o-mut" style="margin:0 0 12px">Le regole su tasse, pensioni e banche cambiano da un paese all'altro, e con loro le lezioni che vedi. I tuoi progressi restano.</p>
+      ${COUNTRIES.map(([c, n, d], k) => html`<button key=${c} type="button" class="o-row" onClick=${() => { if (c !== COUNTRY) setCountryPref(c); else setSheet(null); }} style=${{ minHeight: 60, width: '100%', borderBottom: k < 1 ? `2px solid ${SEP}` : 0 }}><span class="o-grow o-col" style="gap:1px;text-align:left"><span class="o-t">${n}</span><span class="o-s">${d}</span></span>${c === COUNTRY && PathIco(D_CHECK, 22, 3)}</button>`)}<//>`}
     ${sheet === 'name' && html`<${BSheet} onClose=${() => setSheet(null)} label="Nome"><h2 class="o-big">Come ti chiami?</h2>
       <input class="o-inp" value=${nm} onChange=${e => setNm(e.target.value)} placeholder="Il tuo nome" maxlength="24" aria-label="Nome" style="margin-top:16px"/>
       <div style="margin-top:14px"><${Btn} cls="lg" onClick=${() => { s2set({ name: firstName(nm) }); setSheet(null); }}>Salva<//></div><//>`}
@@ -2958,7 +2999,9 @@ export function OrdineSplash({ onComplete }) {
 
 // Primo giorno: benvenuto, obiettivo, (esame), punto di partenza, (5 domande), "Ecco la tua FinLearn".
 // `auth` arriva da app.js (accesso di prova, salvato sul dispositivo); `pre` porta i dati che servono prima dell'accesso.
-const GOALS = [['zero', 'Capire la finanza da zero', 'Soldi, interessi, inflazione', Sprout], ['invest', 'Investire i miei risparmi', 'Azioni, obbligazioni, fondi', TrendingUp], ['work', 'Usarla al lavoro', 'Bilanci, valutazioni, tassi', Briefcase], ['exam', 'Preparare un esame', 'CFA, FRM, CAIA', GraduationCap]];
+const GOALS = [['zero', 'Capire la finanza da zero', 'Soldi, interessi, inflazione', Sprout], ['invest', 'Investire i miei risparmi', 'Azioni, obbligazioni, fondi', TrendingUp], ['work', 'Usarla al lavoro', 'Bilanci, valutazioni, tassi', Briefcase], ['exam', 'Preparare un esame', 'CFA, FRM, CAIA', GraduationCap]].filter(g => LANG !== 'en' || g[0] !== 'exam');
+// i paesi tra cui scegliere (solo in inglese): decidono lezioni e valuta
+const COUNTRIES = [['US', 'Stati Uniti', 'Dollari e regole degli Stati Uniti'], ['IT', 'Italia', 'Euro e regole italiane']];
 function Choice({ on, onClick, icon, title, sub }) {
   return html`<button type="button" role="radio" aria-checked=${on ? 'true' : 'false'} onClick=${onClick} class="o-rowf" style=${{ gap: 14, width: '100%', minHeight: 72, padding: '12px 16px', border: `2.5px solid ${INK}`, borderRadius: 20, background: on ? T_AZ : '#fff', boxShadow: on ? `4px 4px 0 ${INK}` : 'none' }}>
     ${icon && html`<span class="o-ibox" style="width:42px;height:42px;border-radius:13px;font-size:15px">${icon}</span>`}
@@ -2999,7 +3042,7 @@ function pathMeta(c) {
 const NUM_IT = ['', 'una', 'due', 'tre', 'quattro', 'cinque'];
 
 export function OrdineWelcome({ auth, onAuth, pre }) {
-  const [step, setStep] = useState('welcome'), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10), [date, setDate] = useState('');
+  const [step, setStep] = useState(() => { try { const r = sessionStorage.getItem('fl_resume'); if (r) { sessionStorage.removeItem('fl_resume'); return r; } } catch (e) { /* niente */ } return 'welcome'; }), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10), [date, setDate] = useState('');
   const [pl, setPl] = useState(null), [qi, setQi] = useState(0), [sel, setSel] = useState(null), [res, setRes] = useState([]), [known, setKnown] = useState([]);
   const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [mode, setMode] = useState('in');
   if (!K) K = Object.assign({ losProgress: [], albumLoad: () => ({}) }, pre || {});   // prima dell'accesso: i dati dei percorsi e poco altro
@@ -3007,7 +3050,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
   useOrdFit();
   // durante la registrazione il percorso scelto è una bozza: le schermate lo leggono come se fosse già salvato
   const draft = useMemo(() => ({ goal, level: start, known, more: [], add: [], t: 0 }), [goal, start, known]);
-  const inReg = step !== 'welcome' && step !== 'login';
+  const inReg = step !== 'welcome' && step !== 'login' && step !== 'country';
   MIS_DRAFT = inReg ? draft : null;
   useEffect(() => () => { MIS_DRAFT = null; }, []);
   const P = MIS_PATHS[goal], course = inReg ? courseById(P.course) : null, exam = goal === 'exam', N = exam ? 4 : 3, iStart = exam ? 2 : 1;
@@ -3017,6 +3060,8 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
     s2set(s => ({ onboard: { goal, start, level: true, t: now }, mis: { goal, level: start, known, more: [], add: [], t: now, go: first ? first.key : null }, cur: P.course, settings: Object.assign({}, s.settings, { goalMin: mins }) }));
     if (exam && date) { try { localStorage.setItem('finlearn_exam_date', date); } catch (e) {} }
     enter(() => auth.guest()); };
+  const [cty, setCty] = useState(COUNTRY);
+  const pickCountry = () => { try { localStorage.setItem('fl_country', cty); } catch (e) { /* niente */ } if (cty === COUNTRY) { setStep('goal'); return; } try { sessionStorage.setItem('fl_resume', 'goal'); } catch (e) { /* niente */ } setCountryPref(cty); };
   const pickGoal = id => { setGoal(id); setKnown([]); };
   const fromStart = () => { if (start === 'some') { setPl(placementFor(goal)); setQi(0); setRes([]); setSel(null); setKnown([]); setStep('quiz'); } else { setKnown([]); setStep('pronta'); } };
   const answer = () => { const it = pl.items[qi], ok = sel === it.q.ans, r = [...res, ok];
@@ -3028,6 +3073,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
   let body;
   if (step === 'welcome') body = html`<div class="o-scr" style="background:${AZ}">
     <div class="o-top" style="flex:1 1 0;min-height:300px;position:relative;display:flex;flex-direction:column;align-items:center">
+      <button type="button" class="o-link" style="position:absolute;right:16px;top:14px;display:inline-flex;align-items:center;gap:6px" aria-label="Language · Lingua" onClick=${() => setLangPref(LANG === 'en' ? 'it' : 'en')}>${Ico(Languages, 18)}<span lang=${LANG === 'en' ? 'it' : 'en'}>${LANG === 'en' ? 'Italiano' : 'English'}</span></button>
       <div style="margin-top:22px"><${Wordmark} size=${34}/></div>
       <div style="position:relative;width:min(288px,70vw);aspect-ratio:1;margin-top:auto;margin-bottom:-8px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center">
         <${Rally} pose="saluta" w=${250} alt="Rally, la mascotte di FinLearn, saluta" style="margin-bottom:-6px;max-width:92%"/>
@@ -3035,8 +3081,13 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
     <div class="o-sheet o-col" style="flex:none;padding-top:28px;padding-bottom:max(26px,calc(env(safe-area-inset-bottom) + 10px))">
       <h1 style="font-size:30px;line-height:34px;font-weight:800;letter-spacing:-.02em;text-wrap:balance">Impara la finanza, dieci minuti al giorno</h1>
       <p class="o-body o-mut" style="margin-top:10px;font-size:16px;line-height:23px">Dalle basi alle certificazioni, con lezioni brevi, sfide e figurine da collezionare.</p>
-      <div style="margin-top:22px"><${Btn} cls="lg" onClick=${() => setStep('goal')}>Inizia<//></div>
+      <div style="margin-top:22px"><${Btn} cls="lg" onClick=${() => setStep(LANG === 'en' && !LS.raw('fl_country') ? 'country' : 'goal')}>Inizia<//></div>
       <div style="text-align:center;margin-top:4px"><button type="button" class="o-link" onClick=${() => setStep('login')}>Ho già un account</button></div></div></div>`;
+  else if (step === 'country') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} title=""/>`}>
+    <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', 'Il tuo paese', 'Dove vivi?')}
+      <div role="radiogroup" aria-label="Dove vivi" class="o-col" style="gap:12px;position:relative">${COUNTRIES.map(([id, t, s]) => html`<${Choice} key=${id} on=${cty === id} onClick=${() => setCty(id)} title=${t} sub=${s}/>`)}</div>
+      <p class="o-body o-mut" style="margin-top:18px">Le regole su tasse, pensioni e banche cambiano da un paese all'altro, e con loro le lezioni che vedi. Lo cambi quando vuoi, in Impostazioni.</p>
+      <div style="margin-top:20px"><${Btn} cls="lg" onClick=${pickCountry}>Continua<//></div></div><//>`;
   else if (step === 'goal') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} n=${N} i=${0}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep(exam ? 'exam' : 'start')}>Continua<//>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', `Passo 1 di ${N}`, 'Cosa vuoi fare con FinLearn?')}
       <div role="radiogroup" aria-label="Cosa vuoi fare con FinLearn" class="o-col" style="gap:12px;position:relative">${GOALS.map(([id, t, s, I]) => html`<${Choice} key=${id} on=${goal === id} onClick=${() => pickGoal(id)} icon=${Ico(I, 22)} title=${t} sub=${s}/>`)}</div>

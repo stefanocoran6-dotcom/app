@@ -1,0 +1,975 @@
+{
+ "termini": {
+  "mezzo di scambio": {
+   "en": "medium of exchange",
+   "anche": []
+  },
+  "unità di conto": {
+   "en": "unit of account",
+   "anche": []
+  },
+  "riserva di valore": {
+   "en": "store of value",
+   "anche": []
+  },
+  "investimenti": {
+   "en": "investments",
+   "anche": [
+    "investment",
+    "investing"
+   ]
+  },
+  "capitale": {
+   "en": "principal",
+   "anche": [
+    "capital"
+   ]
+  },
+  "interessi": {
+   "en": "interest",
+   "anche": []
+  },
+  "tasso": {
+   "en": "rate",
+   "anche": [
+    "interest rate"
+   ]
+  },
+  "interesse semplice": {
+   "en": "simple interest",
+   "anche": []
+  },
+  "montante": {
+   "en": "final amount",
+   "anche": []
+  },
+  "interesse composto": {
+   "en": "compound interest",
+   "anche": [
+    "interest on interest"
+   ]
+  },
+  "inflazione": {
+   "en": "inflation",
+   "anche": []
+  },
+  "paniere": {
+   "en": "basket",
+   "anche": []
+  },
+  "potere d'acquisto": {
+   "en": "purchasing power",
+   "anche": []
+  },
+  "tasso nominale": {
+   "en": "nominal rate",
+   "anche": []
+  },
+  "tasso reale": {
+   "en": "real rate",
+   "anche": []
+  },
+  "entrate": {
+   "en": "income",
+   "anche": []
+  },
+  "uscite": {
+   "en": "expenses",
+   "anche": [
+    "spending"
+   ]
+  },
+  "saldo": {
+   "en": "balance",
+   "anche": []
+  },
+  "spese fisse": {
+   "en": "fixed expenses",
+   "anche": [
+    "fixed expense"
+   ]
+  },
+  "spese variabili": {
+   "en": "variable expenses",
+   "anche": [
+    "variable expense"
+   ]
+  },
+  "risparmio": {
+   "en": "savings",
+   "anche": [
+    "saving"
+   ]
+  },
+  "budget": {
+   "en": "budget",
+   "anche": []
+  },
+  "bisogni": {
+   "en": "needs",
+   "anche": []
+  },
+  "desideri": {
+   "en": "wants",
+   "anche": []
+  },
+  "fondo di emergenza": {
+   "en": "emergency fund",
+   "anche": []
+  },
+  "liquido": {
+   "en": "liquid",
+   "anche": []
+  },
+  "liquidità": {
+   "en": "liquidity",
+   "anche": [
+    "cash"
+   ]
+  },
+  "conto corrente": {
+   "en": "checking account",
+   "anche": [
+    "current account"
+   ]
+  },
+  "conto deposito": {
+   "en": "savings account",
+   "anche": [
+    "deposit account"
+   ]
+  },
+  "ral": {
+   "en": "gross annual salary",
+   "anche": [
+    "RAL"
+   ]
+  },
+  "contributi": {
+   "en": "social security contributions",
+   "anche": [
+    "contributions",
+    "contribution"
+   ]
+  },
+  "imponibile fiscale": {
+   "en": "taxable income",
+   "anche": []
+  },
+  "imponibile previdenziale": {
+   "en": "contribution base",
+   "anche": []
+  },
+  "irpef": {
+   "en": "IRPEF",
+   "anche": []
+  },
+  "irpef lorda": {
+   "en": "gross IRPEF",
+   "anche": []
+  },
+  "addizionali": {
+   "en": "local surtaxes",
+   "anche": [
+    "local surtax"
+   ]
+  },
+  "conguaglio": {
+   "en": "year-end adjustment",
+   "anche": []
+  },
+  "naspi": {
+   "en": "NASpI",
+   "anche": []
+  },
+  "estratto conto contributivo": {
+   "en": "contribution statement",
+   "anche": []
+  },
+  "a scaglioni": {
+   "en": "in bands",
+   "anche": [
+    "bands",
+    "tax bands"
+   ]
+  },
+  "aliquota media": {
+   "en": "average rate",
+   "anche": []
+  },
+  "aliquota marginale": {
+   "en": "marginal rate",
+   "anche": []
+  },
+  "detrazioni": {
+   "en": "tax credits",
+   "anche": [
+    "tax credit"
+   ]
+  },
+  "deduzione": {
+   "en": "deduction",
+   "anche": [
+    "deductions"
+   ]
+  },
+  "taglio del cuneo": {
+   "en": "tax wedge cut",
+   "anche": []
+  },
+  "tfr": {
+   "en": "TFR",
+   "anche": []
+  },
+  "tassazione separata": {
+   "en": "separate taxation",
+   "anche": []
+  },
+  "imposta di bollo": {
+   "en": "stamp duty",
+   "anche": []
+  },
+  "giacenza media": {
+   "en": "average balance",
+   "anche": []
+  },
+  "riepilogo delle spese": {
+   "en": "statement of fees",
+   "anche": []
+  },
+  "carta di debito": {
+   "en": "debit card",
+   "anche": [
+    "debit cards"
+   ]
+  },
+  "carta di credito": {
+   "en": "credit card",
+   "anche": [
+    "credit cards"
+   ]
+  },
+  "prepagata": {
+   "en": "prepaid card",
+   "anche": [
+    "prepaid"
+   ]
+  },
+  "plafond": {
+   "en": "credit limit",
+   "anche": []
+  },
+  "a saldo": {
+   "en": "in full",
+   "anche": []
+  },
+  "pre-autorizzazione": {
+   "en": "pre-authorization",
+   "anche": []
+  },
+  "anticipo di contante": {
+   "en": "cash advance",
+   "anche": []
+  },
+  "bonifico istantaneo": {
+   "en": "instant transfer",
+   "anche": [
+    "instant transfers"
+   ]
+  },
+  "iban": {
+   "en": "IBAN",
+   "anche": []
+  },
+  "orario limite": {
+   "en": "cut-off time",
+   "anche": []
+  },
+  "verifica del beneficiario": {
+   "en": "verification of payee",
+   "anche": []
+  },
+  "addebito diretto": {
+   "en": "direct debit",
+   "anche": [
+    "direct debits"
+   ]
+  },
+  "fondo di garanzia": {
+   "en": "deposit guarantee scheme",
+   "anche": []
+  },
+  "depositi": {
+   "en": "deposits",
+   "anche": [
+    "deposit"
+   ]
+  },
+  "istituti di pagamento": {
+   "en": "payment institutions",
+   "anche": [
+    "payment institution"
+   ]
+  },
+  "autenticazione forte": {
+   "en": "strong customer authentication",
+   "anche": []
+  },
+  "colpa grave": {
+   "en": "gross negligence",
+   "anche": []
+  },
+  "chargeback": {
+   "en": "chargeback",
+   "anche": []
+  },
+  "rata": {
+   "en": "installment",
+   "anche": [
+    "installments",
+    "repayment",
+    "payment"
+   ]
+  },
+  "quota interessi": {
+   "en": "interest portion",
+   "anche": []
+  },
+  "quota capitale": {
+   "en": "principal portion",
+   "anche": []
+  },
+  "debito residuo": {
+   "en": "remaining balance",
+   "anche": [
+    "outstanding balance",
+    "remaining debt"
+   ]
+  },
+  "tan": {
+   "en": "nominal interest rate",
+   "anche": [
+    "TAN"
+   ]
+  },
+  "taeg": {
+   "en": "APR",
+   "anche": [
+    "TAEG"
+   ]
+  },
+  "spese": {
+   "en": "fees",
+   "anche": []
+  },
+  "mutuo": {
+   "en": "mortgage",
+   "anche": []
+  },
+  "ipoteca": {
+   "en": "lien",
+   "anche": []
+  },
+  "tasso fisso": {
+   "en": "fixed rate",
+   "anche": []
+  },
+  "tasso variabile": {
+   "en": "adjustable rate",
+   "anche": [
+    "variable rate"
+   ]
+  },
+  "spread": {
+   "en": "spread",
+   "anche": [
+    "margin"
+   ]
+  },
+  "revolving": {
+   "en": "revolving credit",
+   "anche": [
+    "revolving"
+   ]
+  },
+  "sistemi di informazioni creditizie": {
+   "en": "credit bureaus",
+   "anche": [
+    "credit bureau"
+   ]
+  },
+  "assicurazione obbligatoria": {
+   "en": "mandatory insurance",
+   "anche": [
+    "required insurance",
+    "compulsory insurance"
+   ]
+  },
+  "inattivi": {
+   "en": "economically inactive",
+   "anche": [
+    "inactive"
+   ]
+  },
+  "tasso di disoccupazione": {
+   "en": "unemployment rate",
+   "anche": []
+  },
+  "tasso di occupazione": {
+   "en": "employment rate",
+   "anche": []
+  },
+  "pil pro capite": {
+   "en": "GDP per capita",
+   "anche": []
+  },
+  "carrello della spesa": {
+   "en": "shopping basket",
+   "anche": []
+  },
+  "deficit": {
+   "en": "deficit",
+   "anche": []
+  },
+  "debito pubblico": {
+   "en": "public debt",
+   "anche": []
+  },
+  "saldo primario": {
+   "en": "primary balance",
+   "anche": [
+    "primary surplus"
+   ]
+  },
+  "punti base": {
+   "en": "basis points",
+   "anche": [
+    "basis point"
+   ]
+  },
+  "rating": {
+   "en": "rating",
+   "anche": [
+    "credit rating"
+   ]
+  },
+  "investment grade": {
+   "en": "investment grade",
+   "anche": []
+  },
+  "outlook": {
+   "en": "outlook",
+   "anche": []
+  },
+  "capitalizzazione": {
+   "en": "market capitalization",
+   "anche": [
+    "market cap"
+   ]
+  },
+  "btp": {
+   "en": "BTP",
+   "anche": [
+    "BTPs"
+   ]
+  },
+  "bot": {
+   "en": "BOT",
+   "anche": [
+    "BOTs"
+   ]
+  },
+  "bund": {
+   "en": "Bund",
+   "anche": [
+    "Bunds"
+   ]
+  },
+  "a ripartizione": {
+   "en": "pay-as-you-go",
+   "anche": []
+  },
+  "pensione di vecchiaia": {
+   "en": "old-age pension",
+   "anche": []
+  },
+  "pensione anticipata": {
+   "en": "early pension",
+   "anche": []
+  },
+  "tasso di sostituzione": {
+   "en": "replacement rate",
+   "anche": []
+  },
+  "montante contributivo": {
+   "en": "notional balance",
+   "anche": []
+  },
+  "coefficiente di trasformazione": {
+   "en": "conversion coefficient",
+   "anche": []
+  },
+  "fondo pensione": {
+   "en": "pension fund",
+   "anche": [
+    "pension funds"
+   ]
+  },
+  "fondi negoziali": {
+   "en": "occupational pension funds",
+   "anche": []
+  },
+  "fondi aperti": {
+   "en": "open pension funds",
+   "anche": []
+  },
+  "pip": {
+   "en": "PIP",
+   "anche": [
+    "PIPs"
+   ]
+  },
+  "isc": {
+   "en": "ISC",
+   "anche": []
+  },
+  "covip": {
+   "en": "COVIP",
+   "anche": []
+  },
+  "anticipo": {
+   "en": "down payment",
+   "anche": []
+  },
+  "perizia": {
+   "en": "appraisal",
+   "anche": []
+  },
+  "caparra": {
+   "en": "deposit",
+   "anche": [
+    "earnest money"
+   ]
+  },
+  "contratto preliminare": {
+   "en": "preliminary contract",
+   "anche": []
+  },
+  "garante": {
+   "en": "guarantor",
+   "anche": []
+  },
+  "fondo prima casa": {
+   "en": "First Home Guarantee Fund",
+   "anche": []
+  },
+  "prima casa": {
+   "en": "first home",
+   "anche": []
+  },
+  "rendita catastale": {
+   "en": "cadastral income",
+   "anche": []
+  },
+  "prezzo-valore": {
+   "en": "price-value rule",
+   "anche": []
+  },
+  "surroga": {
+   "en": "mortgage transfer",
+   "anche": []
+  },
+  "rinegoziazione": {
+   "en": "renegotiation",
+   "anche": []
+  },
+  "sostituzione del mutuo": {
+   "en": "mortgage replacement",
+   "anche": []
+  },
+  "assicurazione": {
+   "en": "insurance",
+   "anche": []
+  },
+  "premio": {
+   "en": "premium",
+   "anche": []
+  },
+  "indennizzo": {
+   "en": "payout",
+   "anche": []
+  },
+  "polizza": {
+   "en": "policy",
+   "anche": []
+  },
+  "esclusioni": {
+   "en": "exclusions",
+   "anche": [
+    "exclusion"
+   ]
+  },
+  "franchigia": {
+   "en": "deductible",
+   "anche": []
+  },
+  "scoperto": {
+   "en": "percentage deductible",
+   "anche": []
+  },
+  "massimale": {
+   "en": "coverage limit",
+   "anche": [
+    "policy limit"
+   ]
+  },
+  "responsabilità civile": {
+   "en": "liability",
+   "anche": [
+    "third-party liability"
+   ]
+  },
+  "rc auto": {
+   "en": "auto liability insurance",
+   "anche": []
+  },
+  "schema ponzi": {
+   "en": "Ponzi scheme",
+   "anche": []
+  },
+  "phishing": {
+   "en": "phishing",
+   "anche": []
+  },
+  "smishing": {
+   "en": "smishing",
+   "anche": []
+  },
+  "vishing": {
+   "en": "vishing",
+   "anche": []
+  },
+  "spoofing": {
+   "en": "spoofing",
+   "anche": []
+  },
+  "furto d'identità": {
+   "en": "identity theft",
+   "anche": []
+  },
+  "temporanea caso morte": {
+   "en": "term life insurance",
+   "anche": []
+  },
+  "polizza rivalutabile": {
+   "en": "with-profits policy",
+   "anche": []
+  },
+  "unit-linked": {
+   "en": "unit-linked policy",
+   "anche": [
+    "unit-linked"
+   ]
+  },
+  "caricamento": {
+   "en": "premium charge",
+   "anche": []
+  },
+  "kid": {
+   "en": "KID",
+   "anche": []
+  },
+  "reclamo": {
+   "en": "complaint",
+   "anche": [
+    "written complaint"
+   ]
+  },
+  "abf": {
+   "en": "ABF",
+   "anche": []
+  },
+  "acf": {
+   "en": "ACF",
+   "anche": []
+  },
+  "arbitro assicurativo": {
+   "en": "Insurance Ombudsman",
+   "anche": []
+  },
+  "azioni": {
+   "en": "stocks",
+   "anche": [
+    "stock",
+    "shares",
+    "share"
+   ]
+  },
+  "dividendo": {
+   "en": "dividend",
+   "anche": []
+  },
+  "obbligazioni": {
+   "en": "bonds",
+   "anche": [
+    "bond"
+   ]
+  },
+  "cedola": {
+   "en": "coupon",
+   "anche": []
+  },
+  "rimborso": {
+   "en": "redemption",
+   "anche": []
+  },
+  "fondo comune": {
+   "en": "mutual fund",
+   "anche": [
+    "mutual funds",
+    "investment fund"
+   ]
+  },
+  "quote": {
+   "en": "shares",
+   "anche": [
+    "share",
+    "units",
+    "unit"
+   ]
+  },
+  "etf": {
+   "en": "ETF",
+   "anche": [
+    "ETFs"
+   ]
+  },
+  "rischio": {
+   "en": "risk",
+   "anche": []
+  },
+  "diversificare": {
+   "en": "diversify",
+   "anche": [
+    "diversification"
+   ]
+  },
+  "orizzonte temporale": {
+   "en": "time horizon",
+   "anche": []
+  },
+  "lordo": {
+   "en": "gross",
+   "anche": []
+  },
+  "netto": {
+   "en": "net",
+   "anche": []
+  },
+  "pic": {
+   "en": "lump sum",
+   "anche": []
+  },
+  "pac": {
+   "en": "dollar-cost averaging",
+   "anche": [
+    "regular investment plan"
+   ]
+  },
+  "prezzo medio di carico": {
+   "en": "average purchase price",
+   "anche": []
+  },
+  "asset allocation": {
+   "en": "asset allocation",
+   "anche": []
+  },
+  "ribilanciare": {
+   "en": "rebalance",
+   "anche": [
+    "rebalancing"
+   ]
+  },
+  "avversione alle perdite": {
+   "en": "loss aversion",
+   "anche": []
+  },
+  "fomo": {
+   "en": "FOMO",
+   "anche": []
+  },
+  "effetto gregge": {
+   "en": "herd behavior",
+   "anche": []
+  },
+  "bolla": {
+   "en": "bubble",
+   "anche": []
+  },
+  "eccesso di fiducia": {
+   "en": "overconfidence",
+   "anche": []
+  },
+  "commissione": {
+   "en": "fee",
+   "anche": [
+    "fees"
+   ]
+  },
+  "stato patrimoniale": {
+   "en": "balance sheet",
+   "anche": []
+  },
+  "attività": {
+   "en": "assets",
+   "anche": []
+  },
+  "passività": {
+   "en": "liabilities",
+   "anche": []
+  },
+  "patrimonio netto": {
+   "en": "equity",
+   "anche": []
+  },
+  "conto economico": {
+   "en": "income statement",
+   "anche": []
+  },
+  "ricavi": {
+   "en": "revenue",
+   "anche": []
+  },
+  "costi": {
+   "en": "costs",
+   "anche": []
+  },
+  "utile": {
+   "en": "profit",
+   "anche": [
+    "earnings"
+   ]
+  },
+  "margine lordo": {
+   "en": "gross margin",
+   "anche": []
+  },
+  "risultato operativo": {
+   "en": "operating income",
+   "anche": [
+    "operating profit"
+   ]
+  },
+  "utile netto": {
+   "en": "net income",
+   "anche": [
+    "net profit"
+   ]
+  },
+  "margine netto": {
+   "en": "net margin",
+   "anche": []
+  },
+  "competenza": {
+   "en": "accrual basis",
+   "anche": []
+  },
+  "ammortamento": {
+   "en": "depreciation",
+   "anche": []
+  },
+  "rendiconto finanziario": {
+   "en": "cash flow statement",
+   "anche": []
+  },
+  "p/e": {
+   "en": "P/E",
+   "anche": [
+    "price/earnings"
+   ]
+  },
+  "banca centrale": {
+   "en": "central bank",
+   "anche": []
+  },
+  "tassi di riferimento": {
+   "en": "policy rates",
+   "anche": [
+    "policy rate"
+   ]
+  },
+  "tasso di cambio": {
+   "en": "exchange rate",
+   "anche": []
+  },
+  "rischio di cambio": {
+   "en": "currency risk",
+   "anche": [
+    "exchange rate risk"
+   ]
+  },
+  "pil": {
+   "en": "GDP",
+   "anche": []
+  },
+  "recessione": {
+   "en": "recession",
+   "anche": []
+  },
+  "indice di borsa": {
+   "en": "stock market index",
+   "anche": [
+    "index"
+   ]
+  },
+  "inflazione di fondo": {
+   "en": "core inflation",
+   "anche": []
+  },
+  "pun": {
+   "en": "PUN",
+   "anche": []
+  },
+  "megawattora": {
+   "en": "megawatt-hour",
+   "anche": []
+  },
+  "fed": {
+   "en": "Fed",
+   "anche": []
+  },
+  "wall street": {
+   "en": "Wall Street",
+   "anche": []
+  }
+ },
+ "altre": {
+  "busta paga": "pay stub",
+  "stipendio lordo / netto": "gross / net pay",
+  "datore di lavoro": "employer",
+  "bolletta": "bill",
+  "bonifico": "bank transfer",
+  "prelievo": "withdrawal",
+  "estratto conto": "bank statement",
+  "canone": "monthly fee",
+  "prestito": "loan",
+  "finanziaria": "finance company",
+  "penale": "penalty",
+  "notaio": "notary",
+  "agenzia (immobiliare)": "real estate agent",
+  "affitto": "rent",
+  "titoli di Stato": "government bonds",
+  "Borsa": "stock market",
+  "rendimento": "return",
+  "costi (di un fondo)": "costs",
+  "figurina": "sticker",
+  "unità": "unit",
+  "lezione": "lesson",
+  "In breve": "In short",
+  "truffa": "scam",
+  "risparmi": "savings",
+  "spesa (al supermercato)": "groceries",
+  "a testa": "per person",
+  "Stato": "the State / the government"
+ }
+}

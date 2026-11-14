@@ -1,0 +1,719 @@
+[
+ {
+  "unita": "basi-u1",
+  "nome_unita": "I soldi nel tempo",
+  "key": "basi-1-1",
+  "titolo": "A cosa servono i soldi",
+  "etichetta": "A",
+  "parole": 585,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u1",
+  "nome_unita": "I soldi nel tempo",
+  "key": "basi-1-2",
+  "titolo": "Interesse semplice",
+  "etichetta": "A",
+  "parole": 556,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u1",
+  "nome_unita": "I soldi nel tempo",
+  "key": "basi-1-3",
+  "titolo": "L'interesse composto",
+  "etichetta": "A",
+  "parole": 590,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u1",
+  "nome_unita": "I soldi nel tempo",
+  "key": "basi-1-4",
+  "titolo": "L'inflazione",
+  "etichetta": "A",
+  "parole": 598,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u1",
+  "nome_unita": "I soldi nel tempo",
+  "key": "basi-1-5",
+  "titolo": "Tasso reale",
+  "etichetta": "A",
+  "parole": 637,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u7",
+  "nome_unita": "Entrate e uscite",
+  "key": "basi-7-1",
+  "titolo": "Dove vanno i tuoi soldi",
+  "etichetta": "A",
+  "parole": 691,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u7",
+  "nome_unita": "Entrate e uscite",
+  "key": "basi-7-2",
+  "titolo": "Un budget in tre parti",
+  "etichetta": "A",
+  "parole": 711,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u7",
+  "nome_unita": "Entrate e uscite",
+  "key": "basi-7-3",
+  "titolo": "Il fondo di emergenza",
+  "etichetta": "A",
+  "parole": 750,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u7",
+  "nome_unita": "Entrate e uscite",
+  "key": "basi-7-4",
+  "titolo": "Un obiettivo, una cifra, una data",
+  "etichetta": "A",
+  "parole": 610,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u12",
+  "nome_unita": "Lo stipendio",
+  "key": "basi-12-1",
+  "titolo": "Dal lordo al netto",
+  "etichetta": "C",
+  "parole": 835,
+  "segni_italiani": [
+   "IRPEF",
+   "INPS",
+   "TFR",
+   "Milano"
+  ]
+ },
+ {
+  "unita": "basi-u12",
+  "nome_unita": "Lo stipendio",
+  "key": "basi-12-2",
+  "titolo": "I contributi: dove vanno",
+  "etichetta": "C",
+  "parole": 860,
+  "segni_italiani": [
+   "IRPEF",
+   "INPS",
+   "bollo",
+   "TFR",
+   "SPID"
+  ]
+ },
+ {
+  "unita": "basi-u12",
+  "nome_unita": "Lo stipendio",
+  "key": "basi-12-3",
+  "titolo": "L'IRPEF e gli scaglioni",
+  "etichetta": "C",
+  "parole": 866,
+  "segni_italiani": [
+   "IRPEF"
+  ]
+ },
+ {
+  "unita": "basi-u12",
+  "nome_unita": "Lo stipendio",
+  "key": "basi-12-4",
+  "titolo": "Detrazioni e deduzioni",
+  "etichetta": "C",
+  "parole": 787,
+  "segni_italiani": [
+   "IRPEF",
+   "INPS",
+   "Agenzia delle Entrate",
+   "codice fiscale"
+  ]
+ },
+ {
+  "unita": "basi-u12",
+  "nome_unita": "Lo stipendio",
+  "key": "basi-12-5",
+  "titolo": "Il TFR",
+  "etichetta": "C",
+  "parole": 810,
+  "segni_italiani": [
+   "INPS",
+   "TFR"
+  ]
+ },
+ {
+  "unita": "basi-u11",
+  "nome_unita": "La banca e i pagamenti",
+  "key": "basi-11-1",
+  "titolo": "Quanto ti costa il conto",
+  "etichetta": "E",
+  "parole": 1044,
+  "segni_italiani": [
+   "Banca d'Italia",
+   "bollo",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u11",
+  "nome_unita": "La banca e i pagamenti",
+  "key": "basi-11-2",
+  "titolo": "Debito, credito, prepagata",
+  "etichetta": "E",
+  "parole": 1056,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u11",
+  "nome_unita": "La banca e i pagamenti",
+  "key": "basi-11-3",
+  "titolo": "Bonifici, IBAN e addebiti diretti",
+  "etichetta": "E",
+  "parole": 1123,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u11",
+  "nome_unita": "La banca e i pagamenti",
+  "key": "basi-11-4",
+  "titolo": "Se la banca fallisce",
+  "etichetta": "E",
+  "parole": 1108,
+  "segni_italiani": [
+   "Banca d'Italia",
+   "in Italia"
+  ]
+ },
+ {
+  "unita": "basi-u11",
+  "nome_unita": "La banca e i pagamenti",
+  "key": "basi-11-5",
+  "titolo": "Pagare online e con il telefono",
+  "etichetta": "E",
+  "parole": 1121,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u4",
+  "nome_unita": "Debiti e prestiti",
+  "key": "basi-4-1",
+  "titolo": "Come funziona un prestito",
+  "etichetta": "A",
+  "parole": 771,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u4",
+  "nome_unita": "Debiti e prestiti",
+  "key": "basi-4-2",
+  "titolo": "TAN e TAEG",
+  "etichetta": "A",
+  "parole": 542,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u4",
+  "nome_unita": "Debiti e prestiti",
+  "key": "basi-4-3",
+  "titolo": "Il mutuo: fisso o variabile",
+  "etichetta": "A",
+  "parole": 572,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u4",
+  "nome_unita": "Debiti e prestiti",
+  "key": "basi-4-4",
+  "titolo": "Quando il debito lavora contro di te",
+  "etichetta": "A",
+  "parole": 493,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u4",
+  "nome_unita": "Debiti e prestiti",
+  "key": "basi-4-5",
+  "titolo": "Comprare a rate",
+  "etichetta": "B",
+  "parole": 893,
+  "segni_italiani": [
+   "Banca d'Italia",
+   "bollo",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u4",
+  "nome_unita": "Debiti e prestiti",
+  "key": "basi-4-6",
+  "titolo": "Compra ora, paga dopo",
+  "etichetta": "B",
+  "parole": 727,
+  "segni_italiani": [
+   "in Italia"
+  ]
+ },
+ {
+  "unita": "basi-u4",
+  "nome_unita": "Debiti e prestiti",
+  "key": "basi-4-7",
+  "titolo": "La cessione del quinto",
+  "etichetta": "C",
+  "parole": 864,
+  "segni_italiani": [
+   "INPS",
+   "Banca d'Italia",
+   "TFR",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u13",
+  "nome_unita": "La casa",
+  "key": "basi-13-1",
+  "titolo": "Affitto o acquisto",
+  "etichetta": "A",
+  "parole": 787,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u13",
+  "nome_unita": "La casa",
+  "key": "basi-13-2",
+  "titolo": "Quanto mutuo ti puoi permettere",
+  "etichetta": "B",
+  "parole": 690,
+  "segni_italiani": [
+   "Banca d'Italia",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u13",
+  "nome_unita": "La casa",
+  "key": "basi-13-3",
+  "titolo": "L'anticipo e le garanzie",
+  "etichetta": "C",
+  "parole": 867,
+  "segni_italiani": [
+   "ISEE"
+  ]
+ },
+ {
+  "unita": "basi-u13",
+  "nome_unita": "La casa",
+  "key": "basi-13-4",
+  "titolo": "I costi oltre il prezzo",
+  "etichetta": "C",
+  "parole": 887,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u13",
+  "nome_unita": "La casa",
+  "key": "basi-13-5",
+  "titolo": "Cambiare mutuo",
+  "etichetta": "C",
+  "parole": 763,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u8",
+  "nome_unita": "Proteggersi",
+  "key": "basi-8-1",
+  "titolo": "Come funziona un'assicurazione",
+  "etichetta": "A",
+  "parole": 610,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u8",
+  "nome_unita": "Proteggersi",
+  "key": "basi-8-2",
+  "titolo": "Franchigia e massimale",
+  "etichetta": "A",
+  "parole": 596,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u8",
+  "nome_unita": "Proteggersi",
+  "key": "basi-8-3",
+  "titolo": "Che cosa assicurare davvero",
+  "etichetta": "A",
+  "parole": 693,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u8",
+  "nome_unita": "Proteggersi",
+  "key": "basi-8-4",
+  "titolo": "Riconoscere una truffa",
+  "etichetta": "B",
+  "parole": 845,
+  "segni_italiani": [
+   "Banca d'Italia",
+   "Consob",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u8",
+  "nome_unita": "Proteggersi",
+  "key": "basi-8-5",
+  "titolo": "Phishing e furto d'identità",
+  "etichetta": "B",
+  "parole": 881,
+  "segni_italiani": [
+   "Italia",
+   "Poste",
+   "codice fiscale",
+   "Polizia Postale"
+  ]
+ },
+ {
+  "unita": "basi-u8",
+  "nome_unita": "Proteggersi",
+  "key": "basi-8-6",
+  "titolo": "Polizze vita: protezione o investimento?",
+  "etichetta": "B",
+  "parole": 881,
+  "segni_italiani": [
+   "IRPEF",
+   "Banca d'Italia",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u8",
+  "nome_unita": "Proteggersi",
+  "key": "basi-8-7",
+  "titolo": "Reclami: a chi rivolgersi",
+  "etichetta": "C",
+  "parole": 759,
+  "segni_italiani": [
+   "Banca d'Italia",
+   "Consob",
+   "IVASS",
+   "ABF",
+   "ACF",
+   "Italia",
+   "AGCOM",
+   "ARERA"
+  ]
+ },
+ {
+  "unita": "basi-u2",
+  "nome_unita": "Gli strumenti",
+  "key": "basi-2-1",
+  "titolo": "Azioni",
+  "etichetta": "A",
+  "parole": 153,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u2",
+  "nome_unita": "Gli strumenti",
+  "key": "basi-2-2",
+  "titolo": "Obbligazioni",
+  "etichetta": "B",
+  "parole": 211,
+  "segni_italiani": [
+   "BTP"
+  ]
+ },
+ {
+  "unita": "basi-u2",
+  "nome_unita": "Gli strumenti",
+  "key": "basi-2-4",
+  "titolo": "Fondi ed ETF",
+  "etichetta": "A",
+  "parole": 299,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u2",
+  "nome_unita": "Gli strumenti",
+  "key": "basi-2-5",
+  "titolo": "Conti, depositi e liquidità",
+  "etichetta": "B",
+  "parole": 237,
+  "segni_italiani": [
+   "Italia",
+   "26%"
+  ]
+ },
+ {
+  "unita": "basi-u3",
+  "nome_unita": "Rischio, tempo e costi",
+  "key": "basi-2-3",
+  "titolo": "Rischio e rendimento",
+  "etichetta": "A",
+  "parole": 172,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u3",
+  "nome_unita": "Rischio, tempo e costi",
+  "key": "basi-3-2",
+  "titolo": "Diversificare con i numeri",
+  "etichetta": "A",
+  "parole": 236,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u3",
+  "nome_unita": "Rischio, tempo e costi",
+  "key": "basi-3-3",
+  "titolo": "L'orizzonte temporale",
+  "etichetta": "A",
+  "parole": 269,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u3",
+  "nome_unita": "Rischio, tempo e costi",
+  "key": "basi-3-4",
+  "titolo": "I costi",
+  "etichetta": "A",
+  "parole": 239,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u9",
+  "nome_unita": "Investire passo passo",
+  "key": "basi-9-1",
+  "titolo": "Tutto subito o un po' alla volta",
+  "etichetta": "A",
+  "parole": 689,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u9",
+  "nome_unita": "Investire passo passo",
+  "key": "basi-9-2",
+  "titolo": "Comprare a prezzi diversi",
+  "etichetta": "A",
+  "parole": 684,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u9",
+  "nome_unita": "Investire passo passo",
+  "key": "basi-9-3",
+  "titolo": "La regola del 72",
+  "etichetta": "A",
+  "parole": 519,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u9",
+  "nome_unita": "Investire passo passo",
+  "key": "basi-9-4",
+  "titolo": "Dividere e riequilibrare",
+  "etichetta": "A",
+  "parole": 786,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u10",
+  "nome_unita": "La testa dell'investitore",
+  "key": "basi-10-1",
+  "titolo": "Le perdite fanno più male",
+  "etichetta": "A",
+  "parole": 651,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u10",
+  "nome_unita": "La testa dell'investitore",
+  "key": "basi-10-2",
+  "titolo": "Tutti comprano, compro anche io",
+  "etichetta": "A",
+  "parole": 701,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u10",
+  "nome_unita": "La testa dell'investitore",
+  "key": "basi-10-3",
+  "titolo": "Vendere nel momento peggiore",
+  "etichetta": "A",
+  "parole": 677,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u10",
+  "nome_unita": "La testa dell'investitore",
+  "key": "basi-10-4",
+  "titolo": "Sentirsi più bravi del mercato",
+  "etichetta": "A",
+  "parole": 661,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u14",
+  "nome_unita": "La pensione",
+  "key": "basi-14-1",
+  "titolo": "La pensione pubblica",
+  "etichetta": "C",
+  "parole": 834,
+  "segni_italiani": [
+   "INPS",
+   "Italia",
+   "SPID"
+  ]
+ },
+ {
+  "unita": "basi-u14",
+  "nome_unita": "La pensione",
+  "key": "basi-14-2",
+  "titolo": "Come si calcola la pensione",
+  "etichetta": "C",
+  "parole": 735,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u14",
+  "nome_unita": "La pensione",
+  "key": "basi-14-3",
+  "titolo": "I fondi pensione",
+  "etichetta": "C",
+  "parole": 1019,
+  "segni_italiani": [
+   "IRPEF",
+   "INPS",
+   "COVIP",
+   "TFR",
+   "26%"
+  ]
+ },
+ {
+  "unita": "basi-u14",
+  "nome_unita": "La pensione",
+  "key": "basi-14-4",
+  "titolo": "TFR: in azienda o nel fondo?",
+  "etichetta": "C",
+  "parole": 828,
+  "segni_italiani": [
+   "INPS",
+   "TFR"
+  ]
+ },
+ {
+  "unita": "basi-u5",
+  "nome_unita": "Leggere un'azienda",
+  "key": "basi-5-1",
+  "titolo": "Lo stato patrimoniale",
+  "etichetta": "A",
+  "parole": 218,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u5",
+  "nome_unita": "Leggere un'azienda",
+  "key": "basi-5-2",
+  "titolo": "Il conto economico",
+  "etichetta": "A",
+  "parole": 203,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u5",
+  "nome_unita": "Leggere un'azienda",
+  "key": "basi-5-3",
+  "titolo": "Utile non è cassa",
+  "etichetta": "A",
+  "parole": 223,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u5",
+  "nome_unita": "Leggere un'azienda",
+  "key": "basi-5-4",
+  "titolo": "Prezzo e valore",
+  "etichetta": "A",
+  "parole": 309,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u6",
+  "nome_unita": "L'economia intorno",
+  "key": "basi-6-1",
+  "titolo": "Banche centrali e tassi",
+  "etichetta": "A",
+  "parole": 271,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u6",
+  "nome_unita": "L'economia intorno",
+  "key": "basi-6-2",
+  "titolo": "I cambi",
+  "etichetta": "A",
+  "parole": 261,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u6",
+  "nome_unita": "L'economia intorno",
+  "key": "basi-6-3",
+  "titolo": "Il ciclo economico",
+  "etichetta": "A",
+  "parole": 254,
+  "segni_italiani": []
+ },
+ {
+  "unita": "basi-u15",
+  "nome_unita": "Capire le notizie",
+  "key": "basi-15-1",
+  "titolo": "PIL, inflazione, disoccupazione",
+  "etichetta": "B",
+  "parole": 849,
+  "segni_italiani": [
+   "ISTAT"
+  ]
+ },
+ {
+  "unita": "basi-u15",
+  "nome_unita": "Capire le notizie",
+  "key": "basi-15-2",
+  "titolo": "Deficit e debito pubblico",
+  "etichetta": "B",
+  "parole": 837,
+  "segni_italiani": [
+   "BTP",
+   "BOT",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u15",
+  "nome_unita": "Capire le notizie",
+  "key": "basi-15-3",
+  "titolo": "Spread e rating",
+  "etichetta": "B",
+  "parole": 681,
+  "segni_italiani": [
+   "BTP",
+   "Italia"
+  ]
+ },
+ {
+  "unita": "basi-u15",
+  "nome_unita": "Capire le notizie",
+  "key": "basi-15-4",
+  "titolo": "Gli indici di Borsa",
+  "etichetta": "B",
+  "parole": 800,
+  "segni_italiani": [
+   "FTSE MIB",
+   "Milano"
+  ]
+ }
+]

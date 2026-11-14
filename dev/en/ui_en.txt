@@ -1,0 +1,935 @@
+# Dizionario dell'interfaccia: frase italiana ⇒ English phrase. {0} {1} sono i valori che il codice mette nel testo. "=" lascia la frase com'è.
+Indietro ⇒ Back
+Chiudi ⇒ Close
+Sezioni dell'app ⇒ App sections
+Che cosa vuol dire ⇒ What it means
+Ho capito ⇒ Got it
+FinLearn ⇒ =
+FinLearn si sta aprendo ⇒ FinLearn is opening
+Bull market your knowledge ⇒ =
+In arrivo: ⇒ Coming soon:
+Parti da qui ⇒ Start here
+Rally, la mascotte di FinLearn, saluta ⇒ Rally, the FinLearn mascot, waving
+Ciao, sono Rally ⇒ Hi, I'm Rally
+Impara la finanza, dieci minuti al giorno ⇒ Learn finance, ten minutes a day
+Dalle basi alle certificazioni, con lezioni brevi, sfide e figurine da collezionare. ⇒ From the basics to investing, with short lessons, practice and stickers to collect.
+Ho già un account ⇒ I already have an account
+Cosa vuoi fare con FinLearn ⇒ What do you want to do with FinLearn
+Da questa scelta dipende cosa trovi nell'app. La cambi quando vuoi, senza perdere i progressi. ⇒ What you pick here decides what you find in the app. You can change it anytime without losing your progress.
+Con la data, in Home vedi quanti giorni mancano. Puoi metterla anche dopo. ⇒ With the date, Home shows how many days are left. You can also add it later.
+Da dove parti ⇒ Where are you starting from
+Parto da zero ⇒ Starting from zero
+Comincio dalla prima lezione. ⇒ I begin with the first lesson.
+So già qualcosa ⇒ I know a little already
+Livello e minuti li cambi quando vuoi dalle impostazioni. ⇒ You can change your level and minutes anytime in Settings.
+Preferisco partire dall'inizio ⇒ I'd rather start from the beginning
+Ecco la tua FinLearn ⇒ Here is your FinLearn
+Cambi obiettivo quando vuoi, in Impostazioni. ⇒ You can change your goal anytime in Settings.
+Versione di prova: l'account resta su questo dispositivo. ⇒ Trial version: your account stays on this device.
+Soldi, interessi, inflazione ⇒ Money, interest, inflation
+Azioni, obbligazioni, fondi ⇒ Stocks, bonds, funds
+Bilanci, valutazioni, tassi ⇒ Financial statements, valuation, rates
+Passo 1 di {0} ⇒ Step 1 of {0}
+Cosa vuoi fare con FinLearn? ⇒ What do you want to do with FinLearn?
+Passo 2 di 4 ⇒ Step 2 of 4
+Quale esame prepari? ⇒ Which exam are you preparing?
+Cinque domande per capire a che punto sei. ⇒ Five questions to see where you stand.
+Cinque domande, e Rally ti fa saltare quello che sai già. ⇒ Five questions, and Rally lets you skip what you already know.
+Per un esame si parte dalla prima materia. Le domande che hai sbagliato le ritrovi tra i punti deboli, in Allenati. ⇒ For an exam you start from the first subject. The questions you get wrong come back under weak spots, in Practice.
+La prima unità la sai già: Rally te la segna come fatta. Resta aperta, la ripassi quando vuoi. ⇒ You already know the first unit: Rally marks it as done. It stays open, so you can review it whenever you like.
+Le prime {0} unità le sai già: Rally te le segna come fatte. Restano aperte, le ripassi quando vuoi. ⇒ You already know the first {0} units: Rally marks them as done. They stay open, so you can review them whenever you like.
+Meglio partire dalla prima unità, così non resta nessun buco. Le lezioni sono brevi. ⇒ Better to start from the first unit, so no gaps are left. The lessons are short.
+Inizia da ⇒ Start from
+Inizia la prima lezione ⇒ Start the first lesson
+Bentornato ⇒ Welcome back
+Crea un account ⇒ Create an account
+Entra con l'account che hai già. ⇒ Sign in with the account you already have.
+Bastano nome, email e password. ⇒ All you need is a name, email and password.
+Non ho un account ⇒ I don't have an account
+Impara ⇒ Learn
+Allenati ⇒ Practice
+Sfide ⇒ Challenges
+AI Coach ⇒ =
+Profilo ⇒ Profile
+Passo {0} di {1} ⇒ Step {0} of {1}
+{0} giorni di fila ⇒ {0}-day streak
+Italiano ⇒ =
+Google User ⇒ =
+Stefano ⇒ =
+Quiz: {0}... ⇒ Quiz: {0}...
+Language · Lingua ⇒ =
+English ⇒ =
+Inizia ⇒ Get started
+Dove vivi ⇒ Where do you live
+Le regole su tasse, pensioni e banche cambiano da un paese all'altro, e con loro le lezioni che vedi. Lo cambi quando vuoi, in Impostazioni. ⇒ Rules on taxes, pensions and banking change from one country to another, and so do the lessons you see. You can change it anytime in Settings.
+Continua ⇒ Continue
+In arrivo ⇒ Coming soon
+Quando hai l'esame? ⇒ When is your exam?
+Data dell'esame ⇒ Exam date
+html|minuti ⇒ minutes
+Quanto tempo hai al giorno? ⇒ How much time do you have each day?
+Minuti al giorno ⇒ Minutes per day
+Domanda {0} di {1} ⇒ Question {0} of {1}
+La sai già ⇒ You already know this
+{0} {1} su {2} ⇒ {0} of {2} correct
+giusta ⇒ =
+giuste ⇒ =
+Parti da ⇒ Start from
+Parti dall'inizio ⇒ Start from the beginning
+Continua con Google ⇒ Continue with Google
+Il tuo paese ⇒ Your country
+Dove vivi? ⇒ Where do you live?
+Fai le 5 domande ⇒ Take the 5 questions
+Da dove parti? ⇒ Where are you starting from?
+Avanti ⇒ Next
+Vedi da dove parti ⇒ See where you start
+Parto da qui ⇒ Start here
+Un attimo… ⇒ One moment…
+Non ha funzionato, riprova. ⇒ That didn't work. Try again.
+Stati Uniti ⇒ United States
+Dollari e regole degli Stati Uniti ⇒ Dollars and US rules
+Italia ⇒ Italy
+Euro e regole italiane ⇒ Euros and Italian rules
+Capire la finanza da zero ⇒ Understand finance from scratch
+Investire i miei risparmi ⇒ Invest my savings
+Usarla al lavoro ⇒ Use it at work
+Preparare un esame ⇒ Prepare for an exam
+CFA, FRM, CAIA ⇒ =
+lezione segnata come fatta ⇒ lesson marked as done
+lezioni segnate come fatte ⇒ lessons marked as done
+La sai già: {0} ⇒ You already know this: {0}
+{0}, domande in inglese ⇒ =
+{0}, {1} unità in arrivo ⇒ {0}, {1} units coming soon
+{0} in {1} unità ⇒ {0} in {1} units
+{0} in {1} ⇒ =
+Basi della finanza ⇒ Finance basics
+Per chi parte da zero ⇒ For people starting from zero
+Risparmio e budget ⇒ Savings and budgeting
+Azioni e obbligazioni ⇒ Stocks and bonds
+Fondi ed ETF ⇒ Funds and ETFs
+CFA Level I ⇒ =
+FRM Part I ⇒ =
+CAIA Level I ⇒ =
+CFA Level II ⇒ =
+Per chi prepara l'esame ⇒ For people preparing for the exam
+Valutare un'azione con dividendi, flussi di cassa, multipli e residual income ⇒ Valuing a stock with dividends, cash flows, multiples and residual income
+ETF, modelli multifattoriali, VaR e gestione attiva ⇒ ETFs, multifactor models, VaR and active management
+Domande in inglese, come all'esame ⇒ Questions in English, just like the exam
+tutti i tipi di azioni, BOT, BTP e obbligazioni societarie, ognuno con un esempio in cifre ⇒ every kind of stock, government and corporate bonds, each with a worked example
+fondi attivi e indicizzati, ad accumulo o a distribuzione, con i costi in cifre ⇒ active and index funds, accumulating or distributing, with costs in numbers
+Capire se un'azienda sta bene ⇒ Telling whether a company is healthy
+margini, EBITDA, ROE, debito ⇒ margins, EBITDA, ROE, debt
+crediti, magazzino, fornitori ⇒ receivables, inventory, suppliers
+Costi, prezzi e margini ⇒ Costs, prices and margins
+punto di pareggio, budget ⇒ break-even point, budget
+Decidere un investimento ⇒ Deciding on an investment
+VAN, TIR, tempo di rientro ⇒ NPV, IRR, payback time
+Finanziare l'azienda ⇒ Financing the company
+debito o capitale, banca, leasing ⇒ debt or equity, bank, leasing
+Valutare un'azienda ⇒ Valuing a company
+i multipli e l'idea del DCF ⇒ multiples and the idea of DCF
+Interessi, inflazione, tasso reale ⇒ Interest, inflation, real rate
+Budget, fondo di emergenza, obiettivi ⇒ Budget, emergency fund, goals
+Conto, carte, bonifici, garanzia dei depositi ⇒ Account, cards, transfers, deposit insurance
+Busta paga, IRPEF, detrazioni, TFR ⇒ Payslip, income tax, deductions, severance pay
+Prestiti, TAN e TAEG, mutuo ⇒ Loans, interest rate and APR, mortgage
+Affitto o acquisto, mutuo, costi, surroga ⇒ Renting or buying, how big a mortgage you can afford
+Pensione pubblica, fondi pensione, TFR ⇒ Public pension, pension funds, severance pay
+PIL, debito pubblico, spread, indici di Borsa ⇒ GDP, public debt, spread, stock market indexes
+Assicurazioni, truffe, polizze vita, reclami ⇒ Insurance, scams, life policies
+Azioni, obbligazioni, fondi, conti ⇒ Stocks, bonds, funds, accounts
+Rendimento, diversificare, orizzonte temporale ⇒ Return, diversification, time horizon
+Un po' alla volta, regola del 72 ⇒ A little at a time, the rule of 72
+Paura di perdere, seguire la massa ⇒ Fear of losing, following the crowd
+Bilancio, utile, cassa, prezzo e valore ⇒ Balance sheet, profit, cash, price and value
+Banche centrali, cambi, ciclo economico ⇒ Central banks, exchange rates, the business cycle
+Per chi vuole investire ⇒ For people who want to invest
+Finanza per il lavoro ⇒ Finance for work
+Per chi la usa al lavoro ⇒ For people who use it at work
+Per l'esame CFA Level II ⇒ For the CFA Level II exam
+tpl|{0} minuti ⇒ {0} minutes
+ora ⇒ hour
+ore ⇒ hours
+e {0} minuti ⇒ and {0} minutes
+Verifica: ⇒ Unit test:
+Test di livello ⇒ Level test
+Simulazione d'esame ⇒ Mock exam
+Giulia ⇒ =
+Luca ⇒ =
+Marco ⇒ =
+Sara ⇒ =
+Paolo ⇒ =
+Elena ⇒ =
+Davide ⇒ =
+Chiara ⇒ =
+Matteo ⇒ =
+Lega Azzurra ⇒ Blue League
+Togli la data ⇒ Remove the date
+Rally conta i giorni che mancano e te li ricorda nella home. ⇒ Rally counts the days left and reminds you on the home screen.
+Salva la data ⇒ Save the date
+Rally saluta ⇒ Rally waving
+Ciao{0} ⇒ Hi{0}
+{0} di {1}, {2} minuti ⇒ {0} in {1}, {2} minutes
+Prossima lezione ⇒ Next lesson
+Prima lezione ⇒ First lesson
+Percorso completato ⇒ Path complete
+Hai finito le lezioni pronte. Tieni vive le figurine con il ripasso. ⇒ You've finished the lessons that are ready. Keep your stickers alive by reviewing.
+Vai al ripasso ⇒ Go to review
+Sei qui: {0} di {1} ⇒ You are here: {0} of {1}
+{0} delle Basi, {1} ⇒ {0} from the Basics, {1}
+Gli altri tuoi percorsi ⇒ Your other paths
+Aggiungi ⇒ Add
+Aggiungi {0} ⇒ Add {0}
+Aggiungile tutte ⇒ Add all
+Aggiungi altre unità ⇒ Add more units
+Sono le altre unità delle Basi della finanza. Quelle che aggiungi vanno in fondo al tuo percorso. ⇒ These are the other units of Finance Basics. The ones you add go to the end of your path.
+Scopri tutti i percorsi ⇒ See all paths
+Da aggiungere e in arrivo ⇒ Available to add and coming soon
+Rally indica la prossima lezione ⇒ Rally pointing to your next lesson
+Torna a Impara ⇒ Back to Learn
+Cambia argomento ⇒ Change topic
+Unità {0} di {1} ⇒ Unit {0} of {1}
+Reading {0} ⇒ =
+Lezione {0}, {1} minuti ⇒ Lesson {0}, {1} minutes
+Verifica ⇒ Unit test
+Superata con {0} su {1}: figurine dorate ⇒ Passed with {0} out of {1}: golden stickers
+{0} domande, se passi le figurine diventano dorate ⇒ {0} questions, pass them and your stickers turn golden
+{0} su {1} fatte ⇒ {0} of {1} done
+Argomenti ⇒ Topics
+I dati del caso ⇒ The case data
+Spiegazione {0} di {1} ⇒ Explanation {0} of {1}
+Segnalata, grazie ⇒ Reported, thanks
+Segnala un errore in questa domanda ⇒ Report an error in this question
+Spiegazioni finite ⇒ Explanations used up
+FinLearn Pro ⇒ =
+Per oggi le spiegazioni sono finite ⇒ You're out of explanations for today
+Gratis ne hai {0} al giorno. Con Pro non finiscono mai. ⇒ On the free plan you get {0} a day. With Pro they never run out.
+Prova Pro gratis ⇒ Try Pro for free
+Torno domani ⇒ I'll come back tomorrow
+Abbina le coppie ⇒ Match the pairs
+Tocca una parola, poi il suo significato. ⇒ Tap a word, then its meaning.
+1.000 € al 5% l'anno ⇒ =
+dopo {0} anni ⇒ after {0} years
+Anni ⇒ Years
+Calcolatrice ⇒ Calculator
+Le parole sottolineate si possono toccare: ti dicono che cosa vogliono dire. ⇒ Underlined words are tappable: they tell you what they mean.
+All'esame ⇒ On the exam
+In breve ⇒ In short
+Vai alla domanda ⇒ Go to the question
+Controlla ⇒ Check
+Chiedi a Rally ⇒ Ask Rally
+Risposte giuste ⇒ Correct answers
+{0} su {1} ⇒ {0} of {1}
+Rivedi la domanda sbagliata ⇒ Review the question you missed
+Perché ⇒ Why
+Domanda sbagliata ⇒ Question you missed
+Rally festeggia con il cappello da laureato ⇒ Rally celebrating in a graduation cap
+Lezione finita! ⇒ Lesson complete!
+Punti ⇒ Points
+Giorni di fila ⇒ Day streak
+Apple User ⇒ =
+Esame oggi ⇒ Exam today
+giorno ⇒ day
+giorni ⇒ days
+Esame tra {0} ⇒ Exam in {0}
+Metti la data dell'esame ⇒ Set your exam date
+Giorno ⇒ Day
+Apri {0} ⇒ Open {0}
+Percorso completato al {0}% ⇒ Path {0}% complete
+Riprendi la lezione ⇒ Resume the lesson
+Inizia la lezione ⇒ Start the lesson
+Gli argomenti di {0} ⇒ Topics in {0}
+Il tuo percorso, unità per unità ⇒ Your path, unit by unit
+{0} di {1} ⇒ {0} of {1}
+Sta sbiadendo, ripassala ⇒ Fading, review it
+Figurina dorata ⇒ Golden sticker
+Figurina presa ⇒ Sticker collected
+lit|minuti ⇒ minutes
+{0} di {1} lezioni ⇒ {0} of {1} lessons
+La tua scelta ⇒ Your choice
+La tua risposta ⇒ Your answer
+Quella giusta ⇒ The right one
+Il caso ⇒ The case
+Domanda ⇒ Question
+Risposta giusta ⇒ Correct answer
+Risposta sbagliata ⇒ Wrong answer
+Giusto! ⇒ Right!
+Non ancora ⇒ Not yet
+Tutte le coppie sono a posto. ⇒ All pairs are matched.
+coppia ⇒ pair
+coppie ⇒ pairs
+Hai scelto “{0}”: ora tocca il significato. ⇒ You picked “{0}”: now tap its meaning.
+{0} su {1}.{2} ⇒ {0} out of {1}.{2}
+Dopo {0} anni 1.000 euro diventano {1} ⇒ =
+oggi ⇒ today
+{0} anni ⇒ {0} years
+I tuoi soldi ⇒ Your money
+Interessi sui tuoi soldi ⇒ Interest on your money
+Interessi sugli interessi ⇒ Interest on interest
+Domanda: ⇒ Question:
+Domanda: "{0}"\n\nHai risposto {1}, la giusta è {2}. Cosa vuoi capire? ⇒ =
+Stai lavorando su:\n\n"{0}"\n\nTi guido io, senza dirti subito la risposta. Da dove partiamo? ⇒ =
+All'esame: ⇒ On the exam:
+In breve: ⇒ In short:
+Lezione: ⇒ Lesson:
+Stai leggendo "{0}". Cosa non ti torna? Posso spiegartelo più semplice, farti un esempio con i numeri o interrogarti. ⇒ You're reading "{0}". What doesn't add up? I can explain it more simply, give you an example with numbers, or quiz you.
+Domanda d'esame ⇒ Exam question
+Hai una figurina nuova nel tuo album. ⇒ You have a new sticker in your album.
+Figurina ravvivata: resta a colori più a lungo. ⇒ Sticker refreshed: it stays colorful longer.
+La tua stima ⇒ Your estimate
+Obiettivo{0} ⇒ Goal{0}
+Muovi le leve ⇒ Move the sliders
+Tutto a posto ⇒ All sorted
+{0} su {1} al primo colpo ⇒ {0} of {1} on the first try
+Metti al posto giusto ⇒ Put each one in its place
+Voci da ordinare ⇒ Items to sort
+Metti in ordine ⇒ Put in order
+Tocca le voci dalla prima all'ultima. ⇒ Tap the items from first to last.
+Calcola tu ⇒ Calculate it yourself
+Meno: ⇒ Decrease:
+Più: ⇒ Increase:
+Ci hai visto giusto ⇒ You called it
+Non proprio ⇒ Not quite
+Quasi centrato ⇒ Almost spot on
+Meno di quanto pensavi ⇒ Less than you thought
+Più di quanto pensavi ⇒ More than you thought
+Prima di leggere: tu che dici? ⇒ Before you read: what do you think?
+Bel colpo! ⇒ Nice one!
+Guardiamo insieme il conto. ⇒ Let's look at the math together.
+Il conto ⇒ The math
+La tua stima è {0}, il conto dà {1} ⇒ Your estimate is {0}, the math gives {1}
+Blocca la risposta ⇒ Lock in your answer
+Blocca la stima ⇒ Lock in your estimate
+Rata mensile ⇒ Monthly payment
+Interessi in tutto ⇒ Total interest
+Capitale ⇒ Principal
+Interessi ⇒ Interest
+Tempo per chiudere ⇒ Time to pay off
+Mai ⇒ Never
+Con questa cifra ⇒ With this amount
+paghi solo gli interessi ⇒ you only pay interest
+Debito ⇒ Debt
+Quanto avrai ⇒ What you'll have
+Versato da te ⇒ What you put in
+Versato ⇒ Paid in
+Rendimenti ⇒ Returns
+Metti da parte ⇒ You set aside
+Ti manca ancora ⇒ Still to go
+Obiettivo ⇒ Goal
+Messo da parte ⇒ Set aside
+Manca ⇒ Still needed
+Risparmio al mese ⇒ Savings per month
+Quota delle entrate ⇒ Share of income
+Spese ⇒ Spending
+Risparmio ⇒ Savings
+Quello che comprano ⇒ What it will buy
+Potere d'acquisto perso ⇒ Purchasing power lost
+Resta ⇒ Left
+Perso ⇒ Lost
+Costo in un anno ⇒ Cost over a year
+Canone e operazioni ⇒ Fees and transactions
+Imposta di bollo ⇒ Stamp duty
+non dovuta ⇒ not due
+Alla banca ⇒ To the bank
+Allo Stato ⇒ To the State
+Fuori dalla garanzia ⇒ Outside the guarantee
+La tua parte in banca A ⇒ Your share in bank A
+I tuoi soldi in tutto ⇒ All your money
+Protetti ⇒ Protected
+Fuori ⇒ Outside
+Netto al mese ⇒ Net per month
+Trattenute in un anno ⇒ Withheld in a year
+Di 1.000 € lordi in più ti restano ⇒ Of an extra €1,000 gross, you keep
+A te ⇒ To you
+Contributi e imposte ⇒ Contributions and taxes
+IRPEF lorda ⇒ Gross income tax
+Aliquota media ⇒ Average rate
+Aliquota sull'ultimo euro ⇒ Rate on the last euro
+Imposta ⇒ Tax
+Resto del reddito ⇒ Rest of income
+Se la deduci, risparmi ⇒ If you deduct it, you save
+Se la detrai al 19%, risparmi ⇒ If you take the credit at 19%, you save
+Detrazione ⇒ Tax credit
+In più con la deduzione ⇒ Extra with the deduction
+TFR maturato ⇒ Accrued severance pay
+Rivalutazione netta di un anno ⇒ Net revaluation over one year
+Rispetto all'inflazione ⇒ Compared with inflation
+Quote annue ⇒ Annual contributions
+Rivalutazioni ⇒ Revaluations
+Spese in tutto ⇒ Total fees
+Totale pagato ⇒ Total paid
+Prezzo ⇒ Price
+Somma che ricevi ⇒ Amount you receive
+Rata trattenuta ogni mese ⇒ Installment withheld each month
+Restituisci in tutto ⇒ You repay in total
+Ricevi ⇒ You receive
+Costo del prestito ⇒ Cost of the loan
+Comprando risparmi ⇒ Buying saves you
+Affittando risparmi ⇒ Renting saves you
+Costo di comprare ⇒ Cost of buying
+Costo di affittare ⇒ Cost of renting
+Comprare ⇒ Buy
+Affittare ⇒ Rent
+Mutuo che puoi sostenere ⇒ Mortgage you can afford
+Rata, un terzo del reddito ⇒ Payment, a third of income
+Casa che ci compri, con il 20% tuo ⇒ Home you can buy with 20% down
+Mutuo ⇒ Mortgage
+Rata nuova ⇒ New payment
+Rispetto alla rata di oggi ⇒ Compared with today's payment
+Interessi in meno, in tutto ⇒ Less interest, in total
+Interessi in più, in tutto ⇒ More interest, in total
+Interessi da pagare ⇒ Interest to pay
+Pensione lorda al mese ⇒ Gross pension per month
+In percentuale dello stipendio ⇒ As a percentage of salary
+Montante messo da parte ⇒ Accumulated fund
+Pensione di un anno ⇒ One year of pension
+Differenza con lo stipendio ⇒ Gap with salary
+Capitale alla pensione ⇒ Capital at retirement
+Versi tu, tolto lo sconto fiscale ⇒ You pay in, net of the tax break
+Aggiunge il datore ⇒ The employer adds
+Mangiato dai costi ⇒ Eaten up by costs
+Il fondo ti dà in più ⇒ The fund gives you more
+L'azienda ti dà in più ⇒ The company gives you more
+TFR in azienda, netto ⇒ Severance pay with the company, net
+TFR nel fondo, netto ⇒ Severance pay in the fund, net
+In azienda ⇒ With the company
+Nel fondo ⇒ In the fund
+Tasso di disoccupazione ⇒ Unemployment rate
+Tasso di occupazione ⇒ Employment rate
+Inattivi: non lavorano e non cercano ⇒ Inactive: not working and not looking
+su 100 ⇒ out of 100
+Occupati ⇒ Employed
+Senza lavoro: disoccupati e inattivi ⇒ Without work: unemployed and inactive
+Debito tra dieci anni, sul PIL ⇒ Debt in ten years, as a share of GDP
+Spesa per interessi, sul PIL ⇒ Interest spending, as a share of GDP
+Deficit del primo anno, sul PIL ⇒ First-year deficit, as a share of GDP
+Oggi ⇒ Today
+Tra dieci anni ⇒ In ten years
+L'indice oggi ⇒ The index today
+Titoli in rialzo ⇒ Stocks up
+su 3 ⇒ out of 3
+Media semplice dei tre ⇒ Simple average of the three
+Non va in “{0}”. ⇒ It doesn't go in “{0}”.
+Tocca il contenitore giusto. ⇒ Tap the right bucket.
+Metti in: ⇒ Put in:
+La risposta è **{0}**.\n\n{1} ⇒ =
+Hai scritto {0} {1} ⇒ You wrote {0} {1}
+Scrivi il numero ⇒ Type the number
+Cancella ⇒ Delete
+Virgola ⇒ Decimal point
+punti ⇒ points
+raggiunto ⇒ reached
+anni ⇒ years
+anno ⇒ year
+mese ⇒ month
+mesi ⇒ months
+en ⇒ =
+nearest ⇒ =
+and ⇒ =
+giusto ⇒ =
+insegna ⇒ =
+pensa ⇒ =
+del ⇒ =
+Rally con la fascia in fronte ⇒ Rally with a headband
+{0} in circa {1}. ⇒ {0} in about {1}.
+Una figurina sta sbiadendo ⇒ One sticker is fading
+La ravvivi ⇒ You can refresh it
+Le ravvivi ⇒ You can refresh them
+minuto ⇒ minute
+Le tue figurine sono tutte vive ⇒ All your stickers are alive
+Nessun ripasso in scadenza. Se vuoi, tieniti in forma con un quiz misto. ⇒ No reviews due. If you like, stay sharp with a mixed quiz.
+Fai un quiz misto ⇒ Take a mixed quiz
+Qui ripassi quello che impari ⇒ Review what you learn here
+Ogni lezione finita diventa una figurina. Se non la ripassi sbiadisce, e la ravvivi da qui. ⇒ Every finished lesson becomes a sticker. If you don't review it, it fades, and you can bring it back from here.
+Vai alle lezioni ⇒ Go to lessons
+5 domande per capire a che punto sei ⇒ 5 questions to see where you stand
+Oppure scegli tu ⇒ Or pick your own
+Quiz misto ⇒ Mixed quiz
+10 domande dai tuoi percorsi ⇒ 10 questions from your paths
+10 domande dal tuo percorso ⇒ 10 questions from your path
+Punti deboli ⇒ Weak spots
+Rally li trova dalle tue risposte ⇒ Rally finds them from your answers
+Rally pronto per il test ⇒ Rally ready for the test
+Mettiti alla prova ⇒ Test yourself
+Ultimo test: {0} su {1} ⇒ Last test: {0} of {1}
+Nessun test, per ora ⇒ No tests yet
+Consigliato adesso ⇒ Recommended now
+Verifica: {0} ⇒ Unit test: {0}
+{0}, {1} domande, {2} minuti ⇒ {0}, {1} questions, {2} minutes
+Se passi, le figurine diventano dorate. ⇒ If you pass, your stickers turn golden.
+Inizia la verifica ⇒ Start the unit test
+Hai superato tutte le verifiche ⇒ You've passed all the unit tests
+Resta la simulazione d'esame, quando ti senti pronto. ⇒ Only the mock exam is left, when you feel ready.
+Tieniti in forma con il quiz misto, in Allenati. ⇒ Stay sharp with the mixed quiz, in Practice.
+CFA Level II, 44 domande a tempo ⇒ CFA Level II, 44 timed questions
+Pro ⇒ =
+Verifiche di unità ⇒ Unit tests
+Tutti i test ⇒ All tests
+superata ⇒ =
+superate ⇒ =
+{0}: {1} {2} su {3} ⇒ {0}: {1} of {3} passed
+Se passi, le figurine dell'unità diventano dorate e restano vive più a lungo. ⇒ If you pass, the stickers of the unit turn golden and stay alive longer.
+Esci dal test ⇒ Leave the test
+Nero: risposta data. Giallo: segnata per dopo. ⇒ Black: answered. Yellow: flagged for later.
+Consegna ⇒ Submit
+Conferma ⇒ Confirm
+Figurine dorate ⇒ Golden stickers
+Si riprova quando vuoi ⇒ You can try again anytime
+Allenati sui punti deboli ⇒ Practice your weak spots
+Rally parte dagli argomenti dove sbagli di più ⇒ Rally starts from the topics where you slip up most
+{0} Tempo: {1}. ⇒ {0} Time: {1}.
+Ne bastavano {0}. ⇒ You needed {0}.
+Ne servono {0}. ⇒ You need {0}.
+Errore {0} di {1} ⇒ Mistake {0} of {1}
+Domanda {0} ⇒ Question {0}
+Non avevi risposto a questa domanda. ⇒ You hadn't answered this question.
+Mostrami i tasti{0} ⇒ Show me the keys{0}
+Ripasso veloce ⇒ Quick review
+Riapri la lezione ⇒ Reopen the lesson
+Ripassata ⇒ Reviewed
+Dalle tue risposte ⇒ From your answers
+Solo con Pro ⇒ Pro only
+Il più debole adesso ⇒ Weakest right now
+{0} su 100 ⇒ {0} out of 100
+Hai sbagliato {0} {1} su {2} in {3}. ⇒ You missed {0} {1} out of {2} in {3}.
+risposta ⇒ =
+risposte ⇒ =
+Allenati {0} ⇒ Practice for {0}
+Ancora niente da misurare ⇒ Nothing to measure yet
+Rispondi a qualche domanda: Rally guarda dove sbagli e ti dice da dove ripartire. ⇒ Answer a few questions: Rally watches where you slip up and tells you where to restart.
+Compaiono qui dopo le prime risposte. ⇒ They show up here after your first answers.
+Tutti gli argomenti ⇒ All topics
+Le risposte recenti pesano di più. Se non ripassi un argomento, il punteggio torna verso 50. ⇒ Recent answers weigh more. If you don't review a topic, its score drifts back toward 50.
+{0} min{1} ⇒ =
+Test ⇒ =
+{0} di fila ⇒ {0} in a row
+Comincia oggi ⇒ Start today
+Ravviva la figurina ⇒ Refresh the sticker
+Ravviva le figurine ⇒ Refresh the stickers
+CFA Level II, ultimo punteggio {0}% ⇒ CFA Level II, last score {0}%
+Superata ⇒ Passed
+Non ancora superata ⇒ Not passed yet
+{0}, migliore {1} su {2} ⇒ {0}, best {1} of {2}
+{0} domande ⇒ {0} questions
+Niente aiuti: le spiegazioni arrivano alla fine. ⇒ No help: explanations come at the end.
+Puoi segnare una domanda e tornarci dopo. ⇒ You can flag a question and come back to it later.
+La calcolatrice resta a portata di mano. ⇒ The calculator is always within reach.
+La simulazione completa è nel piano Pro. ⇒ The full simulation is in the Pro plan.
+Il tempo parte subito. ⇒ The clock starts right away.
+Scopri Pro ⇒ Discover Pro
+Domande ⇒ Questions
+Tempo ⇒ Time
+Per passare ⇒ To pass
+{0} giuste ⇒ {0} correct
+, risposta data ⇒ , answered
+, segnata ⇒ , flagged
+Domanda {0}{1}{2} ⇒ Question {0}{1}{2}
+Togli il segno ⇒ Remove the flag
+Segna per dopo ⇒ Flag for later
+Mancano {0} ⇒ {0} missing
+Vuoi uscire dal test? ⇒ Leave the test?
+Le domande senza risposta contano come sbagliate. ⇒ Unanswered questions count as wrong.
+Se esci adesso il test non viene salvato. ⇒ If you leave now, the test isn't saved.
+Torno alle domande ⇒ Back to the questions
+Continuo il test ⇒ Keep going with the test
+Consegna lo stesso ⇒ Submit anyway
+Esci ⇒ Leave
+Test finito ⇒ Test complete
+Verifica superata ⇒ Unit test passed
+Rivedi l'errore ⇒ Review the mistake
+Rivedi i {0} errori ⇒ Review the {0} mistakes
+Domanda per domanda ⇒ Question by question
+Per argomento ⇒ By topic
+Mostrami i tasti da premere sulla BA II Plus per risolvere questa domanda, un passo per riga. ⇒ Show me the keys to press on the BA II Plus to solve this question, one step per line.
+Prossimo errore ⇒ Next mistake
+Fine ⇒ Done
+Figurine ravvivate ⇒ Stickers refreshed
+Quiz finito ⇒ Quiz complete
+Allenamento finito ⇒ Practice complete
+Niente da ripassare ⇒ Nothing to review
+Qui non ci sono domande per ora. Finisci qualche lezione e torna. ⇒ There are no questions here for now. Finish a few lessons and come back.
+figurina è tornata ⇒ sticker is back
+figurine sono tornate ⇒ stickers are back
+{0} a colori. ⇒ {0} in color.
+Ogni risposta aggiorna i tuoi punti deboli. ⇒ Every answer updates your weak spots.
+Riapri la lezione per ripassarla. ⇒ Reopen the lesson to review it.
+triste ⇒ =
+festeggia ⇒ =
+tasti ⇒ =
+allenati ⇒ =
+sbiadisce ⇒ =
+pratica ⇒ =
+mix ⇒ =
+home ⇒ =
+level ⇒ =
+deboli ⇒ =
+test ⇒ =
+unit ⇒ =
+mock ⇒ =
+send ⇒ =
+pro ⇒ =
+case ⇒ =
+ask ⇒ =
+weak ⇒ =
+ravviva ⇒ =
+Rally con le cuffie ⇒ Rally with headphones
+Conversazioni ⇒ Conversations
+Nuova conversazione ⇒ New conversation
+Nuova chat ⇒ New chat
+Chiedimi tutto ⇒ Ask me anything
+Cosa vuoi capire oggi? ⇒ What do you want to understand today?
+Scrivi tu la domanda ⇒ Write your own question
+I suggerimenti seguono il tuo percorso. ⇒ Suggestions follow your path.
+Elimina ⇒ Delete
+Rally con una moneta ⇒ Rally with a coin
+Il tuo album ⇒ Your album
+{0} figurine su {1} ⇒ {0} of {1} stickers
+Apri l'album ⇒ Open the album
+Impostazioni ⇒ Settings
+Il tuo percorso, account e grafica ⇒ Your path and account
+Album ⇒ Album
+OpenRouter ⇒ =
+OpenRouter è collegato ⇒ OpenRouter is connected
+Rally risponde con il tuo account OpenRouter. La chiave resta su questo dispositivo. ⇒ Rally answers using your OpenRouter account. The key stays on this device.
+Solo fornitori che non tengono le domande ⇒ Only providers that don't keep your questions
+Con i modelli gratis spesso non ce ne sono: Rally potrebbe non rispondere. ⇒ With free models there often aren't any: Rally might not answer.
+Gestisci la chiave su OpenRouter ⇒ Manage the key on OpenRouter
+Scollega da questo dispositivo ⇒ Disconnect from this device
+Scollegando, la chiave resta nel tuo account OpenRouter: la cancelli dalla pagina delle chiavi. ⇒ If you disconnect, the key stays in your OpenRouter account: you delete it from the keys page.
+sk-or-… oppure il codice ⇒ sk-or-… or the code
+Chiave o codice di OpenRouter ⇒ OpenRouter key or code
+Ho una chiave o un codice ⇒ I have a key or a code
+Collega OpenRouter ⇒ Connect OpenRouter
+Rally ti risponde con un modello AI che gira sul tuo account OpenRouter. Con i modelli gratis non paghi niente: OpenRouter mette solo un limite di domande al minuto e al giorno. ⇒ Rally answers with an AI model that runs on your OpenRouter account. With free models you pay nothing: OpenRouter only sets a limit on questions per minute and per day.
+La chiave resta su questo dispositivo e le domande vanno da qui a OpenRouter, senza passare da FinLearn. ⇒ The key stays on this device and your questions go straight from here to OpenRouter, without passing through FinLearn.
+Con i modelli gratis, chi fa girare il modello può conservare le domande e usarle: non scriverci dati personali. ⇒ With free models, whoever runs the model may keep your questions and use them: don't write personal data in them.
+Carico l'elenco dei modelli… ⇒ Loading the list of models…
+Ce ne sono altri {0}: scrivi per cercarli. ⇒ There are {0} more: type to search for them.
+Nessun modello con questo nome. ⇒ No model with that name.
+Modello ⇒ Model
+I modelli gratis non costano niente. Quelli a pagamento usano i crediti del tuo account OpenRouter. ⇒ Free models cost nothing. Paid ones use the credits in your OpenRouter account.
+Cerca un modello ⇒ Search for a model
+Ogni volta OpenRouter sceglie un modello gratis libero. ⇒ Each time, OpenRouter picks a free model that's available.
+Passa a Pro ⇒ Upgrade to Pro
+Piano ⇒ Plan
+Gratis ⇒ Free
+Adesso ⇒ Current
+Cambia obiettivo ⇒ Change goal
+Cosa vuoi fare adesso? ⇒ What do you want to do now?
+Cambia quello che vedi nell'app, non quello che hai già fatto. ⇒ This changes what you see in the app, not what you've already done.
+Annulla ⇒ Cancel
+Fatto: adesso il tuo percorso è {0}. ⇒ Done: your path is now {0}.
+Riparto dall'inizio ⇒ Start over from the beginning
+Livello ⇒ Level
+Lingua ⇒ Language
+Paese ⇒ Country
+Le regole su tasse, pensioni e banche cambiano da un paese all'altro, e con loro le lezioni che vedi. I tuoi progressi restano. ⇒ Rules on taxes, pensions and banking change from one country to another, and so do the lessons you see. Your progress stays.
+Nome ⇒ Name
+Come ti chiami? ⇒ What's your name?
+Il tuo nome ⇒ Your name
+Account ⇒ Account
+Versione di prova: i tuoi dati restano su questo dispositivo. ⇒ Trial version: your data stays on this device.
+{0} Esci dall'account ⇒ {0} Sign out
+Grafica ⇒ Look
+Grafica dell'app ⇒ The app's look
+Stai usando la grafica nuova, "In ordine". Quella di prima resta disponibile, con gli stessi progressi. ⇒ You're using the new look, "In Order". The previous one is still available, with the same progress.
+Tengo quella nuova ⇒ Keep the new one
+Torna alla grafica precedente ⇒ Go back to the previous look
+Domande segnalate ⇒ Flagged questions
+Finiscono anche nel file di "Scarica i miei dati". ⇒ They also end up in the "Download my data" file.
+Svuota l'elenco ⇒ Clear the list
+Regole e privacy ⇒ Rules and privacy
+I tuoi progressi, le risposte e le conversazioni sono salvati solo su questo dispositivo. ⇒ Your progress, answers and conversations are saved only on this device.
+Se colleghi OpenRouter, le domande che fai all'AI Coach partono da qui verso OpenRouter e il fornitore del modello scelto. FinLearn non le riceve. ⇒ If you connect OpenRouter, the questions you ask the AI Coach go from here to OpenRouter and the provider of the model you chose. FinLearn doesn't receive them.
+Niente pubblicità e nessun dato venduto. ⇒ No ads and no data sold.
+FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute. ⇒ FinLearn is not affiliated with CFA Institute. CFA® and Chartered Financial Analyst® are trademarks of CFA Institute.
+Elimina l'account ⇒ Delete account
+Eliminare tutto? ⇒ Delete everything?
+Cancelli da questo dispositivo progressi, figurine, punti e conversazioni. Non si può annullare. ⇒ You delete progress, stickers, points and conversations from this device. This can't be undone.
+Tengo tutto ⇒ Keep everything
+{0} Elimina account e dati ⇒ {0} Delete account and data
+Il tuo percorso ⇒ Your path
+Da qui dipende cosa trovi in Impara, Allenati, Sfide e AI Coach. Se cambi, i progressi restano. ⇒ What you find in Learn, Practice and AI Coach depends on this. If you change it, your progress stays.
+FinLearn 2.0 · {0} ⇒ FinLearn 2.0 · {0}
+Torna al piano gratis ⇒ Back to the free plan
+Prova gratis per 7 giorni ⇒ Try it free for 7 days
+Pro è attivo. Nessun addebito: i pagamenti non sono ancora collegati. ⇒ Pro is on. No charge: payments aren't connected yet.
+Rally con la corona ⇒ Rally wearing a crown
+Percorsi ⇒ Paths
+{0} Aggiungi alla mia app ⇒ {0} Add to my app
+{0} adesso è nella tua app. ⇒ {0} is now in your app.
+Non trovi un argomento? Chiedilo a Rally. ⇒ Can't find a topic? Ask Rally.
+Lascio tutto com'è ⇒ Leave everything as it is
+Cosa impari ⇒ What you'll learn
+Le figurine da vincere ⇒ Stickers to win
+Tutte le lezioni sono gratis. ⇒ All lessons are free.
+Email ⇒ =
+Password ⇒ =
+Continua con Apple ⇒ Continue with Apple
+Continua con l'email ⇒ Continue with email
+Rally con il telefono ⇒ Rally with a phone
+Salva i tuoi progressi ⇒ Save your progress
+{0}Con un account le ritrovi quando rientri. ⇒ {0}With an account you find them again when you come back.
+Hai finito la prima lezione e vinto una figurina. ⇒ You finished your first lesson and won a sticker.
+Più tardi ⇒ Later
+Versione di prova: l'account resta su questo dispositivo. Niente pubblicità, niente dati venduti. ⇒ Trial version: your account stays on this device. No ads, no data sold.
+Spiegazioni senza limite ⇒ Unlimited explanations
+Tutti i test, con il report per argomento ⇒ All tests, with a report by topic
+Allenamento sui tuoi punti deboli ⇒ Practice on your weak spots
+I tasti della calcolatrice, passo per passo ⇒ Calculator keys, step by step
+7 giorni di prova, poi {0} l'anno. ⇒ 7-day trial, then {0} a year.
+Rally ti risponde con parole semplici ed esempi di tutti i giorni. ⇒ Rally answers in simple words, with everyday examples.
+Cos'è l'inflazione, con un esempio ⇒ What is inflation? Give me an example
+Interesse semplice o composto: che differenza c'è? ⇒ Simple or compound interest: what's the difference?
+Perché i soldi nel cassetto perdono valore? ⇒ Why does money in a drawer lose value?
+Rally ti spiega gli strumenti con esempi in cifre: rendimenti, costi, tempo. ⇒ Rally explains financial instruments with examples in numbers: returns, costs, time.
+Che differenza c'è tra un'azione e un'obbligazione? ⇒ What's the difference between a stock and a bond?
+Quanto pesano i costi di un fondo in vent'anni? ⇒ How much do a fund's costs weigh over twenty years?
+Cosa vuol dire diversificare, con un esempio ⇒ What does diversifying mean? Give me an example
+Rally ti aiuta a leggere un bilancio o una notizia di economia. ⇒ Rally helps you read a financial statement or an economic news story.
+Come capisco se un'azienda guadagna davvero? ⇒ How do I tell if a company is really making money?
+Perché un'azienda in utile può restare senza cassa? ⇒ Why can a profitable company run out of cash?
+Cosa cambia per un'azienda se salgono i tassi? ⇒ What changes for a company when rates go up?
+Rally ti risponde con formule, passaggi e domande come all'esame. ⇒ Rally answers with formulas, steps and exam-style questions.
+Spiegami il residual income da zero ⇒ Explain residual income from scratch
+Differenza tra FCFF e FCFE ⇒ Difference between FCFF and FCFE
+Come si calcola il VaR parametrico? ⇒ How is parametric VaR calculated?
+Interrogami con domande A, B, C ⇒ Quiz me with A, B, C questions
+Fammi tre domande sulle ultime lezioni ⇒ Ask me three questions about my latest lessons
+Chiedimi un concetto da spiegare da zero, un esercizio o una domanda d'esame. ⇒ Ask me to explain a concept from scratch, or for an exercise or an exam question.
+Chiedimi una parola che non conosci, un dubbio sui soldi o un esempio con le cifre. ⇒ Ask me about a word you don't know, a doubt about money or an example with numbers.
+Ciao{0}! {1} ⇒ Hi{0}! {1}
+Conversazione ⇒ Conversation
+giorni di fila ⇒ day streak
+punti XP ⇒ XP points
+di ⇒ of
+del percorso ⇒ of the path
+Attivo ⇒ Active
+Provalo gratis per 7 giorni ⇒ Try it free for 7 days
+Management ⇒ =
+Mgmt ⇒ =
+Ravviva quella che sbiadisce ⇒ Refresh the one that's fading
+Ravviva le {0} che sbiadiscono ⇒ Refresh the {0} that are fading
+Ospite ⇒ Guest
+Con Apple ⇒ With Apple
+Con Google ⇒ With Google
+Con l'email ⇒ With email
+I tuoi percorsi ⇒ Your paths
+Studio ⇒ Study
+Promemoria ⇒ Reminders
+Domande d'esame ⇒ Exam questions
+In inglese, come all'esame ⇒ In English, just like the exam
+Da collegare ⇒ Not connected
+Collegato ⇒ Connected
+Accesso ⇒ Sign-in
+Scarica i miei dati ⇒ Download my data
+Aspetto ⇒ Appearance
+In ordine ⇒ In Order
+Aiuto ⇒ Help
+Nessuna ⇒ None
+Adesso il tuo percorso è ⇒ Right now your path is
+Il percorso diventa ⇒ Your path becomes
+La lezione che hai già fatto resta fatta, con la sua figurina. ⇒ The lesson you've already done stays done, with its sticker.
+Le {0} che hai già fatto restano fatte, con le loro figurine. ⇒ The {0} you've already done stay done, with their stickers.
+{0} esce dall'app: si riaggiunge quando vuoi da Scopri, con i progressi. ⇒ {0} leaves the app: you can add it back anytime from Discover, with your progress.
+nota un'unità ⇒ =
+note ⇒ =
+unità ⇒ units
+Rally ti ha segnato come già {0}. Con le 5 domande ricalcola da dove parti. ⇒ Rally has marked you as already knowing {0}. Retake the 5 questions to recalculate where you start.
+Stai seguendo il percorso dalla prima unità. Con 5 domande Rally ti fa saltare quello che sai già. ⇒ You're following the path from the first unit. With 5 questions Rally lets you skip what you already know.
+Français ⇒ =
+Español ⇒ =
+Deutsch ⇒ =
+È attivo. Buono studio. ⇒ It's on. Happy studying.
+Tutta la finanza, senza limiti. ⇒ All of finance, without limits.
+Annuale ⇒ Yearly
+Mensile ⇒ Monthly
+Consigliato ⇒ Best value
+al mese ⇒ a month
+2,92 € al mese ⇒ =
+Versione di prova dell'app: Pro si attiva senza pagamento. ⇒ Trial version of the app: Pro turns on without payment.
+Poi {0}. Per ora nessun addebito: i pagamenti non sono ancora collegati. ⇒ Then {0}. No charge for now: payments aren't connected yet.
+È un percorso da esame. Se lo aggiungi, entrano anche la simulazione d'esame in Allenati e le domande d'esame nelle Sfide. ⇒ This is an exam path. If you add it, the mock exam in Practice and the exam questions in Challenges come with it.
+Sono le basi, in italiano: interessi, budget, debiti, strumenti, bilanci. Utili anche per un ripasso da capo. ⇒ These are the basics: interest, budget, debt, instruments, financial statements. Also useful as a refresher from scratch.
+Basi ⇒ Basics
+Investire ⇒ Investing
+Esami ⇒ Exams
+Nella tua app ⇒ In your app
+lezione fatta ⇒ =
+lezioni fatte ⇒ =
+{0} per cento del percorso ⇒ {0} percent of the path
+Puoi aggiungere ⇒ You can add
+Apri la scheda di {0} ⇒ Open the details of {0}
+lezione breve ⇒ short lesson
+lezioni brevi ⇒ short lessons
+Per un esame non si salta niente. Le domande che hai sbagliato le ritrovi tra i punti deboli, in Allenati. ⇒ For an exam you don't skip anything. The questions you get wrong come back under weak spots, in Practice.
+La prima unità la sai già: Rally te la segna come fatta ⇒ You already know the first unit: Rally marks it as done
+Le prime {0} unità le sai già: Rally te le segna come fatte ⇒ You already know the first {0} units: Rally marks them as done
+{0}. Restano aperte, le ripassi quando vuoi. ⇒ {0}. Everything stays open: review it whenever you like.
+Meglio partire dalla prima unità, così non resta nessun buco. ⇒ Better to start from the first unit, so no gaps are left.
+Parto dall'inizio ⇒ Start from the beginning
+argomenti ⇒ topics
+min ⇒ =
+in tutto ⇒ in total
+Aggiungi alla mia app e inizia ⇒ Add to my app and start
+Continua il percorso ⇒ Continue the path
+Inizia il percorso ⇒ Start the path
+Crea l'account ⇒ Create account
+Entra ⇒ Sign in
+Viva ⇒ =
+Sbiadisce ⇒ =
+Dorata ⇒ =
+coach ⇒ =
+profilo ⇒ =
+off ⇒ =
+false ⇒ =
+new ⇒ =
+learn ⇒ =
+it ⇒ =
+style ⇒ =
+string ⇒ =
+for ⇒ =
+undefined ⇒ =
+link ⇒ =
+stylesheet ⇒ =
+div ⇒ =
+px ⇒ =
+resize ⇒ =
+pageshow ⇒ =
+object ⇒ =
+number ⇒ =
+function ⇒ =
+basi ⇒ =
+risparmio ⇒ =
+wallet ⇒ =
+azob ⇒ =
+invest ⇒ =
+trend ⇒ =
+fondi ⇒ =
+pie ⇒ =
+cert ⇒ =
+equity ⇒ =
+los ⇒ =
+base ⇒ =
+exam ⇒ =
+zero ⇒ =
+some ⇒ =
+page ⇒ =
+recap ⇒ =
+ex ⇒ =
+manca ⇒ =
+dorata ⇒ =
+viva ⇒ =
+duel ⇒ =
+none ⇒ =
+sfide ⇒ =
+saluta ⇒ =
+auto ⇒ =
+button ⇒ =
+lg ⇒ =
+on ⇒ =
+relative ⇒ =
+flex ⇒ =
+center ⇒ =
+ok ⇒ =
+ko ⇒ =
+num ⇒ =
+sel ⇒ =
+true ⇒ =
+role ⇒ =
+tabindex ⇒ =
+Enter ⇒ =
+transparent ⇒ =
+1 0 auto ⇒ =
+{0} punti esperienza ⇒ {0} experience points
+2px solid {0} ⇒ =
+percorso ⇒ =
+anywhere ⇒ =
+vertical ⇒ =
+hidden ⇒ =
+lezione ⇒ =
+lezioni ⇒ =
+catalogo ⇒ =
+absolute ⇒ =
+4px dotted {0} ⇒ =
+dim ⇒ =
+2.5px solid {0} ⇒ =
+background .15s ⇒ =
+block ⇒ =
+lesson ⇒ =
+limit ⇒ =
+compound ⇒ =
+inherit ⇒ =
+smooth ⇒ =
+grid ⇒ =
+2.5px dashed {0} ⇒ =
+2px dashed {0} ⇒ =
+{0} figurine stanno sbiadendo ⇒ {0} stickers are fading
+assistant ⇒ =
+numeric ⇒ =
+short ⇒ =
+album ⇒ =
+impostazioni ⇒ =
+Apro OpenRouter… ⇒ Opening OpenRouter…
+Controllo… ⇒ Checking…
+Usa questa ⇒ Use this one
+Tutti ⇒ All
+· gratis ⇒ · free
+· a pagamento ⇒ · paid
+apple ⇒ =
+google ⇒ =
+obiettivo ⇒ =
+livello ⇒ =
+goal ⇒ =
+lang ⇒ =
+country ⇒ =
+or ⇒ =
+model ⇒ =
+name ⇒ =
+account ⇒ =
+ui ⇒ =
+flags ⇒ =
+priv ⇒ =
+left ⇒ =
+figurine ⇒ =
+scheda ⇒ =
+email ⇒ =
+'Nunito','Bricolage Grotesque',system-ui,sans-serif ⇒ =
+(prefers-reduced-motion: reduce) ⇒ =
+calmo ⇒ =
+'IBM Plex Mono',ui-monospace,monospace ⇒ =
+uppercase ⇒ =
+nowrap ⇒ =
+work ⇒ =
+ellipsis ⇒ =
+start ⇒ =
+known ⇒ =
+soon ⇒ =
+dashed ⇒ =
+solid ⇒ =
+modulo ⇒ module
+moduli ⇒ modules
+todo ⇒ =
+lezione pronta ⇒ lesson ready
+lezioni pronte ⇒ lessons ready
+welcome ⇒ =
+in ⇒ =
+login ⇒ =
+quiz ⇒ =
+pronta ⇒ =
+esito ⇒ =
+indica ⇒ =
+occhiolino ⇒ =
+live ⇒ =
+visible ⇒ =
+Automatico (gratis) ⇒ Automatic (free)
+html|Salva ⇒ Save
+Password (almeno 6 caratteri) ⇒ Password (at least 6 characters)
+La cassa ⇒ Cash
+class ⇒ =
+mcq ⇒ =
+match ⇒ =
+last ⇒ =
+salva ⇒ =
+all ⇒ =
+st ⇒ =

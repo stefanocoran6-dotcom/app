@@ -46,8 +46,8 @@ const newsDate = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); ret
 // sul nastro c'è scritto "Oggi" solo se le notizie sono davvero di oggi, altrimenti il giorno
 const newsDayShort = s => { if (s && s === dayKey()) return 'Oggi'; const d = newsDate(s); return d ? `${d.getDate()} ${NEWS_MESI[d.getMonth()]}` : 'Notizie'; };
 const newsCap = t => t.charAt(0).toUpperCase() + t.slice(1);
-const newsDayLong = s => { const d = newsDate(s); return d ? newsCap(d.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) : ''; };
-const newsDayName = s => { const d = newsDate(s); return d ? d.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }) : ''; };
+const newsDayLong = s => { const d = newsDate(s); return d ? newsCap(d.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })) : ''; };
+const newsDayName = s => { const d = newsDate(s); return d ? d.toLocaleDateString(LOC, { weekday: 'long', day: 'numeric', month: 'long' }) : ''; };
 const newsDayHead = s => (s === dayKey() ? 'Oggi · ' + newsDayName(s) : s === dayKey(new Date(Date.now() - DAY)) ? 'Ieri · ' + newsDayName(s) : newsCap(newsDayName(s)));
 const newsWords = a => [a.sommario, ...(a.breve || []), ...a.corpo.reduce((t, s) => t.concat(s.h, s.p || []), []), a.perche].join(' ').split(/\s+/).filter(Boolean).length;
 const newsMinutes = a => Math.max(1, Math.round(newsWords(a) / 180));
@@ -58,6 +58,7 @@ const newsLab = (t, w = 600) => html`<span class="o-mono" style=${{ fontSize: 11
 // Il nastro: i titoli del giorno che scorrono sotto la lezione. Ogni titolo apre il suo articolo, l'etichetta del giorno apre l'archivio.
 function NewsTicker({ nav }) {
   const n = useNews();
+  if (LANG === 'en') return html`<div style="height:24px;flex:none"></div>`;   // le notizie sono in italiano e sull'Italia
   if (!n.items.length) return html`<div style="height:24px;flex:none"></div>`;
   const lab = newsDayShort(n.data), chars = n.items.reduce((t, a) => t + String(a.nastro || a.titolo).length + 12, 0);
   const star = html`<svg width="14" height="14" viewBox="0 0 24 24" fill=${INK} aria-hidden="true" style="flex:none"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z"/></svg>`;
@@ -73,7 +74,7 @@ function NewsTicker({ nav }) {
 // la riga che dalla home porta all'archivio (compare solo se ci sono notizie)
 function NewsHomeRow({ nav }) {
   const n = useNews();
-  if (!n.items.length) return null;
+  if (LANG === 'en' || !n.items.length) return null;
   return html`<${Row} icon=${PathIco(D_NEWS, 22, 2.2)} ibg=${GIALLO} title="Tutte le notizie" sub="L'archivio, giorno per giorno" chev=${true} onClick=${() => nav.go('notizie')}/>`;
 }
 

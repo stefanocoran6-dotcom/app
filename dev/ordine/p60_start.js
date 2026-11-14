@@ -79,7 +79,9 @@ export function OrdineSplash({ onComplete }) {
 
 // Primo giorno: benvenuto, obiettivo, (esame), punto di partenza, (5 domande), "Ecco la tua FinLearn".
 // `auth` arriva da app.js (accesso di prova, salvato sul dispositivo); `pre` porta i dati che servono prima dell'accesso.
-const GOALS = [['zero', 'Capire la finanza da zero', 'Soldi, interessi, inflazione', Sprout], ['invest', 'Investire i miei risparmi', 'Azioni, obbligazioni, fondi', TrendingUp], ['work', 'Usarla al lavoro', 'Bilanci, valutazioni, tassi', Briefcase], ['exam', 'Preparare un esame', 'CFA, FRM, CAIA', GraduationCap]];
+const GOALS = [['zero', 'Capire la finanza da zero', 'Soldi, interessi, inflazione', Sprout], ['invest', 'Investire i miei risparmi', 'Azioni, obbligazioni, fondi', TrendingUp], ['work', 'Usarla al lavoro', 'Bilanci, valutazioni, tassi', Briefcase], ['exam', 'Preparare un esame', 'CFA, FRM, CAIA', GraduationCap]].filter(g => LANG !== 'en' || g[0] !== 'exam');
+// i paesi tra cui scegliere (solo in inglese): decidono lezioni e valuta
+const COUNTRIES = [['US', 'Stati Uniti', 'Dollari e regole degli Stati Uniti'], ['IT', 'Italia', 'Euro e regole italiane']];
 function Choice({ on, onClick, icon, title, sub }) {
   return html`<button type="button" role="radio" aria-checked=${on ? 'true' : 'false'} onClick=${onClick} class="o-rowf" style=${{ gap: 14, width: '100%', minHeight: 72, padding: '12px 16px', border: `2.5px solid ${INK}`, borderRadius: 20, background: on ? T_AZ : '#fff', boxShadow: on ? `4px 4px 0 ${INK}` : 'none' }}>
     ${icon && html`<span class="o-ibox" style="width:42px;height:42px;border-radius:13px;font-size:15px">${icon}</span>`}
@@ -120,7 +122,7 @@ function pathMeta(c) {
 const NUM_IT = ['', 'una', 'due', 'tre', 'quattro', 'cinque'];
 
 export function OrdineWelcome({ auth, onAuth, pre }) {
-  const [step, setStep] = useState('welcome'), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10), [date, setDate] = useState('');
+  const [step, setStep] = useState(() => { try { const r = sessionStorage.getItem('fl_resume'); if (r) { sessionStorage.removeItem('fl_resume'); return r; } } catch (e) { /* niente */ } return 'welcome'; }), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10), [date, setDate] = useState('');
   const [pl, setPl] = useState(null), [qi, setQi] = useState(0), [sel, setSel] = useState(null), [res, setRes] = useState([]), [known, setKnown] = useState([]);
   const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [mode, setMode] = useState('in');
   if (!K) K = Object.assign({ losProgress: [], albumLoad: () => ({}) }, pre || {});   // prima dell'accesso: i dati dei percorsi e poco altro
@@ -128,7 +130,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
   useOrdFit();
   // durante la registrazione il percorso scelto è una bozza: le schermate lo leggono come se fosse già salvato
   const draft = useMemo(() => ({ goal, level: start, known, more: [], add: [], t: 0 }), [goal, start, known]);
-  const inReg = step !== 'welcome' && step !== 'login';
+  const inReg = step !== 'welcome' && step !== 'login' && step !== 'country';
   MIS_DRAFT = inReg ? draft : null;
   useEffect(() => () => { MIS_DRAFT = null; }, []);
   const P = MIS_PATHS[goal], course = inReg ? courseById(P.course) : null, exam = goal === 'exam', N = exam ? 4 : 3, iStart = exam ? 2 : 1;
@@ -138,6 +140,8 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
     s2set(s => ({ onboard: { goal, start, level: true, t: now }, mis: { goal, level: start, known, more: [], add: [], t: now, go: first ? first.key : null }, cur: P.course, settings: Object.assign({}, s.settings, { goalMin: mins }) }));
     if (exam && date) { try { localStorage.setItem('finlearn_exam_date', date); } catch (e) {} }
     enter(() => auth.guest()); };
+  const [cty, setCty] = useState(COUNTRY);
+  const pickCountry = () => { try { localStorage.setItem('fl_country', cty); } catch (e) { /* niente */ } if (cty === COUNTRY) { setStep('goal'); return; } try { sessionStorage.setItem('fl_resume', 'goal'); } catch (e) { /* niente */ } setCountryPref(cty); };
   const pickGoal = id => { setGoal(id); setKnown([]); };
   const fromStart = () => { if (start === 'some') { setPl(placementFor(goal)); setQi(0); setRes([]); setSel(null); setKnown([]); setStep('quiz'); } else { setKnown([]); setStep('pronta'); } };
   const answer = () => { const it = pl.items[qi], ok = sel === it.q.ans, r = [...res, ok];
@@ -149,6 +153,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
   let body;
   if (step === 'welcome') body = html`<div class="o-scr" style="background:${AZ}">
     <div class="o-top" style="flex:1 1 0;min-height:300px;position:relative;display:flex;flex-direction:column;align-items:center">
+      <button type="button" class="o-link" style="position:absolute;right:16px;top:14px;display:inline-flex;align-items:center;gap:6px" aria-label="Language · Lingua" onClick=${() => setLangPref(LANG === 'en' ? 'it' : 'en')}>${Ico(Languages, 18)}<span lang=${LANG === 'en' ? 'it' : 'en'}>${LANG === 'en' ? 'Italiano' : 'English'}</span></button>
       <div style="margin-top:22px"><${Wordmark} size=${34}/></div>
       <div style="position:relative;width:min(288px,70vw);aspect-ratio:1;margin-top:auto;margin-bottom:-8px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center">
         <${Rally} pose="saluta" w=${250} alt="Rally, la mascotte di FinLearn, saluta" style="margin-bottom:-6px;max-width:92%"/>
@@ -156,8 +161,13 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
     <div class="o-sheet o-col" style="flex:none;padding-top:28px;padding-bottom:max(26px,calc(env(safe-area-inset-bottom) + 10px))">
       <h1 style="font-size:30px;line-height:34px;font-weight:800;letter-spacing:-.02em;text-wrap:balance">Impara la finanza, dieci minuti al giorno</h1>
       <p class="o-body o-mut" style="margin-top:10px;font-size:16px;line-height:23px">Dalle basi alle certificazioni, con lezioni brevi, sfide e figurine da collezionare.</p>
-      <div style="margin-top:22px"><${Btn} cls="lg" onClick=${() => setStep('goal')}>Inizia<//></div>
+      <div style="margin-top:22px"><${Btn} cls="lg" onClick=${() => setStep(LANG === 'en' && !LS.raw('fl_country') ? 'country' : 'goal')}>Inizia<//></div>
       <div style="text-align:center;margin-top:4px"><button type="button" class="o-link" onClick=${() => setStep('login')}>Ho già un account</button></div></div></div>`;
+  else if (step === 'country') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} title=""/>`}>
+    <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', 'Il tuo paese', 'Dove vivi?')}
+      <div role="radiogroup" aria-label="Dove vivi" class="o-col" style="gap:12px;position:relative">${COUNTRIES.map(([id, t, s]) => html`<${Choice} key=${id} on=${cty === id} onClick=${() => setCty(id)} title=${t} sub=${s}/>`)}</div>
+      <p class="o-body o-mut" style="margin-top:18px">Le regole su tasse, pensioni e banche cambiano da un paese all'altro, e con loro le lezioni che vedi. Lo cambi quando vuoi, in Impostazioni.</p>
+      <div style="margin-top:20px"><${Btn} cls="lg" onClick=${pickCountry}>Continua<//></div></div><//>`;
   else if (step === 'goal') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} n=${N} i=${0}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep(exam ? 'exam' : 'start')}>Continua<//>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', `Passo 1 di ${N}`, 'Cosa vuoi fare con FinLearn?')}
       <div role="radiogroup" aria-label="Cosa vuoi fare con FinLearn" class="o-col" style="gap:12px;position:relative">${GOALS.map(([id, t, s, I]) => html`<${Choice} key=${id} on=${goal === id} onClick=${() => pickGoal(id)} icon=${Ico(I, 22)} title=${t} sub=${s}/>`)}</div>

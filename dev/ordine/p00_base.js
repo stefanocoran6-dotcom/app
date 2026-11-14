@@ -6,6 +6,23 @@ import { X, ChevronLeft, ChevronRight, ChevronDown, Check, Calculator, Clock, Ti
   GraduationCap, Compass, LayoutGrid, FileText, ArrowUp, Plus, TrendingUp, PieChart, Star, Zap, RotateCcw, Table2, Percent, BarChart3, Scale, Coins, Bell, Languages, Download,
   Trash2, LogOut, Info, Shuffle, User, Palette, History, Lightbulb, Share2 } from 'lucide-react';
 
+// ---- lingua e paese ----
+// LANG: 'it' = app in italiano, 'en' = app in inglese americano. L'inglese si genera con dev/en/compila.mjs (ordine_en.js), che cambia solo questa riga e sostituisce i testi.
+const LANG = 'it';
+// COUNTRY: il paese decide quali lezioni valgono (le regole cambiano da un paese all'altro) e la valuta. IT = Italia, US = Stati Uniti.
+// In italiano è sempre l'Italia; in inglese lo si sceglie all'inizio e dalle Impostazioni (chiave fl_country, letta prima di disegnare).
+function guessCountry() {
+  try { const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || ''), lg = (navigator.language || ''); if (/^Europe\/Rome$/.test(tz) || /-IT$/i.test(lg)) return 'IT'; } catch (e) { /* niente */ }
+  return 'US';
+}
+const COUNTRY = (() => { if (LANG !== 'en') return 'IT'; try { const c = localStorage.getItem('fl_country'); if (c === 'US' || c === 'IT') return c; } catch (e) { /* niente */ } return guessCountry(); })();
+const LOC = LANG === 'en' ? 'en-US' : 'it-IT';        // formato di numeri e date
+const CUR = COUNTRY === 'US' ? '$' : '€';            // simbolo della valuta
+const GRP = LANG === 'en' ? ',' : '.', DEC = LANG === 'en' ? '.' : ',';   // 1.331,5 all'italiana · 1,331.5 all'americana
+// cambiare lingua o paese ricarica la pagina: le lezioni e i testi dell'altra versione stanno in un altro file
+function setLangPref(l) { try { localStorage.setItem('fl_lang', l); localStorage.setItem('fl_lang_chosen', '1'); } catch (e) { /* niente */ } try { document.documentElement.lang = l; location.reload(); } catch (e) { /* niente */ } }
+function setCountryPref(c) { try { localStorage.setItem('fl_country', c); } catch (e) { /* niente */ } try { location.reload(); } catch (e) { /* niente */ } }
+
 const useSyncExternalStore = React.useSyncExternalStore || function (sub, get) { const [, f] = useState(0); useEffect(() => sub(() => f(x => x + 1)), [sub]); return get(); };
 
 // ---- htm 3.1.1 · (c) Jason Miller · Apache License 2.0 · https://github.com/developit/htm ----
@@ -268,6 +285,6 @@ function useTick() {
 let K = null;
 const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const DAY = 864e5;
-const fmtInt = n => Math.round(n).toLocaleString('it-IT');
+const fmtInt = n => Math.round(n).toLocaleString(LOC);
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;

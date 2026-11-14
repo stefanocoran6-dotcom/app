@@ -2,12 +2,14 @@
 // ---- passi interattivi delle lezioni: stima prima di leggere, leve con un obiettivo, metti a posto, metti in ordine, calcola ----
 // I dati di ogni passo stanno nelle lezioni (campo "flow"); qui c'è come si vedono e come rispondono al tocco.
 const NBSP = ' ';
-// numeri all'italiana, scritti allo stesso modo su ogni telefono: 1.331 · 7,5 · 87.584
-const grp = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-const fmtN = (v, d = 0) => { const s = Math.abs(Number(v)).toFixed(d).split('.'); return (v < 0 ? '−' : '') + grp(s[0]) + (s[1] ? ',' + s[1] : ''); };
-const withUnit = (v, unit, d = 0) => fmtN(v, d) + (unit === '%' ? '%' : unit ? NBSP + unit : '');
-const eur0 = x => fmtN(Math.round(x)) + NBSP + '€';
-const mesiTxt = m => { const a = Math.floor(m / 12), r = m % 12; return a ? plural(a, 'anno', 'anni') + (r ? ' e ' + plural(r, 'mese', 'mesi') : '') : plural(r, 'mese', 'mesi'); };
+// numeri scritti allo stesso modo su ogni telefono: all'italiana 1.331 · 7,5 · 87.584 · 1.000 €; all'americana 1,331 · 7.5 · 87,584 · €1,000
+const grp = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, GRP);
+const fmtN = (v, d = 0) => { const s = Math.abs(Number(v)).toFixed(d).split('.'); return (v < 0 ? '−' : '') + grp(s[0]) + (s[1] ? DEC + s[1] : ''); };
+const isMoney = unit => unit === '€' || unit === '$';
+// la valuta in inglese sta davanti alla cifra (€1,000), in italiano dopo (1.000 €)
+const withUnit = (v, unit, d = 0) => (LANG === 'en' && isMoney(unit) ? CUR + fmtN(v, d) : fmtN(v, d) + (unit === '%' ? '%' : unit ? NBSP + unit : ''));
+const eur0 = x => (LANG === 'en' ? CUR + fmtN(Math.round(x)) : fmtN(Math.round(x)) + NBSP + '€');
+const mesiTxt = m => { const a = Math.floor(m / 12), r = m % 12; return a ? plural(a, 'anno', 'anni') + (r ? (LANG === 'en' ? ' and ' : ' e ') + plural(r, 'mese', 'mesi') : '') : plural(r, 'mese', 'mesi'); };
 
 // cursore con i due tasti meno e più: il dito lo trascina, i tasti servono per il passo fine
 function Slider({ value, min, max, step, onChange, label, disabled }) {
@@ -323,17 +325,17 @@ function OrderStep({ st, top, onNext, scrollRef }) {
 function NumStep({ st, l, top, onNext, repeat, scrollRef }) {
   const [s, setS] = useState(''), [fb, setFb] = useState(null);
   const dec = st.dec || 0;
-  const press = k => { if (fb) return; setS(x => k === 'del' ? x.slice(0, -1) : k === ',' ? (dec && x && x.indexOf(',') < 0 ? x + ',' : x)
-    : (x.replace(',', '').length >= 8 || (x.indexOf(',') >= 0 && x.split(',')[1].length >= dec)) ? x : x === '0' ? k : x + k); };
-  const val = s ? parseFloat(s.replace(',', '.')) : NaN;
-  const shown = s ? grp(s.split(',')[0]) + (s.indexOf(',') >= 0 ? ',' + (s.split(',')[1] || '') : '') : '';
+  const press = k => { if (fb) return; setS(x => k === 'del' ? x.slice(0, -1) : k === DEC ? (dec && x && x.indexOf(DEC) < 0 ? x + DEC : x)
+    : (x.replace(DEC, '').length >= 8 || (x.indexOf(DEC) >= 0 && x.split(DEC)[1].length >= dec)) ? x : x === '0' ? k : x + k); };
+  const val = s ? parseFloat(s.replace(DEC, '.')) : NaN;
+  const shown = s ? grp(s.split(DEC)[0]) + (s.indexOf(DEC) >= 0 ? DEC + (s.split(DEC)[1] || '') : '') : '';
   const ok = fb === 'ok', ansDec = (String(st.ans).split('.')[1] || '').length;
   const q = { key: l.key + '~' + st.n, exp: ok ? st.exp : `La risposta è **${withUnit(st.ans, st.unit, ansDec)}**.\n\n${st.exp || ''}` };
-  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', dec ? ',' : null, '0', 'del'];
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', dec ? DEC : null, '0', 'del'];
   const body = html`<div class="o-pad" style="padding-top:18px;padding-bottom:20px"><div class="o-col" style="gap:6px"><span class="o-lab">Calcola tu</span><${Rich} text=${st.q} cls="q"/></div></div>`;
   const foot = html`<div class="o-col" style="gap:10px">
     <div class="o-numd" aria-live="polite" aria-label=${s ? `Hai scritto ${shown} ${st.unit}` : 'Scrivi il numero'}><span style=${{ color: s ? INK : DIM }}>${shown || '?'}</span><span style="font-size:22px;line-height:28px;font-weight:800">${st.unit}</span></div>
-    <div class="o-keys">${keys.map((k, j) => k == null ? html`<span key=${j}></span>` : html`<button key=${j} type="button" class="o-key" aria-label=${k === 'del' ? 'Cancella' : k === ',' ? 'Virgola' : k} onClick=${() => press(k)}>${k === 'del' ? PathIco('M20 6H9l-6 6 6 6h11zM12 10l4 4M16 10l-4 4', 24, 2.2) : k}</button>`)}</div>
+    <div class="o-keys">${keys.map((k, j) => k == null ? html`<span key=${j}></span>` : html`<button key=${j} type="button" class="o-key" aria-label=${k === 'del' ? 'Cancella' : k === DEC ? 'Virgola' : k} onClick=${() => press(k)}>${k === 'del' ? PathIco('M20 6H9l-6 6 6 6h11zM12 10l4 4M16 10l-4 4', 24, 2.2) : k}</button>`)}</div>
     <${Btn} cls="lg" disabled=${isNaN(val) || !!fb} onClick=${() => setFb(Math.abs(val - st.ans) <= (st.tol || 0) + 1e-9 ? 'ok' : 'ko')}>Controlla<//></div>`;
   const over = fb ? html`<${FeedbackSheet} ok=${ok} q=${q} xp=${repeat ? 5 : 10} onNext=${() => onNext({ ok })}/>` : null;
   return html`<${Flow} scrollRef=${scrollRef} top=${top} foot=${foot} over=${over}>${body}<//>`;

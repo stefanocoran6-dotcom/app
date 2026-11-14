@@ -120,7 +120,7 @@ function CoachScreen({ nav }) {
     const c = { id: `chat_${Date.now()}`, title: first ? first.slice(0, 40) : 'Nuova conversazione', createdAt: now, updatedAt: now, messages: [{ role: 'assistant', content: `Ciao${nm ? ' ' + nm : ''}! ${coach.exam ? 'Chiedimi un concetto da spiegare da zero, un esercizio o una domanda d\'esame.' : 'Chiedimi una parola che non conosci, un dubbio sui soldi o un esempio con le cifre.'}`, timestamp: now }] };
     K.setChats(prev => [c, ...prev].slice(0, 50)); K.setActiveChatId(c.id); setPending(first ? { id: c.id, text: first } : null); setHist(false);
   };
-  const fmt = d => { try { return new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
+  const fmt = d => { try { return new Date(d).toLocaleDateString(LOC, { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
   return html`<${Room} color=${LILLA} tab="coach" go=${nav.tab} headH=${140}
     rally=${html`<${Rally} pose="coach" alt="Rally con le cuffie" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
     head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">AI Coach</h1>
@@ -269,7 +269,8 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
         <p style="margin-top:4px;padding:10px 14px;background:${T_GR};border-radius:14px;font-size:13px;line-height:18px;font-weight:600">Da qui dipende cosa trovi in Impara, Allenati, Sfide e AI Coach. Se cambi, i progressi restano.</p></div>
       ${H('Studio')}
       ${R('Promemoria', 'In arrivo', null)}
-      ${R('Lingua delle spiegazioni', set.lang, () => setSheet('lang'), null, !inMyApp('cfa2'))}
+      ${R('Lingua', LANG === 'en' ? 'English' : 'Italiano', () => setSheet('lang'), null, LANG !== 'en' && !inMyApp('cfa2'))}
+      ${LANG === 'en' && R('Paese', COUNTRY === 'US' ? 'Stati Uniti' : 'Italia', () => setSheet('country'), null, !inMyApp('cfa2'))}
       ${inMyApp('cfa2') && R('Domande d\'esame', 'In inglese, come all\'esame', null, null, true)}
       ${H('AI Coach')}
       ${R('OpenRouter', or.on ? 'Collegato' : 'Da collegare', () => setSheet('or'))}
@@ -303,8 +304,11 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
         ${nk > 0 && html`<${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set(() => ({ mis: Object.assign({}, misGet(), { known: [], level: 'zero' }) })); setSheet(null); }}>Riparto dall'inizio<//>`}</div><//>`}
     ${sheet === 'goal' && html`<${BSheet} onClose=${() => setSheet(null)} label="Minuti al giorno"><h2 class="o-big">Quanto tempo hai al giorno?</h2>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px">${[5, 10, 20].map(m => html`<button key=${m} type="button" class="o-col" onClick=${() => { upd({ goalMin: m }); setSheet(null); }} style=${{ alignItems: 'center', padding: '12px 0', border: `2.5px solid ${INK}`, borderRadius: 18, background: set.goalMin === m ? AZ : '#fff', boxShadow: set.goalMin === m ? `3px 3px 0 ${INK}` : 'none' }}><span style="font-size:26px;line-height:30px;font-weight:800">${m}</span><span class="o-s" style="color:${INK}">minuti</span></button>`)}</div><//>`}
-    ${sheet === 'lang' && html`<${BSheet} onClose=${() => setSheet(null)} label="Lingua"><h2 class="o-big" style="margin-bottom:6px">Lingua delle spiegazioni</h2>
-      ${[['Italiano', true], ['English', false], ['Français', false], ['Español', false], ['Deutsch', false], ['中文', false]].map(([l, ok], k) => html`<div key=${l} class="o-row" style=${{ minHeight: 50, borderBottom: k < 5 ? `2px solid ${SEP}` : 0 }}><span class="o-grow o-t" style=${{ color: ok ? INK : DIMT }}>${l}</span>${ok ? PathIco(D_CHECK, 22, 3) : html`<span class="o-s">In arrivo</span>`}</div>`)}<//>`}
+    ${sheet === 'lang' && html`<${BSheet} onClose=${() => setSheet(null)} label="Lingua"><h2 class="o-big" style="margin-bottom:6px">Lingua</h2>
+      ${[['Italiano', 'it'], ['English', 'en'], ['Français', null], ['Español', null], ['Deutsch', null], ['中文', null]].map(([l, code], k) => html`<button key=${l} type="button" class="o-row" disabled=${!code} onClick=${() => { if (code && code !== LANG) setLangPref(code); else setSheet(null); }} style=${{ minHeight: 50, width: '100%', borderBottom: k < 5 ? `2px solid ${SEP}` : 0 }}><span class="o-grow o-t" lang=${code || undefined} style=${{ color: code ? INK : DIMT, textAlign: 'left' }}>${l}</span>${code === LANG ? PathIco(D_CHECK, 22, 3) : code ? null : html`<span class="o-s">In arrivo</span>`}</button>`)}<//>`}
+    ${sheet === 'country' && html`<${BSheet} onClose=${() => setSheet(null)} label="Paese"><h2 class="o-big" style="margin-bottom:6px">Paese</h2>
+      <p class="o-body o-mut" style="margin:0 0 12px">Le regole su tasse, pensioni e banche cambiano da un paese all'altro, e con loro le lezioni che vedi. I tuoi progressi restano.</p>
+      ${COUNTRIES.map(([c, n, d], k) => html`<button key=${c} type="button" class="o-row" onClick=${() => { if (c !== COUNTRY) setCountryPref(c); else setSheet(null); }} style=${{ minHeight: 60, width: '100%', borderBottom: k < 1 ? `2px solid ${SEP}` : 0 }}><span class="o-grow o-col" style="gap:1px;text-align:left"><span class="o-t">${n}</span><span class="o-s">${d}</span></span>${c === COUNTRY && PathIco(D_CHECK, 22, 3)}</button>`)}<//>`}
     ${sheet === 'name' && html`<${BSheet} onClose=${() => setSheet(null)} label="Nome"><h2 class="o-big">Come ti chiami?</h2>
       <input class="o-inp" value=${nm} onChange=${e => setNm(e.target.value)} placeholder="Il tuo nome" maxlength="24" aria-label="Nome" style="margin-top:16px"/>
       <div style="margin-top:14px"><${Btn} cls="lg" onClick=${() => { s2set({ name: firstName(nm) }); setSheet(null); }}>Salva<//></div><//>`}

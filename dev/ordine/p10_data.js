@@ -4,11 +4,28 @@
 // =====================================================================================================
 // "Basi della finanza": primo percorso non d'esame. Contenuti originali, brevi, con un esempio numerico per lezione.
 // Le lezioni stanno in basi_src.py (che le controlla e scrive basi.json): build.sh le mette qui sopra come BASI_UNITS.
+// Quali lezioni valgono nel paese scelto: A = per tutti, B/C/E = regole e fatti italiani (si vedono solo con l'Italia).
+// Senza etichetta (app in italiano) valgono tutte. Per gli Stati Uniti la valuta delle lezioni diventa il dollaro: € -> $ nel testo, \text{€} -> \text{\$} nelle formule.
+const lessonOk = l => !l.lab || l.lab === 'A' || COUNTRY === 'IT';
+function usDollars(x) {
+  if (typeof x === 'string') {
+    if (x.indexOf('€') < 0) return x;
+    const m = [];   // le formule si tengono da parte: lì il dollaro va protetto con la barra
+    const t = x.replace(/\$\$[\s\S]*?\$\$|\\\([\s\S]*?\\\)/g, f => { m.push(f.replace(/€/g, '\\$')); return '\u0001' + (m.length - 1) + '\u0002'; });
+    return t.replace(/€/g, '$').replace(/\u0001(\d+)\u0002/g, (_, i) => m[+i]);
+  }
+  if (Array.isArray(x)) return x.map(usDollars);
+  if (x && typeof x === 'object') { const o = {}; for (const k in x) o[k] = usDollars(x[k]); return o; }
+  return x;
+}
+// Per gli Stati Uniti ogni lezione passa da usDollars, tranne quelle con una variante americana (campo "us"): sono già scritte in dollari (e in euro dove si parla proprio dell'euro) e prendono il posto dei campi di base.
+const usLesson = l => { const b = usDollars(Object.assign({}, l, { us: undefined })); return l.us ? Object.assign(b, l.us) : b; };
+const BASI_LIST = LANG === 'en' && COUNTRY === 'US' ? BASI_UNITS.map(u => Object.assign({}, u, { lessons: u.lessons.map(usLesson) })) : BASI_UNITS;
 const BASI = {
-  id: 'basi', name: 'Basi della finanza', badge: '€', color: AZ, group: 'basi', ready: true, pace: 48,
+  id: 'basi', name: 'Basi della finanza', badge: CUR, color: AZ, group: 'basi', ready: true, pace: 48,
   tagline: 'Per chi parte da zero',
   learn: ['Come lavorano interessi, inflazione e tempo', 'Come tenere in ordine entrate, uscite e risparmio', 'Come si leggono la busta paga, il conto e le carte', 'Quanto costano prestiti e mutuo, e i conti da fare prima di comprare casa', 'Come proteggersi da imprevisti e truffe', 'Cosa sono azioni, obbligazioni, fondi ed ETF, e come si investe un po\' alla volta', 'Quali errori fa la nostra testa quando investe', 'Come funzionano pensione, fondi pensione e TFR', 'Come si leggono un bilancio e le notizie di economia'],
-  units: BASI_UNITS.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
+  units: BASI_LIST.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons.filter(lessonOk) }] })).filter(u => u.sections[0].lessons.length)
 };
 // Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
 // La chiave è la parola in minuscolo, come compare in grassetto nelle lezioni; le forme diverse (singolare, plurale) stanno in GLOSS_ALIAS.
@@ -253,7 +270,7 @@ let COURSES_MEMO = null;
 const losMinutes = l => { const c = l.content || {}; const n = (c.introduction || '').length + (c.sections || []).reduce((s, x) => s + (x.content || '').length, 0); return clamp(Math.round(n / 900) + (l.question ? 2 : 1), 2, 20); };
 function courses() {
   if (COURSES_MEMO) return COURSES_MEMO;
-  const CFA = (K && K.CFA) || {};
+  const CFA = LANG === 'en' ? {} : (K && K.CFA) || {};   // il CFA ha le domande in italiano e le regole italiane: in inglese per ora non c'è
   const units = ['equityValuation', 'portfolioManagement', 'equity'].filter(k => CFA[k]).map(k => {
     const t = CFA[k];
     return { id: k, name: t.name, sections: t.modules.map(m => ({
@@ -263,7 +280,7 @@ function courses() {
   });
   const cfa2 = { id: 'cfa2', name: 'CFA Level II', badge: 'L2', color: AZ, group: 'cert', ready: true, pace: 90, tagline: 'Per chi prepara l\'esame',
     learn: ['Valutare un\'azione con dividendi, flussi di cassa, multipli e residual income', 'ETF, modelli multifattoriali, VaR e gestione attiva', 'Domande in inglese, come all\'esame'], units };
-  COURSES_MEMO = [BASI, cfa2];
+  COURSES_MEMO = LANG === 'en' ? [BASI] : [BASI, cfa2];
   // indici utili
   COURSES_MEMO.forEach(c => { c.lessons = []; c.units.forEach((u, ui) => u.sections.forEach(s => s.lessons.forEach(l => { l.course = c; l.unit = u; l.ui = ui; l.section = s; if (!l.kind) l.kind = 'base'; c.lessons.push(l); }))); });
   return COURSES_MEMO;
@@ -301,8 +318,8 @@ const MIS_PATHS = {
 // Chi usava l'app prima di "su misura": l'obiettivo si ricava da quello che aveva scelto o iniziato, e i percorsi iniziati restano tutti.
 function misDerive(s) {
   const ob = s.onboard || {}, st = new Set(s.started || []), done = s.basi || [];
-  const cfa = st.has('cfa2') || !!(K && (K.losProgress || []).length), basi = st.has('basi') || done.length > 0;
-  const goal = MIS_PATHS[ob.goal] ? ob.goal : cfa ? 'exam' : 'zero', P = MIS_PATHS[goal], add = [];
+  const cfa = LANG !== 'en' && (st.has('cfa2') || !!(K && (K.losProgress || []).length)), basi = st.has('basi') || done.length > 0;
+  const goal = MIS_PATHS[ob.goal] && (LANG !== 'en' || ob.goal !== 'exam') ? ob.goal : cfa ? 'exam' : 'zero', P = MIS_PATHS[goal], add = [];
   if (cfa && P.course !== 'cfa2') add.push('cfa2');
   if (basi && P.course !== 'basi') add.push('basi');
   const more = P.stops ? BASI.units.filter(u => !P.stops.includes(u.id) && unitLessons(u).some(l => done.includes(l.key))).map(u => u.id) : [];
@@ -311,7 +328,7 @@ function misDerive(s) {
 let MIS_MEMO = null, MIS_DRAFT = null;   // MIS_DRAFT: la registrazione mostra il percorso prima di salvarlo
 function misGet() {
   if (MIS_DRAFT) return MIS_DRAFT;
-  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal]) return s.mis;
+  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal] && (LANG !== 'en' || s.mis.goal !== 'exam')) return s.mis;
   const n = (K && (K.losProgress || []).length) || 0;
   if (!MIS_MEMO || MIS_MEMO.s !== s || MIS_MEMO.n !== n) MIS_MEMO = { s, n, m: misDerive(s) };
   return MIS_MEMO.m;

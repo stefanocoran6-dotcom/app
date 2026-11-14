@@ -1,0 +1,580 @@
+{
+ "medium of exchange": {
+  "it": "mezzo di scambio",
+  "titolo": "Medium of exchange",
+  "testo": "One of the three jobs of money: you hand it over in exchange for what you need, without having to swap one thing for another."
+ },
+ "unit of account": {
+  "it": "unità di conto",
+  "titolo": "Unit of account",
+  "testo": "One of the three jobs of money: it works as a yardstick to measure and compare prices."
+ },
+ "store of value": {
+  "it": "riserva di valore",
+  "titolo": "Store of value",
+  "testo": "One of the three jobs of money: it keeps its value over time, so you can earn today and spend later."
+ },
+ "investments": {
+  "it": "investimenti",
+  "titolo": "Investments",
+  "testo": "Using money today to have more in the future, accepting some risk: for example by buying stocks, bonds or shares of a fund."
+ },
+ "principal": {
+  "it": "capitale",
+  "titolo": "Principal",
+  "testo": "The starting amount, not counting interest: the sum you lend, deposit or invest, or the sum you borrow and have to pay back."
+ },
+ "interest": {
+  "it": "interessi",
+  "titolo": "Interest",
+  "testo": "The payment for using money over time. You receive it when you lend or deposit money, and you pay it when you borrow. It is calculated as a percentage of the amount."
+ },
+ "rate": {
+  "it": "tasso",
+  "titolo": "Rate",
+  "testo": "Interest expressed as a percentage of the amount, usually for one year. A rate of 5% a year means €5 of interest for every €100, every year."
+ },
+ "simple interest": {
+  "it": "interesse semplice",
+  "titolo": "Simple interest",
+  "testo": "Interest calculated only on the starting principal. The interest is the same every year."
+ },
+ "final amount": {
+  "it": "montante",
+  "titolo": "Final amount",
+  "testo": "The end figure: the starting principal plus the interest earned."
+ },
+ "basket": {
+  "it": "paniere",
+  "titolo": "Basket",
+  "testo": "The list of goods and services that stands for what households typically spend. It is used to measure how much prices go up."
+ },
+ "purchasing power": {
+  "it": "potere d'acquisto",
+  "titolo": "Purchasing power",
+  "testo": "How much you can buy with a given amount of money. If prices go up and the amount stays the same, purchasing power goes down."
+ },
+ "nominal rate": {
+  "it": "tasso nominale",
+  "titolo": "Nominal rate",
+  "testo": "The rate written on the contract: it tells you how much the amount grows, without taking inflation into account."
+ },
+ "real rate": {
+  "it": "tasso reale",
+  "titolo": "Real rate",
+  "testo": "The rate after inflation: it tells you how much what you can actually buy really grows. It is roughly the nominal rate minus inflation."
+ },
+ "income": {
+  "it": "entrate",
+  "titolo": "Income",
+  "testo": "The money that comes in over a period: salary, pension, rent you collect."
+ },
+ "expenses": {
+  "it": "uscite",
+  "titolo": "Expenses",
+  "testo": "The money you spend over a period, from utility bills to coffee."
+ },
+ "balance": {
+  "it": "saldo",
+  "titolo": "Balance",
+  "testo": "The difference between income and expenses. If it is positive you have something left over; if it is negative you spent more than you earned."
+ },
+ "fixed expenses": {
+  "it": "spese fisse",
+  "titolo": "Fixed expenses",
+  "testo": "The expenses that come back every month for the same amount or nearly, like rent, utility bills and subscriptions."
+ },
+ "variable expenses": {
+  "it": "spese variabili",
+  "titolo": "Variable expenses",
+  "testo": "The expenses that change from one month to the next and depend on what you do, like groceries, eating out and clothes."
+ },
+ "savings": {
+  "it": "risparmio",
+  "titolo": "Savings",
+  "testo": "The part of your income that you don't spend and set aside."
+ },
+ "needs": {
+  "it": "bisogni",
+  "titolo": "Needs",
+  "testo": "The expenses you can't do without: housing, bills, food, transport to work."
+ },
+ "wants": {
+  "it": "desideri",
+  "titolo": "Wants",
+  "testo": "The expenses that make life more enjoyable but could be cut back: eating out, trips, subscriptions."
+ },
+ "emergency fund": {
+  "it": "fondo di emergenza",
+  "titolo": "Emergency fund",
+  "testo": "A sum kept aside only for the unexpected, usually equal to 3 to 6 months of expenses, in an account you can withdraw from right away."
+ },
+ "liquid": {
+  "it": "liquido",
+  "titolo": "Liquid",
+  "testo": "Said of money or investments you can use quickly and without losing out. A checking account is liquid; a house is not."
+ },
+ "liquidity": {
+  "it": "liquidità",
+  "titolo": "Liquidity",
+  "testo": "How quickly you can turn something into cash without losing out. Money ready to use is also called liquidity."
+ },
+ "checking account": {
+  "it": "conto corrente",
+  "titolo": "Checking account",
+  "testo": "The everyday account: you use it to receive your salary and to pay. It earns little or nothing."
+ },
+ "savings account": {
+  "it": "conto deposito",
+  "titolo": "Savings account",
+  "testo": "An account made to leave a sum untouched in exchange for interest. It can be flexible, if you can withdraw whenever you want, or locked for a set time."
+ },
+ "installment": {
+  "it": "rata",
+  "titolo": "Installment",
+  "testo": "The amount you pay at each due date to pay back a loan. It contains a part of interest and a part of principal."
+ },
+ "nominal interest rate": {
+  "it": "tan",
+  "titolo": "Nominal interest rate",
+  "testo": "The yearly interest rate of the loan, not counting fees."
+ },
+ "apr": {
+  "it": "taeg",
+  "titolo": "APR",
+  "testo": "Annual percentage rate. It is what the loan costs you in a year, putting together interest and mandatory fees. It is the number to compare between different offers."
+ },
+ "fees": {
+  "it": "spese",
+  "titolo": "Fees",
+  "testo": "The costs of a loan that are not interest: setting up the loan, collecting each payment, the insurance the bank requires you to take out."
+ },
+ "mortgage": {
+  "it": "mutuo",
+  "titolo": "Mortgage",
+  "testo": "The long-term loan you take out to buy a home. It is secured by the home itself."
+ },
+ "lien": {
+  "it": "ipoteca",
+  "titolo": "Lien",
+  "testo": "The guarantee you give the bank when you take out a mortgage: if you stop paying, the bank can have the home sold to get its money back."
+ },
+ "fixed rate": {
+  "it": "tasso fisso",
+  "titolo": "Fixed rate",
+  "testo": "A rate that stays the same for the whole life of the loan. The payment doesn't change either."
+ },
+ "adjustable rate": {
+  "it": "tasso variabile",
+  "titolo": "Adjustable rate",
+  "testo": "A rate that follows a market benchmark rate: when that goes up or down, your payment changes too."
+ },
+ "spread": {
+  "it": "spread",
+  "titolo": "Spread",
+  "testo": "The difference between two rates. On a mortgage it is the markup the bank adds to the benchmark rate. In the news it is the gap between the yield on Italian government bonds (BTPs) and on German ones (Bunds)."
+ },
+ "revolving credit": {
+  "it": "revolving",
+  "titolo": "Revolving card",
+  "testo": "A credit card that lets you pay back what you spend in installments, charging interest on the debt that remains. The rate is often high."
+ },
+ "credit bureaus": {
+  "it": "sistemi di informazioni creditizie",
+  "titolo": "Credit bureaus",
+  "testo": "Databases where banks and lenders record loan applications and payments, on time or late. They check them before granting credit."
+ },
+ "economically inactive": {
+  "it": "inattivi",
+  "titolo": "Economically inactive",
+  "testo": "People who don't have a job and aren't looking for one: students, retirees, people who take care of the home, people who have stopped looking. They are not counted among the unemployed."
+ },
+ "gdp per capita": {
+  "it": "pil pro capite",
+  "titolo": "GDP per capita",
+  "testo": "GDP divided by the number of inhabitants. It is used to compare living standards between countries of different sizes."
+ },
+ "shopping basket": {
+  "it": "carrello della spesa",
+  "titolo": "Shopping basket",
+  "testo": "The trend of prices for food and for household and personal care products: the things people buy most often."
+ },
+ "deficit": {
+  "it": "deficit",
+  "titolo": "Deficit",
+  "testo": "How much the government spends beyond what it takes in during a year. It is measured as a percentage of GDP."
+ },
+ "primary balance": {
+  "it": "saldo primario",
+  "titolo": "Primary balance",
+  "testo": "The difference between the government's revenue and spending, not counting the interest on the debt. When it is positive it is called a primary surplus."
+ },
+ "basis points": {
+  "it": "punti base",
+  "titolo": "Basis points",
+  "testo": "Hundredths of a percentage point: 100 basis points are 1%. They are used to measure small differences between rates."
+ },
+ "rating": {
+  "it": "rating",
+  "titolo": "Rating",
+  "testo": "The grade an agency gives to the ability of a government or a company to pay back its debts. It goes from AAA, the highest, to D."
+ },
+ "investment grade": {
+  "it": "investment grade",
+  "titolo": "Investment grade",
+  "testo": "The band of the highest ratings, from AAA to BBB−: debt considered reliable. Below this line, bonds are called speculative."
+ },
+ "outlook": {
+  "it": "outlook",
+  "titolo": "Outlook",
+  "testo": "The expected direction. Next to a rating it can be positive, stable or negative: it says where the grade might move."
+ },
+ "market capitalization": {
+  "it": "capitalizzazione",
+  "titolo": "Market capitalization",
+  "testo": "The value of a company on the stock market: the price of one share times the number of shares."
+ },
+ "insurance": {
+  "it": "assicurazione",
+  "titolo": "Insurance",
+  "testo": "An agreement in which you pay a small, certain amount to a company, which in return compensates you if you suffer a loss covered by the contract."
+ },
+ "premium": {
+  "it": "premio",
+  "titolo": "Premium",
+  "testo": "The price of insurance: the amount you pay the company, usually once a year."
+ },
+ "payout": {
+  "it": "indennizzo",
+  "titolo": "Payout",
+  "testo": "The sum the insurance company pays you when you suffer a loss covered by the policy."
+ },
+ "policy": {
+  "it": "polizza",
+  "titolo": "Policy",
+  "testo": "The insurance contract. It says what is covered, how much you pay and how much you receive in case of loss."
+ },
+ "exclusions": {
+  "it": "esclusioni",
+  "titolo": "Exclusions",
+  "testo": "The cases in which the policy doesn't pay, written in the contract. It is the part to read most carefully."
+ },
+ "deductible": {
+  "it": "franchigia",
+  "titolo": "Deductible",
+  "testo": "The fixed part of each loss that stays with you. With a €500 deductible, on €3,000 of damage the company pays €2,500."
+ },
+ "percentage deductible": {
+  "it": "scoperto",
+  "titolo": "Percentage deductible",
+  "testo": "The part of each loss that stays with you, expressed as a percentage. With a 10% deductible, on €3,000 of damage you pay €300."
+ },
+ "coverage limit": {
+  "it": "massimale",
+  "titolo": "Coverage limit",
+  "testo": "The highest amount the company pays for a loss. The part above the limit stays with you."
+ },
+ "liability": {
+  "it": "responsabilità civile",
+  "titolo": "Liability",
+  "testo": "The obligation to compensate for the damage you cause to other people or to their property. The insurance that covers it is called liability insurance."
+ },
+ "auto liability insurance": {
+  "it": "rc auto",
+  "titolo": "Auto liability insurance",
+  "testo": "The insurance that pays for the damage you cause to others with your vehicle. In most places the law requires every driver to have it."
+ },
+ "ponzi scheme": {
+  "it": "schema ponzi",
+  "titolo": "Ponzi scheme",
+  "testo": "A scam in which there is no real investment: the gains paid to the first people in are the money paid in by those who join later. When the new arrivals run out, it collapses."
+ },
+ "phishing": {
+  "it": "phishing",
+  "titolo": "Phishing",
+  "testo": "A fake email that imitates your bank, a courier or an agency, to get you to open a link and enter data or codes."
+ },
+ "smishing": {
+  "it": "smishing",
+  "titolo": "Smishing",
+  "testo": "Phishing done with a text message or a chat message. It can show up in the same conversation as the real messages from your bank."
+ },
+ "vishing": {
+  "it": "vishing",
+  "titolo": "Vishing",
+  "testo": "The scam done by phone: a fake agent from your bank, or from another service, talks you into giving away codes or moving money."
+ },
+ "spoofing": {
+  "it": "spoofing",
+  "titolo": "Spoofing",
+  "testo": "Faking the name of the sender of a message or the number of the caller, so that it looks like someone you trust is writing or calling."
+ },
+ "identity theft": {
+  "it": "furto d'identità",
+  "titolo": "Identity theft",
+  "testo": "Using another person's data, such as ID documents and personal numbers, to get loans or open accounts in their name."
+ },
+ "term life insurance": {
+  "it": "temporanea caso morte",
+  "titolo": "Term life insurance",
+  "testo": "A policy that pays a sum to the people named if the insured person dies before a set date. If the insured is still alive at the end, it pays nothing."
+ },
+ "with-profits policy": {
+  "it": "polizza rivalutabile",
+  "titolo": "With-profits policy",
+  "testo": "A life insurance policy that is also an investment, linked to the company's prudent management. The capital grows slowly, usually with a guarantee written in the contract."
+ },
+ "unit-linked policy": {
+  "it": "unit-linked",
+  "titolo": "Unit-linked policy",
+  "testo": "A life insurance policy that is also an investment, whose value follows that of the funds it is linked to. The risk that the funds go down is borne by the person who takes it out."
+ },
+ "premium charge": {
+  "it": "caricamento",
+  "titolo": "Premium charge",
+  "testo": "The part of each payment that a policy keeps to cover its costs, before investing the rest."
+ },
+ "kid": {
+  "it": "kid",
+  "titolo": "KID",
+  "testo": "Key information document: a document of at most three pages with the key facts about an investment product: risks, scenarios and costs. It must be handed to you before you sign."
+ },
+ "stocks": {
+  "it": "azioni",
+  "titolo": "Stocks",
+  "testo": "Ownership stakes in a company. They earn through dividends and through a rising price, but nothing is guaranteed."
+ },
+ "dividend": {
+  "it": "dividendo",
+  "titolo": "Dividend",
+  "testo": "The part of profit that a company distributes to its owners, that is, to the people who hold its stock."
+ },
+ "bonds": {
+  "it": "obbligazioni",
+  "titolo": "Bonds",
+  "testo": "Loans made to a company or to a government. In return you receive interest at fixed dates, the coupons, and the repayment of the principal at maturity."
+ },
+ "coupon": {
+  "it": "cedola",
+  "titolo": "Coupon",
+  "testo": "The interest that a bond pays at fixed dates, for example once a year."
+ },
+ "redemption": {
+  "it": "rimborso",
+  "titolo": "Redemption",
+  "testo": "The paying back of the principal lent, at the maturity of the bond."
+ },
+ "mutual fund": {
+  "it": "fondo comune",
+  "titolo": "Mutual fund",
+  "testo": "A vehicle that gathers the money of many savers and invests it in many securities together. Those who take part own shares of the fund."
+ },
+ "shares": {
+  "it": "quote",
+  "titolo": "Shares",
+  "testo": "The equal parts a fund is divided into. Whoever invests in a fund buys shares, and the value of each share changes over time."
+ },
+ "etf": {
+  "it": "etf",
+  "titolo": "ETF",
+  "testo": "A fund that is bought and sold on the stock exchange like a stock. It usually tracks an index, that is, a basket of securities chosen by a fixed rule, and it costs little."
+ },
+ "risk": {
+  "it": "rischio",
+  "titolo": "Risk",
+  "testo": "The possibility that the result is different from what was expected, for better or for worse. The higher it is, the further results can move from the average."
+ },
+ "diversify": {
+  "it": "diversificare",
+  "titolo": "Diversify",
+  "testo": "Splitting your money among many different investments, so the trouble of just one weighs little on the total."
+ },
+ "time horizon": {
+  "it": "orizzonte temporale",
+  "titolo": "Time horizon",
+  "testo": "The time that passes before you need the money you invested. The longer it is, the more ups and downs you can bear."
+ },
+ "gross": {
+  "it": "lordo",
+  "titolo": "Gross",
+  "testo": "Before costs and taxes are taken out."
+ },
+ "net": {
+  "it": "netto",
+  "titolo": "Net",
+  "testo": "What is left after costs and taxes are taken out."
+ },
+ "lump sum": {
+  "it": "pic",
+  "titolo": "Lump sum",
+  "testo": "Investing a whole sum all at once, in a single go."
+ },
+ "dollar-cost averaging": {
+  "it": "pac",
+  "titolo": "Dollar-cost averaging",
+  "testo": "Investing a fixed amount at regular intervals, usually every month."
+ },
+ "average purchase price": {
+  "it": "prezzo medio di carico",
+  "titolo": "Average purchase price",
+  "testo": "What each share or unit cost you on average: the total paid in divided by the number of shares you own. It is your break-even point."
+ },
+ "asset allocation": {
+  "it": "asset allocation",
+  "titolo": "Asset allocation",
+  "testo": "How you split your money among different types of investments, for example how much in stocks and how much in bonds."
+ },
+ "rebalance": {
+  "it": "ribilanciare",
+  "titolo": "Rebalance",
+  "testo": "Bringing the portfolio back to the split you chose, by selling a bit of what went up and buying what lagged behind."
+ },
+ "loss aversion": {
+  "it": "avversione alle perdite",
+  "titolo": "Loss aversion",
+  "testo": "The tendency to suffer more from a loss than you enjoy a gain of the same size: about twice as much."
+ },
+ "fomo": {
+  "it": "fomo",
+  "titolo": "FOMO",
+  "testo": "Short for fear of missing out: the worry of being left out of a gain that others are making."
+ },
+ "herd behavior": {
+  "it": "effetto gregge",
+  "titolo": "Herd behavior",
+  "testo": "The tendency to do something because everyone is doing it, without asking whether it makes sense."
+ },
+ "bubble": {
+  "it": "bolla",
+  "titolo": "Bubble",
+  "testo": "A phase in which prices rise much more than the real value of what is being bought, pushed by enthusiasm. It ends with a sudden drop."
+ },
+ "overconfidence": {
+  "it": "eccesso di fiducia",
+  "titolo": "Overconfidence",
+  "testo": "The tendency to believe you are better or better informed than average. In investing it leads to taking too much risk and to buying and selling too often."
+ },
+ "fee": {
+  "it": "commissione",
+  "titolo": "Fee",
+  "testo": "The payment you make to an intermediary for a service, for example every time you buy or sell securities."
+ },
+ "balance sheet": {
+  "it": "stato patrimoniale",
+  "titolo": "Balance sheet",
+  "testo": "The document that takes a snapshot of a company on one specific day: what it owns, what it owes to others and what is left for its owners."
+ },
+ "assets": {
+  "it": "attività",
+  "titolo": "Assets",
+  "testo": "What a company owns: cash, inventory, equipment, money owed by customers."
+ },
+ "liabilities": {
+  "it": "passività",
+  "titolo": "Liabilities",
+  "testo": "What a company owes to others: debts with banks, suppliers, the tax authorities."
+ },
+ "equity": {
+  "it": "patrimonio netto",
+  "titolo": "Equity",
+  "testo": "What is left to the owners of a company once all the debts are paid: assets minus liabilities."
+ },
+ "income statement": {
+  "it": "conto economico",
+  "titolo": "Income statement",
+  "testo": "The document that tells the story of a period, usually a year: how much the company took in, how much it spent and how much was left."
+ },
+ "revenue": {
+  "it": "ricavi",
+  "titolo": "Revenue",
+  "testo": "What a company takes in by selling its products or services."
+ },
+ "costs": {
+  "it": "costi",
+  "titolo": "Costs",
+  "testo": "What is spent to obtain something. For a company they are raw materials, salaries, rent; for an investor they are fees and management costs."
+ },
+ "profit": {
+  "it": "utile",
+  "titolo": "Profit",
+  "testo": "What is left to a company after taking costs away from revenue."
+ },
+ "gross margin": {
+  "it": "margine lordo",
+  "titolo": "Gross margin",
+  "testo": "Revenue minus the cost of the goods sold. It tells you how much is left before paying salaries, rent and the other overhead costs."
+ },
+ "operating income": {
+  "it": "risultato operativo",
+  "titolo": "Operating income",
+  "testo": "What the company earns from its business, before paying interest and taxes."
+ },
+ "net income": {
+  "it": "utile netto",
+  "titolo": "Net income",
+  "testo": "What is left to the company after everything is taken out: costs, interest and taxes."
+ },
+ "net margin": {
+  "it": "margine netto",
+  "titolo": "Net margin",
+  "testo": "Net income divided by revenue: how many cents the company keeps for every €1 of sales."
+ },
+ "accrual basis": {
+  "it": "competenza",
+  "titolo": "Accrual basis",
+  "testo": "The rule that revenue and costs are recorded when they arise, not when the money comes in or goes out."
+ },
+ "depreciation": {
+  "it": "ammortamento",
+  "titolo": "Depreciation",
+  "testo": "The share of the cost of an asset that lasts several years, like a machine, counted in each year it is used."
+ },
+ "cash flow statement": {
+  "it": "rendiconto finanziario",
+  "titolo": "Cash flow statement",
+  "testo": "The document that shows a company's real cash movements: the money that came in and the money that went out."
+ },
+ "p/e": {
+  "it": "p/e",
+  "titolo": "P/E",
+  "testo": "The ratio between the price of a share and the earnings per share: how much you pay for each €1 of yearly earnings."
+ },
+ "central bank": {
+  "it": "banca centrale",
+  "titolo": "Central bank",
+  "testo": "The institution that manages the money of a country or an area, like the Federal Reserve for the dollar or the ECB for the euro. It sets the policy rates to keep prices stable."
+ },
+ "policy rates": {
+  "it": "tassi di riferimento",
+  "titolo": "Policy rates",
+  "testo": "The rates set by the central bank. The rates on mortgages, loans and savings accounts depend on them, one after the other."
+ },
+ "exchange rate": {
+  "it": "tasso di cambio",
+  "titolo": "Exchange rate",
+  "testo": "The price of one currency expressed in another. If the euro/dollar rate is 1.10, with 1 euro you buy 1.10 dollars."
+ },
+ "currency risk": {
+  "it": "rischio di cambio",
+  "titolo": "Currency risk",
+  "testo": "The risk of gaining or losing because the value of the currency you invested in changes."
+ },
+ "gdp": {
+  "it": "pil",
+  "titolo": "GDP",
+  "testo": "Gross domestic product: the value of all the goods and services produced in a country in a year. It is the thermometer of the economy."
+ },
+ "recession": {
+  "it": "recessione",
+  "titolo": "Recession",
+  "testo": "A phase in which the economy shrinks. The rule of thumb: GDP falls for two quarters in a row."
+ },
+ "_alias": {
+  "share": "shares"
+ },
+ "_nessun_rimando": [
+  "payment",
+  "unit",
+  "units"
+ ]
+}

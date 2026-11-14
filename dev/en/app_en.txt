@@ -1,0 +1,133 @@
+# Le frasi di app.js che arrivano nell'interfaccia inglese: frase italiana ⇒ English. {} = un valore che il codice inserisce, nello stesso ordine; \n = a capo.
+# app_patch.mjs avvolge ogni frase in L('italiano', 'English'): in italiano non cambia nulla.
+# ---- accesso (account di prova sul dispositivo) ----
+Nessun utente. ⇒ No user found.
+Email non valida. ⇒ Invalid email.
+Password troppo corta (almeno 6 caratteri). ⇒ Password too short (at least 6 characters).
+Email già registrata. Prova ad accedere. ⇒ Email already registered. Try signing in.
+Account non trovato. Registrati! ⇒ Account not found. Sign up!
+Password errata. ⇒ Wrong password.
+Password troppo debole (min 6 caratteri). ⇒ Password too weak (at least 6 characters).
+Errore. Riprova. ⇒ Error. Try again.
+# ---- calcolatrice ----
+Calcolatrice ⇒ Calculator
+Chiudi calcolatrice ⇒ Close calculator
+: premi una cifra (0\\u20139) ⇒ : press a digit (0–9)
+TVM: valore→tasto · CPT→tasto per calcolare · 2ND I/Y = P/Y (↑↓ per C/Y) · 2ND PMT = BGN ⇒ TVM: value→key · CPT→key to compute · 2ND I/Y = P/Y (↑↓ for C/Y) · 2ND PMT = BGN
+Worksheet (2ND + cifra): DATA·STAT·BOND·DEPR·BRKEVN·ICONV·MEM | 2ND % = DATE | ↑↓ naviga · ENTER salva · ENTER sui setting = cambia · 2ND CE|C esce ⇒ Worksheet (2ND + digit): DATA·STAT·BOND·DEPR·BRKEVN·ICONV·MEM | 2ND % = DATE | ↑↓ navigate · ENTER save · ENTER on settings = change · 2ND CE|C exit
+Date in formato MM.DDYY (es. 06.1526 = 15 giu 2026) ⇒ Dates as MM.DDYY (e.g. 06.1526 = Jun 15, 2026)
+# ---- OpenRouter: errori e prezzi ----
+Non riesco a raggiungere OpenRouter. Controlla la connessione e riprova. ⇒ I can't reach OpenRouter. Check your connection and try again.
+Collega il tuo OpenRouter per far rispondere Rally. ⇒ Connect your OpenRouter account so Rally can answer.
+Incolla la chiave o il codice di OpenRouter. ⇒ Paste your OpenRouter key or code.
+Il collegamento è scaduto o è partito da un altro dispositivo. Tocca di nuovo "Collega OpenRouter". ⇒ The connection expired or was started from another device. Tap "Connect OpenRouter" again.
+Questo codice non viene dal collegamento partito da qui. Tocca di nuovo "Collega OpenRouter". ⇒ This code doesn't come from the connection started here. Tap "Connect OpenRouter" again.
+OpenRouter non ha accettato il codice: vale 10 minuti e una volta sola. Tocca di nuovo "Collega OpenRouter". ⇒ OpenRouter didn't accept the code: it is valid for 10 minutes and only once. Tap "Connect OpenRouter" again.
+Questa chiave non funziona su OpenRouter: controlla di averla copiata tutta. ⇒ This key doesn't work on OpenRouter: check that you copied all of it.
+Il modello si è fermato mentre rispondeva. Riprova, o scegli un altro modello. ⇒ The model stopped while answering. Try again, or choose another model.
+La chiave di OpenRouter non vale più (forse è stata cancellata). Collega di nuovo OpenRouter. ⇒ Your OpenRouter key is no longer valid (it may have been deleted). Connect OpenRouter again.
+Su OpenRouter non ci sono crediti per questo modello. Scegli un modello gratis in Impostazioni, oppure aggiungi crediti sul tuo account. ⇒ There are no credits on OpenRouter for this model. Choose a free model in Settings, or add credits to your account.
+Troppe domande di fila: i modelli gratis hanno un limite al minuto e uno al giorno. Riprova tra un po'. ⇒ Too many questions in a row: free models have a per-minute and a per-day limit. Try again in a little while.
+Con le tue impostazioni di privacy su OpenRouter non c'è un modello disponibile. Puoi cambiarle su openrouter.ai/settings/privacy, oppure scegliere un altro modello. ⇒ With your privacy settings on OpenRouter no model is available. You can change them at openrouter.ai/settings/privacy, or choose another model.
+Il modello scelto adesso non è disponibile. Prova con "Automatico (gratis)" in Impostazioni. ⇒ The model you chose isn't available right now. Try "Automatic (free)" in Settings.
+OpenRouter non ha accettato questa domanda. ⇒ OpenRouter didn't accept this question.
+Il modello adesso non risponde. Riprova tra poco, o scegli un altro modello. ⇒ The model isn't responding right now. Try again shortly, or choose another model.
+OpenRouter ha risposto con un errore{}. ⇒ OpenRouter returned an error{}.
+ · gratis ⇒  · free
+Non costa niente: OpenRouter mette solo un limite di domande al giorno ⇒ It costs nothing: OpenRouter only sets a daily limit on questions
+Circa {} a domanda ({} per milione di token letti, {} scritti) ⇒ About {} per question ({} per million tokens read, {} written)
+Automatico ⇒ Automatic
+# ---- scelta del modello e collegamento ----
+gratis ⇒ free
+a pagamento ⇒ paid
+Cambia modello. Ora: {}, {} ⇒ Change model. Now: {}, {}
+Modello:  ⇒ Model:\s
+Scegli il modello ⇒ Choose the model
+Chiudi ⇒ Close
+I modelli gratis non costano niente, c'è solo un limite di domande al giorno. Quelli a pagamento usano i crediti del tuo account OpenRouter: il costo a domanda è una stima per una domanda tipica. ⇒ Free models cost nothing, there is only a daily limit on questions. Paid ones use the credits in your OpenRouter account: the cost per question is an estimate for a typical question.
+Tutti ⇒ All
+Gratis · {} ⇒ Free · {}
+Gratis ⇒ Free
+A pagamento · {} ⇒ Paid · {}
+A pagamento ⇒ Paid
+Cerca un modello (es. llama, gemini, claude) ⇒ Search for a model (e.g. llama, gemini, claude)
+Cerca un modello ⇒ Search for a model
+Ogni volta OpenRouter sceglie un modello gratis libero. Va bene per iniziare. ⇒ Each time, OpenRouter picks a free model that's available. Fine to start with.
+Carico i modelli di OpenRouter… ⇒ Loading OpenRouter models…
+A pagamento · {}, dal più economico ⇒ Paid · {}, cheapest first
+Ce ne sono altri {}: scrivi il nome per trovarli. ⇒ There are {} more: type the name to find them.
+Nessun modello con questo nome. ⇒ No model with this name.
+Collega OpenRouter ⇒ Connect OpenRouter
+Rally ti risponde con un modello AI che gira sul tuo account OpenRouter. Con i modelli gratis non paghi niente. ⇒ Rally answers with an AI model that runs on your OpenRouter account. With free models you pay nothing.
+La chiave resta su questo dispositivo e le domande vanno da qui a OpenRouter, senza passare da FinLearn. Se non hai un account OpenRouter, lo crei nel passaggio dopo. ⇒ The key stays on this device and your questions go from here to OpenRouter, without passing through FinLearn. If you don't have an OpenRouter account, you create one in the next step.
+Apro OpenRouter… ⇒ Opening OpenRouter…
+Collegamento annullato: OpenRouter non è collegato. ⇒ Connection canceled: OpenRouter is not connected.
+Collego OpenRouter… ⇒ Connecting OpenRouter…
+OpenRouter è collegato: ora Rally ti risponde con l'AI. ⇒ OpenRouter is connected: now Rally answers with AI.
+Hai dato il permesso su OpenRouter, ma il collegamento era partito da un'altra finestra. Copia questo codice e incollalo in FinLearn, in Profilo → Impostazioni → AI Coach → "Ho una chiave o un codice". Vale 10 minuti. ⇒ You gave permission on OpenRouter, but the connection was started from another window. Copy this code and paste it into FinLearn, in Profile → Settings → AI Coach → "I have a key or a code". It is valid for 10 minutes.
+Copiato ⇒ Copied
+Copia il codice ⇒ Copy the code
+# ---- la chat con Rally ----
+Mi dispiace, non ho ricevuto una risposta valida. ⇒ Sorry, I didn't get a valid answer.
+Risposta vuota dal modello locale. ⇒ Empty answer from the local model.
+\nRispondi in modo breve (max 80 parole). ⇒ \nAnswer briefly (max 80 words).
+Risposta vuota dal modello on-device. ⇒ Empty answer from the on-device model.
+Nuova conversazione ⇒ New conversation
+\n\n(Risposta interrotta dal modello: riprova.) ⇒ \n\n(Answer interrupted by the model: try again.)
+\n\n(La risposta si è fermata perché era lunga: scrivi «continua».) ⇒ \n\n(The answer stopped because it was long: write ‘continue’.)
+Nessun modello ha scritto una risposta{}. Riprova, o scegli un modello preciso dal tasto «Modello». ⇒ No model wrote an answer{}. Try again, or pick a specific model with the ‘Model’ button.
+ (provati: {}) ⇒  (tried: {})
+\n\n(Risposta fermata.) ⇒ \n\n(Answer stopped.)
+Il modello on-device non si è caricato. Nell'anteprima di claude.ai il download è bloccato dalla sandbox: usa questo motore nella versione pubblicata (PWA/GitHub Pages), oppure resta su Claude. ⇒ The on-device model didn't load. In the claude.ai preview the download is blocked by the sandbox: use this engine in the published version (PWA/GitHub Pages), or stay on Claude.
+Non raggiungo Ollama su {}. Verifica che sia avviato (`ollama serve`) e lanciato con OLLAMA_ORIGINS="*", e che il modello `{}` sia scaricato (`ollama pull {}`). ⇒ I can't reach Ollama at {}. Check that it is running (`ollama serve`) and was started with OLLAMA_ORIGINS="*", and that the model `{}` is downloaded (`ollama pull {}`).
+Errore di connessione al motore Claude. Riprova. ⇒ Connection error with the Claude engine. Try again.
+Il motore Claude funziona solo nell'anteprima dentro claude.ai. Qui usa OpenRouter. ⇒ The Claude engine only works in the preview inside claude.ai. Here, use OpenRouter.
+· pronto ⇒ · ready
+Claude (integrato) ⇒ Claude (built in)
+Configura Ollama ⇒ Set up Ollama
+URL OLLAMA ⇒ OLLAMA URL
+MODELLO ⇒ MODEL
+Sul computer: installa Ollama, poi  ⇒ On your computer: install Ollama, then
+Scarico il modello (solo la prima volta)… ⇒ Downloading the model (first time only)…
+🧠 Modello  ⇒ 🧠 Model
+ eseguito  ⇒  running
+dentro il browser ⇒ inside the browser
+ (WebGPU/WASM): nessuna installazione, nessuna chiave. ~350MB scaricati una sola volta al primo messaggio, poi resta in cache e funziona anche offline. Qualità da mini-modello: ottimo per hint e definizioni rapide. ⇒  (WebGPU/WASM): no installation, no key. ~350MB downloaded once at the first message, then it stays in cache and works offline too. Mini-model quality: great for hints and quick definitions.
+📝 Domanda:  ⇒ 📝 Question:
+Ciao! Sono il tuo AI Coach ⇒ Hi! I'm your AI Coach
+Posso aiutarti a capire i concetti senza darti le risposte dirette. ⇒ I can help you understand the concepts without giving you the direct answers.
+Spiegami il concetto ⇒ Explain the concept to me
+Dammi un hint ⇒ Give me a hint
+Non capisco ⇒ I don't understand
+Spiegamela più semplice ⇒ Explain it more simply
+Rifammi i conti passo per passo ⇒ Redo the math step by step
+Un trucco per ricordarla ⇒ A trick to remember it
+Dammi una domanda simile ⇒ Give me a similar question
+Chiedimi qualcosa... ⇒ Ask me something...
+# ---- la chat dentro le lezioni (finestra "chiedi a Rally") e la pagina AI Coach ----
+Risposta di\s ⇒ Answer from\s
+Riprova ⇒ Try again
+Fai rispondere Rally ⇒ Have Rally answer
+Spiegamelo più semplice ⇒ Explain it more simply
+Fammi un esempio con i numeri ⇒ Give me an example with numbers
+Interrogami su questa pagina ⇒ Quiz me on this page
+Un trucco per ricordarlo ⇒ A trick to remember it
+Torna alla lezione ⇒ Back to the lesson
+Torna al quiz ⇒ Back to the quiz
+Lezione in pausa · tocca per tornare ⇒ Lesson paused · tap to return
+Quiz in pausa · tocca per tornare ⇒ Quiz paused · tap to return
+conosce la pagina che stai leggendo ⇒ knows the page you are reading
+conosce la domanda e la tua risposta ⇒ knows the question and your answer
+\s· hai scelto {}, giusta {} ⇒ \s· you chose {}, right answer {}
+Sto pensando… ⇒ Thinking…
+Scrivi all'AI Coach ⇒ Write to the AI Coach
+Prima collega OpenRouter ⇒ Connect OpenRouter first
+Chiedi qualcosa su questa pagina… ⇒ Ask something about this page…
+Chiedi qualcosa su questa domanda… ⇒ Ask something about this question…
+Ferma la risposta ⇒ Stop the answer
+Invia ⇒ Send
+Le risposte le scrive un modello AI: possono contenere errori. ⇒ Answers are written by an AI model: they can contain mistakes.
+Più semplice ⇒ Simpler
+Interrogami su questo ⇒ Quiz me on this
+Chiedimi qualsiasi cosa… ⇒ Ask me anything…
+l'AI può sbagliare ⇒ AI can make mistakes

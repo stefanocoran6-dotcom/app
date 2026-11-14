@@ -1,5 +1,5 @@
-const CACHE = 'finlearn-v52';
-const SHELL = ['./', './index.html', './app.js', './ordine.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg', './notizie.json', './notizie/indice.json'];
+const CACHE = 'finlearn-v53';
+const SHELL = ['./', './index.html', './app.js', './ordine.js', './ordine_en.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg', './notizie.json', './notizie/indice.json'];
 
 // install: scarica il guscio saltando la cache HTTP del browser, così non si salva una versione vecchia
 self.addEventListener('install', (e) => {
@@ -16,7 +16,7 @@ self.addEventListener('fetch', (e) => {
   // OpenRouter (AI Coach): sempre dalla rete, mai in cache
   if (/(^|\.)openrouter\.ai$/.test(u.hostname)) return;
   const same = u.origin === self.location.origin;
-  const fresh = same && (e.request.mode === 'navigate' || /\/(app\.js|ordine\.js|index\.html|notizie\.json)?$/.test(u.pathname) || u.pathname.includes('/notizie/') || u.pathname.endsWith('/app.js') || u.pathname.endsWith('/ordine.js'));
+  const fresh = same && (e.request.mode === 'navigate' || /\/(app\.js|ordine\.js|ordine_en\.js|index\.html|notizie\.json)?$/.test(u.pathname) || u.pathname.includes('/notizie/') || u.pathname.endsWith('/app.js') || u.pathname.endsWith('/ordine.js') || u.pathname.endsWith('/ordine_en.js'));
   if (fresh) {
     e.respondWith(fetch(e.request, { cache: 'no-cache' }).then((res) => {
       // una pagina con parametri (es. il ritorno da OpenRouter con ?code=) non si salva: il codice non deve restare in cache
