@@ -1,232 +1,228 @@
 {
  "v": 1,
- "data": "2026-11-13",
+ "data": "2026-11-14",
  "articoli": [
   {
-   "id": "2026-11-13-irpef",
-   "cat": "Tasse",
-   "nastro": "Taglio Irpef: a chi va, secondo l'Upb",
-   "titolo": "Taglio Irpef, riguarda 8 contribuenti su 100: i conti dell'Upb",
-   "evid": "8 contribuenti su 100",
-   "sommario": "L'Ufficio parlamentare di bilancio ha calcolato chi guadagna dal taglio dell'Irpef previsto dalla manovra per il 2027: circa 3,25 milioni di persone, soprattutto tra i redditi più alti.",
-   "numero": "3,25 mln",
-   "nota": "l'8% del totale",
-   "didascalia": "I contribuenti toccati dal taglio dell'Irpef sui redditi tra 50.000 e 55.000 €, secondo le stime dell'Ufficio parlamentare di bilancio",
+   "id": "2026-11-14-carburanti",
+   "cat": "Prezzi",
+   "nastro": "Benzina e gasolio: prezzi ancora giù",
+   "titolo": "Benzina e gasolio scendono ancora: il diesel a 2,21 € al litro",
+   "evid": "scendono ancora",
+   "sommario": "Venerdì 13 novembre il prezzo medio al self service è sceso a 1,969 € al litro per la benzina e a 2,213 € per il gasolio. Sul gasolio pesa anche lo sconto sulle accise, che vale fino al 23 novembre.",
+   "numero": "2,213 €",
+   "nota": "benzina 1,969 €",
+   "didascalia": "Il prezzo medio di un litro di gasolio al self service sulla rete stradale venerdì 13 novembre, secondo i dati del ministero delle Imprese",
    "breve": [
-    "La manovra per il 2027 abbassa dal 43% al 33% l'Irpef sulla parte di reddito tra 50.000 e 55.000 € l'anno.",
-    "Secondo l'Ufficio parlamentare di bilancio la misura riguarda circa 3,25 milioni di contribuenti, l'8% del totale, e costa allo Stato 1,45 miliardi di euro.",
-    "Ne beneficia l'89% dei dirigenti, il 12% degli impiegati e l'1% degli operai. Il testo è ancora all'esame del Parlamento."
+    "Venerdì 13 novembre la benzina al self service costava in media 1,969 € al litro e il gasolio 2,213 €, secondo i dati del ministero delle Imprese e del Made in Italy.",
+    "Rispetto a martedì 10 novembre la benzina è scesa di quasi 3 centesimi al litro e il gasolio di 2,7 centesimi.",
+    "Sul gasolio c'è uno sconto sulle accise di 4,88 centesimi al litro, IVA compresa, in vigore dal 10 al 23 novembre."
    ],
    "corpo": [
     {
-     "h": "Che cosa prevede la manovra",
+     "h": "I prezzi di venerdì",
      "p": [
-      "L'**Irpef** è l'imposta sui redditi delle persone: stipendi, pensioni, guadagni di chi lavora in proprio. Funziona a scaglioni, cioè a fasce di reddito: su ogni fascia si applica una percentuale diversa, chiamata aliquota.",
-      "Nel 2026 le aliquote sono tre: 23% fino a 28.000 € l'anno, 33% da 28.000 a 50.000 €, 43% sulla parte che supera i 50.000 €. La manovra, cioè la legge di bilancio per il 2027 ora in Parlamento, allarga la seconda fascia fino a 55.000 €: sulla parte di reddito tra 50.000 e 55.000 € l'aliquota scende dal 43% al 33%.",
-      "Chi guadagna meno di 50.000 € non vede cambiamenti. Chi supera quella soglia paga dieci punti in meno su un massimo di 5.000 €: il risparmio può arrivare quindi fino a 500 € l'anno."
+      "Ogni giorno il ministero delle Imprese e del Made in Italy pubblica il prezzo medio dei carburanti, calcolato sui prezzi comunicati dai distributori. Venerdì 13 novembre, sulla rete stradale, un litro di benzina al self service costava in media 1,969 €, quasi un centesimo in meno del giorno prima. Un litro di gasolio costava 2,213 €, mezzo centesimo in meno.",
+      "In autostrada si paga di più: 1,999 € la benzina e 2,275 € il gasolio, sempre al self service."
      ]
     },
     {
-     "h": "I conti dell'Ufficio parlamentare di bilancio",
+     "h": "Quanto sono scesi in pochi giorni",
      "p": [
-      "L'Ufficio parlamentare di bilancio, in sigla Upb, è un organismo indipendente che controlla i conti pubblici. Giovedì 12 novembre la sua presidente, Lilia Cavallari, è stata ascoltata sulla manovra dalle commissioni Bilancio di Camera e Senato.",
-      "Secondo le stime dell'Upb, il taglio riguarda circa 3,25 milioni di contribuenti, l'8% del totale. Per lo Stato significa incassare 1,45 miliardi di euro in meno.",
-      "Il vantaggio non si distribuisce in modo uguale. Ne beneficia l'89% dei dirigenti, con un risparmio medio di 444 € l'anno. Tra gli impiegati ne beneficia il 12%, con una media di 52 €. Tra gli operai l'1%, con una media di 4 €."
+      "Martedì 10 novembre la media era di 1,998 € per la benzina e di 2,240 € per il gasolio. In tre giorni la benzina è quindi scesa di 2,9 centesimi al litro e il gasolio di 2,7 centesimi.",
+      "Su un pieno da 50 litri la differenza è di circa 1,45 € per la benzina e di 1,35 € per il gasolio."
      ]
     },
     {
-     "h": "Chi resta fuori",
+     "h": "Lo sconto sulle accise del gasolio",
      "p": [
-      "Sempre secondo l'Upb, i giovani fino a 35 anni sono di fatto esclusi. Nel Mezzogiorno il vantaggio medio è meno della metà di quello del Centro-Nord.",
-      "Guardando alle famiglie, l'Upb stima che il beneficio vada quasi tutto al decimo più ricco: lì lo riceve il 79% dei nuclei, con una media di 423 € l'anno. La metà delle famiglie con i redditi più bassi non riceve nulla.",
-      "Il giudizio dell'Upb è che l'intervento non risolve i problemi di fondo dell'Irpef e, anzi, li accentua."
+      "Le accise sono tasse fisse che si pagano su ogni litro di carburante, qualunque sia il prezzo del petrolio. Con un decreto, il governo ha abbassato quella sul gasolio di 4 centesimi al litro. Poiché sulle accise si paga anche l'IVA, lo sconto sul prezzo finale è di 4,88 centesimi: circa 2,44 € su un pieno da 50 litri.",
+      "Lo sconto vale da martedì 10 a lunedì 23 novembre e non riguarda la benzina. Costa allo Stato 43,2 milioni di euro, coperti con l'IVA in più incassata a ottobre: quando i carburanti rincarano, infatti, lo Stato incassa più IVA, e una parte viene restituita abbassando le accise per un periodo limitato."
      ]
     },
     {
      "h": "Che cosa succede adesso",
      "p": [
-      "Giovedì 12 novembre si sono chiuse le audizioni sulla manovra. Ora il Parlamento può modificare il testo, che va approvato entro la fine dell'anno: fino ad allora soglie e percentuali possono cambiare."
+      "Lo sconto precedente era scaduto pochi giorni prima e all'inizio della settimana il gasolio era rincarato. Quello attuale scade lunedì 23 novembre. Se non verrà rinnovato, l'accisa sul gasolio tornerà al livello pieno, 4,88 centesimi in più al litro con l'IVA."
      ]
     }
    ],
-   "perche": "L'Irpef si paga su stipendi e pensioni, quindi ogni modifica cambia il **netto** in busta paga. Per capire se una misura ti riguarda conta il tuo reddito **lordo** annuo: in questo caso, solo la parte sopra i 50.000 €.",
+   "perche": "Il prezzo alla pompa è fatto in buona parte di tasse: per questo può cambiare anche per una decisione del governo, e non solo perché cambia il prezzo del petrolio. Chi usa un'auto diesel ha una data da tenere d'occhio: lunedì 23 novembre, quando lo sconto scade.",
    "fonti": [
     {
-     "nome": "ANSA",
-     "titolo": "Le stime dell'Upb: benefici per l'89% dei dirigenti e l'1% degli operai",
-     "url": "https://www.ladige.it/attualita/upb-benefici-taglio-irpef-per-l89-dei-dirigenti-e-l1-degli-operai-uduhs95c"
-    },
-    {
      "nome": "Teleborsa",
-     "titolo": "L'audizione dell'Upb sulla manovra: Irpef, sanità e coperture",
-     "url": "https://www.teleborsa.it/News/2026/11/12/manovra-upb-manca-visione-strutturale-criticita-per-irpef-sanita-e-coperture-199.html"
+     "titolo": "I prezzi medi di benzina e gasolio di venerdì 13 novembre, dai dati del ministero",
+     "url": "https://teleborsa.ansa.it/notiziario/economia/carburanti-prezzo-medio-self-benzina-scende-a-1969-euro-e-gasolio-2213-euro/"
     },
     {
-     "nome": "ItaliaOggi",
-     "titolo": "Il taglio Irpef per categorie di lavoratori e per fasce di famiglie",
-     "url": "https://www.italiaoggi.it/diritto-e-fisco/manovra-2027-per-i-dirigenti-il-taglio-irpef-vale-444-euro-lanno-h2xsfzbn"
+     "nome": "Auto.it",
+     "titolo": "I prezzi del 13 novembre e la variazione sul giorno prima",
+     "url": "https://www.auto.it/news/attualita/caro-benzina-costi-carburante/2026/11/13-9290756/carburanti_i_prezzi_di_benzina_e_diesel_venerd_13_novembre"
     },
     {
-     "nome": "Il Fatto Quotidiano",
-     "titolo": "I numeri della memoria depositata dall'Upb in Parlamento",
-     "url": "https://www.ilfattoquotidiano.it/2026/11/12/irpef-manovra-2027-redditi-medi-stangata-drenaggio-fiscale/8569607/"
+     "nome": "Sky TG24",
+     "titolo": "Lo sconto sulle accise del gasolio e i prezzi del 10 e dell'11 novembre",
+     "url": "https://tg24.sky.it/economia/2026/11/12/diesel-benzina-sconto-accise-prezzi"
     },
     {
-     "nome": "ANSA",
-     "titolo": "L'ultimo giorno di audizioni sulla manovra",
-     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/12/giorgetti-apre-sulla-manovra-i-giochi-non-sono-fatti-ma-trovate-le-coperture_ba7f7462-173e-4722-85ec-2383cb73ecfd.html"
+     "nome": "Money.it",
+     "titolo": "Il decreto sulle accise: importo, durata, costo e copertura",
+     "url": "https://www.money.it/accise-il-mef-rideterminata-temporaneamente-l-aliquota-cosa-cambia-per-i-consumatori"
     }
    ]
   },
   {
-   "id": "2026-11-13-bce-bollettino",
-   "cat": "Tassi",
-   "nastro": "Bce: l'energia spinge ancora i prezzi",
-   "titolo": "Bce: il caro energia spingerà ancora i prezzi e frena la crescita",
-   "evid": "spingerà ancora i prezzi",
-   "sommario": "Nel bollettino economico pubblicato giovedì 12 novembre la Banca centrale europea spiega perché ha lasciato fermi i tassi e avverte: l'inflazione resterà sopra l'obiettivo del 2% nei prossimi mesi.",
-   "numero": "4,0%",
-   "nota": "a settembre 3,8%",
-   "didascalia": "L'inflazione nell'area dell'euro a ottobre, secondo la stima rapida di Eurostat: la Bce punta al 2%",
+   "id": "2026-11-14-rating-sp",
+   "cat": "Economia",
+   "nastro": "S&P conferma il voto all'Italia: BBB+",
+   "titolo": "S&P conferma il voto all'Italia: BBB+ con prospettiva positiva",
+   "evid": "prospettiva positiva",
+   "sommario": "Venerdì 13 novembre l'agenzia Standard & Poor's ha lasciato invariato il suo giudizio sull'affidabilità dell'Italia come debitore. Avverte però che energia, difesa e interessi faranno salire il deficit del 2027.",
+   "numero": "BBB+",
+   "nota": "outlook positivo",
+   "didascalia": "Il voto di Standard & Poor's sul debito a lungo termine dello Stato italiano, confermato venerdì 13 novembre",
    "breve": [
-    "Giovedì 12 novembre la Bce ha pubblicato il bollettino economico, che spiega la decisione del 29 ottobre di lasciare fermi i tassi di interesse.",
-    "L'inflazione nell'area dell'euro è salita al 3,8% a settembre e al 4,0% a ottobre, spinta dall'energia. La Bce si aspetta che salga ancora nel breve periodo.",
-    "Per la Bce i rischi sono due: prezzi più alti del previsto e crescita più debole. Le prossime decisioni sui tassi saranno prese riunione per riunione."
+    "Venerdì 13 novembre, in serata, Standard & Poor's ha confermato il voto BBB+ sul debito dell'Italia, con prospettiva positiva.",
+    "Secondo l'agenzia, le spese per energia, difesa e interessi porteranno il deficit del 2027 sopra le sue stime precedenti, e il debito scenderà solo lentamente.",
+    "Per S&P la sfida principale nel lungo periodo resta la crescita dell'economia."
    ],
    "corpo": [
     {
-     "h": "Che cos'è il bollettino",
+     "h": "Che cosa ha deciso S&P",
      "p": [
-      "La Banca centrale europea, in sigla Bce, è la **banca centrale** dei Paesi che usano l'euro. Il suo compito principale è tenere stabili i prezzi: l'obiettivo è un'**inflazione**, cioè un aumento generale dei prezzi, del 2% l'anno.",
-      "Dopo ogni riunione sui tassi di interesse la Bce pubblica un bollettino economico, un rapporto che spiega i dati su cui si è basata. Quello uscito giovedì 12 novembre riguarda la riunione del 29 ottobre, quando i tassi sono rimasti fermi. Il tasso sui depositi è al 2,50%. L'ultimo aumento, di 0,25 punti, risale al 10 settembre."
+      "Standard & Poor's, in breve S&P, è una delle grandi agenzie che danno un voto agli Stati e alle aziende che chiedono soldi in prestito. Questo voto si chiama **rating** e dice quanto è probabile che il debitore restituisca il denaro. Venerdì 13 novembre, in serata, S&P ha confermato per l'Italia il voto BBB+ sul debito a lungo termine e A-2 su quello a breve.",
+      "Ha confermato anche l'**outlook**, cioè la prospettiva: resta positivo. Vuol dire che l'agenzia considera possibile alzare il voto in futuro."
      ]
     },
     {
-     "h": "Prezzi: pesa l'energia",
+     "h": "Che cosa vuol dire BBB+",
      "p": [
-      "Secondo il bollettino, a settembre l'inflazione nell'area dell'euro è salita al 3,8%, dal 3,2% di agosto. Pesa soprattutto l'energia, i cui prezzi sono cresciuti del 18,9% in un anno. Per ottobre la stima rapida di Eurostat, l'ufficio statistico europeo, indica un altro aumento, al 4,0%. In Italia è al 5,6%.",
-      "La Bce si aspetta che l'inflazione aumenti ancora nel breve periodo. Nota però che l'**inflazione di fondo**, quella calcolata senza le voci più instabili come l'energia, è rimasta più o meno stabile, e che per ora gli stipendi non hanno reagito in modo significativo."
+      "La scala di S&P va da AAA, il voto più alto, fino a D, che indica un debitore che non paga. BBB+ sta nella fascia chiamata **investment grade**, quella dei debitori considerati affidabili: è due gradini sopra BBB−, l'ultimo voto di questa fascia."
      ]
     },
     {
-     "h": "Crescita e prestiti",
+     "h": "Le ragioni dell'agenzia",
      "p": [
-      "L'economia dell'area dell'euro continua a crescere: nel terzo trimestre il **Pil**, cioè il valore di tutto quello che si produce, è aumentato dello 0,4% rispetto ai tre mesi precedenti. Per la fine dell'anno la Bce vede una crescita che prosegue, ma moderata.",
-      "Intanto chiedere soldi in prestito costa di più. Il bollettino riporta che il tasso medio sui nuovi mutui per comprare casa è salito al 3,6% ad agosto, dal 3,5% di luglio."
+      "S&P si aspetta che le imprese e le famiglie italiane continuino a incassare dall'estero più di quanto spendono, anche se meno di prima, e che lo Stato riduca poco alla volta il suo bisogno di prendere denaro in prestito.",
+      "Ci sono però dei limiti. Secondo l'agenzia, le spese più alte per l'energia, per la difesa e per gli interessi porteranno il **deficit** del 2027 sopra le sue stime precedenti. Il deficit è la differenza tra quello che lo Stato spende e quello che incassa in un anno. Il **debito pubblico**, cioè la somma dei prestiti ancora da restituire, per S&P scenderà solo lentamente.",
+      "L'agenzia definisce ristretto il margine sui conti: lo Stato incassa più di quanto spende se non si contano gli interessi (è quello che si chiama **avanzo primario**), ma gli interessi sul debito sono alti e assorbono questo vantaggio. La sfida principale nel lungo periodo, scrive S&P, è la crescita dell'economia."
      ]
     },
     {
-     "h": "I rischi e le prossime mosse",
+     "h": "Che cosa può far salire il voto",
      "p": [
-      "Per la Bce l'incertezza è molto alta, a causa delle guerre in Medio Oriente e in Ucraina. Se le forniture di energia restassero in difficoltà a lungo, i prezzi potrebbero salire più del previsto, a danno di consumi e investimenti.",
-      "La Bce non anticipa che cosa farà con i tassi: deciderà riunione per riunione, in base ai dati. Ai governi suggerisce che gli aiuti contro il caro energia siano temporanei e mirati."
+      "S&P indica che potrebbe alzare il voto se l'Italia continuerà a rafforzare i suoi conti con l'estero o se ridurrà il peso del debito rispetto al Pil, cioè rispetto a quanto il Paese produce in un anno."
      ]
     }
    ],
-   "perche": "I tassi della Bce influenzano le rate dei mutui a **tasso variabile**, il costo dei nuovi prestiti e gli interessi sui risparmi. L'inflazione, invece, dice quanto valore perde il denaro che hai.",
+   "perche": "Il rating influenza l'interesse che lo Stato paga a chi gli presta denaro comprando i suoi titoli, come i Btp. Più interessi vuol dire meno soldi per tutto il resto, dalla sanità alle tasse. Il voto è un giudizio dell'agenzia, non una certezza su quello che succederà.",
    "fonti": [
     {
-     "nome": "BCE",
-     "titolo": "Bollettino economico n. 7 del 2026",
-     "url": "https://www.ecb.europa.eu/pub/pdf/ecbu/eb202607.it.pdf"
-    },
-    {
-     "nome": "Teleborsa",
-     "titolo": "Il bollettino Bce: rischi al rialzo per l'inflazione, al ribasso per la crescita",
-     "url": "https://www.teleborsa.it/News/2026/11/12/bce-rischi-al-rialzo-per-l-inflazione-e-al-ribasso-per-la-crescita-71.html"
-    },
-    {
-     "nome": "askanews",
-     "titolo": "Bce: lo shock dell'energia rischia di alzare l'inflazione e indebolire la crescita",
-     "url": "https://askanews.it/2026/11/12/bce-shock-energia-rischia-di-far-salire-inflazione-e-abbassare-crescita/"
-    },
-    {
      "nome": "ANSA",
-     "titolo": "Eurostat, 4 novembre: inflazione al 4% nell'area dell'euro a ottobre, in Italia 5,6%",
-     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/04/linflazione-e-salita-al-4-nelleurozona-a-ottobre_322a1cda-fea3-4327-b408-42a920c45bfc.html"
+     "titolo": "S&P conferma il rating sull'Italia: le motivazioni",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/13/sp-conferma-il-rating-sullitalia-la-crescita-superera-le-stime.-giorgetti-e-la-strada-giusta_968a7f83-4609-47b6-b8c7-0b1ab287d3a7.html"
+    },
+    {
+     "nome": "AGI",
+     "titolo": "S&P conferma BBB+ con outlook positivo: deficit, debito e interessi",
+     "url": "https://www.agi.it/economia/news/2026-11-13/standard-poor-rating-italia-40020624/"
+    },
+    {
+     "nome": "Sky TG24",
+     "titolo": "Rating confermato: perché il deficit 2027 salirà secondo S&P",
+     "url": "https://tg24.sky.it/economia/2026/11/13/standard-poor-rating-italia"
+    },
+    {
+     "nome": "Italpress",
+     "titolo": "Che cosa potrebbe far salire il rating",
+     "url": "https://www.italpress.com/sp-conferma-per-litalia-il-rating-bbb-a-2-outlook-positivo/"
     }
    ]
   },
   {
-   "id": "2026-11-13-borsa",
+   "id": "2026-11-14-borsa",
    "cat": "Borsa",
-   "nastro": "Piazza Affari chiude in lieve calo",
-   "titolo": "Piazza Affari chiude in lieve calo: pesano i titoli tecnologici",
-   "evid": "in lieve calo",
-   "sommario": "Giovedì 12 novembre la Borsa di Milano ha perso lo 0,27%, mentre le altre grandi Borse europee hanno chiuso poco sopra lo zero. A frenare è stato il settore dei chip, dopo le dimissioni del capo di Nvidia.",
-   "numero": "−0,27%",
-   "nota": "a 51.808 punti",
-   "didascalia": "La variazione del Ftse Mib, l'indice principale della Borsa di Milano, nella seduta di giovedì 12 novembre",
+   "nastro": "Piazza Affari chiude quasi ferma: +0,10%",
+   "titolo": "Piazza Affari chiude la settimana quasi ferma: +0,10%",
+   "evid": "quasi ferma",
+   "sommario": "Venerdì 13 novembre la Borsa di Milano si è mossa poco, come le altre Borse europee. Tra i dati del giorno, la conferma che nel terzo trimestre l'economia italiana non è cresciuta.",
+   "numero": "+0,10%",
+   "nota": "a 51.858 punti",
+   "didascalia": "La variazione del Ftse Mib, l'indice principale della Borsa di Milano, nella seduta di venerdì 13 novembre",
    "breve": [
-    "Giovedì 12 novembre il Ftse Mib, l'indice principale della Borsa di Milano, ha chiuso a 51.808 punti, in calo dello 0,27%.",
-    "Hanno pesato i titoli legati alla tecnologia, dopo le dimissioni del fondatore e amministratore delegato di Nvidia. A New York Nvidia ha chiuso a −4,3%.",
-    "Lo spread tra titoli di Stato italiani e tedeschi è salito di poco, intorno a 104 punti."
+    "Venerdì 13 novembre il Ftse Mib, l'indice principale della Borsa di Milano, ha chiuso a 51.858 punti, in rialzo dello 0,10%.",
+    "Fincantieri ha perso oltre il 4% dopo la pubblicazione dei conti. Tra i rialzi Eni (+1,98%) e Amplifon (+2,47%).",
+    "Eurostat ha confermato che tra luglio e settembre l'economia della zona euro è cresciuta dello 0,4%, mentre quella italiana è rimasta ferma."
    ],
    "corpo": [
     {
      "h": "La seduta a Milano",
      "p": [
-      "Piazza Affari è il nome con cui si chiama la Borsa di Milano. Il suo termometro è il Ftse Mib, un **indice** che riassume l'andamento delle 40 società più grandi. Giovedì 12 novembre ha chiuso a 51.808 punti, lo 0,27% in meno rispetto a mercoledì 11, quando era salito dello 0,37%.",
-      "In mattinata l'indice era sopra i 52.000 punti, poi è sceso. Le altre grandi Borse europee hanno chiuso in lieve rialzo: Francoforte, per esempio, ha guadagnato lo 0,41%."
+      "Venerdì 13 novembre il Ftse Mib, l'**indice** che riassume l'andamento delle 40 società più grandi della Borsa di Milano, ha chiuso a 51.858 punti: lo 0,10% in più di giovedì 12, quando aveva perso lo 0,27%. Poco mosse anche le altre Borse europee: Londra ha guadagnato circa lo 0,3%, Parigi è rimasta quasi ferma e Francoforte ha chiuso poco sotto lo zero.",
+      "Secondo le agenzie di stampa, gli operatori guardano soprattutto alle prossime mosse della **Fed**, la banca centrale degli Stati Uniti: negli ultimi giorni sui mercati è tornata l'ipotesi che possa alzare i tassi di interesse."
      ]
     },
     {
-     "h": "Perché la tecnologia ha frenato",
+     "h": "Chi è salito e chi è sceso",
      "p": [
-      "Giovedì 12 novembre Nvidia, l'azienda americana che produce i chip più usati per l'intelligenza artificiale, ha comunicato che il fondatore Jensen Huang lascia con effetto immediato la guida della società. Il posto di amministratore delegato passa in via provvisoria alla direttrice finanziaria, Colette Kress, mentre il consiglio cerca un sostituto.",
-      "Le vendite hanno colpito i titoli della tecnologia. A Milano ne ha risentito Technoprobe, che lavora per l'industria dei chip: le sue **azioni** hanno perso il 4,73%. Tra i cali più forti anche Amplifon (−5,29%) e Stellantis (−4,33%). Dall'altra parte, Italgas ha guadagnato l'1,86%."
-     ]
-    },
-    {
-     "h": "Che cosa è successo a New York",
-     "p": [
-      "A **Wall Street**, la Borsa di New York, le azioni Nvidia nei primi scambi hanno perso circa il 14% e hanno poi recuperato in parte, chiudendo a −4,3%. Altre aziende dei chip sono invece salite: AMD e Broadcom hanno guadagnato quasi il 6%. I tre indici principali americani hanno chiuso in calo di circa lo 0,4%.",
-      "Martedì 17 novembre Nvidia pubblicherà i risultati del trimestre, come già previsto."
+      "Il calo più forte tra le società maggiori è stato quello di Fincantieri, che costruisce navi: le sue **azioni** hanno perso oltre il 4% dopo la pubblicazione dei conti, avvenuta il giorno prima. In calo anche Prysmian (−2,58%) e Unipol (−1,22%).",
+      "Dall'altra parte, Brunello Cucinelli è salita di circa il 3%, Amplifon del 2,47% ed Eni dell'1,98%."
      ]
     },
     {
      "h": "Lo spread",
      "p": [
-      "Lo **spread** è la differenza tra il rendimento dei titoli di Stato italiani a dieci anni, i **Btp**, e quello dei titoli tedeschi. Misura quanto costa in più all'Italia farsi prestare denaro rispetto alla Germania. Giovedì 12 novembre ha chiuso intorno a 104 **punti base**, cioè 1,04 punti percentuali, un paio di punti base in più del giorno prima."
+      "Lo **spread**, cioè la differenza tra il rendimento dei titoli di Stato italiani a dieci anni, i **Btp**, e quello dei titoli tedeschi, ha chiuso a 104 **punti base**, cioè 1,04 punti percentuali: quasi come il giorno prima. Il rendimento del Btp a dieci anni è intorno al 4,4%."
+     ]
+    },
+    {
+     "h": "I dati del giorno",
+     "p": [
+      "Venerdì 13 novembre Eurostat, l'ufficio di statistica dell'Unione europea, ha confermato la sua prima stima sul terzo trimestre, cioè sui mesi da luglio a settembre. Il **Pil** della zona euro, cioè il valore di tutto quello che i Paesi dell'euro hanno prodotto, è cresciuto dello 0,4% rispetto ai tre mesi precedenti, quando era salito dello 0,6%. In Italia la crescita è stata zero, dopo il +0,2% del secondo trimestre. La Spagna è cresciuta dello 0,6%, la Germania dello 0,2%, mentre la Francia ha perso lo 0,1%.",
+      "Lo stesso giorno l'Istat ha pubblicato i dati di settembre sugli scambi con l'estero. L'Italia ha venduto all'estero merci per un valore più alto del 3,8% rispetto a settembre 2025, ma le quantità sono scese del 3,4%: sono saliti i prezzi, non i volumi."
      ]
     }
    ],
-   "perche": "Una seduta in calo non dice dove andranno i prezzi. Mostra però come una notizia su una sola grande azienda possa muovere un intero settore, anche a Milano: è uno dei motivi per cui l'andamento di un indice e quello di un singolo titolo possono essere molto diversi.",
+   "perche": "Una seduta quasi ferma non dice dove andranno i prezzi. I dati sul Pil contano di più per la vita di tutti i giorni: quando un'economia non cresce, con il tempo è più difficile che aumentino i posti di lavoro e gli stipendi.",
    "fonti": [
     {
      "nome": "ANSA",
-     "titolo": "Milano chiude a −0,27%, giù Technoprobe",
-     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/12/borsa-milano-chiude-a-027-technoprobe-giu-su-tonfo-nvidia_d4b86315-48e2-44d1-b891-169061d4b61b.html"
-    },
-    {
-     "nome": "Money.it",
-     "titolo": "La chiusura del Ftse Mib a 51.808,67 punti, titolo per titolo",
-     "url": "https://www.money.it/piazza-affari-chiude-in-calo-ftse-mib-12-11-2026"
-    },
-    {
-     "nome": "Teleborsa",
-     "titolo": "L'Europa chiude in lieve rialzo, debole Milano; spread a 104 punti",
-     "url": "https://teleborsa.ansa.it/notiziario/finanza/europa-chiude-in-frazionale-rialzo-debole-invece-milano/"
+     "titolo": "Milano chiude in lieve rialzo, Ftse Mib a 51.858 punti",
+     "url": "https://www.ladige.it/attualita/borsa-milano-chiude-in-lieve-rialzo-ftse-mib-0-1-s8443bpp"
     },
     {
      "nome": "ANSA",
-     "titolo": "Lo spread chiude in rialzo a 104,4 punti base",
-     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/12/lo-spread-tra-btp-e-bund-chiude-in-rialzo-a-1044-punti-base_96944f20-b9b4-4f06-afc6-4fdfa2327db7.html"
+     "titolo": "La seduta in Europa e i titoli di Milano",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/13/borsa-milano-cauta-con-leuropa-in-attesa-della-fed-scivola-fincantieri_e98a131a-7975-4e7b-8f43-71bf52fafd8f.html"
     },
     {
-     "nome": "SEC",
-     "titolo": "Il comunicato di Nvidia sul cambio al vertice",
-     "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000082/nvidiaannouncesceotransiti.htm"
+     "nome": "Money.it",
+     "titolo": "La chiusura del Ftse Mib a 51.858,51 punti, titolo per titolo",
+     "url": "https://www.money.it/piazza-affari-chiude-in-lieve-rialzo-ftse-13-11-2026"
     },
     {
-     "nome": "askanews",
-     "titolo": "Wall Street chiude in calo dopo l'addio del capo di Nvidia",
-     "url": "https://askanews.it/2026/11/12/wall-street-chiude-in-calo-dopo-addio-huang-a-nvidia-dj-036/"
+     "nome": "Teleborsa",
+     "titolo": "La chiusura delle Borse europee e i dati del giorno",
+     "url": "https://www.teleborsa.it/News/2026/11/13/settimana-positiva-per-l-azionario-europeo-nonostante-le-incertezze-sul-tech-193.html"
     },
     {
-     "nome": "Yahoo Finance",
-     "titolo": "La seduta del 12 novembre a Wall Street",
-     "url": "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nasdaq-p-131805045.html"
+     "nome": "ANSA",
+     "titolo": "Lo spread chiude poco mosso a 104 punti base",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/13/lo-spread-tra-btp-e-bund-chiude-poco-mosso-a-104-punti-base_afb5e3a1-e8bb-4da9-b684-bbb34a0424ba.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Eurostat: Pil della zona euro +0,4% nel terzo trimestre, Italia a zero",
+     "url": "https://www.ilnordest.it/italia-ed-esteri/eurostat-pil-eurozona-0-4-nel-terzo-trimestre-italia-a-zero-pgyrapts"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Zona euro, il Pil del terzo trimestre confermato a +0,4%",
+     "url": "https://www.teleborsa.it/News/2026/11/13/zona-euro-pil-3-trimestre-conferma-0-4percent-t-t-e-1-3percent-annuo-63.html"
+    },
+    {
+     "nome": "Istat",
+     "titolo": "Commercio con l'estero e prezzi all'import, settembre 2026",
+     "url": "https://www.istat.it/comunicato-stampa/commercio-con-lestero-e-prezzi-allimport-settembre-2026/"
     }
    ]
   }

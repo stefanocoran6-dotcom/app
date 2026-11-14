@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-13",
+ "aggiornato": "2026-11-14",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-14-carburanti",
+   "data": "2026-11-14",
+   "cat": "Prezzi",
+   "titolo": "Benzina e gasolio scendono ancora: il diesel a 2,21 € al litro",
+   "nastro": "Benzina e gasolio: prezzi ancora giù",
+   "numero": "2,213 €",
+   "min": 3
+  },
+  {
+   "id": "2026-11-14-rating-sp",
+   "data": "2026-11-14",
+   "cat": "Economia",
+   "titolo": "S&P conferma il voto all'Italia: BBB+ con prospettiva positiva",
+   "nastro": "S&P conferma il voto all'Italia: BBB+",
+   "numero": "BBB+",
+   "min": 3
+  },
+  {
+   "id": "2026-11-14-borsa",
+   "data": "2026-11-14",
+   "cat": "Borsa",
+   "titolo": "Piazza Affari chiude la settimana quasi ferma: +0,10%",
+   "nastro": "Piazza Affari chiude quasi ferma: +0,10%",
+   "numero": "+0,10%",
+   "min": 3
+  },
   {
    "id": "2026-11-13-irpef",
    "data": "2026-11-13",
