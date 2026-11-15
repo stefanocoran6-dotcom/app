@@ -159,9 +159,9 @@ html .o-app .o-coach button{text-align:center}
 html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(safe-area-inset-bottom) + 66px) - var(--ord-gap, 0px))!important}
 .o-rich.sm{font-size:15px;line-height:22px;font-weight:600}
 .o-rich.q{font-size:17px;line-height:25px;font-weight:700}
-.o-ovl{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(26,26,26,.45)}
+.o-ovl{position:absolute;inset:0;z-index:41;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(26,26,26,.45)}
 .o-bs{position:relative;max-height:92%;display:flex;flex-direction:column;border:2.5px solid ${INK};border-bottom:0;border-radius:28px 28px 0 0;margin:0 -3px;padding:18px 23px max(20px,calc(env(safe-area-inset-bottom) + 6px));background:#fff}
-.o-toast{position:absolute;left:20px;right:20px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:30;padding:12px 16px;background:${INK};color:#fff;border-radius:16px;font-size:15px;line-height:20px;font-weight:700;text-align:center}
+.o-toast{position:absolute;left:20px;right:20px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:42;padding:12px 16px;background:${INK};color:#fff;border-radius:16px;font-size:15px;line-height:20px;font-weight:700;text-align:center}
 .o-inp{width:100%;height:54px;padding:0 16px;background:#fff;border:2.5px solid ${INK};border-radius:16px;font:inherit;font-size:16px;font-weight:700;color:${INK}}
 .o-sw{position:relative;width:50px;height:30px;flex:none;border:2px solid ${INK};border-radius:99px;background:#fff;transition:background .15s}
 .o-sw>i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:${INK};transition:transform .15s}
