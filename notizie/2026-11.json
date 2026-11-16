@@ -3,6 +3,157 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-16-manovra",
+   "cat": "Manovra",
+   "nastro": "Manovra, modifiche entro martedì 17",
+   "titolo": "Manovra, via il taglio alla scuola: modifiche entro martedì 17",
+   "evid": "via il taglio alla scuola",
+   "sommario": "Venerdì 13 novembre il governo ha annunciato che ritirerà la norma che riduceva di quasi 7.000 posti il personale della scuola. Le proposte di modifica alla legge di bilancio vanno presentate alla Camera entro martedì 17 novembre.",
+   "numero": "7.000",
+   "nota": "posti nella scuola",
+   "didascalia": "I posti tra insegnanti e personale Ata, quasi 7.000, che la manovra prevedeva di ridurre: il governo ha annunciato il ritiro della norma",
+   "breve": [
+    "Venerdì 13 novembre, dopo un incontro con sindacati e imprese a Palazzo Chigi, il governo ha annunciato il ritiro della norma che riduceva di quasi 7.000 posti il personale della scuola.",
+    "Le proposte di modifica alla manovra, cioè gli emendamenti, vanno presentate in commissione Bilancio alla Camera entro le 18 di martedì 17 novembre.",
+    "Si discute anche di sanità, pensioni e Superbonus, ma su questi punti non c'è ancora nulla di deciso."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "La manovra è la legge di bilancio: stabilisce le **entrate** e le **uscite** dello Stato per il 2027. La scrive il governo e la esamina il Parlamento, che può cambiarla.",
+      "Venerdì 13 novembre il governo ha incontrato a Palazzo Chigi i sindacati e le associazioni delle imprese. Dopo le critiche ricevute nelle ultime settimane, si è detto disponibile a correggere alcune misure."
+     ]
+    },
+    {
+     "h": "La scuola",
+     "p": [
+      "La manovra prevedeva di ridurre di quasi 7.000 posti il personale della scuola, tra insegnanti e personale Ata, cioè chi lavora nelle segreterie, nei laboratori e nei servizi. Il governo ha annunciato che questa norma sarà ritirata. La presidente del Consiglio, Giorgia Meloni, ha detto in un video che a suo giudizio non si trattava di tagli, ma di un modo per adeguare il personale al numero degli studenti.",
+      "Restano due punti aperti. Non è ancora deciso se la riduzione sarà cancellata del tutto o solo rinviata. E bisogna trovare altrove i soldi che quella norma avrebbe fatto risparmiare."
+     ]
+    },
+    {
+     "h": "Gli altri punti in discussione",
+     "p": [
+      "Sanità. Il governo si è detto disponibile ad aumentare i fondi, ma non ha indicato cifre. Le Regioni, che gestiscono ospedali e ambulatori, giudicano insufficienti le risorse previste.",
+      "Pensioni. Ogni anno gli assegni vengono adeguati all'aumento dei prezzi, per difendere il **potere d'acquisto**. La manovra riduce questo adeguamento per le pensioni più alte e una parte della maggioranza chiede di attenuare la stretta. Si discute anche di come usare un fondo da 850 milioni di euro pensato per chi vuole lasciare il lavoro prima.",
+      "Superbonus. Una norma allunga a dieci anni i tempi con cui vengono rimborsati i crediti nati dai lavori edilizi agevolati. Banche e imprese la contestano, perché riceverebbero i soldi più lentamente. Il governo sta cercando una soluzione diversa."
+     ]
+    },
+    {
+     "h": "Che cosa succede adesso",
+     "p": [
+      "Gli emendamenti, cioè le proposte di modifica, vanno presentati in commissione Bilancio alla Camera entro le 18 di martedì 17 novembre. Possono presentarli sia i partiti che sostengono il governo sia quelli di opposizione. Anche il ritiro della norma sulla scuola dovrà passare da un emendamento.",
+      "Poi la commissione li esaminerà e li voterà. La legge di bilancio deve essere approvata dalla Camera e dal Senato entro la fine dell'anno. Fino al voto finale nulla è definitivo: anche le misure annunciate possono ancora cambiare."
+     ]
+    }
+   ],
+   "perche": "La manovra decide molte cose che toccano le famiglie: tasse, pensioni, scuola, sanità. Quello che si legge in questi giorni è spesso un annuncio o una proposta: per sapere che cosa cambia davvero bisogna aspettare il testo approvato dal Parlamento.",
+   "fonti": [
+    {
+     "nome": "LaPresse",
+     "titolo": "L'incontro a Palazzo Chigi, il ritiro della norma sulla scuola e la scadenza degli emendamenti",
+     "url": "https://www.lapresse.it/economia/2026/11/14/manovra-2027-dietrofront-sui-tagli-alla-scuola-si-cercano-risorse-per-la-sanita/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "I punti della manovra su cui si preparano le modifiche",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/14/dal-superbonus-alla-sanita-la-carica-degli-emendamenti-alla-manovra_8573b4c5-be0d-4e03-aa95-0c2d6ea8e11c.html"
+    },
+    {
+     "nome": "Fanpage",
+     "titolo": "L'annuncio sulla scuola, il video di Meloni e che cosa resta da decidere",
+     "url": "https://www.fanpage.it/politica/il-governo-meloni-si-rimangia-i-7mila-tagli-alla-scuola-saranno-cancellati-dalla-manovra-2027/"
+    },
+    {
+     "nome": "QuiFinanza",
+     "titolo": "Scuola, sanità, pensioni e Superbonus: le misure in discussione",
+     "url": "https://quifinanza.it/economia/pensioni-exit-tax-emendamenti-manovra-2027/1024403/"
+    }
+   ],
+   "data": "2026-11-16"
+  },
+  {
+   "id": "2026-11-16-mercati",
+   "cat": "Borsa",
+   "nastro": "Borse su nella settimana: Milano +3,61%",
+   "titolo": "Borse, settimana in rialzo: Milano +3,61%. Venerdì frena New York",
+   "evid": "settimana in rialzo",
+   "sommario": "Nella settimana chiusa venerdì 13 novembre la Borsa di Milano ha guadagnato il 3,61% e gli indici americani sono saliti di oltre il 2%. Nell'ultima seduta, però, a New York due indici su tre hanno chiuso in calo: pesano i titoli tecnologici e l'attesa di un rialzo dei tassi negli Stati Uniti.",
+   "numero": "+3,61%",
+   "nota": "S&P 500 +2,51%",
+   "didascalia": "La variazione del Ftse Mib, l'indice principale della Borsa di Milano, nella settimana chiusa venerdì 13 novembre",
+   "breve": [
+    "Nella settimana chiusa venerdì 13 novembre il Ftse Mib, l'indice principale della Borsa di Milano, è salito del 3,61% e ha chiuso a 51.858 punti.",
+    "A New York la settimana è finita con rialzi di oltre il 2%, ma venerdì 13 l'S&P 500 ha perso lo 0,40% e il Nasdaq lo 0,91%.",
+    "I mercati si aspettano che mercoledì 9 dicembre la Fed, la banca centrale americana, alzi i tassi di interesse per frenare i prezzi."
+   ],
+   "corpo": [
+    {
+     "h": "La settimana in numeri",
+     "p": [
+      "Venerdì 13 novembre il Ftse Mib, l'**indice** che riassume l'andamento delle società più grandi della Borsa di Milano, ha chiuso a 51.858 punti. Rispetto al venerdì precedente ha guadagnato il 3,61%.",
+      "È andata bene anche **Wall Street**, la Borsa di New York. Nella settimana l'S&P 500, l'indice delle 500 maggiori società americane, è salito del 2,51%. Il Nasdaq, dove pesano molto le aziende tecnologiche, ha guadagnato il 2,27% e il Dow Jones il 2,07%."
+     ]
+    },
+    {
+     "h": "La frenata di venerdì",
+     "p": [
+      "L'ultima seduta della settimana è stata però negativa per due indici americani su tre. Venerdì 13 novembre l'S&P 500 ha chiuso in calo dello 0,40%, a 7.562 punti, e il Nasdaq dello 0,91%, a 25.136 punti. Il Dow Jones è salito dello 0,10%, a 52.348 punti.",
+      "A scendere sono state soprattutto le società che producono chip, i componenti che fanno funzionare computer e telefoni. Nvidia, che produce i chip usati per l'intelligenza artificiale, ha perso circa il 2% nella seduta e quasi il 13% nella settimana, dopo le dimissioni del suo amministratore delegato."
+     ]
+    },
+    {
+     "h": "Perché si guarda alla Fed",
+     "p": [
+      "Negli Stati Uniti i prezzi stanno salendo in fretta. Venerdì 13 novembre è uscito il dato sui prezzi alla produzione, cioè quelli a cui le aziende vendono i loro prodotti prima che arrivino nei negozi. A ottobre erano più alti del 6,5% rispetto a un anno prima: è l'aumento più forte da novembre 2022. Rispetto a settembre sono saliti dello 0,3%, un po' meno delle attese.",
+      "Per frenare l'**inflazione** la **Fed**, la banca centrale americana, può alzare i tassi di interesse: prendere denaro in prestito costa di più e la spesa rallenta. La prossima decisione è attesa mercoledì 9 dicembre. Dai prezzi che si formano sui mercati risulta che gli operatori si aspettano un rialzo di almeno 25 **punti base**, cioè 0,25 punti percentuali, e danno una probabilità di circa il 10% a un rialzo doppio."
+     ]
+    },
+    {
+     "h": "Che cosa c'entra con l'Europa",
+     "p": [
+      "Quando ci si aspettano tassi più alti negli Stati Uniti, salgono i rendimenti dei titoli di Stato americani, cioè gli interessi che lo Stato paga a chi gli presta denaro: nei giorni scorsi quello a dieci anni ha superato il 5%.",
+      "Tassi più alti tendono anche a rafforzare il dollaro. Venerdì 13 novembre un euro valeva circa 1,10 dollari. Il cambio conta anche per chi non investe: molte materie prime si pagano in dollari, a cominciare dal petrolio. Il Brent, il petrolio di riferimento in Europa, era intorno a 96 dollari al barile."
+     ]
+    }
+   ],
+   "perche": "Una settimana in rialzo non dice che cosa succederà dopo. Serve di più capire il meccanismo: le decisioni della Fed sui tassi muovono il dollaro, i rendimenti e le Borse di tutto il mondo, comprese quelle europee. La prossima decisione è attesa il 9 dicembre.",
+   "fonti": [
+    {
+     "nome": "Money.it",
+     "titolo": "La chiusura del Ftse Mib di venerdì 13 novembre e il bilancio della settimana",
+     "url": "https://www.money.it/piazza-affari-chiude-in-lieve-rialzo-ftse-13-11-2026"
+    },
+    {
+     "nome": "SoldiOnline",
+     "titolo": "Il commento alla seduta di Milano del 13 novembre, con euro e petrolio",
+     "url": "https://www.soldionline.it/notizie/azioni-italia/borsa-italiana-commento-giornata-13-novembre-2026"
+    },
+    {
+     "nome": "MarketScreener",
+     "titolo": "La chiusura di Wall Street del 13 novembre, il bilancio della settimana e le attese sulla Fed",
+     "url": "https://it.marketscreener.com/notizie/wall-street-in-calo-l-incertezza-su-nvidia-trascina-al-ribasso-i-titoli-tecnologici-ce785eded98af723"
+    },
+    {
+     "nome": "TheStreet",
+     "titolo": "Gli indici americani del 13 novembre, i prezzi alla produzione e la Fed (in inglese)",
+     "url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-nov-13-2026"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Il calo di Nvidia nella seduta e nella settimana",
+     "url": "https://www.ansa.it/sito/notizie/mondo/2026/11/13/nvidia-chiude-a-201-perso-quasi-il-13-nella-settimana-con-lo-scandalo-huang_095fab73-de50-48c7-95a4-030d8c2a504b.html"
+    },
+    {
+     "nome": "Milano Finanza",
+     "titolo": "Il rendimento dei titoli di Stato americani a dieci anni oltre il 5% e la riunione della Fed",
+     "url": "https://www.milanofinanza.it/investimenti-trading/rendimento-treasury-10y-oltre-il-5-202611121550364779"
+    }
+   ],
+   "data": "2026-11-16"
+  },
+  {
    "id": "2026-11-14-carburanti",
    "cat": "Prezzi",
    "nastro": "Benzina e gasolio: prezzi ancora giù",

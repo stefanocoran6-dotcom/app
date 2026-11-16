@@ -1,10 +1,28 @@
 {
  "v": 1,
- "aggiornato": "2026-11-14",
+ "aggiornato": "2026-11-16",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-16-manovra",
+   "data": "2026-11-16",
+   "cat": "Manovra",
+   "titolo": "Manovra, via il taglio alla scuola: modifiche entro martedì 17",
+   "nastro": "Manovra, modifiche entro martedì 17",
+   "numero": "7.000",
+   "min": 3
+  },
+  {
+   "id": "2026-11-16-mercati",
+   "data": "2026-11-16",
+   "cat": "Borsa",
+   "titolo": "Borse, settimana in rialzo: Milano +3,61%. Venerdì frena New York",
+   "nastro": "Borse su nella settimana: Milano +3,61%",
+   "numero": "+3,61%",
+   "min": 3
+  },
   {
    "id": "2026-11-14-carburanti",
    "data": "2026-11-14",
