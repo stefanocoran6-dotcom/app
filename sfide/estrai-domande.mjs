@@ -10,8 +10,18 @@ const fuori = { basi: [], cfa2: [] };
 
 // Basi della finanza: gli esercizi a scelta delle lezioni (basi.json lo scrive dev/ordine/basi_src.py)
 const basi = JSON.parse(readFileSync(join(APP, 'dev/ordine/basi.json'), 'utf8'));
+// La versione inglese delle stesse lezioni (dev/en/basi_en.json): chi gioca con l'app in inglese riceve questo testo.
+// Vale solo se la domanda inglese ha le stesse risposte nello stesso ordine: così la giusta è la stessa per tutti e due i telefoni.
+// "eu": la lezione ha una variante americana scritta a parte, quindi nel testo inglese l'euro è proprio l'euro e il telefono non lo cambia in dollaro.
+const inglese = new Map(); let senzaInglese = 0;
+for (const u of JSON.parse(readFileSync(join(APP, 'dev/en/basi_en.json'), 'utf8'))) for (const l of u.lessons) inglese.set(l.key, l);
 for (const u of basi) for (const l of u.lessons) (l.ex || []).filter(e => e.type === 'mcq').forEach((e, i) => {
-  fuori.basi.push({ k: l.key + (i ? '#' + i : ''), q: e.q, o: e.options, a: e.ans, e: e.exp || '' });
+  const d = { k: l.key + (i ? '#' + i : ''), q: e.q, o: e.options, a: e.ans, e: e.exp || '' };
+  const le = inglese.get(l.key), ee = le && (le.ex || []).filter(x => x.type === 'mcq')[i];
+  if (ee && Array.isArray(ee.options) && ee.options.length === e.options.length && ee.ans === e.ans && String(ee.q || '').trim() && new Set(ee.options.map(x => String(x).trim())).size === ee.options.length) {
+    d.en = { q: ee.q, o: ee.options, e: ee.exp || '' }; if (le.us) d.eu = true;
+  } else { senzaInglese++; if (le) console.error(`attenzione, ${d.k}: la versione inglese non corrisponde (risposte diverse o in altro ordine): resta solo in italiano`); }
+  fuori.basi.push(d);
 });
 
 // CFA Level II: la domanda d'esame di ogni LOS, nello stesso ordine dei percorsi dell'app
@@ -40,4 +50,4 @@ for (const [corso, lista] of Object.entries(fuori)) {
 }
 if (errori.length) { console.error('Domande non valide:\n' + errori.join('\n')); process.exit(1); }
 writeFileSync(join(QUI, 'src/domande.json'), JSON.stringify(fuori));
-console.log(`domande dell'arbitro ok: ${fuori.basi.length} basi, ${fuori.cfa2.length} CFA Level II`);
+console.log(`domande dell'arbitro ok: ${fuori.basi.length} basi (${fuori.basi.length - senzaInglese} anche in inglese), ${fuori.cfa2.length} CFA Level II`);

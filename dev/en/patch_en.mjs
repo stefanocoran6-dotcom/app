@@ -15,8 +15,15 @@ export default [
   // ============================ p10_data: percorsi, dati, punteggi ============================
   [/  learn: \['Come lavorano interessi, inflazione e tempo'[^\n]*/, "  learn: ['How interest, inflation and time work', 'How to keep income, spending and savings in order', 'What loans and mortgages cost, and the math to do before buying a home', 'How to protect yourself from the unexpected', 'What stocks, funds and ETFs are, and how to invest a little at a time', 'What mistakes our brain makes when investing', 'How to read a company\\'s financial statements, and how the economy works'],"],
   ["const RIVALS = ['Giulia', 'Luca', 'Marco', 'Sara', 'Paolo', 'Elena', 'Davide', 'Chiara', 'Matteo'];", "const RIVALS = ['Emma', 'Liam', 'Noah', 'Olivia', 'Ethan', 'Mia', 'Lucas', 'Ava', 'Mason'];"],
-  // ============================ p50_more: il Profilo senza la lega (la lega vive nelle Sfide, che in inglese non ci sono) ============================
-  ['${name}</h1><${Pill}>${lg.name}<//></div>`}>', '${name}</h1></div>`}>', 1],
+  // ============================ p50_more: la posizione in lega (in italiano 3°, in inglese #3) ============================
+  ["const ord = n => `${n}°`;", "const ord = n => `#${n}`;", 1],
+  // la barra in basso: «Challenges» è più lunga di «Sfide», quindi in inglese ogni scheda è larga quanto la sua scritta (su 320 px altrimenti si taglia)
+  ['.o-tab{flex:1 1 0;min-width:0;', '.o-tab{flex:1 1 auto;min-width:0;padding:0 3px;', 1],
+  // il punteggio di una sfida: «3 a 2» diventa «3 to 2» (frase troppo corta per il dizionario)
+  ['${a} a ${b}</span>', '${a} to ${b}</span>', 1],
+  // sfida dal vivo: «Tu e Anna» sotto la risposta scelta da tutti e due
+  ["k === opC ? opName : null].filter(Boolean).join(' e ') || null", "k === opC ? opName : null].filter(Boolean).join(' and ') || null", 1],
+  ['${livePts(f.punti[io] || 0)} a ${livePts(f.punti[op] || 0)}</span>', '${livePts(f.punti[io] || 0)} to ${livePts(f.punti[op] || 0)}</span>', 1],
   // ============================ catalogo: senza esami (CFA, FRM e CAIA in inglese non ci sono) ============================
   ["const chips = [['all', 'Tutti'], ['basi', 'Basi'], ['invest', 'Investire'], ['cert', 'Esami']];", "const chips = [['all', 'Tutti'], ['basi', 'Basi'], ['invest', 'Investire']];", 1],
   ["\n  { id: 'cfa1', name: 'CFA Level I', group: 'cert' }, { id: 'frm1', name: 'FRM Part I', group: 'cert' }, { id: 'caia1', name: 'CAIA Level I', group: 'cert' }", '', 1],
@@ -50,7 +57,4 @@ export default [
   ["nk === 1 ? 'nota un\\'unità' : 'note ' + (NUM_IT[nk] || nk) + ' unità'", "nk === 1 ? 'one unit' : (NUM_IT[nk] || nk) + ' units'"],
   ["${d} ${d === 1 ? 'lezione fatta' : 'lezioni fatte'} su ${ls.length}", "${d} of ${ls.length} lessons done"],
   ["[[c.lessons.length, 'lezioni'], [c.units.length, c.group === 'cert' ? 'argomenti' : 'unità'], [mins < 90 ? mins + ' min' : Math.round(mins / 60) + ' ore', 'in tutto']]", "[[c.lessons.length, 'lessons'], [c.units.length, c.group === 'cert' ? 'topics' : 'units'], [mins < 90 ? mins + ' min' : Math.round(mins / 60) + ' hours', 'in total']]"],
-  ["<p>Nelle sfide dal vivo il tuo nome e le tue risposte passano dall'arbitro di FinLearn, su Cloudflare, solo per la durata della partita: alla fine si cancella tutto.</p>", ""],
-  // gli inviti alle sfide dal vivo non si aprono nella versione inglese (le sfide per ora ci sono solo in italiano)
-  ["const c = liveInvito(); if (c) {", "const c = LANG === 'en' ? null : liveInvito(); if (c) {"],
 ];

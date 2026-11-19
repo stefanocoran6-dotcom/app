@@ -25,7 +25,7 @@ const IO = process.argv[1] && process.argv[1].endsWith('compila.mjs');   // fals
 const srcOrig = fs.readFileSync(SRC, 'utf8');
 
 // ---------- le parti, nell'ordine di build.sh (servono solo per dire dove sta una frase) ----------
-const PARTI = ['p00_base.js', null, 'p10_data.js', 'p20_ui.js', 'p30_learn.js', 'p35_steps.js', 'p37_news.js', 'p40_train.js', 'p50_more.js', 'p55_live.js', 'p60_start.js', 'p90_app.js'];
+const PARTI = ['p00_base.js', null, 'p10_data.js', 'p20_ui.js', 'p30_learn.js', 'p35_steps.js', 'p37_news.js', 'p40_train.js', 'p44_motore.js', 'p45_serie.js', 'p50_more.js', 'p55_live.js', 'p60_start.js', 'p90_app.js'];
 // Le parti si ritrovano nel testo (anche dopo le correzioni) cercando l'inizio di ciascuna.
 function offsetParti(testo) {
   const D = path.join(ROOT, 'dev', 'ordine'), out = []; let cur = 0;
@@ -116,14 +116,14 @@ const SALTA = []; let BASI_DECL = null;   // le lezioni inline e il glossario no
 for (const n of ast.body) {
   const nome = n.type === 'VariableDeclaration' && n.declarations[0].id && n.declarations[0].id.name;
   if (nome === 'BASI_UNITS') BASI_DECL = n;
-  if (nome === 'BASI_UNITS' || nome === 'GLOSS_DEF' || nome === 'GLOSS_ALIAS') SALTA.push([n.start, n.end]);
+  if (nome === 'BASI_UNITS' || nome === 'GLOSS_DEF' || nome === 'GLOSS_ALIAS' || nome === 'GEN') SALTA.push([n.start, n.end]);   // GEN (p44_motore.js) ha già dentro le sue lingue
 }
 const dentroSalta = n => SALTA.some(r => n.start >= r[0] && n.end <= r[1]);
 
 const unita = [];   // { kind:'html'|'lit'|'tpl'|'attr', key, start, end, holes:[{start,end}], dove, escape, valore?, classe, parte }
-// Nella prima versione inglese non si raggiungono le notizie, le sfide e le schermate dell'esame CFA: le loro frasi restano in italiano e non si contano tra quelle da tradurre.
-const IGNORA_PARTI = new Set(['p37_news.js', 'p55_live.js']);
-const IGNORA_FUNZIONI = new Set(['SfideScreen', 'DuelRun', 'DuelDone', 'duelQuestions']);
+// Nella versione inglese non si raggiungono le notizie e le schermate dell'esame CFA: le loro frasi restano in italiano e non si contano tra quelle da tradurre.
+const IGNORA_PARTI = new Set(['p37_news.js']);
+const IGNORA_FUNZIONI = new Set([]);
 const IGNORA = [];
 for (const n of ast.body) if (n.type === 'FunctionDeclaration' && IGNORA_FUNZIONI.has(n.id.name)) IGNORA.push([n.start, n.end]);
 function aggiungi(u) {

@@ -1,4 +1,4 @@
-const CACHE = 'finlearn-v55';
+const CACHE = 'finlearn-v56';
 const SHELL = ['./', './index.html', './app.js', './ordine.js', './ordine_en.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg', './notizie.json', './notizie/indice.json'];
 
 // install: scarica il guscio saltando la cache HTTP del browser, così non si salva una versione vecchia

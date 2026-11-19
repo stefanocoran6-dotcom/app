@@ -17,6 +17,15 @@ L'ordine delle unità nel percorso è la lista `UNITS` in fondo a `basi_src.py`.
 
 Per cambiare una lezione o la grafica: si modifica il pezzo, si lancia `dev/ordine/build.sh`, si alza di uno il numero in `sw.js` (`CACHE`) e in `app.js` (`FL_VERSION`).
 
+## Domande generate e «La serie»
+
+- `ordine/p44_motore.js`: il motore. Codice puro (niente schermo, memoria o rete), così lo stesso file potrà servire all'arbitro delle sfide. `GEN.crea(tipo, seme)` dà il nucleo di una domanda (numeri, risposte, posizione della giusta: uguale in tutte le lingue); `GEN.testo(nucleo, lingua, valuta)` la scrive in italiano o in inglese. Dallo stesso seme esce sempre la stessa domanda.
+- Stampi di calcolo (`STAMPI`): `par` sceglie i numeri, `ok` calcola la risposta giusta, `err` sono gli errori tipici da cui nascono le risposte sbagliate, ognuno con la sua riga di spiegazione. Le risposte troppo vicine tra loro vengono scartate (`FORMA`).
+- Fatti (`PERSONE`, `EVENTI`, `MONETE`, `INDICI`): ogni riga è scritta in tutte le lingue e ha la fonte in `ordine/FONTI_GIOCHI.md`.
+- Uno stampo o un fatto nuovo si aggiunge lì, in tutte le lingue; per uno stampo va aggiunto anche il secondo conto in `giochi/ricalcola.py`. Poi `node dev/giochi/collauda.mjs && python3 dev/giochi/ricalcola.py`: genera 10.000 domande per tipo, controlla che la giusta sia una sola, che le risposte siano diverse e distanti, che italiano e inglese abbiano gli stessi numeri, e rifà i conti con un programma scritto a parte. Devono finire tutti e due con zero guai.
+- `ordine/p45_serie.js`: il gioco «La serie» (Allenati): domande senza fine, tre errori e si chiude; il record sta in `serie.best` dei dati salvati. Si apre con `nav.go('pratica', { mode: 'serie' })`.
+- In inglese i testi del motore non passano dal dizionario `en/ui_en.txt`: `compila.mjs` salta `GEN`, che ha già dentro le sue lingue.
+
 ## Notizie
 
 Tre file, nessuno dentro il codice:
@@ -62,6 +71,7 @@ Due telefoni giocano le stesse 5 domande nello stesso momento. In mezzo c'è un 
 - Regole: il punto va a chi risponde giusto per primo. Chi sbaglia perde un punto e per quella domanda è fermo, l'altro può ancora rispondere. Due risposte giuste a meno di 5 centesimi l'una dall'altra fanno pari (un punto a testa). Tempo per domanda: 24 secondi le Basi, 45 il CFA Level II.
 - Il tempo lo misura il telefono (`p55_live.js`), da quando la domanda compare sullo schermo al tocco: chi ha la rete lenta non è penalizzato. L'arbitro lo accetta solo se è credibile: non può essere più corto del tempo passato davvero meno il ping più basso misurato per quel telefono e 0,15 s di margine. Dopo la prima risposta giusta la domanda resta aperta ancora un attimo (il ping dell'altro più 0,1 s, tra 0,3 e 1,2 s) per le risposte già in viaggio.
 - Le domande con le risposte giuste le ha l'arbitro (`sfide/src/domande.json`, scritto da `sfide/estrai-domande.mjs`, che `dev/ordine/build.sh` lancia ogni volta). Al telefono arrivano testo e risposte, la giusta solo dopo.
+- Lingue: ogni telefono dice all'arbitro la lingua della sua app (`lang` nel saluto; chi non la dice è in italiano) e riceve domanda, risposte e spiegazione in quella lingua. Per le Basi il testo inglese viene da `dev/en/basi_en.json` (campo `en` in `domande.json`) e vale solo se ha le stesse risposte nello stesso ordine: così la giusta è la stessa per tutti. Se uno dei due gioca in inglese si pescano solo le domande che hanno anche l'inglese (99 su 156). Il CFA è in inglese per tutti. Chi ha scelto gli Stati Uniti vede i dollari al posto degli euro (`usDollars`, come nelle lezioni), tranne nelle domande con `eu` (lezioni con una variante americana, dove l'euro è proprio l'euro). I messaggi di errore dell'arbitro sono in italiano: l'app usa i suoi (`LIVE_ERR`), scelti dal codice dell'errore.
 - Stanza: codice di 6 caratteri senza I, O, 0 e 1. Il link `…/app/#sfida=CODICE` apre l'app nella stanza (il codice si toglie subito dall'indirizzo). Ogni telefono ha un codice segreto per stanza (`finlearn_sfide_pid`) per rientrare nello stesso posto se cade la rete; la stanza tiene lo stato nel suo salvataggio, così sopravvive anche a un riavvio. Si chiude da sola: 15 minuti senza avversario, 5 minuti dopo la fine, un'ora al massimo. Alla chiusura si cancella tutto.
 - Limiti: al massimo due giocatori, 15 messaggi al secondo per telefono, messaggi corti, nomi ripuliti (20 caratteri, niente caratteri invisibili).
 - Indirizzo: `SFIDE_HOST` in `p55_live.js` (`finlearn-sfide.finlearn27.workers.dev`). Finché c'è `SOTTODOMINIO` la scheda Sfide non mostra la sfida dal vivo. In prova sul computer l'app usa `ws://127.0.0.1:8787`.

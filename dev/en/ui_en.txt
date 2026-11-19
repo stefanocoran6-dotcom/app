@@ -933,3 +933,173 @@ last ⇒ =
 salva ⇒ =
 all ⇒ =
 st ⇒ =
+# La serie (domande generate, p45_serie.js)
+La serie ⇒ Endless run
+Gioca ancora ⇒ Play again
+Torna ad Allenati ⇒ Back to Practice
+Giuste: {0} ⇒ Correct: {0}
+Domande senza fine, il tuo record è {0} ⇒ Endless questions, your record is {0}
+Domande senza fine: al terzo errore si chiude ⇒ Endless questions: the third mistake ends it
+serie ⇒ =
+Nuovo record! ⇒ New record!
+Serie finita ⇒ Run over
+Prima il tuo record era {0}. ⇒ Your record was {0} before.
+È la tua prima serie: da adesso è il numero da battere. ⇒ This is your first run: from now on it is the number to beat.
+Tre errori prima di una risposta giusta. Le spiegazioni servono a questo: riprova. ⇒ Three mistakes before one correct answer. That is what the explanations are for: try again.
+Il tuo record resta {0}. ⇒ Your record is still {0}.
+Vite rimaste: {0} su {1} ⇒ Lives left: {0} of {1}
+# Sfide (p50_more.js) e sfide dal vivo (p55_live.js)
+Rally con la maschera ⇒ Rally wearing a mask
+Sei {0} in lega ⇒ You're {0} in the league
+Sfida un amico dal vivo ⇒ Challenge a friend live
+Lampo: le stesse 5 domande sui due telefoni. Il punto va a chi risponde giusto per primo. ⇒ Lightning: the same 5 questions on both phones. The point goes to whoever answers correctly first.
+Crea una sfida ⇒ Create a challenge
+Ho già un codice ⇒ I already have a code
+contro ⇒ vs
+{0} ti ha sfidato ⇒ {0} challenged you
+5 domande dai tuoi percorsi. ⇒ 5 questions from your paths.
+Vince chi ne fa giuste di più. ⇒ Whoever gets more right wins.
+Accetta la sfida ⇒ Accept challenge
+Dopo ⇒ Later
+Finisce domenica ⇒ Ends Sunday
+{0} Lega di prova: per ora gli altri sono avversari simulati. ⇒ {0} Trial league: for now the others are simulated opponents.
+Sfida ⇒ Challenge
+Per sfidare qualcuno serve almeno una lezione con una domanda. ⇒ To challenge someone you need at least one lesson with a question.
+{0} ha già risposto ⇒ {0} has already answered
+Le sfide con gli amici partono appena l'arbitro è online. ⇒ Challenges with friends start as soon as the referee is online.
+{0}° posto ⇒ Rank #{0}
+in {0} ⇒ =
+Rivincita ⇒ Rematch
+{0} Sfida un amico dal vivo ⇒ {0} Challenge a friend live
+Torna alle sfide ⇒ Back to challenges
+Nelle sfide dal vivo il tuo nome e le tue risposte passano dall'arbitro di FinLearn, su Cloudflare, solo per la durata della partita: alla fine si cancella tutto. ⇒ In live challenges your name and your answers pass through FinLearn's referee, on Cloudflare, only for the length of the game: at the end everything is deleted.
+Come ti vedrà il tuo amico ⇒ How your friend will see you
+Sfida dal vivo ⇒ Live challenge
+Quasi pronta ⇒ Almost ready
+Le sfide dal vivo partono appena l'arbitro è online. ⇒ Live challenges start as soon as the referee is online.
+Crea la sfida ⇒ Create the challenge
+Da quale percorso arrivano le domande ⇒ Which path the questions come from
+Le domande arrivano da {0}. {1}. ⇒ The questions come from {0}. {1}.
+Lampo ⇒ Lightning
+5 domande, le stesse sui due telefoni. Il punto va a chi risponde giusto per primo. Se sbagli perdi un punto, e l'altro può ancora rispondere. ⇒ 5 questions, the same on both phones. The point goes to whoever answers correctly first. If you get it wrong you lose a point, and the other player can still answer.
+Entra nella sfida ⇒ Join the challenge
+Nei codici non ci sono mai I, O, 0 e 1: controlla di averlo scritto giusto. ⇒ Codes never contain I, O, 0 or 1: check that you typed it correctly.
+Codice della sfida ⇒ Challenge code
+characters ⇒ =
+Connessione persa: mi ricollego… ⇒ Connection lost: reconnecting…
+Uscire dalla sfida ⇒ Leave the challenge
+Vuoi uscire dalla sfida? ⇒ Do you want to leave the challenge?
+Se esci adesso la partita va a {0}. ⇒ If you leave now, the game goes to {0}.
+Resto ⇒ Stay
+Esco ⇒ Leave
+Riprova ⇒ Try again
+Mi collego all'arbitro… ⇒ Connecting to the referee…
+Pronto ⇒ Ready
+{0} è nella stanza ⇒ {0} is in the room
+Quando siete pronti tutti e due parte il conto alla rovescia. ⇒ When you are both ready, the countdown starts.
+Manda il codice ⇒ Send the code
+Il tuo amico entra con il link o scrivendo il codice nella scheda Sfide, con «Ho già un codice». ⇒ Your friend joins with the link or by typing the code in the Challenges tab, under ‘I already have a code’.
+{0} Invia il link ⇒ {0} Send the link
+Copia solo il codice ⇒ Copy the code only
+In attesa del tuo amico… ⇒ Waiting for your friend…
+Su iPhone il link si apre in Safari, non nell'app: chi ha FinLearn sulla schermata Home fa prima a scrivere il codice. ⇒ On iPhone the link opens in Safari, not in the app: if FinLearn is on your Home Screen, typing the code is quicker.
+{0} 5 domande: il punto va a chi risponde giusto per primo, chi sbaglia perde un punto. ⇒ {0} 5 questions: the point goes to whoever answers correctly first; a wrong answer costs a point.
+Il punto va a chi risponde giusto per primo. Se sbagli perdi un punto. ⇒ The point goes to whoever answers correctly first. If you get it wrong you lose a point.
+Nessuna risposta ⇒ No answer
+Punti domanda per domanda ⇒ Points question by question
+{0} ha lasciato la sfida. ⇒ {0} left the challenge.
+Nuova sfida ⇒ New challenge
+{0} Per giocare ancora crea una sfida nuova. ⇒ {0} To play again, create a new challenge.
+sfida ⇒ =
+2.5px solid transparent ⇒ =
+Ti mancano {0} XP per superare {1}. ⇒ You need {0} XP to pass {1}.
+Sei in testa alla lega. ⇒ You're at the top of the league.
+Sfida con ⇒ Challenge with
+Hai vinto! ⇒ You won!
+Pareggio ⇒ Tie
+Stavolta no ⇒ Not this time
+per la vittoria ⇒ for the win
+per il pareggio ⇒ for the tie
+per averci provato ⇒ for trying
+Ognuno nella lingua della sua app, 24 secondi per domanda ⇒ Each player in their app's language, 24 seconds per question
+In inglese come all'esame, 45 secondi per domanda ⇒ In English as on the exam, 45 seconds per question
+1 centesimo ⇒ 1 hundredth of a second
+centesimi ⇒ hundredths of a second
+Questa sfida non esiste più. Fatti mandare un link nuovo. ⇒ This challenge no longer exists. Ask for a new link.
+In questa sfida ci sono già due giocatori. ⇒ This challenge already has two players.
+Questa sfida è già cominciata. ⇒ This challenge has already started.
+Aggiorna FinLearn: chiudi l'app, riaprila e riprova. ⇒ Update FinLearn: close the app, open it again and try again.
+La sfida è scaduta: nessuno è entrato in tempo. ⇒ The challenge expired: nobody joined in time.
+La sfida è finita. ⇒ The challenge is over.
+Non sono riuscito a creare la sfida: riprova. ⇒ I couldn't create the challenge: try again.
+Messaggio non valido. ⇒ Invalid message.
+Troppi messaggi in poco tempo. ⇒ Too many messages in a short time.
+ricollego ⇒ =
+collego ⇒ =
+ciao ⇒ =
+hb ⇒ =
+ping ⇒ =
+pong ⇒ =
+benvenuto ⇒ =
+domanda ⇒ =
+errore ⇒ =
+chiuso ⇒ =
+irraggiungibile ⇒ =
+esco ⇒ =
+entra ⇒ =
+scegli ⇒ =
+codice ⇒ =
+stanza ⇒ =
+via ⇒ =
+risposto ⇒ =
+fine ⇒ =
+finita ⇒ =
+gioco ⇒ =
+visibilitychange ⇒ =
+online ⇒ =
+il tuo amico ⇒ your friend
+rete ⇒ =
+pari ⇒ =
+Il codice è ⇒ The code is
+Ti sfido su FinLearn: 5 domande, il punto va a chi risponde giusto per primo. Il codice è {0}. ⇒ I challenge you on FinLearn: 5 questions, and the point goes to whoever answers correctly first. The code is {0}.
+Sfida su FinLearn ⇒ Challenge on FinLearn
+AbortError ⇒ =
+Link copiato ⇒ Link copied
+Ti hanno sfidato ⇒ You've been challenged
+Entra in una sfida ⇒ Join a challenge
+Scrivi il tuo nome ed entra: la sfida parte quando siete pronti tutti e due. ⇒ Type your name and join: the challenge starts when you are both ready.
+Scrivi il codice di 6 caratteri che ti hanno mandato. ⇒ Type the 6-character code you were sent.
+Non riesco a raggiungere l'arbitro delle sfide. Controlla la connessione e riprova. ⇒ I can't reach the challenge referee. Check your connection and try again.
+Il collegamento con la sfida si è chiuso. Se è ancora aperta, rientra con il codice. ⇒ The connection to the challenge closed. If it is still open, rejoin with the code.
+Fuori linea ⇒ Offline
+Nella stanza ⇒ In the room
+Non ancora pronto ⇒ Not ready yet
+pronto ⇒ =
+Aspetto {0}… ⇒ Waiting for {0}…
+Sono pronto ⇒ I'm ready
+Codice ⇒ Code
+Codice copiato ⇒ Code copied
+Domande del CFA Level II, in inglese. ⇒ CFA Level II questions, in English.
+Domande delle Basi della finanza. ⇒ Finance Basics questions.
+Lampo con ⇒ Lightning with
+Via! ⇒ Go!
+Sbagliata: perdi un punto ⇒ Wrong: you lose a point
+Giusta! Vediamo chi è stato più veloce ⇒ Right! Let's see who was faster
+Risposta inviata ⇒ Answer sent
+{0} ha sbagliato: tocca a te ⇒ {0} got it wrong: your turn
+{0} ha risposto ⇒ {0} answered
+Tempo scaduto ⇒ Time's up
+Punto a te ⇒ Point to you
+Punto a {0} ⇒ Point to {0}
+Pari: un punto a testa ⇒ Tie: one point each
+Nessun punto ⇒ No point
+Più veloce tu, di {0} ⇒ You were faster, by {0}
+{0} più veloce di {1} ⇒ {0} was faster by {1}
+Domanda chiusa ⇒ Question closed
+{0} secondi ⇒ {0} seconds
+Accetta la rivincita ⇒ Accept the rematch
+Pari, un punto a testa ⇒ Tie, one point each
+rivincita ⇒ =
+{0} non è più nella stanza. ⇒ {0} is no longer in the room.
+La stanza è chiusa. ⇒ The room is closed.
+Tu ⇒ You

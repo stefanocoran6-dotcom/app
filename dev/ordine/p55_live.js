@@ -3,6 +3,8 @@
 // SFIDE DAL VIVO · modalità Lampo: due telefoni e un arbitro su Cloudflare (codice in sfide/)
 // =====================================================================================================
 // L'arbitro manda la stessa domanda ai due telefoni, riceve le risposte e decide chi prende il punto.
+// Ogni telefono dice all'arbitro la lingua della sua app (`lang` nel saluto) e riceve la domanda in quella lingua:
+// un'app italiana e una inglese giocano la stessa partita, con la risposta giusta nella stessa posizione.
 // Questo telefono misura il proprio tempo di reazione: da quando la domanda compare sullo schermo al tocco.
 const SFIDE_HOST = 'finlearn-sfide.finlearn27.workers.dev';   // indirizzo dell'arbitro su Cloudflare
 const SFIDE_LOCALE = /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
@@ -11,7 +13,7 @@ const SFIDE_ON = SFIDE_LOCALE || !/SOTTODOMINIO/.test(SFIDE_HOST);
 const SFIDE_V = 1;
 const LIVE_RE = /^[A-HJ-NP-Z2-9]{6}$/;
 const LIVE_CORSI = [
-  { id: 'basi', name: 'Basi della finanza', sub: 'In italiano, 24 secondi per domanda' },
+  { id: 'basi', name: 'Basi della finanza', sub: 'Ognuno nella lingua della sua app, 24 secondi per domanda' },
   { id: 'cfa2', name: 'CFA Level II', sub: 'In inglese come all\'esame, 45 secondi per domanda' }
 ];
 // invito: il link …/app/#sfida=CODICE apre l'app e porta nella stanza (il codice si toglie subito dall'indirizzo)
@@ -27,8 +29,14 @@ function livePidSave(codice, pid) {
   try { const a = livePids(); delete a[codice]; a[codice] = pid; const k = Object.keys(a); k.slice(0, Math.max(0, k.length - 6)).forEach(x => { delete a[x]; }); localStorage.setItem(LIVE_PID, JSON.stringify(a)); } catch (e) {}
 }
 function liveNewPid() { const c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'; return Array.from(crypto.getRandomValues(new Uint8Array(20)), x => c[x & 63]).join(''); }
-const liveSec = ms => (ms / 1000).toFixed(2).replace('.', ',') + ' s';
+const liveSec = ms => (ms / 1000).toFixed(2).replace('.', DEC) + ' s';
 const liveGap = ms => { if (ms >= 1000) return liveSec(ms); const c = Math.max(1, Math.round(ms / 10)); return c === 1 ? '1 centesimo' : c + ' centesimi'; };
+// i messaggi di errore dell'arbitro arrivano in italiano: l'app usa i suoi, nella sua lingua, scelti dal codice dell'errore
+const LIVE_ERR = {
+  nontrovata: 'Questa sfida non esiste più. Fatti mandare un link nuovo.', piena: 'In questa sfida ci sono già due giocatori.', iniziata: 'Questa sfida è già cominciata.',
+  versione: 'Aggiorna FinLearn: chiudi l\'app, riaprila e riprova.', scaduta: 'La sfida è scaduta: nessuno è entrato in tempo.', finita: 'La sfida è finita.',
+  riprova: 'Non sono riuscito a creare la sfida: riprova.', formato: 'Messaggio non valido.', troppi: 'Troppi messaggi in poco tempo.'
+};
 const livePts = n => (n < 0 ? '−' + Math.abs(n) : String(n));
 
 // collegamento all'arbitro: si riapre da solo se cade (rete, app in secondo piano), con attese sempre più lunghe
@@ -40,12 +48,15 @@ class LiveConn {
     clearTimeout(this.timer);
     let ws; try { ws = new WebSocket(this.url()); } catch (e) { this.riprova(); return; }
     this.ws = ws; this.onNet(this.tent ? 'ricollego' : 'collego');
-    ws.onopen = () => { this.send({ t: 'ciao', pid: this.pid, nome: this.opt.nome, v: SFIDE_V }); clearInterval(this.hb); this.hb = setInterval(() => this.raw('{"t":"hb"}'), 20000); };
+    ws.onopen = () => { this.send({ t: 'ciao', pid: this.pid, nome: this.opt.nome, v: SFIDE_V, lang: LANG }); clearInterval(this.hb); this.hb = setInterval(() => this.raw('{"t":"hb"}'), 20000); };
     ws.onmessage = ev => {
       let m = null; try { m = JSON.parse(ev.data); } catch (e) { return; }
       if (!m || m.t === 'hb') return;
       if (m.t === 'ping') { this.send({ t: 'pong', s: m.s }); return; }   // subito, prima di disegnare: misura la rete
-      if (m.t === 'benvenuto') { this.codice = m.codice; livePidSave(m.codice, this.pid); this.tent = 0; this.onNet('ok'); }
+      if (m.t === 'benvenuto') { this.codice = m.codice; this.corso = m.corso; livePidSave(m.codice, this.pid); this.tent = 0; this.onNet('ok'); }
+      // Stati Uniti: nelle Basi l'euro del testo inglese diventa dollaro, come nelle lezioni (non dove l'euro è proprio l'euro: m.eu)
+      if (m.t === 'domanda') { this.dollari = COUNTRY === 'US' && this.corso === 'basi' && m.l === 'en' && !m.eu; if (this.dollari) { m.q = usDollars(m.q); m.o = usDollars(m.o); } }
+      if (m.t === 'esito' && this.dollari && m.e) m.e = usDollars(m.e);
       if (m.t === 'errore') this.fermo = true;
       this.onMsg(m, performance.now());
     };
@@ -186,7 +197,7 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
   const closeBtn = () => (fase === 'via' || fase === 'domanda' || fase === 'esito' ? setAsk(true) : leave());
 
   if (fase === 'errore' || fase === 'rete' || fase === 'chiuso') {
-    const msg = fase === 'errore' ? st.err.m : fase === 'rete' ? 'Non riesco a raggiungere l\'arbitro delle sfide. Controlla la connessione e riprova.' : 'Il collegamento con la sfida si è chiuso. Se è ancora aperta, rientra con il codice.';
+    const msg = fase === 'errore' ? (LIVE_ERR[st.err.e] || st.err.m) : fase === 'rete' ? 'Non riesco a raggiungere l\'arbitro delle sfide. Controlla la connessione e riprova.' : 'Il collegamento con la sfida si è chiuso. Se è ancora aperta, rientra con il codice.';
     return html`<${Flow} top=${html`<${TopBar} onClose=${leave} title="Sfida dal vivo"/>`} foot=${html`<div class="o-col" style="gap:10px">
         ${fase !== 'errore' && last.current && html`<${Btn} cls="lg" bg=${PESCA} onClick=${() => start(last.current.codice || !codice ? last.current : { codice })}>Riprova<//>`}
         <${Btn} cls="lg flat" bg="#fff" onClick=${leave}>Torna alle sfide<//></div>`}>

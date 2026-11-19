@@ -42,6 +42,7 @@ function AllenatiScreen({ nav }) {
     <${Sheet}>
       <h2 class="o-h2" style="margin-bottom:4px">Oppure scegli tu</h2>
       <${Row} icon=${PathIco(D_TABS.allenati, 22, 2.4)} title="Quiz misto" sub=${misCourses().length > 1 ? '10 domande dai tuoi percorsi' : '10 domande dal tuo percorso'} chev=${true} onClick=${() => nav.go('pratica', { mode: 'mix' })}/>
+      <${Row} icon=${PathIco(D_SENZAFINE, 22, 2.4)} title="La serie" sub=${serieStato().best > 0 ? `Domande senza fine, il tuo record è ${serieStato().best}` : 'Domande senza fine: al terzo errore si chiude'} chev=${true} onClick=${() => nav.go('pratica', { mode: 'serie' })}/>
       <${Row} icon=${Ico(Target, 22)} title="Punti deboli" sub=${weak ? weak.name : 'Rally li trova dalle tue risposte'} chev=${true} onClick=${() => nav.go('deboli')}/>
       ${exam ? html`<${Row} icon=${Ico(Timer, 22)} title="Simulazione d'esame" sub=${mock ? `CFA Level II, ultimo punteggio ${Math.round(mock.ok / mock.n * 100)}%` : 'CFA Level II, 44 domande a tempo'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>`
         : html`<${Row} icon=${Ico(Compass, 22)} title="Test di livello" sub="5 domande per capire a che punto sei" chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'level', course: cur.id })}/>`}
@@ -217,7 +218,9 @@ function buildPractice(mode, sectionId) {
   const done = pool.filter(l => isHad(l.key)); const src = allQuestions(done).length >= 5 ? done : pool;
   return sh(allQuestions(src)).slice(0, 10).map(q => ({ q, l: q.lesson }));
 }
-function PracticeRun({ nav, mode, section }) {
+// 'serie' è il gioco delle domande generate (p45_serie.js): passa da qui per non aggiungere una schermata nuova all'elenco dell'app
+function PracticeRun(p) { return p.mode === 'serie' ? html`<${SerieRun} nav=${p.nav}/>` : html`<${PracticeQuiz} ...${p}/>`; }
+function PracticeQuiz({ nav, mode, section }) {
   const items = useMemo(() => buildPractice(mode, section), [mode, section]);
   const [i, setI] = useState(0), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [okN, setOkN] = useState(0), [left, setLeft] = useState(null), [tab, setTab] = useState('case'), [end, setEnd] = useState(false);
   const scrollRef = useRef(null);

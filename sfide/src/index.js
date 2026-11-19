@@ -9,7 +9,7 @@
 // - Due risposte giuste a meno di 5 centesimi l'una dall'altra sono un pareggio: un punto a testa.
 // Nella stanza restano solo i soprannomi e le risposte della partita; alla fine (o se nessuno entra) si cancella tutto.
 //
-// Messaggi (JSON) dal telefono: ciao {pid, nome, v} · pronto · risposta {i, c, ms} · pong {s} · rivincita · esco
+// Messaggi (JSON) dal telefono: ciao {pid, nome, v, lang} · pronto · risposta {i, c, ms} · pong {s} · rivincita · esco
 // Messaggi all'app: benvenuto · stanza · ping · via · domanda · risposto · esito · fine · errore
 import DOMANDE from './domande.json';
 
@@ -165,10 +165,10 @@ export class Stanza {
     if (p < 0) {
       if (S.g.length >= 2) return this.caccia(ws, 'piena');
       if (S.fase !== 'attesa') return this.caccia(ws, 'iniziata');
-      S.g.push({ pid, nome: pulisciNome(m.nome) || 'Giocatore', pronto: false, punti: 0, rtt: [], via: true, rivincita: false });
+      S.g.push({ pid, nome: pulisciNome(m.nome) || 'Giocatore', lang: linguaDi(m), pronto: false, punti: 0, rtt: [], via: true, rivincita: false });
       p = S.g.length - 1;
       if (S.g.length === 2) S.fase = 'pronti';
-    } else { S.g[p].via = true; const n = pulisciNome(m.nome); if (n) S.g[p].nome = n; }
+    } else { S.g[p].via = true; const n = pulisciNome(m.nome); if (n) S.g[p].nome = n; S.g[p].lang = linguaDi(m); }
     // lo stesso telefono che si ricollega: la connessione vecchia si chiude
     for (const w of this.ctx.getWebSockets()) if (w !== ws && (w.deserializeAttachment() || {}).pid === pid) { try { w.close(4001, 'sostituita'); } catch (e) {} }
     ws.serializeAttachment({ pid });
@@ -179,7 +179,7 @@ export class Stanza {
     if (S.fase === 'pronti' && S.g.length === 2 && S.g.every(g => g.pronto && g.via)) return this.parti(now);
     if (S.fase === 'via') this.invia(ws, { t: 'via', ms: Math.max(0, S.via - now) });
     if (S.fase === 'domanda' && this.d()) this.invia(ws, this.msgDomanda(now, p));
-    if (S.fase === 'esito' && S.esito) this.invia(ws, S.esito);
+    if (S.fase === 'esito' && S.esito) this.invia(ws, this.msgEsito(p));
     if (S.fase === 'fine' && S.fine) this.invia(ws, S.fine);
   }
   pong(p, m, now) {
@@ -194,7 +194,8 @@ export class Stanza {
     if (S.g.length === 2 && S.g.every(g => g.pronto && g.via)) this.parti(now); else this.aggiorna();
   }
   parti(now) {
-    const S = this.S, tutte = DOMANDE[S.corso].map(d => d.k);
+    // ognuno legge nella lingua della sua app: se uno dei due gioca in inglese si pescano solo le domande che hanno anche il testo inglese
+    const S = this.S, inglese = S.g.some(g => g.lang === 'en'), tutte = DOMANDE[S.corso].filter(d => !inglese || d.l === 'en' || d.en).map(d => d.k);
     let libere = tutte.filter(k => !S.usate.includes(k));
     if (libere.length < N_DOMANDE) { S.usate = []; libere = tutte; }
     S.qs = mescola(libere).slice(0, N_DOMANDE); S.usate = S.usate.concat(S.qs).slice(-tutte.length);
@@ -208,14 +209,15 @@ export class Stanza {
   d() { return PER_CHIAVE[this.S.corso].get(this.S.qs[this.S.i]); }
   msgDomanda(now, p) {
     const S = this.S, d = this.d(), mia = p != null && S.r[p] ? S.r[p].c : null;
-    return { t: 'domanda', i: S.i, n: S.qs.length, q: d.q, o: d.o, l: d.l || 'it', tot: SECONDI[S.corso] * 1000, ms: Math.max(0, S.scade - EXTRA_MS - now), mia,
+    const x = testoPer(d, S.g[p]);   // stessa domanda e stesso ordine delle risposte, scritta nella lingua di chi la riceve
+    return { t: 'domanda', i: S.i, n: S.qs.length, q: x.q, o: x.o, l: x.l, eu: d.eu ? 1 : undefined, tot: SECONDI[S.corso] * 1000, ms: Math.max(0, S.scade - EXTRA_MS - now), mia,
       altri: S.r.map((x, k) => (x && k !== p ? { p: k, ok: x.ok } : null)).filter(Boolean) };
   }
   domanda(i, now) {
     const S = this.S;
     S.i = i; S.fase = 'domanda'; S.t0 = now; S.scade = now + SECONDI[S.corso] * 1000 + EXTRA_MS; S.chiudi = 0; S.r = [null, null];
     if (!this.d()) { this.risolvi(now); return; }   // domanda sparita dall'elenco (aggiornamento a metà partita): si passa oltre
-    this.inviaTutti(this.msgDomanda(now, null));
+    for (const [w, p] of this.giocatori()) this.invia(w, this.msgDomanda(now, p));
   }
   risposta(p, m, now) {
     const S = this.S; if (S.fase !== 'domanda' || m.i !== S.i || S.r[p]) return;
@@ -245,9 +247,12 @@ export class Stanza {
     S.storia.push(voce);
     S.esito = Object.assign({ t: 'esito', e: d ? d.e : '', punti: S.g.map(g => g.punti) }, voce);
     S.fase = 'esito'; S.chiudi = 0; S.avanti = now + ESITO_MS;
-    this.inviaTutti(S.esito); this.aggiorna();
+    for (const [w, p] of this.giocatori()) this.invia(w, this.msgEsito(p));
+    this.aggiorna();
     this.inviaTutti({ t: 'ping', s: now });
   }
+  // il risultato di una domanda: la spiegazione va nella lingua di chi la riceve
+  msgEsito(p) { const S = this.S, d = PER_CHIAVE[S.corso].get(S.qs[S.esito.i]), g = S.g[p]; return d && g && g.lang === 'en' && d.en ? Object.assign({}, S.esito, { e: d.en.e || '' }) : S.esito; }
   finisci(now, via) {
     const S = this.S, pt = S.g.map(g => g.punti);
     let vince = pt.length < 2 || pt[0] > pt[1] ? 0 : pt[1] > pt[0] ? 1 : 'pari';
@@ -282,7 +287,7 @@ export class Stanza {
   }
   stanza(io) {
     const S = this.S;
-    return { t: 'stanza', io, fase: S.fase, corso: S.corso, n: N_DOMANDE, i: S.i, g: S.g.map(g => ({ nome: g.nome, pronto: !!g.pronto, punti: g.punti, via: !!g.via, rivincita: !!g.rivincita })) };
+    return { t: 'stanza', io, fase: S.fase, corso: S.corso, n: N_DOMANDE, i: S.i, g: S.g.map(g => ({ nome: g.nome, l: g.lang || 'it', pronto: !!g.pronto, punti: g.punti, via: !!g.via, rivincita: !!g.rivincita })) };
   }
   aggiorna() { if (this.S) for (const [w, p] of this.giocatori()) this.invia(w, this.stanza(p)); }
   invia(ws, m) { try { ws.send(JSON.stringify(m)); } catch (e) {} }
@@ -307,4 +312,8 @@ function mescola(a) {
 // soprannome: niente caratteri invisibili o di controllo, al massimo 20 caratteri
 const INVISIBILI = new RegExp('[' + [[0x00, 0x1f], [0x7f, 0x9f], [0x200b, 0x200f], [0x2028, 0x202e], [0x2060, 0x206f], [0xfeff, 0xfeff]]
   .map(([a, b]) => String.fromCharCode(a) + '-' + String.fromCharCode(b)).join('') + ']', 'g');
+// lingua dell'app di chi si collega: le app vecchie non la dicono e sono in italiano
+function linguaDi(m) { return m && m.lang === 'en' ? 'en' : 'it'; }
+// il testo di una domanda per un giocatore: in inglese se la sua app è in inglese e la domanda ha la versione inglese
+function testoPer(d, g) { return g && g.lang === 'en' && d.en ? { q: d.en.q, o: d.en.o, l: 'en' } : { q: d.q, o: d.o, l: d.l || 'it' }; }
 function pulisciNome(s) { return String(s || '').replace(INVISIBILI, '').replace(/\s+/g, ' ').trim().slice(0, 20); }

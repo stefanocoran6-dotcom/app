@@ -13,7 +13,7 @@ const D_TABS = {
   coach: 'M4 5h16v11H9l-5 4z',
   profilo: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0'
 };
-const TAB_NAMES = [['home', 'Impara'], ['allenati', 'Allenati'], ['sfide', 'Sfide'], ['coach', 'AI Coach'], ['profilo', 'Profilo']].filter(t => LANG !== 'en' || t[0] !== 'sfide');   // le sfide hanno le domande e l'arbitro in italiano: in inglese per ora non ci sono
+const TAB_NAMES = [['home', 'Impara'], ['allenati', 'Allenati'], ['sfide', 'Sfide'], ['coach', 'AI Coach'], ['profilo', 'Profilo']];
 
 // Rally: pose disegnate (file in rally/*.svg)
 function Rally({ pose = 'saluta', w = 228, style, alt = '' }) {

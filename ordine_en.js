@@ -138,7 +138,7 @@ html.fl-fig .o-app .o-btn:active:not(:disabled){transform:translate(3px,3px);box
 .o-test .o-opt.sel{background:${T_MENTA}}
 .o-duel .o-opt.sel{background:${T_PESCA}}
 .o-tabs{position:absolute;left:16px;right:16px;bottom:max(16px,calc(env(safe-area-inset-bottom) - 10px));height:64px;padding:6px;display:flex;gap:2px;background:${INK};border-radius:24px;z-index:6}
-.o-tab{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:18px;font-size:11px;line-height:14px;font-weight:700;color:#fff;text-align:center}
+.o-tab{flex:1 1 auto;min-width:0;padding:0 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:18px;font-size:11px;line-height:14px;font-weight:700;color:#fff;text-align:center}
 .o-tab.on{font-weight:800;color:${INK}}
 .o-tabpad{height:calc(64px + max(16px,calc(env(safe-area-inset-bottom) - 10px)) + 20px)}
 .o-note{padding:12px 16px;background:${T_GR};border-radius:16px;font-size:15px;line-height:21px;font-weight:700}
@@ -258,7 +258,7 @@ const LS = {
   raw(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 };
 const S2_KEY = 'fl2_state';
-const S2_DEF = { v: 1, name: '', onboard: null, mis: null, started: [], cur: null, basi: [], expl: { d: '', n: 0 }, tests: {}, ans: {}, duel: { w: 0, l: 0, last: null }, xp: {}, gold: {}, seen: {},
+const S2_DEF = { v: 1, name: '', onboard: null, mis: null, started: [], cur: null, basi: [], expl: { d: '', n: 0 }, tests: {}, ans: {}, duel: { w: 0, l: 0, last: null }, serie: { best: 0, n: 0, last: 0 }, xp: {}, gold: {}, seen: {},
   settings: { goalMin: 10, remind: false, remindAt: '19:30', lang: 'Italiano', examEn: true } };
 let s2 = null; const s2subs = new Set();
 // dati salvati con una forma sbagliata (versioni vecchie, memoria rovinata): si torna al valore di partenza di quel campo
@@ -595,7 +595,7 @@ function league() {
   const wk = weekKey(), start = new Date(wk + 'T00:00:00').getTime(), frac = clamp((Date.now() - start) / (7 * DAY), 0.02, 1);
   const mine = (s2get().xp || {})[wk] || 0;
   const rows = RIVALS.map((name, i) => { const r = seedRnd(wk + name); const target = 180 + Math.round(r() * 640); return { name, xp: Math.round(target * Math.pow(frac, 0.85) / 2) * 2 }; });
-  rows.push({ name: 'Tu', xp: mine, me: true });
+  rows.push({ name: 'You', xp: mine, me: true });
   rows.sort((a, b) => b.xp - a.xp || (a.me ? -1 : 1));
   rows.forEach((r, i) => { r.pos = i + 1; });
   return { rows, me: rows.find(r => r.me), name: 'Blue League' };
@@ -616,7 +616,7 @@ const D_TABS = {
   coach: 'M4 5h16v11H9l-5 4z',
   profilo: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0'
 };
-const TAB_NAMES = [['home', 'Learn'], ['allenati', 'Practice'], ['sfide', 'Challenges'], ['coach', 'AI Coach'], ['profilo', 'Profile']].filter(t => LANG !== 'en' || t[0] !== 'sfide');   // le sfide hanno le domande e l'arbitro in italiano: in inglese per ora non ci sono
+const TAB_NAMES = [['home', 'Learn'], ['allenati', 'Practice'], ['sfide', 'Challenges'], ['coach', 'AI Coach'], ['profilo', 'Profile']];
 
 // Rally: pose disegnate (file in rally/*.svg)
 function Rally({ pose = 'saluta', w = 228, style, alt = '' }) {
@@ -1538,7 +1538,7 @@ function ArticleScreen({ nav, id, from }) {
     const failed = NEWS.mesi[m] === null, gone = Array.isArray(NEWS.mesi[m]);
     return html`<div class="o-scr"><div class="o-top o-pad"><div class="o-rowf" style="height:44px">${back}</div>
       <p class="o-body o-mut" style="margin-top:24px">${failed ? 'Non riesco a caricare questa notizia. Controlla la connessione.' : gone ? 'Questa notizia non è più disponibile.' : 'Sto caricando la notizia.'}</p>
-      ${failed && html`<div style="margin-top:14px"><${Btn} cls="sm" bg=${GIALLO} onClick=${() => newsMonthLoad(m)}>Riprova<//></div>`}</div></div>`;
+      ${failed && html`<div style="margin-top:14px"><${Btn} cls="sm" bg=${GIALLO} onClick=${() => newsMonthLoad(m)}>Try again<//></div>`}</div></div>`;
   }
   const day = a.data || n.data, min = newsMinutes(a);
   const pool = n.items.some(x => x.id === a.id) ? n.items : (NEWS.mesi[m] || []);
@@ -1616,7 +1616,7 @@ function NewsArchiveScreen({ nav }) {
       <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:22px;max-width:200px"><h1 class="o-h1m">Tutte le notizie</h1><${Pill}>${pill}<//></div>`}>
     <${Sheet} pad=${false} style=${{ paddingTop: 6, paddingBottom: 'max(28px, calc(env(safe-area-inset-bottom) + 16px))' }}>
       ${!list && html`<p class="o-body o-mut" style="margin-top:18px">${n.idxErr ? 'Non riesco a caricare le notizie. Controlla la connessione.' : 'Sto caricando le notizie.'}</p>`}
-      ${!list && n.idxErr && html`<div style="margin-top:14px"><${Btn} cls="sm" bg=${GIALLO} onClick=${newsIndexLoad}>Riprova<//></div>`}
+      ${!list && n.idxErr && html`<div style="margin-top:14px"><${Btn} cls="sm" bg=${GIALLO} onClick=${newsIndexLoad}>Try again<//></div>`}
       ${list && !tot && html`<p class="o-body o-mut" style="margin-top:18px">Qui trovi tutti gli articoli, giorno per giorno. Il primo arriva presto.</p>`}
       ${groups.slice(0, days).map(g => html`<div key=${g.day} class="o-col" style="margin-top:18px">
         <div style="margin-bottom:2px">${newsLab(newsDayHead(g.day), 700)}</div>
@@ -1671,6 +1671,7 @@ function AllenatiScreen({ nav }) {
     <${Sheet}>
       <h2 class="o-h2" style="margin-bottom:4px">Or pick your own</h2>
       <${Row} icon=${PathIco(D_TABS.allenati, 22, 2.4)} title="Mixed quiz" sub=${misCourses().length > 1 ? '10 questions from your paths' : '10 questions from your path'} chev=${true} onClick=${() => nav.go('pratica', { mode: 'mix' })}/>
+      <${Row} icon=${PathIco(D_SENZAFINE, 22, 2.4)} title="Endless run" sub=${serieStato().best > 0 ? `Endless questions, your record is ${serieStato().best}` : 'Endless questions: the third mistake ends it'} chev=${true} onClick=${() => nav.go('pratica', { mode: 'serie' })}/>
       <${Row} icon=${Ico(Target, 22)} title="Weak spots" sub=${weak ? weak.name : 'Rally finds them from your answers'} chev=${true} onClick=${() => nav.go('deboli')}/>
       ${exam ? html`<${Row} icon=${Ico(Timer, 22)} title="Mock exam" sub=${mock ? `CFA Level II, last score ${Math.round(mock.ok / mock.n * 100)}%` : 'CFA Level II, 44 timed questions'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>`
         : html`<${Row} icon=${Ico(Compass, 22)} title="Level test" sub="5 questions to see where you stand" chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'level', course: cur.id })}/>`}
@@ -1846,7 +1847,9 @@ function buildPractice(mode, sectionId) {
   const done = pool.filter(l => isHad(l.key)); const src = allQuestions(done).length >= 5 ? done : pool;
   return sh(allQuestions(src)).slice(0, 10).map(q => ({ q, l: q.lesson }));
 }
-function PracticeRun({ nav, mode, section }) {
+// 'serie' è il gioco delle domande generate (p45_serie.js): passa da qui per non aggiungere una schermata nuova all'elenco dell'app
+function PracticeRun(p) { return p.mode === 'serie' ? html`<${SerieRun} nav=${p.nav}/>` : html`<${PracticeQuiz} ...${p}/>`; }
+function PracticeQuiz({ nav, mode, section }) {
   const items = useMemo(() => buildPractice(mode, section), [mode, section]);
   const [i, setI] = useState(0), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [okN, setOkN] = useState(0), [left, setLeft] = useState(null), [tab, setTab] = useState('case'), [end, setEnd] = useState(false);
   const scrollRef = useRef(null);
@@ -1920,6 +1923,588 @@ function WeakScreen({ nav }) {
     <//>
   <//>`;
 }
+// =====================================================================================================
+// MOTORE DELLE DOMANDE GENERATE: stampi di calcolo e tabelle di fatti
+// =====================================================================================================
+// Codice puro: niente schermo, niente memoria del telefono, niente rete. Non usa niente del resto dell'app,
+// così lo stesso file può servire anche all'arbitro delle sfide (sfide/).
+// Una domanda nasce in due tempi:
+//   1. GEN.crea(tipo, seme)            → il "nucleo": numeri, risposte e posizione della giusta. Niente parole: è uguale in tutte le lingue.
+//   2. GEN.testo(nucleo, lingua, valuta) → domanda, risposte e spiegazione scritte in quella lingua.
+// Lo stesso tipo con lo stesso seme dà sempre lo stesso nucleo: due telefoni (o un telefono e l'arbitro) vedono la stessa domanda.
+// Regole dei contenuti:
+//   - la risposta giusta di uno stampo la calcola `ok`; le sbagliate nascono dagli errori tipici (`err`), ognuno con la sua spiegazione;
+//   - ogni stampo e ogni fatto è scritto in tutte le lingue attive (it, en): senza una lingua non entra nel gioco;
+//   - i fatti hanno la fonte in dev/ordine/FONTI_GIOCHI.md; niente fatti che scadono (cariche, tassi del momento) o contestati.
+// Il collaudo (dev/giochi/collauda.mjs) genera migliaia di domande per tipo e rifà i conti con un secondo programma scritto a parte.
+const GEN = (() => {
+  const V = 1;   // cambia quando cambia il modo di generare: due telefoni con V diversa non darebbero lo stesso nucleo dallo stesso seme
+
+  // ---- il caso: stessa sequenza dallo stesso seme (mulberry32) ----
+  function caso(seme) {
+    let a = seme >>> 0;
+    return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  }
+  const scegli = (R, a) => a[Math.floor(R() * a.length)];
+  const mescola = (R, lista) => { const a = lista.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
+  // arrotonda a d decimali, con il 5 che va lontano dallo zero (2,5 → 3; −2,5 → −3)
+  const giro = (x, d = 0) => { const m = Math.pow(10, d); return Math.round(x * m + (x >= 0 ? 1e-7 : -1e-7)) / m || 0; };
+  const intero = x => Math.abs(x - Math.round(x)) < 1e-9;
+
+  // ---- come si scrive il valore di una risposta ----
+  // d: decimali; rel e abs: distanza minima tra due risposte (in rapporto alla giusta e in assoluto); segno: si scrive anche il +
+  const FORMA = {
+    soldi: { d: 0, rel: 0.03, abs: 5 },
+    pct: { d: 1, rel: 0.08, abs: 0.5 },
+    pct2: { d: 2, rel: 0.04, abs: 0.15 },
+    seg: { d: 1, rel: 0.08, abs: 0.5, segno: true },
+    seg2: { d: 2, rel: 0.08, abs: 0.4, segno: true },
+    anni: { d: 0, rel: 0.2, abs: 2 }
+  };
+
+  // ---- la penna: numeri, soldi e percentuali scritti come vuole la lingua ----
+  const NB = '\u00A0';
+  function penna(lang, cur) {
+    const en = lang === 'en', G = en ? ',' : '.', D = en ? '.' : ',', sim = cur || '€';
+    // n(2000) → 2.000 · n(3.5, 1) → 3,5 · n(4, 1) → 4 (gli zeri in fondo si tolgono, se non è `fisso`)
+    const n = (x, d = 0, fisso) => {
+      let s = Math.abs(x).toFixed(d); if (d && !fisso) s = s.replace(/\.?0+$/, '');
+      const k = s.indexOf('.'), i = (k < 0 ? s : s.slice(0, k)).replace(/\B(?=(\d{3})+(?!\d))/g, G), f = k < 0 ? '' : s.slice(k + 1);
+      return (x < 0 ? '−' : '') + i + (f ? D + f : '');
+    };
+    const soldi = x => { const t = intero(x) ? n(x) : n(x, 2, true); return en ? sim + t : t + NB + sim; };
+    const pct = (x, d = 1) => n(x, d) + '%';
+    const seg = (x, d = 1) => (giro(x, d) > 0 ? '+' : '') + n(x, d) + '%';
+    // in italiano l'articolo cambia davanti a 1, 8, 11, 80-89: l'8%, all'8%, dell'8%
+    const voc = x => { const k = Math.floor(Math.abs(x)); return k === 1 || k === 8 || k === 11 || (k >= 80 && k <= 89) || (k >= 800 && k <= 899); };
+    const ilp = (x, d = 1) => (voc(x) ? "l'" : 'il ') + pct(x, d), alp = (x, d = 1) => (voc(x) ? "all'" : 'al ') + pct(x, d), delp = (x, d = 1) => (voc(x) ? "dell'" : 'del ') + pct(x, d);
+    const anni = x => en ? `${n(x)} ${x === 1 ? 'year' : 'years'}` : `${n(x)} ${x === 1 ? 'anno' : 'anni'}`;
+    // dentro una formula: la virgola va tra graffe, il % con la barra, il meno è quello semplice
+    const f = s => String(s).replace(/−/g, '-').replace(/,/g, '{,}').replace(/%/g, '\\%');
+    const fn = (x, d = 0, fisso) => f(n(x, d, fisso));
+    const fs = x => intero(x) ? fn(x) : fn(x, 2, true);   // una cifra in valuta dentro una formula: 20 oppure 0,20
+    const valore = (forma, x) => forma === 'soldi' ? soldi(x) : forma === 'anni' ? (en ? 'About ' : 'Circa ') + anni(x) : forma === 'seg' || forma === 'seg2' ? seg(x, FORMA[forma].d) : pct(x, FORMA[forma].d);
+    return { en, n, soldi, pct, ilp, alp, delp, seg, anni, f, fn, fs, valore };
+  }
+
+  // =====================================================================================================
+  // STAMPI DI CALCOLO
+  // =====================================================================================================
+  // par(R): sceglie i numeri (null = combinazione da scartare) · ok(p): la risposta giusta · err: gli errori tipici
+  // it / en: q(p, W) la domanda, exp(p, W, ok) la spiegazione con la formula prima a lettere e poi a numeri, err: una riga per ogni errore tipico
+  const cap = (r, n) => Math.pow(1 + r / 100, n);
+  const STAMPI = {
+    semplice: {
+      liv: 1, tema: 'tempo', forma: 'soldi',
+      par: R => ({ C: scegli(R, [500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 8000, 10000]), r: scegli(R, [2, 3, 4, 5, 6, 8]), n: scegli(R, [2, 3, 4, 5, 6, 8, 10]) }),
+      ok: p => p.C * p.r / 100 * p.n,
+      err: { montante: p => p.C + p.C * p.r / 100 * p.n, unanno: p => p.C * p.r / 100, composto: p => p.C * (cap(p.r, p.n) - 1) },
+      it: {
+        q: (p, W) => `Presti ${W.soldi(p.C)} a un amico per ${W.anni(p.n)}, ${W.alp(p.r)} l'anno. Gli interessi si calcolano ogni anno solo sulla cifra prestata (interesse semplice). Quanti interessi incassi in tutto?`,
+        exp: (p, W, ok) => `Con l'**interesse semplice** ogni anno incassi la stessa cifra, calcolata sempre sul capitale di partenza.\n\n$$I = C \\times r \\times n$$\n\n\\(C\\) = capitale prestato, \\(r\\) = tasso annuo, \\(n\\) = anni, \\(I\\) = interessi in tutto.\n\n$$I = ${W.fn(p.C)} \\times ${W.fn(p.r / 100, 2, true)} \\times ${p.n} = ${W.fn(ok)}$$\n\nIn tutto incassi **${W.soldi(ok)}** di interessi.`,
+        err: { montante: 'Hai sommato anche il capitale: la domanda chiede solo gli interessi.', unanno: 'Questi sono gli interessi di un solo anno: vanno moltiplicati per gli anni.', composto: 'Hai fatto rendere anche gli interessi (interesse composto): qui si calcolano solo sulla cifra prestata.' }
+      },
+      en: {
+        q: (p, W) => `You lend a friend ${W.soldi(p.C)} for ${W.anni(p.n)} at ${W.pct(p.r)} a year. Interest is figured each year only on the amount you lent (simple interest). How much interest do you earn in total?`,
+        exp: (p, W, ok) => `With **simple interest** you earn the same amount every year, always figured on the starting principal.\n\n$$I = C \\times r \\times n$$\n\n\\(C\\) = principal you lent, \\(r\\) = annual rate, \\(n\\) = years, \\(I\\) = total interest.\n\n$$I = ${W.fn(p.C)} \\times ${W.fn(p.r / 100, 2, true)} \\times ${p.n} = ${W.fn(ok)}$$\n\nIn total you earn **${W.soldi(ok)}** in interest.`,
+        err: { montante: 'You added the principal too: the question asks only for the interest.', unanno: 'This is the interest for one year only: multiply it by the number of years.', composto: 'You let the interest earn interest too (compound interest): here it is figured only on the amount you lent.' }
+      }
+    },
+    composto: {
+      liv: 2, tema: 'tempo', forma: 'soldi',
+      par: R => ({ C: scegli(R, [500, 1000, 1500, 2000, 3000, 4000, 5000, 8000, 10000, 20000]), r: scegli(R, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]), n: scegli(R, [2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30]) }),
+      ok: p => p.C * cap(p.r, p.n),
+      err: { semplice: p => p.C * (1 + p.r / 100 * p.n), soloint: p => p.C * (cap(p.r, p.n) - 1), meno1: p => p.C * cap(p.r, p.n - 1) },
+      it: {
+        q: (p, W) => `Metti ${W.soldi(p.C)} in un investimento che rende ${W.ilp(p.r)} l'anno. Ogni anno gli interessi restano investiti e rendono anche loro. Quanto hai dopo ${W.anni(p.n)}?`,
+        exp: (p, W, ok) => `Gli interessi di ogni anno si aggiungono al capitale e l'anno dopo rendono anche loro: è l'**interesse composto**.\n\n$$M = C \\times (1 + r)^n$$\n\n\\(C\\) = capitale di partenza, \\(r\\) = tasso annuo, \\(n\\) = anni, \\(M\\) = quanto hai alla fine.\n\n$$M = ${W.fn(p.C)} \\times ${W.fn(1 + p.r / 100, 2, true)}^{${p.n}} = ${W.fn(ok)}$$\n\nAlla fine hai **${W.soldi(ok)}** (cifra arrotondata).`,
+        err: { semplice: 'Hai calcolato gli interessi sempre sul capitale di partenza (interesse semplice): mancano gli interessi sugli interessi.', soloint: 'Questi sono solo gli interessi: la domanda chiede quanto hai in tutto, capitale compreso.', meno1: 'Hai contato un anno in meno.' }
+      },
+      en: {
+        q: (p, W) => `You put ${W.soldi(p.C)} into an investment that returns ${W.pct(p.r)} a year. Each year the interest stays invested and earns interest too. How much do you have after ${W.anni(p.n)}?`,
+        exp: (p, W, ok) => `Each year's interest is added to the principal, and the next year it earns interest too: this is **compound interest**.\n\n$$M = C \\times (1 + r)^n$$\n\n\\(C\\) = starting principal, \\(r\\) = annual rate, \\(n\\) = years, \\(M\\) = what you have at the end.\n\n$$M = ${W.fn(p.C)} \\times ${W.fn(1 + p.r / 100, 2, true)}^{${p.n}} = ${W.fn(ok)}$$\n\nAt the end you have **${W.soldi(ok)}** (rounded).`,
+        err: { semplice: 'You figured the interest only on the starting principal (simple interest): the interest on the interest is missing.', soloint: 'This is only the interest: the question asks how much you have in total, principal included.', meno1: 'You counted one year too few.' }
+      }
+    },
+    attuale: {
+      liv: 3, tema: 'tempo', forma: 'soldi',
+      par: R => ({ F: scegli(R, [500, 1000, 2000, 3000, 5000, 8000, 10000, 15000, 20000, 50000, 100000]), r: scegli(R, [2, 3, 4, 5, 6, 7, 8, 10]), n: scegli(R, [2, 3, 4, 5, 8, 10, 15, 20, 25, 30]) }),
+      ok: p => p.F / cap(p.r, p.n),
+      err: { capitalizza: p => p.F * cap(p.r, p.n), lineare: p => p.F / (1 + p.r / 100 * p.n), sottrae: p => p.F * (1 - p.r / 100 * p.n) },
+      it: {
+        q: (p, W) => `Tra ${W.anni(p.n)} ti servono ${W.soldi(p.F)}. Hai un investimento che rende ${W.ilp(p.r)} l'anno, con gli interessi che restano investiti. Quanto devi metterci oggi per arrivare a quella cifra?`,
+        exp: (p, W, ok) => `È il conto dell'interesse composto fatto al contrario: si parte dalla cifra futura e si torna a oggi. La cifra di oggi si chiama **valore attuale**.\n\n$$VA = \\frac{F}{(1 + r)^n}$$\n\n\\(F\\) = cifra che ti serve in futuro, \\(r\\) = tasso annuo, \\(n\\) = anni, \\(VA\\) = quanto devi mettere oggi.\n\n$$VA = \\frac{${W.fn(p.F)}}{${W.fn(1 + p.r / 100, 2, true)}^{${p.n}}} = ${W.fn(ok)}$$\n\nOggi devi mettere **${W.soldi(ok)}** (cifra arrotondata).`,
+        err: { capitalizza: 'Hai moltiplicato invece di dividere: così trovi quanto diventerebbe quella cifra in futuro, non quanto serve oggi.', lineare: 'Hai tolto gli interessi come se fossero semplici: qui gli interessi restano investiti e rendono anche loro.', sottrae: 'Hai tolto il tasso moltiplicato per gli anni dalla cifra finale: gli interessi si calcolano sulla cifra di oggi, non su quella futura.' }
+      },
+      en: {
+        q: (p, W) => `In ${W.anni(p.n)} you will need ${W.soldi(p.F)}. You have an investment that returns ${W.pct(p.r)} a year, with the interest staying invested. How much do you have to put in today to reach that amount?`,
+        exp: (p, W, ok) => `This is the compound interest calculation done backward: you start from the future amount and come back to today. Today's amount is called the **present value**.\n\n$$PV = \\frac{F}{(1 + r)^n}$$\n\n\\(F\\) = amount you need in the future, \\(r\\) = annual rate, \\(n\\) = years, \\(PV\\) = how much you have to put in today.\n\n$$PV = \\frac{${W.fn(p.F)}}{${W.fn(1 + p.r / 100, 2, true)}^{${p.n}}} = ${W.fn(ok)}$$\n\nToday you have to put in **${W.soldi(ok)}** (rounded).`,
+        err: { capitalizza: 'You multiplied instead of dividing: that gives what the amount would grow to in the future, not what you need today.', lineare: 'You removed the interest as if it were simple: here the interest stays invested and earns interest too.', sottrae: 'You subtracted the rate times the years from the final amount: interest is figured on today’s amount, not on the future one.' }
+      }
+    },
+    reale: {
+      liv: 2, tema: 'tempo', forma: 'seg',
+      par: R => { const i = scegli(R, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]), f = scegli(R, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]); return i === f ? null : { i, f }; },
+      ok: p => ((1 + p.i / 100) / (1 + p.f / 100) - 1) * 100,
+      err: { somma: p => p.i + p.f, ignora: p => p.i, rovescia: p => ((1 + p.f / 100) / (1 + p.i / 100) - 1) * 100 },
+      it: {
+        q: (p, W) => `In un anno i tuoi risparmi rendono ${W.ilp(p.i)}. Nello stesso anno i prezzi salgono ${W.delp(p.f)}. Di quanto è cambiato davvero quello che puoi comprare con quei soldi?`,
+        exp: (p, W, ok) => `Quello che conta è il **rendimento reale**: quanto resta del rendimento dopo aver tolto l'aumento dei prezzi.\n\n$$r_{\\text{reale}} = \\frac{1 + i}{1 + \\pi} - 1$$\n\n\\(i\\) = rendimento dei risparmi, \\(\\pi\\) = aumento dei prezzi (inflazione).\n\n$$r_{\\text{reale}} = \\frac{${W.fn(1 + p.i / 100, 2, true)}}{${W.fn(1 + p.f / 100, 2, true)}} - 1 = ${W.f(W.seg(ok))}$$\n\nA mente basta la differenza: \\(${W.f(W.pct(p.i))} - ${W.f(W.pct(p.f))} = ${W.f(W.seg(p.i - p.f))}\\), che è quasi lo stesso numero.`,
+        err: { somma: 'Hai sommato l\'aumento dei prezzi: l\'inflazione si toglie dal rendimento, non si aggiunge.', ignora: 'Hai guardato solo il rendimento: se intanto i prezzi salgono, con quei soldi compri meno.', rovescia: 'Il segno è al contrario: si parte dal rendimento e si toglie l\'aumento dei prezzi.' }
+      },
+      en: {
+        q: (p, W) => `In one year your savings earn ${W.pct(p.i)}. In the same year prices rise ${W.pct(p.f)}. By how much has what you can buy with that money really changed?`,
+        exp: (p, W, ok) => `What matters is the **real return**: what is left of the return after taking out the rise in prices.\n\n$$r_{\\text{real}} = \\frac{1 + i}{1 + \\pi} - 1$$\n\n\\(i\\) = return on your savings, \\(\\pi\\) = rise in prices (inflation).\n\n$$r_{\\text{real}} = \\frac{${W.fn(1 + p.i / 100, 2, true)}}{${W.fn(1 + p.f / 100, 2, true)}} - 1 = ${W.f(W.seg(ok))}$$\n\nIn your head, the difference is enough: \\(${W.f(W.pct(p.i))} - ${W.f(W.pct(p.f))} = ${W.f(W.seg(p.i - p.f))}\\), which is almost the same number.`,
+        err: { somma: 'You added the rise in prices: inflation is taken out of the return, not added to it.', ignora: 'You looked only at the return: if prices rise in the meantime, that money buys less.', rovescia: 'The sign is reversed: you start from the return and take out the rise in prices.' }
+      }
+    },
+    variazione: {
+      liv: 1, tema: 'azioni', forma: 'seg',
+      par: R => { const A = scegli(R, [10, 16, 20, 25, 30, 40, 50, 60, 75, 80, 125, 150, 200, 250, 300, 400, 500, 1000]), v = scegli(R, [-75, -60, -50, -40, -30, -25, -20, -10, -5, 5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 80, 150, 200]), B = A * (1 + v / 100); return intero(B) ? { A, B: Math.round(B) } : null; },
+      ok: p => (p.B - p.A) / p.A * 100,
+      err: { suarrivo: p => (p.B - p.A) / p.B * 100, differenza: p => p.B - p.A, rapporto: p => p.B / p.A * 100 },
+      it: {
+        q: (p, W) => `Un'azione passa da ${W.soldi(p.A)} a ${W.soldi(p.B)}. Di quanto è cambiato il prezzo, in percentuale?`,
+        exp: (p, W, ok) => `La variazione si misura sempre rispetto al **prezzo di partenza**.\n\n$$\\text{variazione} = \\frac{P_1 - P_0}{P_0}$$\n\n\\(P_0\\) = prezzo di partenza, \\(P_1\\) = prezzo di arrivo.\n\n$$\\frac{${W.fn(p.B)} - ${W.fn(p.A)}}{${W.fn(p.A)}} = ${W.f(W.seg(ok))}$$`,
+        err: { suarrivo: 'Hai diviso per il prezzo di arrivo: la variazione si calcola sul prezzo di partenza.', differenza: 'Questa è la differenza tra i due prezzi, non la percentuale: va divisa per il prezzo di partenza.', rapporto: 'Questo è il prezzo di arrivo in percentuale di quello di partenza: per la variazione bisogna togliere 100.' }
+      },
+      en: {
+        q: (p, W) => `A stock goes from ${W.soldi(p.A)} to ${W.soldi(p.B)}. By what percentage has the price changed?`,
+        exp: (p, W, ok) => `A change is always measured against the **starting price**.\n\n$$\\text{change} = \\frac{P_1 - P_0}{P_0}$$\n\n\\(P_0\\) = starting price, \\(P_1\\) = ending price.\n\n$$\\frac{${W.fn(p.B)} - ${W.fn(p.A)}}{${W.fn(p.A)}} = ${W.f(W.seg(ok))}$$`,
+        err: { suarrivo: 'You divided by the ending price: the change is figured on the starting price.', differenza: 'This is the difference between the two prices, not the percentage: divide it by the starting price.', rapporto: 'This is the ending price as a percentage of the starting one: for the change you have to subtract 100.' }
+      }
+    },
+    recupero: {
+      liv: 2, tema: 'rischio', forma: 'pct',
+      par: R => { const x = scegli(R, [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90]), P = scegli(R, [10, 20, 30, 40, 50, 60, 80, 100, 150, 200, 250, 400, 500, 1000]); return { P, x, Q: giro(P * (1 - x / 100), 2) }; },
+      ok: p => p.x / (100 - p.x) * 100,
+      err: { uguale: p => p.x, doppio: p => 2 * p.x, suuno: p => p.x / (100 + p.x) * 100 },
+      it: {
+        q: (p, W) => `Un'azione vale ${W.soldi(p.P)}. In un anno perde ${W.ilp(p.x)} e scende a ${W.soldi(p.Q)}. Di quanto deve salire, da lì, per tornare a ${W.soldi(p.P)}?`,
+        exp: (p, W, ok) => `Dopo una perdita si riparte da una cifra più bassa: per recuperare gli stessi soldi serve una percentuale più alta.\n\n$$\\text{recupero} = \\frac{P_0 - P_1}{P_1}$$\n\n\\(P_0\\) = prezzo prima della perdita, \\(P_1\\) = prezzo dopo la perdita.\n\n$$\\frac{${W.fn(p.P)} - ${W.fs(p.Q)}}{${W.fs(p.Q)}} = ${W.f(W.pct(ok))}$$\n\nPiù la perdita è grande, più la risalita che serve è lunga.`,
+        err: { uguale: 'Non basta la stessa percentuale: dopo la perdita si calcola su una cifra più bassa, quindi si recupera meno.', doppio: 'Non è il doppio della perdita: la risalita si calcola dividendo i soldi persi per il nuovo prezzo.', suuno: 'Hai diviso per una cifra più alta del prezzo di partenza: si divide per il prezzo dopo la perdita.' }
+      },
+      en: {
+        q: (p, W) => `A stock is worth ${W.soldi(p.P)}. In one year it loses ${W.pct(p.x)} and falls to ${W.soldi(p.Q)}. By how much does it have to rise from there to get back to ${W.soldi(p.P)}?`,
+        exp: (p, W, ok) => `After a loss you start again from a lower amount: to win back the same money you need a higher percentage.\n\n$$\\text{recovery} = \\frac{P_0 - P_1}{P_1}$$\n\n\\(P_0\\) = price before the loss, \\(P_1\\) = price after the loss.\n\n$$\\frac{${W.fn(p.P)} - ${W.fs(p.Q)}}{${W.fs(p.Q)}} = ${W.f(W.pct(ok))}$$\n\nThe bigger the loss, the longer the climb back.`,
+        err: { uguale: 'The same percentage is not enough: after the loss it is figured on a lower amount, so it wins back less.', doppio: 'It is not double the loss: the climb back is the money lost divided by the new price.', suuno: 'You divided by an amount higher than the starting price: divide by the price after the loss.' }
+      }
+    },
+    raddoppio: {
+      liv: 2, tema: 'tempo', forma: 'anni',
+      par: R => ({ C: scegli(R, [100, 200, 300, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 8000, 10000, 20000, 50000]), r: scegli(R, [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15]) }),
+      ok: p => Math.log(2) / Math.log(1 + p.r / 100),
+      err: { cento: p => 100 / p.r, meta: p => 50 / p.r, triplo: p => 144 / p.r },
+      it: {
+        q: (p, W) => `Hai ${W.soldi(p.C)} investiti ${W.alp(p.r)} l'anno, con gli interessi che restano investiti. Dopo circa quanti anni diventano ${W.soldi(2 * p.C)}?`,
+        exp: (p, W, ok) => `C'è una scorciatoia, la **regola del 72**: dividi 72 per il tasso e trovi più o meno gli anni che servono per raddoppiare.\n\n$$\\text{anni} \\approx \\frac{72}{r}$$\n\n\\(r\\) = tasso annuo, scritto come numero (${p.r} per ${W.ilp(p.r)}).\n\n$$\\frac{72}{${p.r}} ${72 % p.r ? '\\approx' : '='} ${W.fn(72 / p.r, 1)}$$\n\nIl conto esatto con l'interesse composto dà ${W.n(Math.log(2) / Math.log(1 + p.r / 100), 1, true)} anni: la risposta giusta è **circa ${W.anni(ok)}**.`,
+        err: { cento: 'Hai diviso 100 per il tasso: varrebbe se gli interessi non rendessero a loro volta. Con l\'interesse composto si fa prima.', meta: 'Troppo presto: in questi anni il capitale non è ancora raddoppiato. La scorciatoia è 72 diviso il tasso.', triplo: 'Troppo tardi: in questi anni il capitale è circa quadruplicato. La scorciatoia è 72 diviso il tasso.' }
+      },
+      en: {
+        q: (p, W) => `You have ${W.soldi(p.C)} invested at ${W.pct(p.r)} a year, with the interest staying invested. After about how many years does it become ${W.soldi(2 * p.C)}?`,
+        exp: (p, W, ok) => `There is a shortcut, the **rule of 72**: divide 72 by the rate and you get roughly the years it takes to double.\n\n$$\\text{years} \\approx \\frac{72}{r}$$\n\n\\(r\\) = annual rate, written as a number (${p.r} for ${W.pct(p.r)}).\n\n$$\\frac{72}{${p.r}} ${72 % p.r ? '\\approx' : '='} ${W.fn(72 / p.r, 1)}$$\n\nThe exact compound interest calculation gives ${W.n(Math.log(2) / Math.log(1 + p.r / 100), 1, true)} years: the right answer is **about ${W.anni(ok)}**.`,
+        err: { cento: 'You divided 100 by the rate: that would hold if the interest did not earn interest itself. With compound interest it takes less time.', meta: 'Too soon: in these years the money has not doubled yet. The shortcut is 72 divided by the rate.', triplo: 'Too late: in these years the money has grown to about four times. The shortcut is 72 divided by the rate.' }
+      }
+    },
+    dividendo: {
+      liv: 1, tema: 'azioni', forma: 'pct',
+      par: R => { const P = scegli(R, [5, 8, 10, 15, 16, 20, 25, 30, 40, 50, 60, 80, 125, 150, 200, 250, 400]), y = scegli(R, [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8]), D = P * y / 100; return intero(D * 100) ? { P, D: giro(D, 2) } : null; },
+      ok: p => p.D / p.P * 100,
+      err: { inverso: p => p.P / p.D, solodiv: p => p.D, dieci: p => p.D / p.P * 1000 },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)} e paga un dividendo di ${W.soldi(p.D)} l'anno. Quanto rende il solo dividendo, in percentuale del prezzo?`,
+        exp: (p, W, ok) => `Il rendimento da dividendo dice quanto incassi ogni anno rispetto a quello che spendi per comprare l'azione.\n\n$$\\text{rendimento} = \\frac{D}{P}$$\n\n\\(D\\) = dividendo di un anno, \\(P\\) = prezzo dell'azione.\n\n$$\\frac{${W.fs(p.D)}}{${W.fn(p.P)}} = ${W.f(W.pct(ok))}$$`,
+        err: { inverso: 'Hai diviso il prezzo per il dividendo: va fatto il contrario, dividendo diviso prezzo.', solodiv: 'Questo è il dividendo in valuta, non in percentuale: va diviso per il prezzo.', dieci: 'C\'è uno zero di troppo: dividendo diviso prezzo, poi per 100.' }
+      },
+      en: {
+        q: (p, W) => `A stock costs ${W.soldi(p.P)} and pays a dividend of ${W.soldi(p.D)} a year. How much does the dividend alone return, as a percentage of the price?`,
+        exp: (p, W, ok) => `The dividend yield tells you how much you collect each year compared with what you spend to buy the stock.\n\n$$\\text{yield} = \\frac{D}{P}$$\n\n\\(D\\) = one year's dividend, \\(P\\) = price of the stock.\n\n$$\\frac{${W.fs(p.D)}}{${W.fn(p.P)}} = ${W.f(W.pct(ok))}$$`,
+        err: { inverso: 'You divided the price by the dividend: it goes the other way, dividend divided by price.', solodiv: 'This is the dividend in money, not as a percentage: divide it by the price.', dieci: 'There is one zero too many: dividend divided by price, then times 100.' }
+      }
+    },
+    cedola: {
+      liv: 3, tema: 'obbligazioni', forma: 'pct2',
+      par: R => ({ c: scegli(R, [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7]), P: scegli(R, [70, 75, 80, 85, 90, 95, 105, 110, 115, 120, 125]) }),
+      ok: p => p.c / p.P * 100,
+      err: { nominale: p => p.c, rovescio: p => p.c * p.P / 100, sconto: p => p.c + (100 - p.P) },
+      it: {
+        q: (p, W) => `Un'obbligazione paga ogni anno una cedola di ${W.soldi(p.c)} per ogni ${W.soldi(100)} di valore nominale. Oggi sul mercato costa ${W.soldi(p.P)}. Se la compri oggi, quanto ti rende la cedola rispetto a quello che paghi?`,
+        exp: (p, W, ok) => `La cedola è fissa, ma tu paghi il prezzo di oggi: è su quello che va misurata. Si chiama **rendimento immediato**.\n\n$$\\text{rendimento immediato} = \\frac{c}{P}$$\n\n\\(c\\) = cedola di un anno, \\(P\\) = prezzo di oggi.\n\n$$\\frac{${W.fs(p.c)}}{${W.fn(p.P)}} = ${W.f(W.pct(ok, 2))}$$\n\n${p.P < 100 ? 'Il prezzo è sotto 100: la stessa cedola pesa di più su una spesa più bassa.' : 'Il prezzo è sopra 100: la stessa cedola pesa di meno su una spesa più alta.'}`,
+        err: { nominale: 'Questa è la cedola rispetto al valore nominale: tu però non paghi 100, paghi il prezzo di oggi.', rovescio: 'Hai moltiplicato la cedola per il prezzo: va divisa per il prezzo.', sconto: 'Hai aggiunto alla cedola la differenza tra 100 e il prezzo: quella si incassa (o si perde) alla scadenza, non ogni anno.' }
+      },
+      en: {
+        q: (p, W) => `A bond pays a coupon of ${W.soldi(p.c)} every year for each ${W.soldi(100)} of face value. Today it costs ${W.soldi(p.P)} on the market. If you buy it today, how much does the coupon return compared with what you pay?`,
+        exp: (p, W, ok) => `The coupon is fixed, but you pay today's price: that is what it should be measured against. It is called the **current yield**.\n\n$$\\text{current yield} = \\frac{c}{P}$$\n\n\\(c\\) = one year's coupon, \\(P\\) = today's price.\n\n$$\\frac{${W.fs(p.c)}}{${W.fn(p.P)}} = ${W.f(W.pct(ok, 2))}$$\n\n${p.P < 100 ? 'The price is below 100: the same coupon weighs more on a lower outlay.' : 'The price is above 100: the same coupon weighs less on a higher outlay.'}`,
+        err: { nominale: 'This is the coupon compared with the face value: but you do not pay 100, you pay today’s price.', rovescio: 'You multiplied the coupon by the price: divide it by the price.', sconto: 'You added the gap between 100 and the price to the coupon: that is collected (or lost) at maturity, not every year.' }
+      }
+    },
+    portafoglio: {
+      liv: 2, tema: 'rischio', forma: 'seg2',
+      par: R => { const w = scegli(R, [20, 25, 30, 40, 60, 70, 75, 80]), a = scegli(R, [-20, -10, 6, 8, 10, 12, 15, 20]), b = scegli(R, [-2, 1, 2, 3, 4, 5]); return { w, a, b }; },
+      ok: p => (p.w * p.a + (100 - p.w) * p.b) / 100,
+      err: { media: p => (p.a + p.b) / 2, soloazioni: p => p.w * p.a / 100, somma: p => p.a + p.b },
+      it: {
+        q: (p, W) => `Hai ${W.ilp(p.w)} dei tuoi soldi in azioni e il resto in obbligazioni. In un anno le azioni fanno ${W.seg(p.a)} e le obbligazioni ${W.seg(p.b)}. Quanto ha reso tutto il portafoglio?`,
+        exp: (p, W, ok) => `Ogni parte conta per il **peso** che ha nel portafoglio: è una media pesata.\n\n$$R_p = w_A \\times R_A + w_O \\times R_O$$\n\n\\(w_A\\) = quota in azioni, \\(R_A\\) = rendimento delle azioni, \\(w_O\\) = quota in obbligazioni, \\(R_O\\) = rendimento delle obbligazioni.\n\n$$R_p = ${W.fn(p.w / 100, 2, true)} \\times ${p.a < 0 ? '(' + W.f(W.pct(p.a)) + ')' : W.f(W.pct(p.a))} + ${W.fn(1 - p.w / 100, 2, true)} \\times ${p.b < 0 ? '(' + W.f(W.pct(p.b)) + ')' : W.f(W.pct(p.b))} = ${W.f(W.seg(ok, 2))}$$`,
+        err: { media: 'Hai fatto la media semplice dei due rendimenti: andrebbe bene solo con metà dei soldi da una parte e metà dall\'altra.', soloazioni: 'Hai contato solo le azioni: manca la parte in obbligazioni.', somma: 'Hai sommato i due rendimenti: ognuno va prima moltiplicato per la sua quota.' }
+      },
+      en: {
+        q: (p, W) => `You have ${W.pct(p.w)} of your money in stocks and the rest in bonds. In one year the stocks return ${W.seg(p.a)} and the bonds ${W.seg(p.b)}. How much did the whole portfolio return?`,
+        exp: (p, W, ok) => `Each part counts for the **weight** it has in the portfolio: it is a weighted average.\n\n$$R_p = w_S \\times R_S + w_B \\times R_B$$\n\n\\(w_S\\) = share in stocks, \\(R_S\\) = return on the stocks, \\(w_B\\) = share in bonds, \\(R_B\\) = return on the bonds.\n\n$$R_p = ${W.fn(p.w / 100, 2, true)} \\times ${p.a < 0 ? '(' + W.f(W.pct(p.a)) + ')' : W.f(W.pct(p.a))} + ${W.fn(1 - p.w / 100, 2, true)} \\times ${p.b < 0 ? '(' + W.f(W.pct(p.b)) + ')' : W.f(W.pct(p.b))} = ${W.f(W.seg(ok, 2))}$$`,
+        err: { media: 'You took the simple average of the two returns: that would work only with half the money on each side.', soloazioni: 'You counted only the stocks: the bond part is missing.', somma: 'You added the two returns: each one must first be multiplied by its share.' }
+      }
+    },
+    totale: {
+      liv: 2, tema: 'azioni', forma: 'seg',
+      par: R => { const A = scegli(R, [20, 25, 40, 50, 80, 100, 200]), g = scegli(R, [-20, -10, -5, 5, 10, 15, 20, 30]), d = scegli(R, [1, 2, 3, 4, 5]), B = A * (1 + g / 100), D = A * d / 100; return intero(B * 2) && intero(D * 100) ? { A, B: giro(B, 2), D: giro(D, 2) } : null; },
+      ok: p => (p.B - p.A + p.D) / p.A * 100,
+      err: { soloprezzo: p => (p.B - p.A) / p.A * 100, solodiv: p => p.D / p.A * 100, suarrivo: p => (p.B - p.A + p.D) / p.B * 100 },
+      it: {
+        q: (p, W) => `Compri un'azione a ${W.soldi(p.A)}. Dopo un anno vale ${W.soldi(p.B)} e nel frattempo hai incassato ${W.soldi(p.D)} di dividendo. Quanto hai guadagnato o perso in tutto, in percentuale di quello che hai speso?`,
+        exp: (p, W, ok) => `Il **rendimento totale** mette insieme le due cose: quanto è cambiato il prezzo e quanto hai incassato di dividendo.\n\n$$R = \\frac{P_1 - P_0 + D}{P_0}$$\n\n\\(P_0\\) = prezzo a cui hai comprato, \\(P_1\\) = prezzo dopo un anno, \\(D\\) = dividendo incassato.\n\n$$R = \\frac{${W.fs(p.B)} - ${W.fn(p.A)} + ${W.fs(p.D)}}{${W.fn(p.A)}} = ${W.f(W.seg(ok))}$$`,
+        err: { soloprezzo: 'Hai guardato solo il prezzo: manca il dividendo incassato.', solodiv: 'Hai contato solo il dividendo: manca quanto è cambiato il prezzo.', suarrivo: 'Hai diviso per il prezzo finale: il rendimento si calcola su quello che hai speso all\'inizio.' }
+      },
+      en: {
+        q: (p, W) => `You buy a stock at ${W.soldi(p.A)}. After one year it is worth ${W.soldi(p.B)} and in the meantime you collected ${W.soldi(p.D)} in dividends. How much did you gain or lose in total, as a percentage of what you spent?`,
+        exp: (p, W, ok) => `The **total return** puts the two things together: how much the price changed and how much you collected in dividends.\n\n$$R = \\frac{P_1 - P_0 + D}{P_0}$$\n\n\\(P_0\\) = price you bought at, \\(P_1\\) = price after one year, \\(D\\) = dividend collected.\n\n$$R = \\frac{${W.fs(p.B)} - ${W.fn(p.A)} + ${W.fs(p.D)}}{${W.fn(p.A)}} = ${W.f(W.seg(ok))}$$`,
+        err: { soloprezzo: 'You looked only at the price: the dividend you collected is missing.', solodiv: 'You counted only the dividend: the change in price is missing.', suarrivo: 'You divided by the final price: the return is figured on what you spent at the start.' }
+      }
+    },
+    margine: {
+      liv: 1, tema: 'azienda', forma: 'pct',
+      par: R => { const Ri = scegli(R, [20000, 30000, 40000, 50000, 60000, 80000, 100000, 120000, 150000, 200000, 250000, 300000, 400000, 500000, 800000, 1000000, 2000000, 5000000]), m = 2 + Math.floor(R() * 44); return { R: Ri, C: Math.round(Ri * (100 - m) / 100) }; },
+      ok: p => (p.R - p.C) / p.R * 100,
+      err: { costi: p => p.C / p.R * 100, suicosti: p => (p.R - p.C) / p.C * 100, rapporto: p => p.R / p.C * 100 },
+      it: {
+        q: (p, W) => `In un anno un'azienda incassa ${W.soldi(p.R)} dalle vendite e spende ${W.soldi(p.C)}. Che parte delle vendite le resta come utile, in percentuale?`,
+        exp: (p, W, ok) => `È il **margine di utile**: quanto resta in tasca all'azienda per ogni 100 di vendite.\n\n$$\\text{margine} = \\frac{R - C}{R}$$\n\n\\(R\\) = ricavi (quello che incassa dalle vendite), \\(C\\) = costi.\n\n$$\\frac{${W.fn(p.R)} - ${W.fn(p.C)}}{${W.fn(p.R)}} = ${W.f(W.pct(ok))}$$`,
+        err: { costi: 'Questa è la parte delle vendite che se ne va in costi: l\'utile è quello che resta.', suicosti: 'Hai diviso l\'utile per i costi: il margine si calcola sulle vendite.', rapporto: 'Hai diviso le vendite per i costi: prima va trovato l\'utile, poi lo si divide per le vendite.' }
+      },
+      en: {
+        q: (p, W) => `In one year a company takes in ${W.soldi(p.R)} from sales and spends ${W.soldi(p.C)}. What share of its sales is left as profit, as a percentage?`,
+        exp: (p, W, ok) => `This is the **profit margin**: how much the company keeps for every 100 of sales.\n\n$$\\text{margin} = \\frac{R - C}{R}$$\n\n\\(R\\) = revenue (what it takes in from sales), \\(C\\) = costs.\n\n$$\\frac{${W.fn(p.R)} - ${W.fn(p.C)}}{${W.fn(p.R)}} = ${W.f(W.pct(ok))}$$`,
+        err: { costi: 'This is the share of sales that goes to costs: the profit is what is left.', suicosti: 'You divided the profit by the costs: the margin is figured on sales.', rapporto: 'You divided sales by costs: first find the profit, then divide it by sales.' }
+      }
+    }
+  };
+
+  function lontano(v, altri, ok, F) { const soglia = Math.max(F.abs, F.rel * Math.abs(ok)); return altri.every(u => Math.abs(v - u) >= soglia - 1e-9); }
+  function creaCalcolo(T, R) {
+    const F = FORMA[T.forma];
+    for (let giri = 0; giri < 300; giri++) {
+      const p = T.par(R); if (!p) continue;
+      const ok = giro(T.ok(p), F.d); if (!isFinite(ok)) continue;
+      const sb = [];
+      for (const k of mescola(R, Object.keys(T.err))) {
+        const x = T.err[k](p); if (x == null || !isFinite(x)) continue;
+        const v = giro(x, F.d); if (!F.segno && v <= 0) continue;
+        if (lontano(v, [ok].concat(sb.map(s => s.v)), ok, F)) sb.push({ k, v });
+        if (sb.length === 2) break;
+      }
+      if (sb.length < 2) continue;
+      const o = mescola(R, [{ k: 'ok', v: ok }].concat(sb));
+      return { p, o, a: o.findIndex(x => x.k === 'ok') };
+    }
+    return null;   // il collaudo controlla che non succeda mai
+  }
+
+  // =====================================================================================================
+  // TABELLE DI FATTI (fonti in dev/ordine/FONTI_GIOCHI.md)
+  // =====================================================================================================
+  // Persone: chi (domanda → nome) e cosa (nome → idea). `piu`: il nome è di due persone.
+  const PERSONE = [
+    { id: 'smith', nome: 'Adam Smith',
+      it: { q: 'Chi ha scritto «La ricchezza delle nazioni», il libro del 1776 da cui parte l\'economia moderna?', cosa: '«La ricchezza delle nazioni» e l\'immagine della mano invisibile', exp: '**Adam Smith** pubblicò «La ricchezza delle nazioni» nel 1776. Lì compare l\'immagine della mano invisibile: chi cerca il proprio guadagno finisce spesso per fare anche l\'interesse degli altri.' },
+      en: { q: 'Who wrote ‘The Wealth of Nations’, the 1776 book where modern economics begins?', cosa: '‘The Wealth of Nations’ and the image of the invisible hand', exp: '**Adam Smith** published ‘The Wealth of Nations’ in 1776. It contains the image of the invisible hand: people seeking their own gain often end up serving the interest of others too.' } },
+    { id: 'ricardo', nome: 'David Ricardo',
+      it: { q: 'Chi ha spiegato il vantaggio comparato, cioè perché a due paesi conviene commerciare anche quando uno dei due è più bravo in tutto?', cosa: 'Il vantaggio comparato nel commercio tra paesi', exp: '**David Ricardo** espose il vantaggio comparato nel 1817: a ogni paese conviene produrre ciò in cui è relativamente più bravo e scambiare il resto.' },
+      en: { q: 'Who explained comparative advantage, that is, why two countries gain from trading even when one of them is better at everything?', cosa: 'Comparative advantage in trade between countries', exp: '**David Ricardo** set out comparative advantage in 1817: each country gains by producing what it is relatively better at and trading for the rest.' } },
+    { id: 'keynes', nome: 'John Maynard Keynes',
+      it: { q: 'Chi ha scritto la «Teoria generale» del 1936, sostenendo che nelle crisi lo Stato può sostenere la spesa quando famiglie e imprese la tagliano?', cosa: 'La «Teoria generale»: nelle crisi lo Stato può sostenere la spesa', exp: '**John Maynard Keynes** pubblicò la «Teoria generale dell\'occupazione, dell\'interesse e della moneta» nel 1936, negli anni della Grande Depressione.' },
+      en: { q: 'Who wrote the 1936 ‘General Theory’, arguing that in a slump the government can support spending when households and businesses cut back?', cosa: 'The ‘General Theory’: in a slump the government can support spending', exp: '**John Maynard Keynes** published ‘The General Theory of Employment, Interest and Money’ in 1936, during the Great Depression.' } },
+    { id: 'marx', nome: 'Karl Marx',
+      it: { q: 'Chi ha scritto «Il Capitale», il cui primo volume uscì nel 1867?', cosa: '«Il Capitale», una critica del capitalismo', exp: '**Karl Marx** pubblicò il primo volume de «Il Capitale» nel 1867.' },
+      en: { q: 'Who wrote ‘Capital’ (‘Das Kapital’), whose first volume came out in 1867?', cosa: '‘Capital’, a critique of capitalism', exp: '**Karl Marx** published the first volume of ‘Capital’ in 1867.' } },
+    { id: 'friedman', nome: 'Milton Friedman',
+      it: { q: 'Quale economista, premio Nobel nel 1976, è il nome più noto del monetarismo, l\'idea che l\'inflazione dipenda dalla quantità di moneta in circolazione?', cosa: 'Il monetarismo: l\'inflazione dipende dalla quantità di moneta', exp: '**Milton Friedman**, premio Nobel per l\'economia nel 1976, sosteneva che l\'inflazione nasce quando la moneta in circolazione cresce più in fretta della produzione.' },
+      en: { q: 'Which economist, a 1976 Nobel laureate, is the best-known name in monetarism, the idea that inflation depends on the amount of money in circulation?', cosa: 'Monetarism: inflation depends on the amount of money', exp: '**Milton Friedman**, winner of the 1976 Nobel Prize in economics, argued that inflation arises when the money in circulation grows faster than output.' } },
+    { id: 'markowitz', nome: 'Harry Markowitz',
+      it: { q: 'Chi ha mostrato nel 1952 come costruire un portafoglio guardando insieme rendimento e rischio, dando una base matematica alla diversificazione?', cosa: 'La teoria del portafoglio: diversificare riduce il rischio', exp: '**Harry Markowitz** pubblicò «Portfolio Selection» nel 1952: il rischio di un portafoglio dipende da come i titoli si muovono tra loro, non solo dal rischio di ciascuno.' },
+      en: { q: 'Who showed in 1952 how to build a portfolio by looking at return and risk together, giving diversification a mathematical basis?', cosa: 'Portfolio theory: diversifying reduces risk', exp: '**Harry Markowitz** published ‘Portfolio Selection’ in 1952: the risk of a portfolio depends on how its securities move together, not only on the risk of each one.' } },
+    { id: 'sharpe', nome: 'William Sharpe',
+      it: { q: 'Quale economista dà il nome all\'indice che misura quanto rendimento in più ottieni per ogni unità di rischio che corri?', cosa: 'L\'indice che confronta il rendimento con il rischio corso', exp: '**William Sharpe** propose negli anni Sessanta l\'indice che porta il suo nome: rendimento in più rispetto a un investimento senza rischio, diviso per il rischio corso.' },
+      en: { q: 'Which economist gave his name to the ratio that measures how much extra return you get for each unit of risk you take?', cosa: 'The ratio that compares return with the risk taken', exp: '**William Sharpe** proposed in the 1960s the ratio that bears his name: the return above a risk-free investment, divided by the risk taken.' } },
+    { id: 'fama', nome: 'Eugene Fama',
+      it: { q: 'Chi ha formulato l\'ipotesi dei mercati efficienti, secondo cui i prezzi contengono già le informazioni disponibili?', cosa: 'L\'ipotesi dei mercati efficienti: i prezzi contengono già le informazioni', exp: '**Eugene Fama** è l\'economista legato all\'ipotesi dei mercati efficienti: se i prezzi riflettono già le informazioni disponibili, battere il mercato con regolarità è molto difficile.' },
+      en: { q: 'Who formulated the efficient market hypothesis, which says prices already contain the available information?', cosa: 'The efficient market hypothesis: prices already contain the information', exp: '**Eugene Fama** is the economist tied to the efficient market hypothesis: if prices already reflect the available information, beating the market consistently is very hard.' } },
+    { id: 'kahneman', nome: 'Daniel Kahneman',
+      it: { q: 'Quale psicologo, premio Nobel per l\'economia nel 2002, ha mostrato con Amos Tversky che una perdita pesa più di un guadagno della stessa cifra?', cosa: 'Con Tversky: una perdita pesa più di un guadagno uguale', exp: '**Daniel Kahneman** studiò con Amos Tversky come le persone decidono davvero. Nel 2002 ricevette il Nobel per l\'economia.' },
+      en: { q: 'Which psychologist, winner of the 2002 Nobel Prize in economics, showed with Amos Tversky that a loss weighs more than a gain of the same size?', cosa: 'With Tversky: a loss weighs more than an equal gain', exp: '**Daniel Kahneman** studied with Amos Tversky how people really decide. In 2002 he received the Nobel Prize in economics.' } },
+    { id: 'graham', nome: 'Benjamin Graham',
+      it: { q: 'Chi ha scritto «L\'investitore intelligente» (1949) ed è considerato il padre dell\'investimento basato sul valore?', cosa: '«L\'investitore intelligente»: comprare a meno di quanto vale', exp: '**Benjamin Graham** pubblicò «L\'investitore intelligente» nel 1949. Tra i suoi allievi ci fu Warren Buffett.' },
+      en: { q: 'Who wrote ‘The Intelligent Investor’ (1949) and is considered the father of value investing?', cosa: '‘The Intelligent Investor’: buying for less than it is worth', exp: '**Benjamin Graham** published ‘The Intelligent Investor’ in 1949. Warren Buffett was one of his students.' } },
+    { id: 'bogle', nome: 'John Bogle',
+      it: { q: 'Chi ha fondato Vanguard e lanciato nel 1976 il primo fondo indicizzato aperto ai piccoli risparmiatori?', cosa: 'Il primo fondo indicizzato per i piccoli risparmiatori', exp: '**John Bogle** fondò Vanguard e nel 1976 lanciò il primo fondo aperto a tutti che si limitava a copiare un indice di Borsa, con costi bassi.' },
+      en: { q: 'Who founded Vanguard and in 1976 launched the first index fund open to small investors?', cosa: 'The first index fund for small investors', exp: '**John Bogle** founded Vanguard and in 1976 launched the first fund open to everyone that simply copied a stock index, at low cost.' } },
+    { id: 'malthus', nome: 'Thomas Malthus',
+      it: { q: 'Chi sostenne nel 1798 che la popolazione tende a crescere più in fretta del cibo disponibile?', cosa: 'La popolazione tende a crescere più in fretta del cibo', exp: '**Thomas Malthus** pubblicò il «Saggio sul principio di popolazione» nel 1798.' },
+      en: { q: 'Who argued in 1798 that population tends to grow faster than the food supply?', cosa: 'Population tends to grow faster than the food supply', exp: '**Thomas Malthus** published ‘An Essay on the Principle of Population’ in 1798.' } },
+    { id: 'schumpeter', nome: 'Joseph Schumpeter',
+      it: { q: 'Chi ha reso celebre l\'espressione «distruzione creatrice», con cui le imprese e i prodotti nuovi prendono il posto di quelli vecchi?', cosa: 'La distruzione creatrice: il nuovo prende il posto del vecchio', exp: '**Joseph Schumpeter** rese celebre l\'espressione «distruzione creatrice» nel libro «Capitalismo, socialismo e democrazia» del 1942.' },
+      en: { q: 'Who made famous the phrase ‘creative destruction’, by which new firms and products take the place of old ones?', cosa: 'Creative destruction: the new takes the place of the old', exp: '**Joseph Schumpeter** made the phrase ‘creative destruction’ famous in his 1942 book ‘Capitalism, Socialism and Democracy’.' } },
+    { id: 'pareto', nome: 'Vilfredo Pareto',
+      it: { q: 'Quale economista italiano dà il nome alla situazione in cui non si può far stare meglio qualcuno senza far stare peggio qualcun altro?', cosa: 'Nessuno può stare meglio senza che un altro stia peggio', exp: '**Vilfredo Pareto** dà il nome all\'ottimo paretiano: una situazione in cui ogni miglioramento per qualcuno costerebbe un peggioramento a qualcun altro.' },
+      en: { q: 'Which Italian economist gave his name to the situation where no one can be made better off without making someone else worse off?', cosa: 'No one can be better off without someone else being worse off', exp: '**Vilfredo Pareto** gave his name to Pareto efficiency: a situation where any improvement for someone would cost someone else a loss.' } },
+    { id: 'fisher', nome: 'Irving Fisher',
+      it: { q: 'Quale economista dà il nome all\'equazione che lega tasso nominale, tasso reale e inflazione?', cosa: 'L\'equazione che lega tasso nominale, tasso reale e inflazione', exp: '**Irving Fisher** dà il nome all\'equazione che separa il tasso che vedi (nominale) da quello che resta dopo l\'inflazione (reale).' },
+      en: { q: 'Which economist gave his name to the equation that links the nominal rate, the real rate and inflation?', cosa: 'The equation that links the nominal rate, the real rate and inflation', exp: '**Irving Fisher** gave his name to the equation that separates the rate you see (nominal) from what is left after inflation (real).' } },
+    { id: 'modigliani', nome: 'Franco Modigliani',
+      it: { q: 'Quale economista italiano, premio Nobel nel 1985, firmò con Merton Miller il teorema sul rapporto tra i debiti di un\'impresa e il suo valore?', cosa: 'Con Miller: il teorema sul rapporto tra debiti e valore dell\'impresa', exp: '**Franco Modigliani** e Merton Miller pubblicarono il loro teorema nel 1958. Modigliani ricevette il Nobel per l\'economia nel 1985.' },
+      en: { q: 'Which Italian economist, a 1985 Nobel laureate, wrote with Merton Miller the theorem on the relation between a firm’s debt and its value?', cosa: 'With Miller: the theorem on the relation between debt and firm value', exp: '**Franco Modigliani** and Merton Miller published their theorem in 1958. Modigliani received the Nobel Prize in economics in 1985.' } },
+    { id: 'pacioli', nome: 'Luca Pacioli',
+      it: { q: 'Quale frate matematico descrisse in un libro del 1494 la partita doppia, il metodo con cui si tengono ancora oggi i conti delle aziende?', cosa: 'La prima descrizione a stampa della partita doppia', exp: '**Luca Pacioli** descrisse la partita doppia nella «Summa de arithmetica», stampata a Venezia nel 1494. Il metodo era già usato dai mercanti: lui lo mise per iscritto.' },
+      en: { q: 'Which friar and mathematician described double-entry bookkeeping, the method still used to keep company accounts, in a 1494 book?', cosa: 'The first printed description of double-entry bookkeeping', exp: '**Luca Pacioli** described double-entry bookkeeping in the ‘Summa de arithmetica’, printed in Venice in 1494. Merchants already used the method: he put it in writing.' } },
+    { id: 'nash', nome: 'John Nash',
+      it: { q: 'Quale matematico dà il nome all\'equilibrio in cui a nessun giocatore conviene cambiare mossa da solo?', cosa: 'L\'equilibrio in cui a nessuno conviene cambiare mossa da solo', exp: '**John Nash** dà il nome all\'equilibrio più usato nella teoria dei giochi. Nel 1994 ricevette il Nobel per l\'economia.' },
+      en: { q: 'Which mathematician gave his name to the equilibrium where no player gains by changing their move alone?', cosa: 'The equilibrium where no one gains by changing their move alone', exp: '**John Nash** gave his name to the most widely used equilibrium in game theory. In 1994 he received the Nobel Prize in economics.' } },
+    { id: 'minsky', nome: 'Hyman Minsky',
+      it: { q: 'Quale economista sostenne che i periodi di calma spingono a fare troppi debiti, e che così la stabilità prepara la crisi successiva?', cosa: 'La stabilità spinge a fare troppi debiti e prepara la crisi', exp: '**Hyman Minsky** è l\'economista dell\'ipotesi dell\'instabilità finanziaria. Il momento in cui i debiti accumulati fanno scattare la crisi viene chiamato «momento Minsky».' },
+      en: { q: 'Which economist argued that calm periods push people to take on too much debt, so that stability prepares the next crisis?', cosa: 'Stability pushes people into too much debt and prepares the crisis', exp: '**Hyman Minsky** is the economist of the financial instability hypothesis. The moment when built-up debt sets off the crisis is called a ‘Minsky moment’.' } },
+    { id: 'blackscholes', nome: 'Fischer Black e Myron Scholes', nomeEn: 'Fischer Black and Myron Scholes', piu: true,
+      it: { q: 'Chi pubblicò nel 1973 la formula più famosa per calcolare il prezzo delle opzioni?', cosa: 'La formula del 1973 per il prezzo delle opzioni', exp: '**Fischer Black e Myron Scholes** pubblicarono la loro formula nel 1973. Nello stesso anno Robert Merton ne ampliò la teoria.' },
+      en: { q: 'Who published in 1973 the most famous formula for pricing options?', cosa: 'The 1973 formula for pricing options', exp: '**Fischer Black and Myron Scholes** published their formula in 1973. In the same year Robert Merton extended the theory.' } }
+  ];
+  // Eventi: quando (domanda → anno) e prima (quale dei tre è avvenuto per primo). `evita`: anni che non devono comparire tra le risposte sbagliate.
+  const EVENTI = [
+    { id: 'mps', anno: 1472,
+      it: { q: 'A quale anno fa risalire le sue origini il Monte dei Paschi di Siena, considerata la banca più antica ancora in attività?', nome: 'La nascita a Siena del Monte Pio, poi Monte dei Paschi', exp: 'Il Monte dei Paschi fa risalire le sue origini al **1472**, quando a Siena nacque il Monte Pio. Il nome di oggi arrivò nel 1624. È considerata la banca più antica ancora in attività.' },
+      en: { q: 'To what year does Monte dei Paschi di Siena, considered the oldest bank still in business, trace its origins?', nome: 'The founding in Siena of the Monte Pio, later Monte dei Paschi', exp: 'Monte dei Paschi traces its origins to **1472**, when the Monte Pio was set up in Siena. Today’s name came in 1624. It is considered the oldest bank still in business.' } },
+    { id: 'voc', anno: 1602,
+      it: { q: 'In che anno nacque la Compagnia olandese delle Indie Orientali, considerata la prima società con azioni scambiate in Borsa?', nome: 'La nascita della Compagnia olandese delle Indie Orientali', exp: 'La Compagnia olandese delle Indie Orientali nacque nel **1602**. Le sue azioni si scambiavano ad Amsterdam: è considerata la prima società quotata.' },
+      en: { q: 'In what year was the Dutch East India Company founded, considered the first company with shares traded on an exchange?', nome: 'The founding of the Dutch East India Company', exp: 'The Dutch East India Company was founded in **1602**. Its shares were traded in Amsterdam: it is considered the first publicly traded company.' } },
+    { id: 'tulipani', anno: 1637,
+      it: { q: 'In che anno scoppiò in Olanda la bolla dei tulipani, quando i prezzi dei bulbi crollarono di colpo?', nome: 'Lo scoppio della bolla dei tulipani in Olanda', exp: 'I prezzi dei bulbi di tulipano crollarono nel febbraio del **1637**: è una delle prime bolle speculative di cui si ha notizia.' },
+      en: { q: 'In what year did the tulip bubble burst in Holland, when bulb prices suddenly collapsed?', nome: 'The bursting of the tulip bubble in Holland', exp: 'Tulip bulb prices collapsed in February **1637**: it is one of the first speculative bubbles on record.' } },
+    { id: 'boe', anno: 1694,
+      it: { q: 'In che anno fu fondata la Banca d\'Inghilterra?', nome: 'La fondazione della Banca d\'Inghilterra', exp: 'La Banca d\'Inghilterra fu fondata nel **1694**: è una delle banche centrali più antiche del mondo.' },
+      en: { q: 'In what year was the Bank of England founded?', nome: 'The founding of the Bank of England', exp: 'The Bank of England was founded in **1694**: it is one of the oldest central banks in the world.' } },
+    { id: 'buttonwood', anno: 1792,
+      it: { q: 'In che anno un gruppo di agenti firmò a New York l\'accordo di Buttonwood, da cui nacque la Borsa di Wall Street?', nome: 'L\'accordo di Buttonwood a New York', exp: 'L\'accordo di Buttonwood fu firmato a New York nel **1792**: da quel gruppo di agenti nacque la Borsa di New York.' },
+      en: { q: 'In what year did a group of brokers in New York sign the Buttonwood Agreement, from which the Wall Street stock exchange was born?', nome: 'The Buttonwood Agreement in New York', exp: 'The Buttonwood Agreement was signed in New York in **1792**: the New York Stock Exchange grew out of that group of brokers.' } },
+    { id: 'fed', anno: 1913,
+      it: { q: 'In che anno fu creata la Federal Reserve, la banca centrale degli Stati Uniti?', nome: 'La nascita della Federal Reserve', exp: 'La Federal Reserve fu creata con una legge del dicembre **1913**.' },
+      en: { q: 'In what year was the Federal Reserve, the central bank of the United States, created?', nome: 'The creation of the Federal Reserve', exp: 'The Federal Reserve was created by a law passed in December **1913**.' } },
+    { id: 'crollo29', anno: 1929,
+      it: { q: 'In che anno ci fu il grande crollo di Wall Street a cui seguì la Grande Depressione?', nome: 'Il grande crollo di Wall Street', exp: 'La Borsa di New York crollò nell\'ottobre del **1929**. Seguì la Grande Depressione.' },
+      en: { q: 'In what year was the great Wall Street crash that was followed by the Great Depression?', nome: 'The great Wall Street crash', exp: 'The New York stock market crashed in October **1929**. The Great Depression followed.' } },
+    { id: 'bretton', anno: 1944,
+      it: { q: 'In che anno furono firmati gli accordi di Bretton Woods, che legarono le monete al dollaro e il dollaro all\'oro?', nome: 'Gli accordi di Bretton Woods', exp: 'Gli accordi di Bretton Woods furono firmati nel luglio del **1944**. Da lì nacquero anche il Fondo monetario internazionale e la Banca mondiale.' },
+      en: { q: 'In what year were the Bretton Woods agreements signed, tying currencies to the dollar and the dollar to gold?', nome: 'The Bretton Woods agreements', exp: 'The Bretton Woods agreements were signed in July **1944**. The International Monetary Fund and the World Bank also came out of them.' } },
+    { id: 'nixon', anno: 1971,
+      it: { q: 'In che anno gli Stati Uniti sospesero la conversione del dollaro in oro, chiudendo di fatto il sistema di Bretton Woods?', nome: 'La fine della conversione del dollaro in oro', exp: 'Il presidente Nixon sospese la conversione del dollaro in oro nell\'agosto del **1971**.' },
+      en: { q: 'In what year did the United States suspend the conversion of the dollar into gold, in effect ending the Bretton Woods system?', nome: 'The end of the dollar’s conversion into gold', exp: 'President Nixon suspended the conversion of the dollar into gold in August **1971**.' } },
+    { id: 'lunedinero', anno: 1987,
+      it: { q: 'In che anno ci fu il «lunedì nero», quando la Borsa di New York perse più del 20% in un solo giorno?', nome: 'Il «lunedì nero» della Borsa di New York', exp: 'Il 19 ottobre **1987** l\'indice Dow Jones perse più del 20% in una sola seduta.' },
+      en: { q: 'In what year was ‘Black Monday’, when the New York stock market lost more than 20% in a single day?', nome: '‘Black Monday’ on the New York stock market', exp: 'On October 19, **1987**, the Dow Jones index lost more than 20% in a single session.' } },
+    { id: 'maastricht', anno: 1992, evita: [1993],
+      it: { q: 'In che anno fu firmato il Trattato di Maastricht, che aprì la strada all\'euro?', nome: 'La firma del Trattato di Maastricht', exp: 'Il Trattato di Maastricht fu firmato nel febbraio del **1992** ed entrò in vigore l\'anno dopo.' },
+      en: { q: 'In what year was the Maastricht Treaty signed, opening the way to the euro?', nome: 'The signing of the Maastricht Treaty', exp: 'The Maastricht Treaty was signed in February **1992** and came into force the following year.' } },
+    { id: 'bce', anno: 1998, evita: [1999],
+      it: { q: 'In che anno è nata la Banca centrale europea?', nome: 'La nascita della Banca centrale europea', exp: 'La Banca centrale europea è nata il 1° giugno **1998**, pochi mesi prima dell\'euro.' },
+      en: { q: 'In what year was the European Central Bank established?', nome: 'The establishment of the European Central Bank', exp: 'The European Central Bank was established on June 1, **1998**, a few months before the euro.' } },
+    { id: 'euro', anno: 1999, evita: [1998, 2002],
+      it: { q: 'In che anno è nato l\'euro, all\'inizio solo per i conti e i pagamenti elettronici?', nome: 'La nascita dell\'euro', exp: 'L\'euro è nato il 1° gennaio **1999**, all\'inizio solo per i conti e i pagamenti elettronici. Banconote e monete sono arrivate tre anni dopo.' },
+      en: { q: 'In what year was the euro launched, at first only for accounts and electronic payments?', nome: 'The launch of the euro', exp: 'The euro was launched on January 1, **1999**, at first only for accounts and electronic payments. Banknotes and coins arrived three years later.' } },
+    { id: 'dotcom', anno: 2000, evita: [1999, 2001, 2002],
+      it: { q: 'In che anno la bolla delle società di internet (dot-com) toccò il massimo e cominciò a sgonfiarsi?', nome: 'Lo scoppio della bolla delle società di internet', exp: 'L\'indice Nasdaq toccò il massimo nel marzo del **2000**, poi cominciò una lunga discesa.' },
+      en: { q: 'In what year did the internet company (dot-com) bubble peak and begin to deflate?', nome: 'The bursting of the dot-com bubble', exp: 'The Nasdaq index peaked in March **2000**, then began a long decline.' } },
+    { id: 'contanti', anno: 2002, evita: [1999],
+      it: { q: 'In che anno sono entrate in circolazione le banconote e le monete in euro?', nome: 'L\'arrivo di banconote e monete in euro', exp: 'Banconote e monete in euro sono entrate in circolazione il 1° gennaio **2002**.' },
+      en: { q: 'In what year did euro banknotes and coins come into circulation?', nome: 'The arrival of euro banknotes and coins', exp: 'Euro banknotes and coins came into circulation on January 1, **2002**.' } },
+    { id: 'lehman', anno: 2008, evita: [2007, 2009],
+      it: { q: 'In che anno fallì la banca d\'affari americana Lehman Brothers?', nome: 'Il fallimento di Lehman Brothers', exp: 'Lehman Brothers dichiarò fallimento il 15 settembre **2008**: fu il momento più acuto della crisi finanziaria.' },
+      en: { q: 'In what year did the U.S. investment bank Lehman Brothers go bankrupt?', nome: 'The bankruptcy of Lehman Brothers', exp: 'Lehman Brothers filed for bankruptcy on September 15, **2008**: it was the sharpest moment of the financial crisis.' } },
+    { id: 'bitcoin', anno: 2009, evita: [2008],
+      it: { q: 'In che anno è stato creato il primo blocco di Bitcoin?', nome: 'Il primo blocco di Bitcoin', exp: 'Il primo blocco di Bitcoin è stato creato nel gennaio del **2009**.' },
+      en: { q: 'In what year was the first Bitcoin block created?', nome: 'The first Bitcoin block', exp: 'The first Bitcoin block was created in January **2009**.' } },
+    { id: 'draghi', anno: 2012, evita: [2011],
+      it: { q: 'In che anno Mario Draghi, presidente della BCE, disse che la banca avrebbe fatto «tutto il necessario» per salvare l\'euro?', nome: 'Il discorso di Draghi sul «tutto il necessario» per l\'euro', exp: 'Mario Draghi lo disse a Londra il 26 luglio **2012** («whatever it takes»). Dopo quel discorso la pressione sui titoli di Stato dei paesi più in difficoltà cominciò a scendere.' },
+      en: { q: 'In what year did Mario Draghi, president of the ECB, say the bank would do ‘whatever it takes’ to save the euro?', nome: 'Draghi’s ‘whatever it takes’ speech on the euro', exp: 'Mario Draghi said it in London on July 26, **2012**. After that speech the pressure on the government bonds of the countries in most trouble began to ease.' } }
+  ];
+  // Monete: moneta (paese → moneta) e paese (moneta → paese). Ogni nome di moneta compare in una sola riga.
+  const MONETE = [
+    { id: 'jp', it: { paese: 'Giappone', di: 'del Giappone', val: 'Yen', il: 'lo yen', inn: 'in yen' }, en: { paese: 'Japan', di: 'Japan', val: 'Yen', il: 'the yen', la: 'the yen' } },
+    { id: 'gb', it: { paese: 'Regno Unito', di: 'del Regno Unito', val: 'Sterlina', il: 'la sterlina', inn: 'in sterline' }, en: { paese: 'United Kingdom', di: 'the United Kingdom', val: 'Pound sterling', il: 'the pound sterling', la: 'the pound sterling' } },
+    { id: 'ch', it: { paese: 'Svizzera', di: 'della Svizzera', val: 'Franco', il: 'il franco svizzero', inn: 'in franchi' }, en: { paese: 'Switzerland', di: 'Switzerland', val: 'Franc', il: 'the Swiss franc', la: 'the franc' } },
+    { id: 'cn', it: { paese: 'Cina', di: 'della Cina', val: 'Yuan', il: 'lo yuan (renminbi)', inn: 'in yuan' }, en: { paese: 'China', di: 'China', val: 'Yuan', il: 'the yuan (renminbi)', la: 'the yuan' } },
+    { id: 'in', it: { paese: 'India', di: 'dell\'India', val: 'Rupia', il: 'la rupia indiana', inn: 'in rupie' }, en: { paese: 'India', di: 'India', val: 'Rupee', il: 'the Indian rupee', la: 'the rupee' } },
+    { id: 'br', it: { paese: 'Brasile', di: 'del Brasile', val: 'Real', il: 'il real', inn: 'in real' }, en: { paese: 'Brazil', di: 'Brazil', val: 'Real', il: 'the real', la: 'the real' } },
+    { id: 'mx', it: { paese: 'Messico', di: 'del Messico', val: 'Peso', il: 'il peso messicano', inn: 'in pesos' }, en: { paese: 'Mexico', di: 'Mexico', val: 'Peso', il: 'the Mexican peso', la: 'the peso' } },
+    { id: 'za', it: { paese: 'Sudafrica', di: 'del Sudafrica', val: 'Rand', il: 'il rand', inn: 'in rand' }, en: { paese: 'South Africa', di: 'South Africa', val: 'Rand', il: 'the rand', la: 'the rand' } },
+    { id: 'kr', it: { paese: 'Corea del Sud', di: 'della Corea del Sud', val: 'Won', il: 'il won', inn: 'in won' }, en: { paese: 'South Korea', di: 'South Korea', val: 'Won', il: 'the won', la: 'the won' } },
+    { id: 'pl', it: { paese: 'Polonia', di: 'della Polonia', val: 'Zloty', il: 'lo zloty', inn: 'in zloty' }, en: { paese: 'Poland', di: 'Poland', val: 'Zloty', il: 'the zloty', la: 'the zloty' } },
+    { id: 'th', it: { paese: 'Thailandia', di: 'della Thailandia', val: 'Baht', il: 'il baht', inn: 'in baht' }, en: { paese: 'Thailand', di: 'Thailand', val: 'Baht', il: 'the baht', la: 'the baht' } },
+    { id: 'se', it: { paese: 'Svezia', di: 'della Svezia', val: 'Corona', il: 'la corona svedese', inn: 'in corone' }, en: { paese: 'Sweden', di: 'Sweden', val: 'Krona', il: 'the Swedish krona', la: 'the krona' } }
+  ];
+  // Indici di Borsa: indice (indice → paese) e borsa (paese → indice).
+  const INDICI = [
+    { id: 'mib', nome: 'FTSE MIB', it: { paese: 'Italia', agg: 'italiane', exp: 'Il **FTSE MIB** è l\'indice delle principali società della Borsa di Milano.' }, en: { paese: 'Italy', agg: 'Italian', exp: 'The **FTSE MIB** is the index of the leading companies on the Milan stock exchange.' } },
+    { id: 'dax', nome: 'DAX', it: { paese: 'Germania', agg: 'tedesche', exp: 'Il **DAX** è l\'indice delle principali società della Borsa di Francoforte.' }, en: { paese: 'Germany', agg: 'German', exp: 'The **DAX** is the index of the leading companies on the Frankfurt stock exchange.' } },
+    { id: 'cac', nome: 'CAC 40', it: { paese: 'Francia', agg: 'francesi', exp: 'Il **CAC 40** è l\'indice delle principali società della Borsa di Parigi.' }, en: { paese: 'France', agg: 'French', exp: 'The **CAC 40** is the index of the leading companies on the Paris stock exchange.' } },
+    { id: 'ftse', nome: 'FTSE 100', it: { paese: 'Regno Unito', agg: 'britanniche', exp: 'Il **FTSE 100** è l\'indice delle principali società della Borsa di Londra.' }, en: { paese: 'United Kingdom', agg: 'British', exp: 'The **FTSE 100** is the index of the leading companies on the London Stock Exchange.' } },
+    { id: 'ibex', nome: 'IBEX 35', it: { paese: 'Spagna', agg: 'spagnole', exp: 'L\'**IBEX 35** è l\'indice delle principali società della Borsa di Madrid.' }, en: { paese: 'Spain', agg: 'Spanish', exp: 'The **IBEX 35** is the index of the leading companies on the Madrid stock exchange.' } },
+    { id: 'nikkei', nome: 'Nikkei 225', it: { paese: 'Giappone', agg: 'giapponesi', exp: 'Il **Nikkei 225** è l\'indice più seguito della Borsa di Tokyo.' }, en: { paese: 'Japan', agg: 'Japanese', exp: 'The **Nikkei 225** is the most widely followed index of the Tokyo Stock Exchange.' } },
+    { id: 'sp500', nome: 'S&P 500', it: { paese: 'Stati Uniti', agg: 'americane', exp: 'L\'**S&P 500** raccoglie 500 grandi società quotate negli Stati Uniti.' }, en: { paese: 'United States', agg: 'U.S.', exp: 'The **S&P 500** covers 500 large companies listed in the United States.' } },
+    { id: 'smi', nome: 'SMI', it: { paese: 'Svizzera', agg: 'svizzere', exp: 'L\'**SMI** (Swiss Market Index) è l\'indice delle principali società quotate in Svizzera.' }, en: { paese: 'Switzerland', agg: 'Swiss', exp: 'The **SMI** (Swiss Market Index) is the index of the leading companies listed in Switzerland.' } },
+    { id: 'aex', nome: 'AEX', it: { paese: 'Paesi Bassi', agg: 'olandesi', exp: 'L\'**AEX** è l\'indice delle principali società della Borsa di Amsterdam.' }, en: { paese: 'Netherlands', agg: 'Dutch', exp: 'The **AEX** is the index of the leading companies on the Amsterdam stock exchange.' } },
+    { id: 'ibov', nome: 'Ibovespa', it: { paese: 'Brasile', agg: 'brasiliane', exp: 'L\'**Ibovespa** è l\'indice principale della Borsa di San Paolo.' }, en: { paese: 'Brazil', agg: 'Brazilian', exp: 'The **Ibovespa** is the main index of the São Paulo stock exchange.' } },
+    { id: 'kospi', nome: 'KOSPI', it: { paese: 'Corea del Sud', agg: 'sudcoreane', exp: 'Il **KOSPI** è l\'indice principale della Borsa della Corea del Sud.' }, en: { paese: 'South Korea', agg: 'South Korean', exp: 'The **KOSPI** is the main index of the South Korean stock exchange.' } },
+    { id: 'sensex', nome: 'Sensex', it: { paese: 'India', agg: 'indiane', exp: 'Il **Sensex** è l\'indice più noto della Borsa di Mumbai.' }, en: { paese: 'India', agg: 'Indian', exp: 'The **Sensex** is the best-known index of the Bombay Stock Exchange in Mumbai.' } }
+  ];
+  const perId = lista => { const m = {}; lista.forEach(x => { m[x.id] = x; }); return m; };
+  const P_ID = perId(PERSONE), E_ID = perId(EVENTI), M_ID = perId(MONETE), I_ID = perId(INDICI);
+  const ULTIMO_ANNO = 2025;   // gli anni sbagliati non vanno oltre
+
+  // uno giusto e due sbagliati presi dalla stessa tabella, poi mescolati
+  function terna(R, lista) {
+    const m = mescola(R, lista), giusto = m[0], o = mescola(R, [giusto, m[1], m[2]]);
+    return { p: { f: giusto.id }, o: o.map(x => ({ k: x.id })), a: o.indexOf(giusto) };
+  }
+  const FATTI = {
+    chi: { liv: 2, tema: 'storia', crea: R => terna(R, PERSONE) },
+    cosa: { liv: 2, tema: 'storia', crea: R => terna(R, PERSONE) },
+    moneta: { liv: 1, tema: 'mondo', crea: R => terna(R, MONETE) },
+    paese: { liv: 1, tema: 'mondo', crea: R => terna(R, MONETE) },
+    indice: { liv: 2, tema: 'mondo', crea: R => terna(R, INDICI) },
+    borsa: { liv: 2, tema: 'mondo', crea: R => terna(R, INDICI) },
+    quando: { liv: 3, tema: 'storia', crea: R => {
+      const e = scegli(R, EVENTI), eta = 2026 - e.anno, largo = Math.max(8, Math.min(60, Math.round(eta * 0.15))), anni = [e.anno];
+      for (let giri = 0; giri < 400 && anni.length < 3; giri++) {
+        const y = e.anno + (R() < 0.5 ? -1 : 1) * (4 + Math.floor(R() * (largo - 3)));
+        if (y > ULTIMO_ANNO || (e.evita || []).indexOf(y) >= 0 || anni.some(a => Math.abs(a - y) < 4)) continue;
+        anni.push(y);
+      }
+      if (anni.length < 3) return null;
+      const o = mescola(R, anni);
+      return { p: { f: e.id }, o: o.map(y => ({ k: y === e.anno ? 'ok' : 'anno', v: y })), a: o.indexOf(e.anno) };
+    } },
+    prima: { liv: 3, tema: 'storia', crea: R => {
+      for (let giri = 0; giri < 200; giri++) {
+        const t = mescola(R, EVENTI).slice(0, 3);
+        if (Math.abs(t[0].anno - t[1].anno) < 5 || Math.abs(t[0].anno - t[2].anno) < 5 || Math.abs(t[1].anno - t[2].anno) < 5) continue;
+        const primo = t.slice().sort((x, y) => x.anno - y.anno)[0];
+        return { p: { f: primo.id }, o: t.map(x => ({ k: x.id })), a: t.indexOf(primo) };
+      }
+      return null;
+    } }
+  };
+  // le parole dei fatti, per lingua
+  const nomeP = (x, en) => en && x.nomeEn ? x.nomeEn : x.nome;
+  const PAROLE = {
+    chi: (N, L, en) => { const x = P_ID[N.p.f]; return { q: x[L].q, options: N.o.map(o => nomeP(P_ID[o.k], en)), exp: x[L].exp }; },
+    cosa: (N, L, en) => { const x = P_ID[N.p.f]; return { q: en ? (x.piu ? `What are ${nomeP(x, en)} known for?` : `What is ${nomeP(x, en)} known for?`) : (x.piu ? `Per che cosa sono ricordati ${x.nome}?` : `Per che cosa è ricordato ${x.nome}?`), options: N.o.map(o => P_ID[o.k][L].cosa), exp: x[L].exp }; },
+    moneta: (N, L, en) => { const x = M_ID[N.p.f][L]; return { q: en ? `What is the official currency of ${x.di}?` : `Qual è la moneta ufficiale ${x.di}?`, options: N.o.map(o => M_ID[o.k][L].val), exp: en ? `The official currency of ${x.di} is **${x.il}**.` : `La moneta ufficiale ${x.di} è **${x.il}**.` }; },
+    paese: (N, L, en) => { const x = M_ID[N.p.f][L]; return { q: en ? `Which of these countries uses ${x.la}?` : `In quale di questi paesi si paga ${x.inn}?`, options: N.o.map(o => M_ID[o.k][L].paese), exp: en ? `The official currency of **${x.di}** is ${x.il}.` : `La moneta ufficiale **${x.di}** è ${x.il}.` }; },
+    indice: (N, L, en) => { const x = I_ID[N.p.f]; return { q: en ? `The ${x.nome} index follows the leading stocks of which country?` : `L'indice ${x.nome} raccoglie le principali azioni di quale paese?`, options: N.o.map(o => I_ID[o.k][L].paese), exp: x[L].exp }; },
+    borsa: (N, L, en) => { const x = I_ID[N.p.f]; return { q: en ? `Which of these indexes follows the leading ${x[L].agg} stocks?` : `Quale di questi indici raccoglie le principali azioni ${x[L].agg}?`, options: N.o.map(o => I_ID[o.k].nome), exp: x[L].exp }; },
+    quando: (N, L) => { const x = E_ID[N.p.f]; return { q: x[L].q, options: N.o.map(o => String(o.v)), exp: x[L].exp }; },
+    prima: (N, L, en) => {
+      const righe = N.o.map(o => E_ID[o.k]).sort((x, y) => x.anno - y.anno).map(x => `• ${x.anno}: ${x[L].nome}`).join('\n');
+      return { q: en ? 'Which of these happened first?' : 'Quale di questi fatti è avvenuto per primo?', options: N.o.map(o => E_ID[o.k][L].nome), exp: (en ? 'In order of time:' : 'In ordine di tempo:') + '\n' + righe };
+    }
+  };
+
+  // =====================================================================================================
+  // LE DUE FUNZIONI CHE SI USANO DA FUORI
+  // =====================================================================================================
+  const LINGUE = ['it', 'en'];
+  const tipi = Object.keys(STAMPI).map(id => ({ id, fam: 'calcolo', liv: STAMPI[id].liv, tema: STAMPI[id].tema })).concat(Object.keys(FATTI).map(id => ({ id, fam: 'fatti', liv: FATTI[id].liv, tema: FATTI[id].tema })));
+  // il nucleo di una domanda: { v, t: tipo, s: seme, fam, liv, p: dati, o: risposte [{ k, v }], a: posizione della giusta }
+  function crea(tipo, seme) {
+    const s = seme >>> 0, R = caso(s), T = STAMPI[tipo], F = FATTI[tipo];
+    const x = T ? creaCalcolo(T, R) : F ? F.crea(R) : null;
+    return x ? { v: V, t: tipo, s, fam: T ? 'calcolo' : 'fatti', liv: (T || F).liv, p: x.p, o: x.o, a: x.a } : null;
+  }
+  // le parole: { q, options, ans, exp, note: per ogni risposta sbagliata la riga che dice quale errore è (o null), key, lang }
+  function testo(N, lingua, valuta) {
+    const L = LINGUE.indexOf(lingua) >= 0 ? lingua : 'it', W = penna(L, valuta), T = STAMPI[N.t];
+    let r;
+    if (T) {
+      const ok = N.o[N.a].v;
+      r = { q: T[L].q(N.p, W), options: N.o.map(o => W.valore(T.forma, o.v)), exp: T[L].exp(N.p, W, ok), note: N.o.map(o => o.k === 'ok' ? null : T[L].err[o.k]) };
+    } else { r = PAROLE[N.t](N, L, W.en); r.note = N.o.map(() => null); }
+    r.ans = N.a; r.key = `gen:${N.t}:${N.s}`; r.lang = L;
+    return r;
+  }
+  // l'impronta di una domanda: due domande con la stessa impronta sono la stessa domanda (serve a non ripeterle in una partita)
+  const GRUPPO = { chi: 'P', cosa: 'P', moneta: 'M', paese: 'M', indice: 'I', borsa: 'I', quando: 'E' };
+  const impronta = N => N.t === 'prima' ? 'prima|' + N.o.map(o => o.k).sort().join('+') : GRUPPO[N.t] ? GRUPPO[N.t] + '|' + N.p.f : N.t + '|' + JSON.stringify(N.p);
+  return { V, LINGUE, tipi, crea, testo, impronta, caso, giro, STAMPI, FATTI, tabelle: { PERSONE, EVENTI, MONETE, INDICI } };
+})();
+// =====================================================================================================
+// LA SERIE: domande generate senza fine (motore in p44_motore.js). Tre errori e la partita finisce.
+// =====================================================================================================
+// Tutto sul telefono: niente rete, niente arbitro. Il record resta nei dati salvati (serie.best).
+const SERIE_VITE = 3;
+const D_CUORE = 'M12 20.5s-7.5-4.7-7.5-10.4A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.7c0 5.7-7.5 10.4-7.5 10.4z';
+const D_SENZAFINE = 'M6.5 8.5C4.6 8.5 3 10.1 3 12s1.6 3.5 3.5 3.5c3.5 0 7.5-7 11-7 1.9 0 3.5 1.6 3.5 3.5s-1.6 3.5-3.5 3.5c-3.5 0-7.5-7-11-7z';
+const semeNuovo = () => { try { return crypto.getRandomValues(new Uint32Array(1))[0]; } catch (e) { return Math.floor(Math.random() * 4294967296); } };
+const serieStato = () => { const v = s2get().serie; return v && typeof v.best === 'number' ? v : { best: 0, n: 0, last: 0 }; };
+// la domanda numero n (da 0): prima le facili, poi entrano le medie e le difficili; mai due volte di fila lo stesso tipo, mai lo stesso fatto in una partita
+function serieDomanda(n, viste, ultimo) {
+  const tetto = n < 4 ? 1 : n < 10 ? 2 : 3;
+  const adatti = GEN.tipi.filter(t => t.liv <= tetto && t.id !== ultimo), alti = adatti.filter(t => t.liv === tetto);
+  for (let giri = 0; giri < 80; giri++) {
+    const rosa = alti.length && Math.random() < 0.5 ? alti : adatti;   // metà delle volte dal livello più alto raggiunto: così la partita sale
+    const tipo = rosa[Math.floor(Math.random() * rosa.length)], N = GEN.crea(tipo.id, semeNuovo());
+    if (!N || viste.has(GEN.impronta(N))) continue;
+    viste.add(GEN.impronta(N));
+    return Object.assign(GEN.testo(N, LANG, CUR), { tipo: tipo.id });
+  }
+  viste.clear(); return serieDomanda(n, viste, null);   // partita lunghissima, finite le domande nuove: si ricomincia a pescare
+}
+function SerieRun({ nav }) {
+  useS2();
+  const viste = useRef(new Set()), partenza = useRef(serieStato().best), scrollRef = useRef(null);
+  const [q, setQ] = useState(() => serieDomanda(0, viste.current, null));
+  const [n, setN] = useState(0), [okN, setOkN] = useState(0), [vite, setVite] = useState(SERIE_VITE), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [tab, setTab] = useState('case'), [fine, setFine] = useState(false);
+  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [n]);
+  const best = serieStato().best;
+  if (fine) {
+    const record = okN > partenza.current;
+    const ancora = () => { viste.current.clear(); partenza.current = serieStato().best; setQ(serieDomanda(0, viste.current, null)); setN(0); setOkN(0); setVite(SERIE_VITE); setSel(null); setFb(null); setFine(false); };
+    return html`<${Flow} bg=${MENTA} top=${html`<${TopBar} onClose=${nav.back} title=""/>`}
+      foot=${html`<${Btn} cls="lg" bg="#fff" onClick=${ancora}>Play again<//><div style="text-align:center;margin-top:6px"><button type="button" class="o-link" onClick=${nav.back}>Back to Practice</button></div>`}>
+      <div class="o-col o-pad" style="align-items:center;text-align:center;padding-top:6px"><${Rally} pose=${record ? 'festeggia' : 'pensa'} w=${250} alt=""/>
+        <h1 class="o-pop" style="font-size:40px;line-height:44px;font-weight:800;letter-spacing:-.02em;margin-top:-6px">${record ? 'New record!' : 'Run over'}</h1>
+        <p class="o-body" style="margin-top:8px;max-width:300px">${record ? (partenza.current > 0 ? `Your record was ${partenza.current} before.` : 'This is your first run: from now on it is the number to beat.') : okN === 0 ? 'Three mistakes before one correct answer. That is what the explanations are for: try again.' : `Your record is still ${best}.`}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:24px">
+          <div class="o-col" style="padding:10px 14px;background:${GIALLO};border:2.5px solid ${INK};border-radius:18px;text-align:left"><span style="font-size:13px;font-weight:700">Correct answers</span><span style="font-size:22px;line-height:26px;font-weight:800">${okN}</span></div>
+          <div class="o-col" style="padding:10px 14px;background:#fff;border:2.5px solid ${INK};border-radius:18px;text-align:left"><span class="o-s">Points</span><span style="font-size:22px;line-height:26px;font-weight:800">+${okN * 5} XP</span></div></div>
+      </div><//>`;
+  }
+  const locked = !!fb;
+  const next = () => {
+    if (vite <= 0) { s2set(s => ({ serie: Object.assign({}, serieStato(), { n: (serieStato().n || 0) + 1, last: okN }) })); return setFine(true); }
+    const k = n + 1; setQ(serieDomanda(k, viste.current, q.tipo)); setN(k); setSel(null); setFb(null); setTab('case');
+  };
+  const check = () => {
+    if (sel === q.ans) {
+      const tot = okN + 1; setOkN(tot); addXp(5);
+      if (tot > serieStato().best) s2set(s => ({ serie: Object.assign({}, serieStato(), { best: tot }) }));
+      return setFb('ok');
+    }
+    setVite(v => v - 1); setFb('ko');   // nel gioco la spiegazione dopo un errore c'è sempre: non conta nel limite gratis del giorno
+  };
+  // dopo un errore la spiegazione comincia dalla riga che dice quale errore è (se la risposta scelta nasce da un errore tipico)
+  const qFb = fb === 'ko' && q.note[sel] ? Object.assign({}, q, { exp: q.note[sel] + '\n\n' + q.exp }) : q;
+  const cuori = html`<span class="o-rowf" role="img" aria-label=${`Lives left: ${vite} of ${SERIE_VITE}`} style="gap:3px;flex:none">${[0, 1, 2].map(k => html`<span key=${k} style=${{ display: 'flex', opacity: k < vite ? 1 : 0.28 }}>${PathIco(D_CUORE, 22, 2.2, k < vite ? ROSA : 'none', INK)}</span>`)}</span>`;
+  const over = fb === 'ok' ? html`<${FeedbackSheet} ok=${true} q=${qFb} xp=${5} onNext=${next}/>` : fb === 'ko' ? html`<${FeedbackSheet} ok=${false} q=${qFb} onNext=${next}/>` : null;
+  return html`<${Flow} scrollRef=${scrollRef}
+    top=${html`<${TopBar} onClose=${nav.back} mid=${html`<span class="o-grow" style="font-size:15px;line-height:20px;font-weight:800;white-space:nowrap">Correct: ${okN}</span>`} right=${cuori}/>`}
+    foot=${html`<div class="o-rowf" style="gap:12px"><${IBtn} lg=${true} icon=${Ico(Calculator, 24, 2.2)} onClick=${nav.openCalc} label="Calculator"/><div class="o-grow"><${Btn} cls="lg" bg=${MENTA} disabled=${sel == null || locked} onClick=${check}>Check<//></div></div>`} over=${over}>
+    <div class="o-test"><${QuestionBody} key=${n} q=${q} label=${`Question ${n + 1}`} sel=${sel} onSel=${setSel} locked=${locked} tab=${tab} setTab=${setTab}/></div><//>`;
+}
 
 // =====================================================================================================
 // SFIDE, AI COACH, PROFILO, ALBUM, IMPOSTAZIONI, PRO, CATALOGO
@@ -1937,33 +2522,33 @@ function SfideScreen({ nav }) {
   const lg = league(), me = lg.me;
   const rival = RIVALS[(RIVALS.indexOf(duelRival()) + skip) % RIVALS.length];
   const above = lg.rows[me.pos - 2];
-  const ord = n => `${n}°`;
+  const ord = n => `#${n}`;
   const init = (userName() || 'T')[0].toUpperCase();
   return html`<${Room} color=${PESCA} tab="sfide" go=${nav.tab}
-    rally=${html`<${Rally} pose="sfida" alt="Rally con la maschera" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
-    head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">Challenges</h1><${Pill}>Sei ${ord(me.pos)} in lega<//></div>`}>
+    rally=${html`<${Rally} pose="sfida" alt="Rally wearing a mask" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
+    head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1">Challenges</h1><${Pill}>You're ${ord(me.pos)} in the league<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px;align-items:center;text-align:center">
       <div class="o-rowf" style="gap:14px;align-items:flex-start">
-        <span class="o-col" style="align-items:center;gap:6px"><${Avatar} ch=${init} bg=${PESCA} size=${56}/><span class="o-s" style="color:${INK};font-weight:700">Tu</span></span>
-        <span style="margin-top:14px;padding:3px 12px;background:${INK};color:#fff;border-radius:999px;font-size:14px;font-weight:800;transform:rotate(-4deg)">contro</span>
+        <span class="o-col" style="align-items:center;gap:6px"><${Avatar} ch=${init} bg=${PESCA} size=${56}/><span class="o-s" style="color:${INK};font-weight:700">You</span></span>
+        <span style="margin-top:14px;padding:3px 12px;background:${INK};color:#fff;border-radius:999px;font-size:14px;font-weight:800;transform:rotate(-4deg)">vs</span>
         <span class="o-col" style="align-items:center;gap:6px"><${Avatar} ch=${rival[0]} size=${56}/><span class="o-s" style="color:${INK};font-weight:700">${rival}</span></span></div>
-      <div class="o-col" style="gap:4px"><div style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">${rival} ti ha sfidato</div><div class="o-body o-mut">5 domande dai tuoi percorsi.<br/>Vince chi ne fa giuste di più.</div></div>
-      <div class="o-rowf" style="gap:10px;width:100%"><div class="o-grow"><${Btn} bg=${PESCA} onClick=${() => nav.go('sfida', { rival })}>Accetta la sfida<//></div>
-        <button type="button" class="o-btn flat" style="width:auto;background:#fff" onClick=${() => setSkip(skip + 1)}>Dopo</button></div>
+      <div class="o-col" style="gap:4px"><div style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">${rival} challenged you</div><div class="o-body o-mut">5 questions from your paths.<br/>Whoever gets more right wins.</div></div>
+      <div class="o-rowf" style="gap:10px;width:100%"><div class="o-grow"><${Btn} bg=${PESCA} onClick=${() => nav.go('sfida', { rival })}>Accept challenge<//></div>
+        <button type="button" class="o-btn flat" style="width:auto;background:#fff" onClick=${() => setSkip(skip + 1)}>Later</button></div>
     </div>
     ${SFIDE_ON && html`<div class="o-card o-col" style="gap:10px;margin-top:16px">
-      <div style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">Sfida un amico dal vivo</div>
-      <p class="o-body o-mut">Lampo: le stesse 5 domande sui due telefoni. Il punto va a chi risponde giusto per primo.</p>
-      <div class="o-col" style="gap:2px;width:100%;margin-top:4px;align-items:center"><${Btn} bg=${PESCA} onClick=${() => nav.go('live', { nuova: true })}>Crea una sfida<//>
-        <button type="button" class="o-link" onClick=${() => nav.go('live', {})}>Ho già un codice</button></div>
+      <div style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">Challenge a friend live</div>
+      <p class="o-body o-mut">Lightning: the same 5 questions on both phones. The point goes to whoever answers correctly first.</p>
+      <div class="o-col" style="gap:2px;width:100%;margin-top:4px;align-items:center"><${Btn} bg=${PESCA} onClick=${() => nav.go('live', { nuova: true })}>Create a challenge<//>
+        <button type="button" class="o-link" onClick=${() => nav.go('live', {})}>I already have a code</button></div>
     </div>`}</div>
     <div style="height:24px;flex:none"></div>
     <${Sheet}>
-      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px"><h2 class="o-h2">${lg.name}</h2><span class="o-lab">Finisce domenica</span></div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px"><h2 class="o-h2">${lg.name}</h2><span class="o-lab">Ends Sunday</span></div>
       ${lg.rows.map(r => html`<div key=${r.name} class="o-rowf" style=${Object.assign({ gap: 12, height: 54, padding: '0 10px', borderRadius: 16 }, r.me ? { background: T_PESCA, border: `2.5px solid ${INK}` } : { border: '2.5px solid transparent' })}>
         <span style="width:22px;font-size:15px;font-weight:800;text-align:center">${r.pos}</span><${Avatar} ch=${r.me ? init : r.name[0]} bg=${r.me ? PESCA : '#fff'} size=${36}/>
         <span class="o-grow" style="font-size:17px;font-weight:700">${r.name}</span><span style="font-size:16px;font-weight:800">${fmtInt(r.xp)} XP</span></div>`)}
-      <p class="o-s" style="margin-top:12px">${above ? `Ti mancano ${fmtInt(above.xp - me.xp + 1)} XP per superare ${above.name}.` : 'Sei in testa alla lega.'} Lega di prova: per ora gli altri sono avversari simulati.</p>
+      <p class="o-s" style="margin-top:12px">${above ? `You need ${fmtInt(above.xp - me.xp + 1)} XP to pass ${above.name}.` : 'You\'re at the top of the league.'} Trial league: for now the others are simulated opponents.</p>
     <//>
   <//>`;
 }
@@ -1984,21 +2569,21 @@ function DuelRun({ nav, rival }) {
     }, 1500);
   };
   useEffect(() => { const h = setInterval(() => { const e = (Date.now() - t0.current) / 1000; setEl(e); if (e >= lim && !fired.current) confirm(); }, 250); return () => clearInterval(h); }, [i, sel, mine, his]);
-  if (!q) return html`<${Flow} top=${html`<${TopBar} onClose=${nav.back} title="Sfida"/>`}><p class="o-pad o-body" style="padding-top:20px">Per sfidare qualcuno serve almeno una lezione con una domanda.</p><//>`;
+  if (!q) return html`<${Flow} top=${html`<${TopBar} onClose=${nav.back} title="Challenge"/>`}><p class="o-pad o-body" style="padding-top:20px">To challenge someone you need at least one lesson with a question.</p><//>`;
   const left = Math.max(0, Math.ceil(lim - el)), a = mine.filter(Boolean).length, b = his.filter(Boolean).length;
   const dot = (v, k) => html`<i key=${k} style=${{ width: 12, height: 12, borderRadius: '50%', border: `2px solid ${INK}`, background: v === true ? INK : v === false ? '#fff' : 'transparent', borderStyle: v == null ? 'dashed' : 'solid' }}></i>`;
   return html`<${Flow} bg="#fff" top=${html`<div style="flex:none;background:${PESCA};border-bottom:2.5px solid ${INK};padding-bottom:58px;position:relative">
       <${Rally} pose="sfida" w=${110} alt="" style="position:absolute;right:6px;top:calc(var(--otop) - 7px)"/>
-      <${TopBar} onClose=${nav.back} title=${'Sfida con ' + rival}/></div>
+      <${TopBar} onClose=${nav.back} title=${'Challenge with ' + rival}/></div>
     <div class="o-pad" style="flex:none;margin-top:-46px;position:relative"><div class="o-card s" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:12px 16px">
-      <span class="o-col" style="align-items:center;gap:2px"><${Avatar} ch=${init} bg=${PESCA}/><span class="o-s">Tu</span><span style="font-size:30px;line-height:32px;font-weight:800">${a}</span></span>
+      <span class="o-col" style="align-items:center;gap:2px"><${Avatar} ch=${init} bg=${PESCA}/><span class="o-s">You</span><span style="font-size:30px;line-height:32px;font-weight:800">${a}</span></span>
       <span class="o-col" style="align-items:center;gap:6px"><span class="o-s" style="font-weight:700">Question ${i + 1} of ${n}</span>
         <span class="o-mono" role="timer" style=${{ padding: '3px 14px', background: left <= 5 ? ROSA : T_PESCA, border: `2px solid ${INK}`, borderRadius: 999, fontSize: 17, fontWeight: 600 }}>${fmtClock(left)}</span>
         <span class="o-rowf" style="gap:5px">${Array.from({ length: n }, (_, k) => dot(mine[k], k))}</span></span>
       <span class="o-col" style="align-items:center;gap:2px"><${Avatar} ch=${rival[0]} bg=${LILLA}/><span class="o-s">${rival}</span><span style="font-size:30px;line-height:32px;font-weight:800">${b}</span></span></div></div>`}
     foot=${html`<${Btn} cls="lg" bg=${PESCA} disabled=${sel == null || show} onClick=${confirm}>Confirm<//>`}>
     <div class="o-duel o-pad" style="padding-top:14px;padding-bottom:16px">
-      <div style="display:flex;justify-content:flex-end;min-height:28px">${(show || el >= bot.t) && html`<span class="o-fade" style="padding:2px 12px;background:${MENTA};border:2px solid ${INK};border-radius:999px;font-size:13px;line-height:18px;font-weight:800">${rival} ha già risposto</span>`}</div>
+      <div style="display:flex;justify-content:flex-end;min-height:28px">${(show || el >= bot.t) && html`<span class="o-fade" style="padding:2px 12px;background:${MENTA};border:2px solid ${INK};border-radius:999px;font-size:13px;line-height:18px;font-weight:800">${rival} has already answered</span>`}</div>
       <div style="margin-top:10px"><${Rich} text=${q.q} cls="q" lang=${q.lang}/></div>
       <div style="margin-top:16px"><${Options} q=${q} sel=${sel} onSel=${setSel} locked=${show}/></div>
     </div>
@@ -2010,17 +2595,17 @@ function DuelDone({ nav, rival, a, b, xp }) {
   return html`<div class="o-scr" style="background:repeating-conic-gradient(from 5deg at 50% 200px, #FFD7BA 0deg 10deg, ${PESCA} 10deg 20deg)"><div class="o-scroll"><div class="o-col o-pad" style="min-height:100%;align-items:center">
     <div style="width:240px;height:240px;flex:none;margin-top:calc(var(--otop) + 21px);background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
       <${Rally} pose=${win ? 'festeggia' : draw ? 'occhiolino' : 'triste'} w=${228} alt="" style="margin-bottom:-18px"/></div>
-    <h1 class="o-pop" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.02em;margin-top:22px">${win ? 'Hai vinto!' : draw ? 'Pareggio' : 'Stavolta no'}</h1>
-    <div class="o-rowf" style="gap:12px;margin-top:18px;padding:12px 20px;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:5px 5px 0 ${INK};transform:rotate(-2deg)">
-      <${Avatar} ch=${init} bg=${PESCA}/><span style="font-size:15px;font-weight:700">Tu</span><span style="font-size:38px;line-height:40px;font-weight:800;letter-spacing:-.02em;margin:0 6px">${a} a ${b}</span><span style="font-size:15px;font-weight:700">${rival}</span><${Avatar} ch=${rival[0]} bg=${LILLA}/></div>
+    <h1 class="o-pop" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.02em;margin-top:22px">${win ? 'You won!' : draw ? 'Tie' : 'Not this time'}</h1>
+    <div class="o-rowf" style="gap:clamp(6px,3.1vw,12px);margin-top:18px;padding:12px clamp(10px,5.2vw,20px);max-width:100%;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:5px 5px 0 ${INK};transform:rotate(-2deg)">
+      <${Avatar} ch=${init} bg=${PESCA}/><span style="font-size:15px;font-weight:700">You</span><span style="font-size:clamp(26px,9.75vw,38px);line-height:40px;font-weight:800;letter-spacing:-.02em;margin:0 clamp(0px,1.55vw,6px);white-space:nowrap">${a} to ${b}</span><span style="font-size:15px;font-weight:700">${rival}</span><${Avatar} ch=${rival[0]} bg=${LILLA}/></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:24px">
-      <div class="o-col" style="align-items:center;padding:10px;background:${GIALLO};border:2.5px solid ${INK};border-radius:18px"><span style="font-size:20px;line-height:24px;font-weight:800">+${xp} XP</span><span style="font-size:13px;font-weight:700">${win ? 'per la vittoria' : draw ? 'per il pareggio' : 'per averci provato'}</span></div>
-      <div class="o-col" style="align-items:center;padding:10px;background:#fff;border:2.5px solid ${INK};border-radius:18px"><span style="font-size:20px;line-height:24px;font-weight:800">${lg.me.pos}° posto</span><span style="font-size:13px;font-weight:700">in ${lg.name}</span></div></div>
+      <div class="o-col" style="align-items:center;padding:10px;background:${GIALLO};border:2.5px solid ${INK};border-radius:18px"><span style="font-size:20px;line-height:24px;font-weight:800">+${xp} XP</span><span style="font-size:13px;font-weight:700">${win ? 'for the win' : draw ? 'for the tie' : 'for trying'}</span></div>
+      <div class="o-col" style="align-items:center;padding:10px;background:#fff;border:2.5px solid ${INK};border-radius:18px"><span style="font-size:20px;line-height:24px;font-weight:800">Rank #${lg.me.pos}</span><span style="font-size:13px;font-weight:700">in ${lg.name}</span></div></div>
     <div style="flex:1 1 16px;min-height:16px"></div>
-    <div class="o-col" style="gap:12px;width:100%"><${Btn} cls="lg" bg="#fff" onClick=${() => nav.replace('sfida', { rival })}>Rivincita<//>
-      <${Btn} cls="lg ink" onClick=${() => (SFIDE_ON ? nav.replace('live', { nuova: true }) : setMsg(true))}>${Ico(Link2, 20)} Sfida un amico dal vivo<//></div>
-    ${msg && html`<p class="o-s o-fade" style="text-align:center;margin-top:8px;color:${INK}">Le sfide con gli amici partono appena l'arbitro è online.</p>`}
-    <div style="padding:2px 0 max(22px,calc(env(safe-area-inset-bottom) + 8px))"><button type="button" class="o-link" onClick=${nav.back}>Torna alle sfide</button></div>
+    <div class="o-col" style="gap:12px;width:100%"><${Btn} cls="lg" bg="#fff" onClick=${() => nav.replace('sfida', { rival })}>Rematch<//>
+      <${Btn} cls="lg ink" onClick=${() => (SFIDE_ON ? nav.replace('live', { nuova: true }) : setMsg(true))}>${Ico(Link2, 20)} Challenge a friend live<//></div>
+    ${msg && html`<p class="o-s o-fade" style="text-align:center;margin-top:8px;color:${INK}">Challenges with friends start as soon as the referee is online.</p>`}
+    <div style="padding:2px 0 max(22px,calc(env(safe-area-inset-bottom) + 8px))"><button type="button" class="o-link" onClick=${nav.back}>Back to challenges</button></div>
   </div></div></div>`;
 }
 
@@ -2071,7 +2656,7 @@ function ProfiloScreen({ nav }) {
   const cells = Array.from({ length: 8 }, (_, k) => recent[k] || null);
   return html`<${Room} color=${ROSA} tab="profilo" go=${nav.tab} headH=${140}
     rally=${html`<${Rally} pose="moneta" alt="Rally with a coin" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
-    head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1" style=${name.length > 8 ? { fontSize: 34, lineHeight: '36px' } : null}>${name}</h1></div>`}>
+    head=${html`<div class="o-col" style="align-items:flex-start;gap:14px;padding-top:4px;max-width:210px"><h1 class="o-h1" style=${name.length > 8 ? { fontSize: 34, lineHeight: '36px' } : null}>${name}</h1><${Pill}>${lg.name}<//></div>`}>
     <div class="o-pad" style="position:relative;z-index:1"><div class="o-card o-col" style="gap:14px">
       <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><span style="font-size:22px;line-height:26px;font-weight:800;letter-spacing:-.01em">Your album</span><span class="o-lab">${have.length} of ${all.length} stickers</span></div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">${cells.map((l, k) => { const st = l ? stickerState(l, album, now) : 'manca', em = l && lessonEmoji(l);
@@ -2242,7 +2827,7 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
       <div class="o-scroll" style="flex:0 1 auto;max-height:50vh">${Object.keys(s.flags || {}).map(k => { const l = lessonByKey(k.split('#')[0]); return html`<div key=${k} class="o-row" style="min-height:48px"><span class="o-grow o-t" style="font-size:15px">${l ? l.title : k}</span><span class="o-s">${l && l.code ? l.code : ''}</span></div>`; })}</div>
       <div style="margin-top:12px;flex:none"><${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set({ flags: {} }); setSheet(null); }}>Clear the list<//></div><//>`}
     ${sheet === 'priv' && html`<${BSheet} onClose=${() => setSheet(null)} label="Rules and privacy"><h2 class="o-big">Rules and privacy</h2>
-      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>Your progress, answers and conversations are saved only on this device.</p><p>If you connect OpenRouter, the questions you ask the AI Coach go from here to OpenRouter and the provider of the model you chose. FinLearn doesn't receive them.</p><p>No ads and no data sold.</p></div>
+      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>Your progress, answers and conversations are saved only on this device.</p><p>If you connect OpenRouter, the questions you ask the AI Coach go from here to OpenRouter and the provider of the model you chose. FinLearn doesn't receive them.</p><p>In live challenges your name and your answers pass through FinLearn's referee, on Cloudflare, only for the length of the game: at the end everything is deleted.</p><p>No ads and no data sold.</p></div>
       <div style="margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Got it<//></div><//>`}
     ${sheet === 'or' && html`<${OrSheet} onClose=${() => setSheet(null)}/>`}
     ${sheet === 'model' && html`<${ModelSheet} onClose=${() => setSheet(null)}/>`}
@@ -2389,6 +2974,8 @@ function SaveScreen({ nav }) {
 // SFIDE DAL VIVO · modalità Lampo: due telefoni e un arbitro su Cloudflare (codice in sfide/)
 // =====================================================================================================
 // L'arbitro manda la stessa domanda ai due telefoni, riceve le risposte e decide chi prende il punto.
+// Ogni telefono dice all'arbitro la lingua della sua app (`lang` nel saluto) e riceve la domanda in quella lingua:
+// un'app italiana e una inglese giocano la stessa partita, con la risposta giusta nella stessa posizione.
 // Questo telefono misura il proprio tempo di reazione: da quando la domanda compare sullo schermo al tocco.
 const SFIDE_HOST = 'finlearn-sfide.finlearn27.workers.dev';   // indirizzo dell'arbitro su Cloudflare
 const SFIDE_LOCALE = /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
@@ -2397,8 +2984,8 @@ const SFIDE_ON = SFIDE_LOCALE || !/SOTTODOMINIO/.test(SFIDE_HOST);
 const SFIDE_V = 1;
 const LIVE_RE = /^[A-HJ-NP-Z2-9]{6}$/;
 const LIVE_CORSI = [
-  { id: 'basi', name: 'Finance basics', sub: 'In italiano, 24 secondi per domanda' },
-  { id: 'cfa2', name: 'CFA Level II', sub: 'In inglese come all\'esame, 45 secondi per domanda' }
+  { id: 'basi', name: 'Finance basics', sub: 'Each player in their app\'s language, 24 seconds per question' },
+  { id: 'cfa2', name: 'CFA Level II', sub: 'In English as on the exam, 45 seconds per question' }
 ];
 // invito: il link …/app/#sfida=CODICE apre l'app e porta nella stanza (il codice si toglie subito dall'indirizzo)
 const LIVE_INV = 'finlearn_sfida_invito', LIVE_PID = 'finlearn_sfide_pid';
@@ -2413,8 +3000,14 @@ function livePidSave(codice, pid) {
   try { const a = livePids(); delete a[codice]; a[codice] = pid; const k = Object.keys(a); k.slice(0, Math.max(0, k.length - 6)).forEach(x => { delete a[x]; }); localStorage.setItem(LIVE_PID, JSON.stringify(a)); } catch (e) {}
 }
 function liveNewPid() { const c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'; return Array.from(crypto.getRandomValues(new Uint8Array(20)), x => c[x & 63]).join(''); }
-const liveSec = ms => (ms / 1000).toFixed(2).replace('.', ',') + ' s';
-const liveGap = ms => { if (ms >= 1000) return liveSec(ms); const c = Math.max(1, Math.round(ms / 10)); return c === 1 ? '1 centesimo' : c + ' centesimi'; };
+const liveSec = ms => (ms / 1000).toFixed(2).replace('.', DEC) + ' s';
+const liveGap = ms => { if (ms >= 1000) return liveSec(ms); const c = Math.max(1, Math.round(ms / 10)); return c === 1 ? '1 hundredth of a second' : c + ' hundredths of a second'; };
+// i messaggi di errore dell'arbitro arrivano in italiano: l'app usa i suoi, nella sua lingua, scelti dal codice dell'errore
+const LIVE_ERR = {
+  nontrovata: 'This challenge no longer exists. Ask for a new link.', piena: 'This challenge already has two players.', iniziata: 'This challenge has already started.',
+  versione: 'Update FinLearn: close the app, open it again and try again.', scaduta: 'The challenge expired: nobody joined in time.', finita: 'The challenge is over.',
+  riprova: 'I couldn\'t create the challenge: try again.', formato: 'Invalid message.', troppi: 'Too many messages in a short time.'
+};
 const livePts = n => (n < 0 ? '−' + Math.abs(n) : String(n));
 
 // collegamento all'arbitro: si riapre da solo se cade (rete, app in secondo piano), con attese sempre più lunghe
@@ -2426,12 +3019,15 @@ class LiveConn {
     clearTimeout(this.timer);
     let ws; try { ws = new WebSocket(this.url()); } catch (e) { this.riprova(); return; }
     this.ws = ws; this.onNet(this.tent ? 'ricollego' : 'collego');
-    ws.onopen = () => { this.send({ t: 'ciao', pid: this.pid, nome: this.opt.nome, v: SFIDE_V }); clearInterval(this.hb); this.hb = setInterval(() => this.raw('{"t":"hb"}'), 20000); };
+    ws.onopen = () => { this.send({ t: 'ciao', pid: this.pid, nome: this.opt.nome, v: SFIDE_V, lang: LANG }); clearInterval(this.hb); this.hb = setInterval(() => this.raw('{"t":"hb"}'), 20000); };
     ws.onmessage = ev => {
       let m = null; try { m = JSON.parse(ev.data); } catch (e) { return; }
       if (!m || m.t === 'hb') return;
       if (m.t === 'ping') { this.send({ t: 'pong', s: m.s }); return; }   // subito, prima di disegnare: misura la rete
-      if (m.t === 'benvenuto') { this.codice = m.codice; livePidSave(m.codice, this.pid); this.tent = 0; this.onNet('ok'); }
+      if (m.t === 'benvenuto') { this.codice = m.codice; this.corso = m.corso; livePidSave(m.codice, this.pid); this.tent = 0; this.onNet('ok'); }
+      // Stati Uniti: nelle Basi l'euro del testo inglese diventa dollaro, come nelle lezioni (non dove l'euro è proprio l'euro: m.eu)
+      if (m.t === 'domanda') { this.dollari = COUNTRY === 'US' && this.corso === 'basi' && m.l === 'en' && !m.eu; if (this.dollari) { m.q = usDollars(m.q); m.o = usDollars(m.o); } }
+      if (m.t === 'esito' && this.dollari && m.e) m.e = usDollars(m.e);
       if (m.t === 'errore') this.fermo = true;
       this.onMsg(m, performance.now());
     };
@@ -2502,7 +3098,7 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
   }, []);
 
   const S = st.stanza, io = S ? S.io : 0, op = io === 0 ? 1 : 0, g = S ? S.g : [], gMe = g[io], gOp = g[op];
-  const opName = gOp ? gOp.nome : 'il tuo amico', codice = st.benv ? st.benv.codice : cod;
+  const opName = gOp ? gOp.nome : 'your friend', codice = st.benv ? st.benv.codice : cod;
   const dom = st.dom, es = st.esito && dom && st.esito.i === dom.i ? st.esito : null;
   const fase = st.err ? 'errore' : net === 'irraggiungibile' ? 'rete' : st.fine ? 'fine' : net === 'chiuso' ? 'chiuso' : dom ? (es ? 'esito' : 'domanda') : st.via ? 'via' : S ? 'stanza' : 'collego';
   const corre = fase === 'via' || fase === 'domanda';
@@ -2529,89 +3125,89 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
     if (conn.current) conn.current.send({ t: 'risposta', i: dom.i, c: k, ms });
   };
   const link = () => location.origin + location.pathname + '#sfida=' + codice;
-  const copy = async (t, msg) => { try { await navigator.clipboard.writeText(t); nav.toast(msg); } catch (e) { nav.toast('Il codice è ' + codice); } };
+  const copy = async (t, msg) => { try { await navigator.clipboard.writeText(t); nav.toast(msg); } catch (e) { nav.toast('The code is ' + codice); } };
   const share = async () => {
-    const url = link(), text = `Ti sfido su FinLearn: 5 domande, il punto va a chi risponde giusto per primo. Il codice è ${codice}.`;
-    if (navigator.share) { try { await navigator.share({ title: 'Sfida su FinLearn', text, url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
-    copy(url, 'Link copiato');
+    const url = link(), text = `I challenge you on FinLearn: 5 questions, and the point goes to whoever answers correctly first. The code is ${codice}.`;
+    if (navigator.share) { try { await navigator.share({ title: 'Challenge on FinLearn', text, url }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+    copy(url, 'Link copied');
   };
 
   // ---- prima di collegarsi: scelta delle domande, codice, nome ----
   const nameField = !known && html`<div class="o-col" style="gap:8px"><label class="o-lab" for="live-nome">Your name</label>
-    <input id="live-nome" class="o-inp" value=${nm} onInput=${e => setNm(e.target.value)} placeholder="Come ti vedrà il tuo amico" maxlength="20" autocomplete="given-name"/></div>`;
-  const topSetup = html`<${TopBar} onClose=${nav.back} title="Sfida dal vivo"/>`;
-  if (!SFIDE_ON && vista !== 'gioco') return html`<${Flow} top=${topSetup}><div class="o-pad o-col" style="gap:10px;padding-top:12px"><h1 class="o-h1m">Quasi pronta</h1><p class="o-body o-mut">Le sfide dal vivo partono appena l'arbitro è online.</p></div><//>`;
-  if (vista === 'scegli') return html`<${Flow} top=${topSetup} foot=${html`<${Btn} cls="lg" bg=${PESCA} disabled=${!nmOk} onClick=${() => start({ corso })}>Crea la sfida<//>`}>
+    <input id="live-nome" class="o-inp" value=${nm} onInput=${e => setNm(e.target.value)} placeholder="How your friend will see you" maxlength="20" autocomplete="given-name"/></div>`;
+  const topSetup = html`<${TopBar} onClose=${nav.back} title="Live challenge"/>`;
+  if (!SFIDE_ON && vista !== 'gioco') return html`<${Flow} top=${topSetup}><div class="o-pad o-col" style="gap:10px;padding-top:12px"><h1 class="o-h1m">Almost ready</h1><p class="o-body o-mut">Live challenges start as soon as the referee is online.</p></div><//>`;
+  if (vista === 'scegli') return html`<${Flow} top=${topSetup} foot=${html`<${Btn} cls="lg" bg=${PESCA} disabled=${!nmOk} onClick=${() => start({ corso })}>Create the challenge<//>`}>
     <div class="o-pad o-col o-duel" style="gap:22px;padding-top:12px;padding-bottom:20px">
-      <div class="o-col" style="gap:8px"><h1 class="o-h1m">Lampo</h1>
-        <p class="o-body o-mut">5 domande, le stesse sui due telefoni. Il punto va a chi risponde giusto per primo. Se sbagli perdi un punto, e l'altro può ancora rispondere.</p></div>
-      ${corsi.length > 1 ? html`<div class="o-col" style="gap:10px" role="radiogroup" aria-label="Da quale percorso arrivano le domande">
+      <div class="o-col" style="gap:8px"><h1 class="o-h1m">Lightning</h1>
+        <p class="o-body o-mut">5 questions, the same on both phones. The point goes to whoever answers correctly first. If you get it wrong you lose a point, and the other player can still answer.</p></div>
+      ${corsi.length > 1 ? html`<div class="o-col" style="gap:10px" role="radiogroup" aria-label="Which path the questions come from">
         ${corsi.map(c => html`<button key=${c.id} type="button" role="radio" aria-checked=${corso === c.id ? 'true' : 'false'} class=${'o-opt' + (corso === c.id ? ' sel' : '')} onClick=${() => setCorso(c.id)}>
-          <span class="l">${corso === c.id ? PathIco(D_CHECK, 20, 3) : ''}</span><span class="x"><span style="display:block">${c.name}</span><span class="o-s" style="display:block;margin-top:2px;font-weight:600">${c.sub}</span></span></button>`)}</div>` : html`<p class="o-s" style="font-size:14px;line-height:20px">Le domande arrivano da ${corsi[0].name}. ${corsi[0].sub}.</p>`}
+          <span class="l">${corso === c.id ? PathIco(D_CHECK, 20, 3) : ''}</span><span class="x"><span style="display:block">${c.name}</span><span class="o-s" style="display:block;margin-top:2px;font-weight:600">${c.sub}</span></span></button>`)}</div>` : html`<p class="o-s" style="font-size:14px;line-height:20px">The questions come from ${corsi[0].name}. ${corsi[0].sub}.</p>`}
       ${nameField}
     </div><//>`;
   if (vista === 'codice' || (vista === 'entra' && !known)) {
     const c6 = cod.length === 6, okCod = LIVE_RE.test(cod);
-    return html`<${Flow} top=${topSetup} foot=${html`<${Btn} cls="lg" bg=${PESCA} disabled=${!okCod || !nmOk} onClick=${() => start({ codice: cod })}>Entra nella sfida<//>`}>
+    return html`<${Flow} top=${topSetup} foot=${html`<${Btn} cls="lg" bg=${PESCA} disabled=${!okCod || !nmOk} onClick=${() => start({ codice: cod })}>Join the challenge<//>`}>
       <div class="o-pad o-col" style="gap:22px;padding-top:12px;padding-bottom:20px">
-        <div class="o-col" style="gap:8px"><h1 class="o-h1m">${vista === 'entra' ? 'Ti hanno sfidato' : 'Entra in una sfida'}</h1>
-          <p class="o-body o-mut">${vista === 'entra' ? 'Scrivi il tuo nome ed entra: la sfida parte quando siete pronti tutti e due.' : 'Scrivi il codice di 6 caratteri che ti hanno mandato.'}</p></div>
-        <div class="o-col" style="gap:8px"><label class="o-lab" for="live-cod">Codice della sfida</label>
+        <div class="o-col" style="gap:8px"><h1 class="o-h1m">${vista === 'entra' ? 'You\'ve been challenged' : 'Join a challenge'}</h1>
+          <p class="o-body o-mut">${vista === 'entra' ? 'Type your name and join: the challenge starts when you are both ready.' : 'Type the 6-character code you were sent.'}</p></div>
+        <div class="o-col" style="gap:8px"><label class="o-lab" for="live-cod">Challenge code</label>
           <input id="live-cod" class="o-inp o-mono" value=${cod} onInput=${e => setCod(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))} readonly=${vista === 'entra'}
             inputmode="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="6" style="height:64px;font-size:28px;letter-spacing:.24em;text-align:center"/>
-          ${c6 && !okCod && html`<p class="o-s" role="alert">Nei codici non ci sono mai I, O, 0 e 1: controlla di averlo scritto giusto.</p>`}</div>
+          ${c6 && !okCod && html`<p class="o-s" role="alert">Codes never contain I, O, 0 or 1: check that you typed it correctly.</p>`}</div>
         ${nameField}
       </div><//>`;
   }
 
   // ---- collegati ----
-  const banner = net === 'ricollego' && fase !== 'fine' && html`<div role="status" class="o-fade" style="position:absolute;left:20px;right:20px;top:calc(var(--otop) + 54px);z-index:8;padding:10px 14px;background:${GIALLO};border:2.5px solid ${INK};border-radius:16px;font-size:15px;line-height:20px;font-weight:800;text-align:center">Connessione persa: mi ricollego…</div>`;
-  const exitSheet = ask && html`<${BSheet} onClose=${() => setAsk(false)} label="Uscire dalla sfida"><h2 class="o-big">Vuoi uscire dalla sfida?</h2>
-    <p class="o-body o-mut" style="margin-top:6px">Se esci adesso la partita va a ${opName}.</p>
-    <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" bg=${PESCA} onClick=${() => setAsk(false)}>Resto<//><${Btn} cls="lg flat" bg="#fff" onClick=${leave}>Esco<//></div><//>`;
+  const banner = net === 'ricollego' && fase !== 'fine' && html`<div role="status" class="o-fade" style="position:absolute;left:20px;right:20px;top:calc(var(--otop) + 54px);z-index:8;padding:10px 14px;background:${GIALLO};border:2.5px solid ${INK};border-radius:16px;font-size:15px;line-height:20px;font-weight:800;text-align:center">Connection lost: reconnecting…</div>`;
+  const exitSheet = ask && html`<${BSheet} onClose=${() => setAsk(false)} label="Leave the challenge"><h2 class="o-big">Do you want to leave the challenge?</h2>
+    <p class="o-body o-mut" style="margin-top:6px">If you leave now, the game goes to ${opName}.</p>
+    <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" bg=${PESCA} onClick=${() => setAsk(false)}>Stay<//><${Btn} cls="lg flat" bg="#fff" onClick=${leave}>Leave<//></div><//>`;
   const closeBtn = () => (fase === 'via' || fase === 'domanda' || fase === 'esito' ? setAsk(true) : leave());
 
   if (fase === 'errore' || fase === 'rete' || fase === 'chiuso') {
-    const msg = fase === 'errore' ? st.err.m : fase === 'rete' ? 'Non riesco a raggiungere l\'arbitro delle sfide. Controlla la connessione e riprova.' : 'Il collegamento con la sfida si è chiuso. Se è ancora aperta, rientra con il codice.';
-    return html`<${Flow} top=${html`<${TopBar} onClose=${leave} title="Sfida dal vivo"/>`} foot=${html`<div class="o-col" style="gap:10px">
-        ${fase !== 'errore' && last.current && html`<${Btn} cls="lg" bg=${PESCA} onClick=${() => start(last.current.codice || !codice ? last.current : { codice })}>Riprova<//>`}
-        <${Btn} cls="lg flat" bg="#fff" onClick=${leave}>Torna alle sfide<//></div>`}>
+    const msg = fase === 'errore' ? (LIVE_ERR[st.err.e] || st.err.m) : fase === 'rete' ? 'I can\'t reach the challenge referee. Check your connection and try again.' : 'The connection to the challenge closed. If it is still open, rejoin with the code.';
+    return html`<${Flow} top=${html`<${TopBar} onClose=${leave} title="Live challenge"/>`} foot=${html`<div class="o-col" style="gap:10px">
+        ${fase !== 'errore' && last.current && html`<${Btn} cls="lg" bg=${PESCA} onClick=${() => start(last.current.codice || !codice ? last.current : { codice })}>Try again<//>`}
+        <${Btn} cls="lg flat" bg="#fff" onClick=${leave}>Back to challenges<//></div>`}>
       <div class="o-pad o-col" style="align-items:center;text-align:center;gap:14px;padding-top:24px"><${Rally} pose="triste" w=${170} alt=""/>
         <p class="o-body" role="alert" style="font-size:17px;line-height:24px;font-weight:700;max-width:320px">${msg}</p></div><//>`;
   }
-  if (fase === 'collego') return html`<${Flow} top=${html`<${TopBar} onClose=${leave} title="Sfida dal vivo"/>`}>
-    <div class="o-pad o-col" style="align-items:center;text-align:center;gap:14px;padding-top:24px"><${Rally} pose="telefono" w=${170} alt=""/><p class="o-body" role="status">Mi collego all'arbitro…</p></div><//>`;
+  if (fase === 'collego') return html`<${Flow} top=${html`<${TopBar} onClose=${leave} title="Live challenge"/>`}>
+    <div class="o-pad o-col" style="align-items:center;text-align:center;gap:14px;padding-top:24px"><${Rally} pose="telefono" w=${170} alt=""/><p class="o-body" role="status">Connecting to the referee…</p></div><//>`;
 
   if (fase === 'stanza') {
     const two = g.length === 2, iReady = gMe && gMe.pronto;
     const who = (x, me) => html`<div class="o-rowf" style="gap:12px;min-height:56px">
       <${Avatar} ch=${(x.nome || '?')[0].toUpperCase()} bg=${me ? PESCA : LILLA} size=${40}/>
-      <span class="o-grow o-col" style="gap:1px"><span class="o-t">${me ? 'Tu' : x.nome}</span>${!(x.pronto && x.via) && html`<span class="o-s">${!x.via ? 'Fuori linea' : me && !two ? 'Nella stanza' : 'Non ancora pronto'}</span>`}</span>
-      ${x.pronto && x.via && html`<span class="o-tag" style="background:${MENTA}">Pronto</span>`}</div>`;
-    return html`<${Flow} top=${html`<div style="flex:none;background:${PESCA};position:relative"><${TopBar} onClose=${closeBtn} title="Sfida dal vivo"/></div>`}
-      foot=${two ? html`<${Btn} cls="lg" bg=${PESCA} disabled=${iReady || !(gOp && gOp.via)} onClick=${() => conn.current && conn.current.send({ t: 'pronto' })}>${iReady ? `Aspetto ${opName}…` : 'Sono pronto'}<//>` : null} over=${banner}>
+      <span class="o-grow o-col" style="gap:1px"><span class="o-t">${me ? 'You' : x.nome}</span>${!(x.pronto && x.via) && html`<span class="o-s">${!x.via ? 'Offline' : me && !two ? 'In the room' : 'Not ready yet'}</span>`}</span>
+      ${x.pronto && x.via && html`<span class="o-tag" style="background:${MENTA}">Ready</span>`}</div>`;
+    return html`<${Flow} top=${html`<div style="flex:none;background:${PESCA};position:relative"><${TopBar} onClose=${closeBtn} title="Live challenge"/></div>`}
+      foot=${two ? html`<${Btn} cls="lg" bg=${PESCA} disabled=${iReady || !(gOp && gOp.via)} onClick=${() => conn.current && conn.current.send({ t: 'pronto' })}>${iReady ? `Waiting for ${opName}…` : 'I\'m ready'}<//>` : null} over=${banner}>
       <div style="background:${PESCA};padding:4px 20px 26px;border-bottom:2.5px solid ${INK}">
-        ${two ? html`<h1 class="o-h1m">${opName} è nella stanza</h1><p class="o-body" style="margin-top:8px">Quando siete pronti tutti e due parte il conto alla rovescia.</p>`
-          : html`<h1 class="o-h1m">Manda il codice</h1><p class="o-body" style="margin-top:8px">Il tuo amico entra con il link o scrivendo il codice nella scheda Sfide, con «Ho già un codice».</p>`}</div>
+        ${two ? html`<h1 class="o-h1m">${opName} is in the room</h1><p class="o-body" style="margin-top:8px">When you are both ready, the countdown starts.</p>`
+          : html`<h1 class="o-h1m">Send the code</h1><p class="o-body" style="margin-top:8px">Your friend joins with the link or by typing the code in the Challenges tab, under ‘I already have a code’.</p>`}</div>
       <div class="o-pad o-col" style="gap:18px;padding-top:20px;padding-bottom:20px">
         ${!two && html`<div class="o-card s o-col" style="align-items:center;gap:4px;padding:16px">
-            <span class="o-lab">Codice della sfida</span>
-            <span class="o-mono" aria-label=${'Codice ' + codice.split('').join(' ')} style="font-size:40px;line-height:48px;letter-spacing:.2em;font-weight:600;margin-right:-.2em">${codice}</span></div>
-          <div class="o-col" style="gap:4px;align-items:center"><${Btn} cls="lg" bg=${PESCA} onClick=${share}>${Ico(Share2, 20)} Invia il link<//>
-            <button type="button" class="o-link" onClick=${() => copy(codice, 'Codice copiato')}>Copia solo il codice</button></div>`}
+            <span class="o-lab">Challenge code</span>
+            <span class="o-mono" aria-label=${'Code ' + codice.split('').join(' ')} style="font-size:40px;line-height:48px;letter-spacing:.2em;font-weight:600;margin-right:-.2em">${codice}</span></div>
+          <div class="o-col" style="gap:4px;align-items:center"><${Btn} cls="lg" bg=${PESCA} onClick=${share}>${Ico(Share2, 20)} Send the link<//>
+            <button type="button" class="o-link" onClick=${() => copy(codice, 'Code copied')}>Copy the code only</button></div>`}
         <div class="o-col">${gMe && who(gMe, true)}${gOp ? who(gOp, false) : html`<div class="o-rowf" style="gap:12px;min-height:56px">
-          <span style="width:40px;height:40px;flex:none;border:2px dashed ${INK};border-radius:50%"></span><span class="o-s">In attesa del tuo amico…</span></div>`}</div>
-        <p class="o-s">${st.benv && st.benv.corso === 'cfa2' ? 'Domande del CFA Level II, in inglese.' : 'Domande delle Basi della finanza.'} 5 domande: il punto va a chi risponde giusto per primo, chi sbaglia perde un punto.</p>
-        ${!two && html`<p class="o-s">Su iPhone il link si apre in Safari, non nell'app: chi ha FinLearn sulla schermata Home fa prima a scrivere il codice.</p>`}
+          <span style="width:40px;height:40px;flex:none;border:2px dashed ${INK};border-radius:50%"></span><span class="o-s">Waiting for your friend…</span></div>`}</div>
+        <p class="o-s">${st.benv && st.benv.corso === 'cfa2' ? 'CFA Level II questions, in English.' : 'Finance Basics questions.'} 5 questions: the point goes to whoever answers correctly first; a wrong answer costs a point.</p>
+        ${!two && html`<p class="o-s">On iPhone the link opens in Safari, not in the app: if FinLearn is on your Home Screen, typing the code is quicker.</p>`}
       </div><//>`;
   }
 
   if (fase === 'via') {
     const left = Math.max(0, Math.ceil((st.via - performance.now()) / 1000));
-    return html`<${Flow} bg=${PESCA} top=${html`<${TopBar} onClose=${closeBtn} title=${'Lampo con ' + opName}/>`} over=${html`${banner}${exitSheet}`}>
+    return html`<${Flow} bg=${PESCA} top=${html`<${TopBar} onClose=${closeBtn} title=${'Lightning with ' + opName}/>`} over=${html`${banner}${exitSheet}`}>
       <div class="o-pad o-col" style="align-items:center;text-align:center;gap:22px;padding-top:30px">
-        <div role="timer" aria-live="assertive" class="o-pop" key=${left} style="width:180px;height:180px;display:flex;align-items:center;justify-content:center;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};font-size:${left ? 96 : 56}px;line-height:1;font-weight:800">${left || 'Via!'}</div>
-        <p class="o-body" style="font-size:17px;line-height:24px;font-weight:700;max-width:300px">Il punto va a chi risponde giusto per primo. Se sbagli perdi un punto.</p></div><//>`;
+        <div role="timer" aria-live="assertive" class="o-pop" key=${left} style="width:180px;height:180px;display:flex;align-items:center;justify-content:center;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};font-size:${left ? 96 : 56}px;line-height:1;font-weight:800">${left || 'Go!'}</div>
+        <p class="o-body" style="font-size:17px;line-height:24px;font-weight:700;max-width:300px">The point goes to whoever answers correctly first. If you get it wrong you lose a point.</p></div><//>`;
   }
 
   if (fase === 'domanda' || fase === 'esito') {
@@ -2622,32 +3218,32 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
     const rich = dom.o.some(o => /\\\(|\*\*|\$\$/.test(o)), big = dom.o.every(o => String(o).length <= 14), opC = es && es.r[op] ? es.r[op].c : null;
     let chip = null;
     if (!es) {
-      if (st.mia != null) chip = myOk === false ? [ROSA, 'Sbagliata: perdi un punto'] : myOk === true ? [MENTA, 'Giusta! Vediamo chi è stato più veloce'] : [T_PESCA, 'Risposta inviata'];
-      else if (opOk === false) chip = [GIALLO, `${opName} ha sbagliato: tocca a te`];
-      else if (opOk === true) chip = [T_GR, `${opName} ha risposto`];
-      else if (expired) chip = [T_GR, 'Tempo scaduto'];
+      if (st.mia != null) chip = myOk === false ? [ROSA, 'Wrong: you lose a point'] : myOk === true ? [MENTA, 'Right! Let\'s see who was faster'] : [T_PESCA, 'Answer sent'];
+      else if (opOk === false) chip = [GIALLO, `${opName} got it wrong: your turn`];
+      else if (opOk === true) chip = [T_GR, `${opName} answered`];
+      else if (expired) chip = [T_GR, 'Time\'s up'];
     }
     const res = es && (() => {
-      const head = es.punto === io ? 'Punto a te' : es.punto === op ? `Punto a ${opName}` : es.punto === 'pari' ? 'Pari: un punto a testa' : 'Nessun punto';
+      const head = es.punto === io ? 'Point to you' : es.punto === op ? `Point to ${opName}` : es.punto === 'pari' ? 'Tie: one point each' : 'No point';
       const a = es.r[io], b = es.r[op], both = a && b && a.ok && b.ok;
-      const gap = both && es.punto !== 'pari' ? (es.punto === io ? `Più veloce tu, di ${liveGap(Math.abs(a.ms - b.ms))}` : `${opName} più veloce di ${liveGap(Math.abs(a.ms - b.ms))}`) : null;
+      const gap = both && es.punto !== 'pari' ? (es.punto === io ? `You were faster, by ${liveGap(Math.abs(a.ms - b.ms))}` : `${opName} was faster by ${liveGap(Math.abs(a.ms - b.ms))}`) : null;
       const line = (r, name, me) => html`<div class="o-rowf" style="gap:10px;min-height:30px">
         <span class="o-grow" style="font-size:15px;font-weight:700">${name}</span>
         ${r ? html`<span class="o-rowf" style="gap:6px;font-size:16px;font-weight:800">${PathIco(r.ok ? D_CHECK : D_X, 18, 3)}${liveSec(r.ms)}${!r.ok && html`<span style="padding:0 8px;background:${ROSA};border:2px solid ${INK};border-radius:999px;font-size:13px">−1</span>`}</span>`
-          : html`<span class="o-s">Nessuna risposta</span>`}</div>`;
+          : html`<span class="o-s">No answer</span>`}</div>`;
       return html`<div class="o-card s o-pop" role="status" style=${{ padding: '12px 16px', background: es.punto === io ? MENTA : es.punto === op ? T_LILLA : es.punto === 'pari' ? T_GIALLO : '#fff' }}>
         <div style="font-size:20px;line-height:24px;font-weight:800">${head}</div>
-        <div class="o-col" style="margin-top:6px">${line(a, 'Tu', true)}${line(b, opName, false)}</div>
+        <div class="o-col" style="margin-top:6px">${line(a, 'You', true)}${line(b, opName, false)}</div>
         ${gap && html`<p class="o-s" style="margin-top:4px;color:${INK}">${gap}</p>`}</div>`;
     })();
     return html`<${Flow} bg="#fff" top=${html`<div style="flex:none;background:${PESCA};border-bottom:2.5px solid ${INK};padding-bottom:58px;position:relative">
         <${Rally} pose="sfida" w=${110} alt="" style="position:absolute;right:6px;top:calc(var(--otop) - 7px)"/>
-        <${TopBar} onClose=${closeBtn} title=${'Lampo con ' + opName} right=${html`<span aria-hidden="true" style="width:84px;flex:none"></span>`}/></div>
+        <${TopBar} onClose=${closeBtn} title=${'Lightning with ' + opName} right=${html`<span aria-hidden="true" style="width:84px;flex:none"></span>`}/></div>
       <div class="o-pad" style="flex:none;margin-top:-46px;position:relative"><div class="o-card s" style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:12px 16px">
-        <span class="o-col" style="align-items:center;gap:2px"><${Avatar} ch=${((gMe && gMe.nome) || 'T')[0].toUpperCase()} bg=${PESCA}/><span class="o-s">Tu</span><span style="font-size:30px;line-height:32px;font-weight:800">${livePts(pts[io] || 0)}</span></span>
+        <span class="o-col" style="align-items:center;gap:2px"><${Avatar} ch=${((gMe && gMe.nome) || 'T')[0].toUpperCase()} bg=${PESCA}/><span class="o-s">You</span><span style="font-size:30px;line-height:32px;font-weight:800">${livePts(pts[io] || 0)}</span></span>
         <span class="o-col" style="align-items:center;gap:6px"><span class="o-s" style="font-weight:700">Question ${dom.i + 1} of ${n}</span>
-          <span class="o-mono" role="timer" aria-label=${es ? 'Domanda chiusa' : `${left} secondi`} style=${{ padding: '3px 14px', background: !es && left <= 5 ? ROSA : T_PESCA, border: `2px solid ${INK}`, borderRadius: 999, fontSize: 17, fontWeight: 600 }}>${fmtClock(left)}</span>
-          <span class="o-rowf" style="gap:5px" role="img" aria-label="Punti domanda per domanda">${Array.from({ length: n }, (_, k) => dot(k))}</span></span>
+          <span class="o-mono" role="timer" aria-label=${es ? 'Question closed' : `${left} seconds`} style=${{ padding: '3px 14px', background: !es && left <= 5 ? ROSA : T_PESCA, border: `2px solid ${INK}`, borderRadius: 999, fontSize: 17, fontWeight: 600 }}>${fmtClock(left)}</span>
+          <span class="o-rowf" style="gap:5px" role="img" aria-label="Points question by question">${Array.from({ length: n }, (_, k) => dot(k))}</span></span>
         <span class="o-col" style="align-items:center;gap:2px"><${Avatar} ch=${opName[0].toUpperCase()} bg=${LILLA}/><span class="o-s" style="max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${opName}</span><span style="font-size:30px;line-height:32px;font-weight:800">${livePts(pts[op] || 0)}</span></span></div></div>`}
       over=${html`${banner}${exitSheet}`}>
       <div class="o-duel o-pad" style="padding-top:12px;padding-bottom:20px">
@@ -2656,8 +3252,8 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
         <div style="margin-top:12px"><${Rich} text=${dom.q} cls=${dom.q.length > 160 ? '' : 'q'} lang=${dom.l}/></div>
         <div class="o-col" style="gap:10px;margin-top:16px">${dom.o.map((o, k) => {
           let state = '', note = null;
-          if (es) { state = k === es.a ? 'ok' : k === st.mia ? 'ko' : 'dim'; note = [k === st.mia ? 'Tu' : null, k === opC ? opName : null].filter(Boolean).join(' e ') || null; }
-          else if (st.mia === k) { state = myOk === true ? 'ok' : myOk === false ? 'ko' : 'sel'; note = 'Tu'; }
+          if (es) { state = k === es.a ? 'ok' : k === st.mia ? 'ko' : 'dim'; note = [k === st.mia ? 'You' : null, k === opC ? opName : null].filter(Boolean).join(' and ') || null; }
+          else if (st.mia === k) { state = myOk === true ? 'ok' : myOk === false ? 'ko' : 'sel'; note = 'You'; }
           else if (st.mia != null || expired) state = 'dim';
           return html`<${Opt} key=${k} letter=${L3[k]} text=${o} rich=${rich} big=${big} lang=${dom.l} state=${state} note=${note} disabled=${st.mia != null || !!es || expired} onClick=${() => tap(k)}/>`;
         })}</div>
@@ -2667,29 +3263,29 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
   // ---- fine ----
   const f = st.fine, win = f.vince === io, draw = f.vince === 'pari', heLeft = f.uscito === op;
   const canRe = f.uscito == null && !st.chiusa && gOp && gOp.via && S && S.fase === 'fine';
-  const reLabel = gMe && gMe.rivincita ? `Aspetto ${opName}…` : gOp && gOp.rivincita ? 'Accetta la rivincita' : 'Rivincita';
+  const reLabel = gMe && gMe.rivincita ? `Waiting for ${opName}…` : gOp && gOp.rivincita ? 'Accept the rematch' : 'Rematch';
   return html`<div class="o-scr" style="background:repeating-conic-gradient(from 5deg at 50% 200px, #FFD7BA 0deg 10deg, ${PESCA} 10deg 20deg)"><div class="o-scroll"><div class="o-col o-pad" style="min-height:100%;align-items:center">
     <div style="width:220px;height:220px;flex:none;margin-top:calc(var(--otop) + 18px);background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
       <${Rally} pose=${win ? 'festeggia' : draw ? 'occhiolino' : 'triste'} w=${208} alt="" style="margin-bottom:-16px"/></div>
-    <h1 class="o-pop" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.02em;margin-top:20px;text-align:center">${win ? 'Hai vinto!' : draw ? 'Pareggio' : 'Stavolta no'}</h1>
-    ${heLeft && html`<p class="o-body" style="margin-top:6px;font-weight:700">${opName} ha lasciato la sfida.</p>`}
+    <h1 class="o-pop" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.02em;margin-top:20px;text-align:center">${win ? 'You won!' : draw ? 'Tie' : 'Not this time'}</h1>
+    ${heLeft && html`<p class="o-body" style="margin-top:6px;font-weight:700">${opName} left the challenge.</p>`}
     <div class="o-rowf" style="gap:12px;margin-top:16px;padding:12px 20px;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:5px 5px 0 ${INK};transform:rotate(-2deg)">
-      <${Avatar} ch=${((gMe && gMe.nome) || 'T')[0].toUpperCase()} bg=${PESCA}/><span style="font-size:15px;font-weight:700">Tu</span>
-      <span style="font-size:36px;line-height:40px;font-weight:800;letter-spacing:-.02em;margin:0 6px;white-space:nowrap">${livePts(f.punti[io] || 0)} a ${livePts(f.punti[op] || 0)}</span>
+      <${Avatar} ch=${((gMe && gMe.nome) || 'T')[0].toUpperCase()} bg=${PESCA}/><span style="font-size:15px;font-weight:700">You</span>
+      <span style="font-size:36px;line-height:40px;font-weight:800;letter-spacing:-.02em;margin:0 6px;white-space:nowrap">${livePts(f.punti[io] || 0)} to ${livePts(f.punti[op] || 0)}</span>
       <span style="font-size:15px;font-weight:700;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${opName}</span><${Avatar} ch=${opName[0].toUpperCase()} bg=${LILLA}/></div>
     ${xp != null && xp > 0 && html`<span class="o-pill" style="margin-top:20px;background:${GIALLO}">+${xp} XP</span>`}
     ${(f.storia || []).length > 0 && html`<div class="o-card s" style="width:100%;margin-top:20px;padding:6px 16px">${f.storia.map(v => {
       const w = v.punto === 'pari' ? null : v.punto, r = w != null && v.r[w] ? v.r[w] : null;
-      const t = v.punto === io ? 'Punto a te' : v.punto === op ? `Punto a ${opName}` : v.punto === 'pari' ? 'Pari, un punto a testa' : 'Nessun punto';
+      const t = v.punto === io ? 'Point to you' : v.punto === op ? `Point to ${opName}` : v.punto === 'pari' ? 'Tie, one point each' : 'No point';
       return html`<div key=${v.i} class="o-row" style="min-height:48px;gap:12px"><span style="width:26px;height:26px;flex:none;display:flex;align-items:center;justify-content:center;border:2px solid ${INK};border-radius:50%;font-size:13px;font-weight:800;background:${v.punto === io ? PESCA : v.punto === op ? LILLA : v.punto === 'pari' ? GIALLO : '#fff'}">${v.i + 1}</span>
         <span class="o-grow o-t" style="font-size:15px">${t}</span><span class="o-s" style="color:${INK};font-weight:700">${r ? liveSec(r.ms) : ''}</span></div>`;
     })}</div>`}
     <div style="flex:1 1 16px;min-height:16px"></div>
     <div class="o-col" style="gap:12px;width:100%;margin-top:18px">
       ${canRe ? html`<${Btn} cls="lg" bg="#fff" disabled=${gMe && gMe.rivincita} onClick=${() => conn.current && conn.current.send({ t: 'rivincita' })}>${reLabel}<//>`
-        : html`<${Btn} cls="lg" bg="#fff" onClick=${() => { if (conn.current) conn.current.chiudi(true); conn.current = null; nav.replace('live', { nuova: true }); }}>Nuova sfida<//>`}
-      ${!canRe && html`<p class="o-s" style="text-align:center;color:${INK}">${heLeft || (gOp && !gOp.via) ? `${opName} non è più nella stanza.` : 'La stanza è chiusa.'} Per giocare ancora crea una sfida nuova.</p>`}</div>
-    <div style="padding:2px 0 max(22px,calc(env(safe-area-inset-bottom) + 8px))"><button type="button" class="o-link" onClick=${leave}>Torna alle sfide</button></div>
+        : html`<${Btn} cls="lg" bg="#fff" onClick=${() => { if (conn.current) conn.current.chiudi(true); conn.current = null; nav.replace('live', { nuova: true }); }}>New challenge<//>`}
+      ${!canRe && html`<p class="o-s" style="text-align:center;color:${INK}">${heLeft || (gOp && !gOp.via) ? `${opName} is no longer in the room.` : 'The room is closed.'} To play again, create a new challenge.</p>`}</div>
+    <div style="padding:2px 0 max(22px,calc(env(safe-area-inset-bottom) + 8px))"><button type="button" class="o-link" onClick=${leave}>Back to challenges</button></div>
   </div></div>${banner}</div>`;
 }
 
@@ -2994,7 +3590,7 @@ export function OrdineApp({ kit }) {
     go(); window.addEventListener('fl-or', go); return () => window.removeEventListener('fl-or', go);
   }, []);
   // link di una sfida dal vivo (…#sfida=CODICE): si apre direttamente la stanza
-  useEffect(() => { const c = LANG === 'en' ? null : liveInvito(); if (c) { setStack([]); setTab('sfide'); nav.go('live', { codice: c }); } }, []);
+  useEffect(() => { const c = liveInvito(); if (c) { setStack([]); setTab('sfide'); nav.go('live', { codice: c }); } }, []);
   // primo ingresso: nome per chi usava già l'app, test di livello per chi ha detto "so già qualcosa"
   useEffect(() => {
     const st = s2get(), u = kit.user || {};
