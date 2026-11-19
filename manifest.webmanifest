@@ -1,7 +1,7 @@
 {
-  "name": "FinLearn · CFA Prep",
+  "name": "FinLearn",
   "short_name": "FinLearn",
-  "description": "Quiz, flashcard, calcolatrice finanziaria, Equity Valuation e AI Coach per il CFA",
+  "description": "Impara la finanza da zero: lezioni brevi, esercizi, sfide e un tutor che risponde alle tue domande",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

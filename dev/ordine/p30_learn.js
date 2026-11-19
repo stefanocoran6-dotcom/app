@@ -334,7 +334,7 @@ function LessonDone({ nav, l, done, steps, res }) {
   const [rev, setRev] = useState(false);
   const streak = streakDays(), emoji = lessonEmoji(l);
   const wq = done.wrong.length ? steps[done.wrong[0]].q : null, wr = wq ? res[done.wrong[0]] : null;
-  const goOn = () => { const s = s2get(); if (K.user && K.user.guest && !s.askedSave) { s2set({ askedSave: true }); nav.replace('salva'); } else nav.back(); };
+  const goOn = () => nav.back();   // (qui c'era l'invito a creare un account: tornerà quando gli account saranno veri)
   const conf = [[34, 96, GIALLO, 24, 0], [58, 176, '#fff', 0, 1], [26, 244, MENTA, -32, 0], [96, 70, ROSA, 0, 1], [-48, 88, ROSA, -18, 0], [-70, 170, GIALLO, 0, 1], [-38, 240, '#fff', 38, 0], [-104, 64, MENTA, 0, 1]];
   return html`<div class="o-scr" style="background:repeating-conic-gradient(from 5deg at 50% 190px, #A9D3FF 0deg 10deg, ${AZ} 10deg 20deg)">
     <div class="o-scroll"><div class="o-col" style="min-height:100%;align-items:center;position:relative;padding:0 20px">

@@ -111,6 +111,10 @@ html.fl-fig .o-app .o-btn:active:not(:disabled){transform:translate(3px,3px);box
 .o-tag{display:inline-flex;align-items:center;padding:1px 9px;background:${GIALLO};border:2px solid ${INK};border-radius:999px;font-size:12px;line-height:16px;font-weight:800;white-space:nowrap}
 .o-card{background:#fff;border:2.5px solid ${INK};border-radius:28px;box-shadow:5px 5px 0 ${INK};padding:20px}
 .o-card.s{border-radius:24px;box-shadow:4px 4px 0 ${INK}}
+.o-hero{flex:1 1 0;min-height:300px;position:relative;display:flex;flex-direction:column;align-items:center}
+.o-hero-c{position:relative;flex:none;width:min(288px,70vw);aspect-ratio:1;margin-top:auto;margin-bottom:-8px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center}
+.o-hero-p{position:absolute;left:min(-22px,calc(20.95% - 79.2px));top:clamp(-12px,calc(28.57% - 58px),20px)}
+@supports (width:1cqh){.o-hero{min-height:190px;container-type:size}.o-hero-c{width:min(288px,70vw,calc(100cqh - 70px))}}
 .o-sheet{position:relative;background:#fff;border:2.5px solid ${INK};border-bottom:0;border-radius:32px 32px 0 0;margin:0 -3px;padding:20px 23px 0}
 .o-row{display:flex;align-items:center;gap:14px;width:100%;min-height:66px;padding:8px 0;border-bottom:2px solid ${SEP}}
 .o-row.last,.o-row:last-child{border-bottom:0}
@@ -332,24 +336,14 @@ const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some
 const COMING = [
   { id: 'risparmio', name: 'Savings and budgeting', group: 'basi', color: MENTA, icon: 'wallet' },
   { id: 'azob', name: 'Stocks and bonds', group: 'invest', color: PESCA, icon: 'trend' },
-  { id: 'fondi', name: 'Funds and ETFs', group: 'invest', color: LILLA, icon: 'pie' },
+  { id: 'fondi', name: 'Funds and ETFs', group: 'invest', color: LILLA, icon: 'pie' }
 ];
 
 let COURSES_MEMO = null;
 const losMinutes = l => { const c = l.content || {}; const n = (c.introduction || '').length + (c.sections || []).reduce((s, x) => s + (x.content || '').length, 0); return clamp(Math.round(n / 900) + (l.question ? 2 : 1), 2, 20); };
 function courses() {
   if (COURSES_MEMO) return COURSES_MEMO;
-  const CFA = LANG === 'en' ? {} : (K && K.CFA) || {};   // il CFA ha le domande in italiano e le regole italiane: in inglese per ora non c'è
-  const units = ['equityValuation', 'portfolioManagement', 'equity'].filter(k => CFA[k]).map(k => {
-    const t = CFA[k];
-    return { id: k, name: t.name, sections: t.modules.map(m => ({
-      id: m.id, name: m.title, num: m.number,
-      lessons: m.los.map((l, i) => ({ key: `${m.id}-${l.id}`, kind: 'los', title: K.flShortTitle(l.title), code: (l.code || `LOS ${m.number}${l.id}`).replace(/^LOS\s*/, ''), los: l, minutes: losMinutes(l) }))
-    })) };
-  });
-  const cfa2 = { id: 'cfa2', name: 'CFA Level II', badge: 'L2', color: AZ, group: 'cert', ready: true, pace: 90, tagline: 'For people preparing for the exam',
-    learn: ['Valuing a stock with dividends, cash flows, multiples and residual income', 'ETFs, multifactor models, VaR and active management', 'Questions in English, just like the exam'], units };
-  COURSES_MEMO = LANG === 'en' ? [BASI] : [BASI, cfa2];
+  COURSES_MEMO = [BASI];   // il percorso d'esame non c'è più: quello professionale, scritto da zero, entrerà qui come corso a sé
   // indici utili
   COURSES_MEMO.forEach(c => { c.lessons = []; c.units.forEach((u, ui) => u.sections.forEach(s => s.lessons.forEach(l => { l.course = c; l.unit = u; l.ui = ui; l.section = s; if (!l.kind) l.kind = 'base'; c.lessons.push(l); }))); });
   return COURSES_MEMO;
@@ -357,13 +351,13 @@ function courses() {
 const courseById = id => courses().find(c => c.id === id);
 let LESSON_MAP = null;
 const lessonByKey = key => { if (!LESSON_MAP) { LESSON_MAP = {}; courses().forEach(c => c.lessons.forEach(l => { LESSON_MAP[l.key] = l; })); } return LESSON_MAP[key]; };
-const isDone = key => (K.losProgress || []).includes(key) || s2get().basi.includes(key);
+const isDone = key => s2get().basi.includes(key);
 const doneCount = list => list.filter(l => isDone(l.key)).length;
 const unitLessons = u => u.sections.flatMap(s => s.lessons);
 
 // ---- su misura: l'obiettivo scelto alla registrazione decide che cosa c'è nell'app ----
 // Un obiettivo porta un percorso di partenza: un corso intero, oppure una scelta ordinata delle sue unità più quelle ancora da scrivere ("in arrivo").
-// Tutte le schede leggono da qui: chi parte da zero non trova il CFA finché non lo aggiunge da "Scopri".
+// Tutte le schede leggono da qui.
 const MIS_SOON = {
   azob: ['Stocks and bonds', 'every kind of stock, government and corporate bonds, each with a worked example'],
   fondi: ['Funds and ETFs', 'active and index funds, accumulating or distributing, with costs in numbers'],
@@ -378,18 +372,18 @@ const MIS_SOON = {
 const MIS_SUB = { 'basi-u1': 'Interest, inflation, real rate', 'basi-u7': 'Budget, emergency fund, goals', 'basi-u11': 'Account, cards, transfers, deposit insurance', 'basi-u12': 'Payslip, income tax, deductions, severance pay', 'basi-u4': 'Loans, interest rate and APR, mortgage', 'basi-u13': 'Renting or buying, how big a mortgage you can afford', 'basi-u14': 'Public pension, pension funds, severance pay', 'basi-u15': 'GDP, public debt, spread, stock market indexes', 'basi-u8': 'Insurance, scams, life policies', 'basi-u2': 'Stocks, bonds, funds, accounts',
   'basi-u3': 'Return, diversification, time horizon', 'basi-u9': 'A little at a time, the rule of 72', 'basi-u10': 'Fear of losing, following the crowd', 'basi-u5': 'Balance sheet, profit, cash, price and value', 'basi-u6': 'Central banks, exchange rates, the business cycle' };
 // stops: le unità del percorso in ordine; "+nome" è un'unità in arrivo. null = tutto il corso.
-const MIS_PATHS = {
+// (un oggetto senza le voci "di serie": il nome dell'obiettivo arriva anche dai dati salvati, e una parola come "constructor" non deve valere come percorso)
+const MIS_PATHS = Object.assign(Object.create(null), {
   zero: { goal: 'Understand finance from scratch', name: 'Finance basics', pill: 'For people starting from zero', course: 'basi', color: AZ, stops: null },
   invest: { goal: 'Invest my savings', name: 'Invest my savings', pill: 'For people who want to invest', course: 'basi', color: PESCA, ico: TrendingUp, stops: ['basi-u1', 'basi-u2', 'basi-u3', '+azob', '+fondi', 'basi-u9', 'basi-u10'] },
-  work: { goal: 'Use it at work', name: 'Finance for work', pill: 'For people who use it at work', course: 'basi', color: MENTA, ico: Briefcase, stops: ['basi-u5', '+w-salute', '+w-cassa', '+w-costi', 'basi-u1', '+w-invest', '+w-finanz', 'basi-u6', '+w-valuta'] },
-  exam: { goal: 'Prepare for an exam', name: 'CFA Level II', pill: 'For the CFA Level II exam', course: 'cfa2', color: AZ, stops: null }
-};
+  work: { goal: 'Use it at work', name: 'Finance for work', pill: 'For people who use it at work', course: 'basi', color: MENTA, ico: Briefcase, stops: ['basi-u5', '+w-salute', '+w-cassa', '+w-costi', 'basi-u1', '+w-invest', '+w-finanz', 'basi-u6', '+w-valuta'] }
+});
 // Chi usava l'app prima di "su misura": l'obiettivo si ricava da quello che aveva scelto o iniziato, e i percorsi iniziati restano tutti.
 function misDerive(s) {
   const ob = s.onboard || {}, st = new Set(s.started || []), done = s.basi || [];
-  const cfa = LANG !== 'en' && (st.has('cfa2') || !!(K && (K.losProgress || []).length)), basi = st.has('basi') || done.length > 0;
-  const goal = MIS_PATHS[ob.goal] && (LANG !== 'en' || ob.goal !== 'exam') ? ob.goal : cfa ? 'exam' : 'zero', P = MIS_PATHS[goal], add = [];
-  if (cfa && P.course !== 'cfa2') add.push('cfa2');
+  // chi aveva scelto il percorso d'esame (che non c'è più) riparte dalle basi: l'obiettivo si può cambiare da Profilo
+  const basi = st.has('basi') || done.length > 0;
+  const goal = MIS_PATHS[ob.goal] ? ob.goal : 'zero', P = MIS_PATHS[goal], add = [];
   if (basi && P.course !== 'basi') add.push('basi');
   const more = P.stops ? BASI.units.filter(u => !P.stops.includes(u.id) && unitLessons(u).some(l => done.includes(l.key))).map(u => u.id) : [];
   return { goal, level: ob.start === 'some' ? 'some' : 'zero', known: [], more, add, t: 0 };
@@ -397,7 +391,7 @@ function misDerive(s) {
 let MIS_MEMO = null, MIS_DRAFT = null;   // MIS_DRAFT: la registrazione mostra il percorso prima di salvarlo
 function misGet() {
   if (MIS_DRAFT) return MIS_DRAFT;
-  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal] && (LANG !== 'en' || s.mis.goal !== 'exam')) return s.mis;
+  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal]) return s.mis;
   const n = (K && (K.losProgress || []).length) || 0;
   if (!MIS_MEMO || MIS_MEMO.s !== s || MIS_MEMO.n !== n) MIS_MEMO = { s, n, m: misDerive(s) };
   return MIS_MEMO.m;
@@ -479,7 +473,7 @@ function lessonSteps(l) {
 }
 // percorso attuale e prossima lezione
 // i percorsi dell'utente sono quelli del suo obiettivo più quelli aggiunti: il primo è sempre quello dell'obiettivo
-function startedCourses() { const s = s2get(); const out = new Set(s.started || []); if ((K.losProgress || []).length) out.add('cfa2'); if (s.basi.length) out.add('basi'); return misCourses().filter(c => out.has(c.id)); }
+function startedCourses() { const s = s2get(); const out = new Set(s.started || []); if (s.basi.length) out.add('basi'); return misCourses().filter(c => out.has(c.id)); }
 function currentCourse() {
   const s = s2get(); const mine = misCourses();
   return mine.find(c => c.id === s.cur) || mine[0] || null;
@@ -551,10 +545,9 @@ function explState() { const s = s2get(); const today = dayKey(); const n = s.ex
 function spendExplanation() { const today = dayKey(); s2set(s => ({ expl: { d: today, n: (s.expl && s.expl.d === today ? s.expl.n : 0) + 1 } })); }
 
 // ---- le 5 domande della registrazione: servono a saltare le unità che si sanno già ----
-// Una domanda per unità (di più se le unità sono poche). Per l'esame non si salta niente: le unità sono materie intere.
+// Una domanda per unità (di più se le unità sono poche).
 function placementFor(goal) {
   const P = MIS_PATHS[goal], c = courseById(P.course), sh = K.flShuffle;
-  if (P.course === 'cfa2') { const u = c.units[0]; return { course: c, units: [], items: sh(allQuestions(unitLessons(u))).slice(0, 5).map(q => ({ q, u })) }; }
   const units = (P.stops ? P.stops.filter(x => x[0] !== '+').map(id => c.units.find(u => u.id === id)) : c.units).filter(Boolean);
   const pick = units.slice(0, 5), items = [];
   for (let i = 0; i < 5; i++) { const u = pick[Math.floor(i * pick.length / 5)], used = items.map(x => x.q.key); const q = sh(allQuestions(unitLessons(u))).find(x => !used.includes(x.key)); if (q) items.push({ q, u }); }
@@ -1065,7 +1058,7 @@ function LessonDone({ nav, l, done, steps, res }) {
   const [rev, setRev] = useState(false);
   const streak = streakDays(), emoji = lessonEmoji(l);
   const wq = done.wrong.length ? steps[done.wrong[0]].q : null, wr = wq ? res[done.wrong[0]] : null;
-  const goOn = () => { const s = s2get(); if (K.user && K.user.guest && !s.askedSave) { s2set({ askedSave: true }); nav.replace('salva'); } else nav.back(); };
+  const goOn = () => nav.back();   // (qui c'era l'invito a creare un account: tornerà quando gli account saranno veri)
   const conf = [[34, 96, GIALLO, 24, 0], [58, 176, '#fff', 0, 1], [26, 244, MENTA, -32, 0], [96, 70, ROSA, 0, 1], [-48, 88, ROSA, -18, 0], [-70, 170, GIALLO, 0, 1], [-38, 240, '#fff', 38, 0], [-104, 64, MENTA, 0, 1]];
   return html`<div class="o-scr" style="background:repeating-conic-gradient(from 5deg at 50% 190px, #A9D3FF 0deg 10deg, ${AZ} 10deg 20deg)">
     <div class="o-scroll"><div class="o-col" style="min-height:100%;align-items:center;position:relative;padding:0 20px">
@@ -1651,8 +1644,8 @@ function AllenatiScreen({ nav }) {
   useS2(); useTick();
   const album = K.albumLoad(), now = Date.now();
   const due = dueLessons(), have = Object.keys(album).length, streak = streakDays();
-  const cur = currentCourse(), exam = inMyApp('cfa2');   // la simulazione d'esame c'è solo per chi ha il CFA nella sua app
-  const weak = topicScores(cur)[0], mock = s2get().tests['mock:cfa2'];
+  const cur = currentCourse();
+  const weak = topicScores(cur)[0];
   const mins = Math.max(2, Math.round(due.reduce((n, l) => n + (lessonQuestions(l).length ? 1.5 : 0.7), 0)));
   return html`<${Room} color=${MENTA} tab="allenati" go=${nav.tab}
     rally=${html`<${Rally} pose="allena" alt="Rally with a headband" style="position:absolute;right:-10px;top:calc(var(--otop) + 4px)"/>`}
@@ -1673,8 +1666,7 @@ function AllenatiScreen({ nav }) {
       <${Row} icon=${PathIco(D_TABS.allenati, 22, 2.4)} title="Mixed quiz" sub=${misCourses().length > 1 ? '10 questions from your paths' : '10 questions from your path'} chev=${true} onClick=${() => nav.go('pratica', { mode: 'mix' })}/>
       <${Row} icon=${PathIco(D_SENZAFINE, 22, 2.4)} title="Endless run" sub=${serieStato().best > 0 ? `Endless questions, your record is ${serieStato().best}` : 'Endless questions: the third mistake ends it'} chev=${true} onClick=${() => nav.go('pratica', { mode: 'serie' })}/>
       <${Row} icon=${Ico(Target, 22)} title="Weak spots" sub=${weak ? weak.name : 'Rally finds them from your answers'} chev=${true} onClick=${() => nav.go('deboli')}/>
-      ${exam ? html`<${Row} icon=${Ico(Timer, 22)} title="Mock exam" sub=${mock ? `CFA Level II, last score ${Math.round(mock.ok / mock.n * 100)}%` : 'CFA Level II, 44 timed questions'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>`
-        : html`<${Row} icon=${Ico(Compass, 22)} title="Level test" sub="5 questions to see where you stand" chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'level', course: cur.id })}/>`}
+      <${Row} icon=${Ico(Compass, 22)} title="Level test" sub="5 questions to see where you stand" chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'level', course: cur.id })}/>
     <//>
   <//>`;
 }
@@ -1689,7 +1681,7 @@ const testableSections = c => misUnits(c).flatMap(u => u.sections).filter(sec =>
 function TestScreen({ nav }) {
   useS2();
   const [list, setList] = useState(false);
-  const c = currentCourse(), exam = inMyApp('cfa2'), tests = s2get().tests, last = tests._last;
+  const c = currentCourse(), tests = s2get().tests, last = tests._last;
   const sug = suggestedTest(c), secs = testableSections(c), passed = secs.filter(x => tests['unit:' + x.id] && tests['unit:' + x.id].passedEver).length;
   const qn = sug ? Math.min(10, allQuestions(sug.lessons).length) : 0;
   return html`<${Room} color=${MENTA} tab="allenati" go=${nav.tab} headH=${176}
@@ -1701,14 +1693,13 @@ function TestScreen({ nav }) {
           <div class="o-body o-mut">${misName(c)}, ${qn} questions, ${Math.round(qn * c.pace / 60)} minutes</div></div>
         <div class="o-rowf" style="gap:12px;padding:10px 14px;background:${T_GIALLO};border-radius:14px"><span style="width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;background:${GIALLO};border:2px solid ${INK};border-radius:9px">${PathIco(D_STAR, 16, 2, INK, INK)}</span><span class="o-t" style="font-size:15px">If you pass, your stickers turn golden.</span></div>
         <${Btn} bg=${MENTA} onClick=${() => nav.go('testInizio', { kind: 'unit', course: c.id, section: sug.id })}>Start the unit test<//>`
-      : html`<div class="o-col" style="gap:4px"><div style="font-size:22px;line-height:26px;font-weight:800">You've passed all the unit tests</div><div class="o-body o-mut">${exam ? 'Only the mock exam is left, when you feel ready.' : 'Stay sharp with the mixed quiz, in Practice.'}</div></div>`}
+      : html`<div class="o-col" style="gap:4px"><div style="font-size:22px;line-height:26px;font-weight:800">You've passed all the unit tests</div><div class="o-body o-mut">Stay sharp with the mixed quiz, in Practice.</div></div>`}
     </div></div>
     <div style="height:24px;flex:none"></div>
     <${Sheet}>
       <h2 class="o-h2" style="margin-bottom:4px">All tests</h2>
       <${Row} icon=${Ico(Compass, 22)} title="Level test" sub="5 questions to see where you stand" chev=${true} onClick=${() => nav.go('testInizio', { kind: 'level', course: c.id })}/>
-      <${Row} icon=${Ico(Flag, 22)} title="Unit tests" sub=${`${misName(c)}: ${passed} of ${secs.length} passed`} chev=${true} last=${!exam} onClick=${() => setList(true)}/>
-      ${exam && html`<${Row} icon=${Ico(Timer, 22)} title="Mock exam" sub="CFA Level II, 44 timed questions" tag=${K.isPro ? null : 'Pro'} chev=${true} last=${true} onClick=${() => nav.go('testInizio', { kind: 'mock', course: 'cfa2' })}/>`}
+      <${Row} icon=${Ico(Flag, 22)} title="Unit tests" sub=${`${misName(c)}: ${passed} of ${secs.length} passed`} chev=${true} last=${true} onClick=${() => setList(true)}/>
     <//>
     ${list && html`<${BSheet} onClose=${() => setList(false)} label="Unit tests">
       <h2 class="o-big" style="margin-bottom:6px;flex:none">Unit tests</h2>
@@ -2509,7 +2500,8 @@ function SerieRun({ nav }) {
 // =====================================================================================================
 // SFIDE, AI COACH, PROFILO, ALBUM, IMPOSTAZIONI, PRO, CATALOGO
 // =====================================================================================================
-const PRO_POINTS = ['Unlimited explanations', 'All tests, with a report by topic', 'Practice on your weak spots', 'Calculator keys, step by step'];
+// quello che oggi è davvero riservato a Pro (i test e il loro report sono per tutti, da quando non c'è più la simulazione d'esame)
+const PRO_POINTS = ['Unlimited explanations', 'Practice on your weak spots', 'Calculator keys, step by step'];
 const PRO_YEAR = CUR + '34.99', PRO_MONTH = CUR + '5.99';
 const PRO_TRIAL_LINE = `7-day trial, then ${PRO_YEAR} a year.`;
 function startPro(plan) { s2set({ pro: { since: Date.now(), plan: plan || 'year' } }); try { K.setIsPro(true); } catch (e) {} }
@@ -2610,21 +2602,20 @@ function DuelDone({ nav, rival, a, b, xp }) {
 }
 
 // ---- AI Coach: la chat è quella dell'app, dentro la nuova cornice ----
-// I suggerimenti seguono l'obiettivo: chi parte da zero non trova le domande del CFA.
+// I suggerimenti seguono l'obiettivo.
 const COACH = {
   zero: ['Rally answers in simple words, with everyday examples.', ['What is inflation? Give me an example', 'Simple or compound interest: what\'s the difference?', 'Why does money in a drawer lose value?']],
   invest: ['Rally explains financial instruments with examples in numbers: returns, costs, time.', ['What\'s the difference between a stock and a bond?', 'How much do a fund\'s costs weigh over twenty years?', 'What does diversifying mean? Give me an example']],
-  work: ['Rally helps you read a financial statement or an economic news story.', ['How do I tell if a company is really making money?', 'Why can a profitable company run out of cash?', 'What changes for a company when rates go up?']],
-  exam: ['Rally answers with formulas, steps and exam-style questions.', ['Explain residual income from scratch', 'Difference between FCFF and FCFE', 'How is parametric VaR calculated?']]
+  work: ['Rally helps you read a financial statement or an economic news story.', ['How do I tell if a company is really making money?', 'Why can a profitable company run out of cash?', 'What changes for a company when rates go up?']]
 };
-function coachAsk() { const g = misGet().goal; return { exam: g === 'exam', lead: COACH[g][0], ask: [...COACH[g][1], g === 'exam' ? 'Quiz me with A, B, C questions' : 'Ask me three questions about my latest lessons'] }; }
+function coachAsk() { const g = COACH[misGet().goal] ? misGet().goal : 'zero'; return { lead: COACH[g][0], ask: [...COACH[g][1], 'Ask me three questions about my latest lessons'] }; }
 function CoachScreen({ nav }) {
   const [hist, setHist] = useState(false), [pending, setPending] = useState(null);
   const chats = K.chats || [], active = chats.find(c => c.id === K.activeChatId);
   const Chat = K.AiChatModal, coach = coachAsk();
   const newChat = first => {
     const now = new Date().toISOString(), nm = userName();
-    const c = { id: `chat_${Date.now()}`, title: first ? first.slice(0, 40) : 'New conversation', createdAt: now, updatedAt: now, messages: [{ role: 'assistant', content: `Hi${nm ? ' ' + nm : ''}! ${coach.exam ? 'Ask me to explain a concept from scratch, or for an exercise or an exam question.' : 'Ask me about a word you don\'t know, a doubt about money or an example with numbers.'}`, timestamp: now }] };
+    const c = { id: `chat_${Date.now()}`, title: first ? first.slice(0, 40) : 'New conversation', createdAt: now, updatedAt: now, messages: [{ role: 'assistant', content: `Hi${nm ? ' ' + nm : ''}! Ask me about a word you don't know, a question about money or an example with numbers.`, timestamp: now }] };
     K.setChats(prev => [c, ...prev].slice(0, 50)); K.setActiveChatId(c.id); setPending(first ? { id: c.id, text: first } : null); setHist(false);
   };
   const fmt = d => { try { return new Date(d).toLocaleDateString(LOC, { day: 'numeric', month: 'short' }); } catch (e) { return ''; } };
@@ -2669,7 +2660,7 @@ function ProfiloScreen({ nav }) {
       <${Stats3} items=${[[streakDays(), 'day streak'], [fmtInt((K.stats && K.stats.xp) || 0), 'XP points'], [(cur ? coursePct(cur) : 0) + '%', cur ? 'of ' + misName(cur) : 'of the path']]}/>
       <div style="height:2px;background:${SEP};margin:18px 0 0"></div>
       <${Row} icon=${Ico(Crown, 22)} ibg=${GIALLO} title="FinLearn Pro" sub=${K.isPro ? 'Active' : 'Try it free for 7 days'} chev=${true} onClick=${() => nav.go('pro')}/>
-      <${Row} icon=${Ico(SlidersHorizontal, 22)} title="Settings" sub="Your path and account" chev=${true} last=${true} onClick=${() => nav.go('impostazioni')}/>
+      <${Row} icon=${Ico(SlidersHorizontal, 22)} title="Settings" sub="Your path, language and data" chev=${true} last=${true} onClick=${() => nav.go('impostazioni')}/>
     <//>
   <//>`;
 }
@@ -2696,12 +2687,70 @@ function AlbumScreen({ nav }) {
 }
 
 // ---- impostazioni ----
+// Le voci che sono "i dati dell'utente": tutte quelle dell'app, tranne quelle che non devono uscire dal telefono né entrarci da un file:
+// gli account di prova di una volta, la chiave di OpenRouter (e il codice usato mentre la si collega), l'identità del telefono nelle sfide dal vivo.
+const dataKeyOk = k => typeof k === 'string' && /^(finlearn_|fl2_)/.test(k) && k !== 'finlearn_users' && !/^finlearn_or_(key|pkce)$/.test(k) && k !== 'finlearn_sfide_pid';
+function saveFile(blob, name) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
 function downloadData() {
   try {
-    // nel file non finiscono le password degli account di prova né la chiave di OpenRouter
-    const out = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(finlearn_|fl2_)/.test(k) && k !== 'finlearn_users' && !/^finlearn_or_(key|pkce)$/.test(k)) out[k] = localStorage.getItem(k); }
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' })); a.download = `finlearn-data-${dayKey()}.json`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    const out = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (dataKeyOk(k)) out[k] = localStorage.getItem(k); }
+    const name = `finlearn-data-${dayKey()}.json`, blob = new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' });
+    // iPhone con l'app sulla schermata Home: lì lo scaricamento diretto non è affidabile, si passa da "Condividi" (dove c'è "Salva su File")
+    try {
+      if (navigator.standalone === true && typeof File === 'function' && navigator.canShare) { const f = new File([blob], name, { type: 'application/json' });
+        if (navigator.canShare({ files: [f] })) { navigator.share({ files: [f] }).catch(e => { if (!e || e.name !== 'AbortError') { try { saveFile(blob, name); } catch (x) {} } }); return; } }
+    } catch (e) {}
+    saveFile(blob, name);
   } catch (e) {}
+}
+// Ricarica un file creato da "Scarica i miei dati": serve per cambiare telefono, o indirizzo dell'app, senza perdere i progressi.
+// Il file va controllato, non creduto: entrano solo le voci dell'app con un valore di testo (mai account di prova, chiave di OpenRouter, identità nelle sfide),
+// e progressi, utente e dati devono avere la forma giusta. Se qualcosa non torna non si scrive niente.
+// I dati che c'erano prima sul telefono vengono sostituiti, non mescolati: le voci che il file non ha si tolgono (così non restano, per esempio, le chat di un altro).
+const RESTORE_MAX = 8 * 1024 * 1024;
+const RESTORE_ERR = { big: 'The file is too large to be a FinLearn backup.', file: 'This file is not a FinLearn backup.', empty: 'There is no progress to restore in this file.', write: 'I couldn\'t save the data on this phone: it may be out of space.' };
+const restoreKeyOk = k => dataKeyOk(k) && k.length <= 80 && /^(finlearn_|fl2_)[\w.:-]+$/.test(k);
+const jsonKind = t => { try { const v = JSON.parse(t); return v === null ? 'null' : Array.isArray(v) ? 'array' : typeof v; } catch (e) { return 'bad'; } };
+function restoreRead(text) {
+  let j; try { j = JSON.parse(text); } catch (e) { throw new Error('file'); }
+  if (!j || typeof j !== 'object' || Array.isArray(j)) throw new Error('file');
+  const out = {}; let n = 0;
+  for (const k of Object.keys(j)) { if (!restoreKeyOk(k) || typeof j[k] !== 'string') continue; out[k] = j[k]; n++; }
+  if (!n) throw new Error('file');
+  if (out.fl2_state != null) { let st; try { st = JSON.parse(out.fl2_state); } catch (e) { throw new Error('file'); } if (!st || typeof st !== 'object' || Array.isArray(st) || st.v !== 1) throw new Error('file'); }
+  // l'utente e i suoi dati: se ci sono devono essere leggibili, altrimenti il file è rovinato
+  if (out.finlearn_user != null) { let u = null; try { u = JSON.parse(out.finlearn_user); } catch (e) { /* sotto */ } if (!u || typeof u !== 'object' || Array.isArray(u) || typeof u.uid !== 'string' || !/^[\w-]{1,64}$/.test(u.uid)) throw new Error('file'); }
+  for (const k of Object.keys(out)) { if (/^finlearn_data_/.test(k) && jsonKind(out[k]) !== 'object') throw new Error('file'); if (/^finlearn_chats_/.test(k) && jsonKind(out[k]) !== 'array') throw new Error('file'); }
+  if (out.fl2_state == null && !Object.keys(out).some(k => /^finlearn_(data_|chats_|album|activity)/.test(k))) throw new Error('empty');
+  return out;
+}
+function restoreData(file) {
+  return new Promise((res, rej) => {
+    if (!file || file.size > RESTORE_MAX) return rej(new Error('big'));
+    const r = new FileReader();
+    r.onerror = () => rej(new Error('file'));
+    r.onload = () => { let out; try { out = restoreRead(String(r.result)); } catch (e) { return rej(e); }
+      // prima si mettono da parte i dati di adesso: se la scrittura si ferma a metà si torna com'era
+      const prima = {}, nuove = Object.keys(out);
+      try {
+        for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (dataKeyOk(k)) prima[k] = localStorage.getItem(k); }
+        // chi è l'utente su questo telefono resta com'è se il file non lo dice
+        for (const k of Object.keys(prima)) if (!(k in out) && k !== 'finlearn_user') localStorage.removeItem(k);
+        for (const k of nuove) localStorage.setItem(k, out[k]);
+        res(nuove.length);
+      } catch (e) {
+        try { for (const k of nuove) if (!(k in prima)) localStorage.removeItem(k); for (const k of Object.keys(prima)) localStorage.setItem(k, prima[k]); } catch (x) { /* niente */ }
+        rej(new Error('write'));
+      } };
+    r.readAsText(file);
+  });
+}
+// il campo (invisibile) che fa scegliere il file: sta dentro un'etichetta che fa da pulsante. Se il file va bene la pagina si ricarica con i dati nuovi.
+function RestoreInput({ busy, onBusy, onErr }) {
+  return html`<input type="file" accept="application/json,.json" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" disabled=${!!busy} onChange=${e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return; onBusy();
+    restoreData(f).then(() => { try { location.reload(); } catch (x) {} }).catch(x => onErr(RESTORE_ERR[x && x.message] || RESTORE_ERR.file)); }}/>`;
 }
 // ---- AI Coach con OpenRouter: collega, scegli il modello, scollega ----
 const orModelLabel = id => { const t = id === K.FL_OR_FREE ? 'Automatic (free)' : K.flOrModelName(id); return t.length > 28 ? t.slice(0, 27) + '…' : t; };
@@ -2755,16 +2804,17 @@ function ModelSheet({ onClose }) {
 }
 function SettingsScreen({ nav, sheet: sheet0 }) {
   const s = useS2(), set = s.settings, u = K.user || {}, or = K.useFlOr();
-  const [sheet, setSheet] = useState(sheet0 || null), [nm, setNm] = useState(userName());
+  const [sheet, setSheet] = useState(sheet0 || null), [nm, setNm] = useState(userName()), [load, setLoad] = useState(null);
   const m = misGet(), P = misP(), nk = (m.known || []).length, [pick, setPick] = useState(m.goal);
   const upd = p => s2set(x => ({ settings: Object.assign({}, x.settings, p) }));
   const flags = Object.keys(s.flags || {}).length;
-  const access = u.guest ? 'Guest' : u.provider === 'apple' ? 'With Apple' : /^google_/.test(u.uid || '') || u.provider === 'google' ? 'With Google' : 'With email';
   const H = t => html`<h2 class="o-h2" style="font-size:18px;margin:26px 0 2px">${t}</h2>`;
   const R = (label, value, onClick, right, last) => html`<${onClick ? 'button' : 'div'} type=${onClick ? 'button' : undefined} class=${'o-row' + (last ? ' last' : '')} style="min-height:52px;gap:10px" onClick=${onClick}>
     <span class="o-grow o-t" style="font-size:16px">${label}</span>${value != null && html`<span style="font-size:15px;font-weight:600;color:${MUT};text-align:right">${value}</span>`}${right || (onClick && PathIco(D_NEXT, 20, 2.6))}<//>`;
-  const wipe = () => { try { const uid = u.uid; ['fl2_state', 'finlearn_los_progress', 'finlearn_album', 'finlearn_album_v1', 'finlearn_activity', 'finlearn_quiz_stats', 'finlearn_exam_date', 'finlearn_data_' + uid, 'finlearn_chats_' + uid,
-    'finlearn_or_key', 'finlearn_or_pkce', 'finlearn_or_model', 'finlearn_or_private', 'finlearn_ai_engine', 'finlearn_sfide_pid'].forEach(k => localStorage.removeItem(k)); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
+  // "Cancella tutti i dati" toglie dal telefono tutto quello che l'app ci ha scritto (anche la chiave di OpenRouter e gli account di prova di una volta);
+  // restano solo lingua e paese (fl_lang, fl_country), che non dicono niente di chi usa l'app
+  const wipe = () => { try { const ks = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(finlearn_|fl2_)/.test(k)) ks.push(k); } ks.forEach(k => localStorage.removeItem(k)); } catch (e) {}
+    try { sessionStorage.removeItem('finlearn_sfida_invito'); } catch (e) {} K.onLogout(); setTimeout(() => { try { location.reload(); } catch (e) {} }, 50); };
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Settings</h1>`}/>`}>
     <div class="o-pad" style="padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
       <div style="margin-top:18px;padding:14px 16px 12px;border:2.5px solid ${INK};border-radius:24px;box-shadow:4px 4px 0 ${INK}">
@@ -2773,21 +2823,20 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
         ${R('Level', nk ? 'I know a little already' : 'Starting from zero', () => setSheet('livello'))}
         ${R('Your paths', misCourses().map(misName).join(', '), () => nav.go('catalogo'))}
         ${R('Minutes per day', `${set.goalMin} minutes`, () => setSheet('goal'), null, true)}
-        <p style="margin-top:4px;padding:10px 14px;background:${T_GR};border-radius:14px;font-size:13px;line-height:18px;font-weight:600">What you find in Learn, Practice and AI Coach depends on this. If you change it, your progress stays.</p></div>
+        <p style="margin-top:4px;padding:10px 14px;background:${T_GR};border-radius:14px;font-size:13px;line-height:18px;font-weight:600">What you find in Learn, Practice, Challenges and AI Coach depends on this. If you change it, your progress stays.</p></div>
       ${H('Study')}
       ${R('Reminders', 'Coming soon', null)}
-      ${R('Language', LANG === 'en' ? 'English' : 'Italiano', () => setSheet('lang'), null, LANG !== 'en' && !inMyApp('cfa2'))}
-      ${LANG === 'en' && R('Country', COUNTRY === 'US' ? 'United States' : 'Italy', () => setSheet('country'), null, !inMyApp('cfa2'))}
-      ${inMyApp('cfa2') && R('Exam questions', 'In English, just like the exam', null, null, true)}
+      ${R('Language', LANG === 'en' ? 'English' : 'Italiano', () => setSheet('lang'), null, LANG !== 'en')}
+      ${LANG === 'en' && R('Country', COUNTRY === 'US' ? 'United States' : 'Italy', () => setSheet('country'), null, true)}
       ${H('AI Coach')}
       ${R('OpenRouter', or.on ? 'Connected' : 'Not connected', () => setSheet('or'))}
       ${R('Model', orModelLabel(or.model), () => setSheet('model'), null, true)}
-      ${H('Account')}
+      ${H('Your data')}
       ${R('Name', userName() || 'Add', () => setSheet('name'))}
-      ${R('Sign-in', access, () => (u.guest ? nav.go('salva') : setSheet('account')))}
       ${R('Plan', K.isPro ? 'Pro' : 'Free', () => nav.go('pro'), K.isPro ? null : html`<span class="o-tag" style="padding:3px 11px;font-size:13px">Upgrade to Pro</span>`)}
       ${R('Download my data', null, downloadData)}
-      ${R('Delete account', null, () => setSheet('del'), null, true)}
+      ${R('Restore my data', null, () => { setLoad(null); setSheet('load'); })}
+      ${R('Erase all data', null, () => setSheet('del'), null, true)}
       ${H('Help')}
       ${R('Flagged questions', flags ? String(flags) : 'None', flags ? () => setSheet('flags') : null)}
       ${R('Rules and privacy', null, () => setSheet('priv'), null, true)}
@@ -2817,22 +2866,23 @@ function SettingsScreen({ nav, sheet: sheet0 }) {
     ${sheet === 'name' && html`<${BSheet} onClose=${() => setSheet(null)} label="Name"><h2 class="o-big">What's your name?</h2>
       <input class="o-inp" value=${nm} onChange=${e => setNm(e.target.value)} placeholder="Your name" maxlength="24" aria-label="Name" style="margin-top:16px"/>
       <div style="margin-top:14px"><${Btn} cls="lg" onClick=${() => { s2set({ name: firstName(nm) }); setSheet(null); }}>Save<//></div><//>`}
-    ${sheet === 'account' && html`<${BSheet} onClose=${() => setSheet(null)} label="Account"><h2 class="o-big">${u.displayName || 'Account'}</h2><p class="o-body o-mut" style="margin-top:4px">${u.email || ''}</p>
-      <p class="o-body" style="margin-top:12px">Trial version: your data stays on this device.</p>
-      <div style="margin-top:16px"><${Btn} cls="lg flat" bg="#fff" onClick=${() => { setSheet(null); K.onLogout(); }}>${Ico(LogOut, 20)} Sign out<//></div><//>`}
-    ${sheet === 'ui' && html`<${BSheet} onClose=${() => setSheet(null)} label="Look"><h2 class="o-big">The app's look</h2>
-      <p class="o-body o-mut" style="margin-top:6px">You're using the new look, "In Order". The previous one is still available, with the same progress.</p>
-      <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Keep the new one<//><${Btn} cls="lg flat" bg="#fff" onClick=${() => K.setUi('figurine')}>Go back to the previous look<//></div><//>`}
+    ${sheet === 'load' && html`<${BSheet} onClose=${() => setSheet(null)} label="Restore my data"><h2 class="o-big">Restore your data</h2>
+      <p class="o-body o-mut" style="margin-top:6px">Choose the file you saved with ‘Download my data’. The progress now on this phone is replaced by what is in the file.</p>
+      ${load && load.err && html`<p role="alert" style="margin-top:12px;padding:10px 14px;background:${T_ROSA};border-radius:14px;font-size:15px;line-height:20px;font-weight:700">${load.err}</p>`}
+      <div class="o-col" style="gap:10px;margin-top:16px">
+        <label class="o-btn lg" style=${{ background: AZ, cursor: 'pointer', opacity: load && load.busy ? 0.5 : 1 }}>${load && load.busy ? 'One moment…' : 'Choose the file'}
+          <${RestoreInput} busy=${load && load.busy} onBusy=${() => setLoad({ busy: true })} onErr=${t => setLoad({ err: t })}/></label>
+        <${Btn} cls="lg flat" bg="#fff" onClick=${() => setSheet(null)}>Cancel<//></div><//>`}
     ${sheet === 'flags' && html`<${BSheet} onClose=${() => setSheet(null)} label="Flagged questions"><h2 class="o-big" style="flex:none">Flagged questions</h2><p class="o-body o-mut" style="margin:6px 0 8px;flex:none">They also end up in the "Download my data" file.</p>
       <div class="o-scroll" style="flex:0 1 auto;max-height:50vh">${Object.keys(s.flags || {}).map(k => { const l = lessonByKey(k.split('#')[0]); return html`<div key=${k} class="o-row" style="min-height:48px"><span class="o-grow o-t" style="font-size:15px">${l ? l.title : k}</span><span class="o-s">${l && l.code ? l.code : ''}</span></div>`; })}</div>
       <div style="margin-top:12px;flex:none"><${Btn} cls="lg flat" bg="#fff" onClick=${() => { s2set({ flags: {} }); setSheet(null); }}>Clear the list<//></div><//>`}
     ${sheet === 'priv' && html`<${BSheet} onClose=${() => setSheet(null)} label="Rules and privacy"><h2 class="o-big">Rules and privacy</h2>
-      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>Your progress, answers and conversations are saved only on this device.</p><p>If you connect OpenRouter, the questions you ask the AI Coach go from here to OpenRouter and the provider of the model you chose. FinLearn doesn't receive them.</p><p>In live challenges your name and your answers pass through FinLearn's referee, on Cloudflare, only for the length of the game: at the end everything is deleted.</p><p>No ads and no data sold.</p></div>
+      <div class="o-col o-body" style="gap:10px;margin-top:10px"><p>Your progress, answers and conversations are saved only on this device.</p><p>If you connect OpenRouter, the questions you ask the AI Coach go from here to OpenRouter and the provider of the model you chose. FinLearn doesn't receive them.</p><p>In live challenges your name and your answers pass through FinLearn's referee, on Cloudflare, only for the length of the game: at the end everything is deleted.</p><p>No ads and no data sold.</p><p>FinLearn is for learning: what you read here is not advice on how to invest your money.</p></div>
       <div style="margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Got it<//></div><//>`}
     ${sheet === 'or' && html`<${OrSheet} onClose=${() => setSheet(null)}/>`}
     ${sheet === 'model' && html`<${ModelSheet} onClose=${() => setSheet(null)}/>`}
-    ${sheet === 'del' && html`<${BSheet} onClose=${() => setSheet(null)} label="Delete account"><h2 class="o-big">Delete everything?</h2><p class="o-body o-mut" style="margin-top:6px">You delete progress, stickers, points and conversations from this device. This can't be undone.</p>
-      <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Keep everything<//><${Btn} cls="lg flat" bg=${ROSA} onClick=${wipe}>${Ico(Trash2, 20)} Delete account and data<//></div><//>`}
+    ${sheet === 'del' && html`<${BSheet} onClose=${() => setSheet(null)} label="Erase all data"><h2 class="o-big">Erase everything?</h2><p class="o-body o-mut" style="margin-top:6px">You delete progress, stickers, points and conversations from this device. This can't be undone.</p>
+      <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" onClick=${() => setSheet(null)}>Keep everything<//><${Btn} cls="lg flat" bg=${ROSA} onClick=${wipe}>${Ico(Trash2, 20)} Erase everything<//></div><//>`}
   <//>`;
 }
 
@@ -2861,8 +2911,7 @@ function ProScreen({ nav }) {
 }
 
 // ---- Scopri: i percorsi della propria app, quelli che si possono aggiungere, quelli in arrivo ----
-const CAT_ADD = { cfa2: 'This is an exam path. If you add it, the mock exam in Practice and the exam questions in Challenges come with it.',
-  basi: 'These are the basics: interest, budget, debt, instruments, financial statements. Also useful as a refresher from scratch.' };
+const CAT_ADD = { basi: 'These are the basics: interest, budget, debt, instruments, financial statements. Also useful as a refresher from scratch.' };
 function CatalogScreen({ nav }) {
   useS2();
   const [f, setF] = useState('all');
@@ -2934,42 +2983,6 @@ function CourseSheetScreen({ nav, course }) {
   <//>`;
 }
 
-// ---- salva i progressi (per chi è entrato come ospite) e accesso ----
-function AccountForm({ mode, onSubmit, busy, err }) {
-  const [name, setName] = useState(''), [email, setEmail] = useState(''), [pw, setPw] = useState('');
-  return html`<form class="o-col" style="gap:10px;margin-top:14px" onSubmit=${e => { e.preventDefault(); onSubmit({ name: name.trim(), email: email.trim(), password: pw }); }}>
-    ${mode === 'new' && html`<input class="o-inp" value=${name} onChange=${e => setName(e.target.value)} placeholder="Your name" aria-label="Name" autocomplete="given-name" maxlength="24"/>`}
-    <input class="o-inp" type="email" value=${email} onChange=${e => setEmail(e.target.value)} placeholder="Email" aria-label="Email" autocomplete="email" required=${true}/>
-    <input class="o-inp" type="password" value=${pw} onChange=${e => setPw(e.target.value)} placeholder="Password (at least 6 characters)" aria-label="Password" autocomplete=${mode === 'new' ? 'new-password' : 'current-password'} minlength="6" required=${true}/>
-    ${err && html`<p class="o-s" style="color:#B3261E;font-weight:700" role="alert">${err}</p>`}
-    <${Btn} cls="lg" type="submit" disabled=${busy} onClick=${undefined}>${busy ? 'One moment…' : mode === 'new' ? 'Create account' : 'Sign in'}<//>
-  </form>`;
-}
-function SaveScreen({ nav }) {
-  const [form, setForm] = useState(false), [busy, setBusy] = useState(false), [err, setErr] = useState(null);
-  const l = allStickers().find(x => isDone(x.key));
-  const link = async p => { setBusy(true); setErr(null); try { await K.upgradeGuest(p); if (p.name) s2set({ name: firstName(p.name) }); nav.back(); } catch (e) { setErr((e && e.message) || 'That didn\'t work. Try again.'); setBusy(false); } };
-  return html`<div class="o-scr" style="background:${AZ}">
-    <div style="position:relative;flex:none;height:calc(var(--otop) + 227px)">
-      <div class="o-top o-pad"><${IBtn} d=${D_X} onClick=${nav.back} label="Close"/></div>
-      <${Rally} pose="telefono" w=${214} alt="Rally with a phone" style="position:absolute;left:50%;margin-left:-150px;bottom:-34px"/>
-      ${l && html`<div class="o-col" style="position:absolute;left:50%;margin-left:44px;bottom:26px;width:104px;padding:6px 6px 10px;gap:6px;background:#fff;border:2.5px solid ${INK};border-radius:16px;box-shadow:4px 4px 0 ${INK};transform:rotate(6deg)">
-        <span style="height:52px;display:flex;align-items:center;justify-content:center;background:${AZ};border:2px solid ${INK};border-radius:10px;font-size:24px;font-weight:800">${lessonEmoji(l) || stickerSym(l)}</span><span style="font-size:12px;line-height:15px;font-weight:700;padding:0 2px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${l.title}</span></div>`}
-    </div>
-    <div class="o-scroll" style="background:#fff;border-top:2.5px solid ${INK};position:relative"><div class="o-col o-pad" style="min-height:100%;padding-top:26px">
-      <h1 class="o-big" style="font-size:30px;line-height:34px">Save your progress</h1>
-      <p class="o-body o-mut" style="margin-top:8px;font-size:16px">${l ? 'You finished your first lesson and won a sticker. ' : ''}With an account you find them again when you come back.</p>
-      ${form ? html`<${AccountForm} mode="new" busy=${busy} err=${err} onSubmit=${p => link(Object.assign({ provider: 'email' }, p))}/>`
-        : html`<div class="o-col" style="gap:12px;margin-top:26px">
-          <${Btn} cls="lg ink" disabled=${busy} onClick=${() => link({ provider: 'apple' })}>Continue with Apple<//>
-          <${Btn} cls="lg flat" bg="#fff" disabled=${busy} onClick=${() => link({ provider: 'google' })}>Continue with Google<//>
-          <${Btn} cls="lg flat" bg="#fff" disabled=${busy} onClick=${() => setForm(true)}>Continue with email<//></div>`}
-      <div style="text-align:center;margin-top:6px"><button type="button" class="o-link" onClick=${nav.back}>Later</button></div>
-      <div style="flex:1 1 12px"></div>
-      <p class="o-s" style="text-align:center;padding:10px 12px max(26px,calc(env(safe-area-inset-bottom) + 10px))">Trial version: your account stays on this device. No ads, no data sold.</p>
-    </div></div></div>`;
-}
-
 // =====================================================================================================
 // SFIDE DAL VIVO · modalità Lampo: due telefoni e un arbitro su Cloudflare (codice in sfide/)
 // =====================================================================================================
@@ -2977,15 +2990,16 @@ function SaveScreen({ nav }) {
 // Ogni telefono dice all'arbitro la lingua della sua app (`lang` nel saluto) e riceve la domanda in quella lingua:
 // un'app italiana e una inglese giocano la stessa partita, con la risposta giusta nella stessa posizione.
 // Questo telefono misura il proprio tempo di reazione: da quando la domanda compare sullo schermo al tocco.
-const SFIDE_HOST = 'finlearn-sfide.finlearn27.workers.dev';   // indirizzo dell'arbitro su Cloudflare
+const SFIDE_HOST = 'finlearn-sfide.finlearn27.workers.dev';   // l'arbitro su Cloudflare; dallo stesso indirizzo esce anche l'app
 const SFIDE_LOCALE = /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
-const SFIDE_WS = SFIDE_LOCALE ? 'ws://127.0.0.1:8787' : 'wss://' + SFIDE_HOST;
+// In prova sul computer l'arbitro è su 127.0.0.1:8787. Dal vecchio indirizzo su GitHub l'arbitro è su Cloudflare.
+// Da ogni altro indirizzo (Cloudflare oggi, un dominio nostro domani) app e arbitro stanno insieme: si usa lo stesso indirizzo della pagina.
+const SFIDE_WS = SFIDE_LOCALE ? 'ws://127.0.0.1:8787' : /\.github\.io$/.test(location.hostname) ? 'wss://' + SFIDE_HOST : 'wss://' + location.host;
 const SFIDE_ON = SFIDE_LOCALE || !/SOTTODOMINIO/.test(SFIDE_HOST);
 const SFIDE_V = 1;
 const LIVE_RE = /^[A-HJ-NP-Z2-9]{6}$/;
 const LIVE_CORSI = [
-  { id: 'basi', name: 'Finance basics', sub: 'Each player in their app\'s language, 24 seconds per question' },
-  { id: 'cfa2', name: 'CFA Level II', sub: 'In English as on the exam, 45 seconds per question' }
+  { id: 'basi', name: 'Finance basics', sub: 'Each player in their app\'s language, 24 seconds per question' }
 ];
 // invito: il link …/app/#sfida=CODICE apre l'app e porta nella stanza (il codice si toglie subito dall'indirizzo)
 const LIVE_INV = 'finlearn_sfida_invito', LIVE_PID = 'finlearn_sfide_pid';
@@ -3053,7 +3067,7 @@ class LiveConn {
 function LiveScreen({ nav, codice: cod0, nuova }) {
   const known = userName();
   const [vista, setVista] = useState(cod0 ? 'entra' : nuova ? 'scegli' : 'codice');
-  // le domande arrivano dai percorsi che si hanno nell'app: chi non ha il CFA non lo vede tra le scelte
+  // le domande arrivano dai percorsi che si hanno nell'app
   const corsi = LIVE_CORSI.filter(c => inMyApp(c.id)).length ? LIVE_CORSI.filter(c => inMyApp(c.id)) : LIVE_CORSI;
   const [corso, setCorso] = useState(() => { const c = currentCourse(); return c && corsi.some(x => x.id === c.id) ? c.id : corsi[0].id; });
   const [cod, setCod] = useState(cod0 || ''), [nm, setNm] = useState(known);
@@ -3197,7 +3211,7 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
             <button type="button" class="o-link" onClick=${() => copy(codice, 'Code copied')}>Copy the code only</button></div>`}
         <div class="o-col">${gMe && who(gMe, true)}${gOp ? who(gOp, false) : html`<div class="o-rowf" style="gap:12px;min-height:56px">
           <span style="width:40px;height:40px;flex:none;border:2px dashed ${INK};border-radius:50%"></span><span class="o-s">Waiting for your friend…</span></div>`}</div>
-        <p class="o-s">${st.benv && st.benv.corso === 'cfa2' ? 'CFA Level II questions, in English.' : 'Finance Basics questions.'} 5 questions: the point goes to whoever answers correctly first; a wrong answer costs a point.</p>
+        <p class="o-s">Finance Basics questions. 5 questions: the point goes to whoever answers correctly first; a wrong answer costs a point.</p>
         ${!two && html`<p class="o-s">On iPhone the link opens in Safari, not in the app: if FinLearn is on your Home Screen, typing the code is quicker.</p>`}
       </div><//>`;
   }
@@ -3367,9 +3381,9 @@ export function OrdineSplash({ onComplete }) {
     </div></div>`;
 }
 
-// Primo giorno: benvenuto, obiettivo, (esame), punto di partenza, (5 domande), "Ecco la tua FinLearn".
+// Primo giorno: benvenuto, obiettivo, punto di partenza, (5 domande), "Ecco la tua FinLearn".
 // `auth` arriva da app.js (accesso di prova, salvato sul dispositivo); `pre` porta i dati che servono prima dell'accesso.
-const GOALS = [['zero', 'Understand finance from scratch', 'Money, interest, inflation', Sprout], ['invest', 'Invest my savings', 'Stocks, bonds, funds', TrendingUp], ['work', 'Use it at work', 'Financial statements, valuation, rates', Briefcase], ['exam', 'Prepare for an exam', 'CFA, FRM, CAIA', GraduationCap]].filter(g => LANG !== 'en' || g[0] !== 'exam');
+const GOALS = [['zero', 'Understand finance from scratch', 'Money, interest, inflation', Sprout], ['invest', 'Invest my savings', 'Stocks, bonds, funds', TrendingUp], ['work', 'Use it at work', 'Financial statements, valuation, rates', Briefcase]];
 // i paesi tra cui scegliere (solo in inglese): decidono lezioni e valuta
 const COUNTRIES = [['US', 'United States', 'Dollars and US rules'], ['IT', 'Italy', 'Euros and Italian rules']];
 function Choice({ on, onClick, icon, title, sub }) {
@@ -3410,25 +3424,26 @@ function pathMeta(c) {
   return soon ? `${plural(ls.length, 'lesson ready', 'lessons ready')}, ${soon} units coming soon` : `${plural(ls.length, 'short lesson', 'short lessons')} in ${misUnits(c).length} units`;
 }
 const NUM_IT = ['', 'one', 'two', 'three', 'four', 'five'];
+// i passi della registrazione (in STEPS_REG il percorso scelto è già una bozza da mostrare)
+const STEPS_REG = ['goal', 'start', 'quiz', 'esito', 'pronta'], STEPS_ALL = ['country'].concat(STEPS_REG);
 
 export function OrdineWelcome({ auth, onAuth, pre }) {
-  const [step, setStep] = useState(() => { try { const r = sessionStorage.getItem('fl_resume'); if (r) { sessionStorage.removeItem('fl_resume'); return r; } } catch (e) { /* niente */ } return 'welcome'; }), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10), [date, setDate] = useState('');
+  const [step, setStep] = useState(() => { try { const r = sessionStorage.getItem('fl_resume'); if (r) { sessionStorage.removeItem('fl_resume'); return r; } } catch (e) { /* niente */ } return 'welcome'; }), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10);
   const [pl, setPl] = useState(null), [qi, setQi] = useState(0), [sel, setSel] = useState(null), [res, setRes] = useState([]), [known, setKnown] = useState([]);
-  const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [mode, setMode] = useState('in');
+  const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [rest, setRest] = useState(null);   // rest: ricarica di un salvataggio
   if (!K) K = Object.assign({ losProgress: [], albumLoad: () => ({}) }, pre || {});   // prima dell'accesso: i dati dei percorsi e poco altro
   ordInjectCss();
   useOrdFit();
   // durante la registrazione il percorso scelto è una bozza: le schermate lo leggono come se fosse già salvato
   const draft = useMemo(() => ({ goal, level: start, known, more: [], add: [], t: 0 }), [goal, start, known]);
-  const inReg = step !== 'welcome' && step !== 'login' && step !== 'country';
+  const inReg = STEPS_REG.includes(step);
   MIS_DRAFT = inReg ? draft : null;
   useEffect(() => () => { MIS_DRAFT = null; }, []);
-  const P = MIS_PATHS[goal], course = inReg ? courseById(P.course) : null, exam = goal === 'exam', N = exam ? 4 : 3, iStart = exam ? 2 : 1;
+  const P = MIS_PATHS[goal], course = inReg ? courseById(P.course) : null, N = 3, iStart = 1;
   const first = inReg ? nextLesson(course) : null;
   const enter = async fn => { setBusy(true); setErr(null); try { const r = await fn(); onAuth(r.user, r.data); } catch (e) { setErr((e && e.message) || 'That didn\'t work. Try again.'); setBusy(false); } };
   const create = () => { const now = Date.now();
     s2set(s => ({ onboard: { goal, start, level: true, t: now }, mis: { goal, level: start, known, more: [], add: [], t: now, go: first ? first.key : null }, cur: P.course, settings: Object.assign({}, s.settings, { goalMin: mins }) }));
-    if (exam && date) { try { localStorage.setItem('finlearn_exam_date', date); } catch (e) {} }
     enter(() => auth.guest()); };
   const [cty, setCty] = useState(COUNTRY);
   const pickCountry = () => { try { localStorage.setItem('fl_country', cty); } catch (e) { /* niente */ } if (cty === COUNTRY) { setStep('goal'); return; } try { sessionStorage.setItem('fl_resume', 'goal'); } catch (e) { /* niente */ } setCountryPref(cty); };
@@ -3441,40 +3456,35 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
   const head = (pose, lab, title, minH = 156) => html`<${Rally} pose=${pose} w=${190} alt="" style="position:absolute;right:-14px;top:-10px"/>
     <div class="o-col" style=${{ gap: 6, position: 'relative', minHeight: minH, maxWidth: 200 }}><span class="o-lab">${lab}</span><h1 class="o-big" style="font-size:30px;line-height:34px">${title}</h1></div>`;
   let body;
-  if (step === 'welcome') body = html`<div class="o-scr" style="background:${AZ}">
-    <div class="o-top" style="flex:1 1 0;min-height:300px;position:relative;display:flex;flex-direction:column;align-items:center">
+  // benvenuto. Sotto «Inizia» c'è «Ho già un salvataggio»: chi cambia telefono (o arriva dal vecchio indirizzo) riparte dal file di "Scarica i miei dati"
+  if (!STEPS_ALL.includes(step)) body = html`<div class="o-scr" style="background:${AZ};overflow-y:auto;overflow-x:hidden">
+    <div class="o-top o-hero">
       <button type="button" class="o-link" style="position:absolute;right:16px;top:14px;display:inline-flex;align-items:center;gap:6px" aria-label="Language · Lingua" onClick=${() => setLangPref(LANG === 'en' ? 'it' : 'en')}>${Ico(Languages, 18)}<span lang=${LANG === 'en' ? 'it' : 'en'}>${LANG === 'en' ? 'Italiano' : 'English'}</span></button>
       <div style="margin-top:22px"><${Wordmark} size=${34}/></div>
-      <div style="position:relative;width:min(288px,70vw);aspect-ratio:1;margin-top:auto;margin-bottom:-8px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center">
+      <div class="o-hero-c">
         <${Rally} pose="saluta" w=${250} alt="Rally, the FinLearn mascot, waving" style="margin-bottom:-6px;max-width:92%"/>
-        <span style="position:absolute;left:-22px;top:20px"><${Pill} rot=${-8}>Hi, I'm Rally<//></span></div></div>
+        <span class="o-hero-p"><${Pill} rot=${-8}>Hi, I'm Rally<//></span></div></div>
     <div class="o-sheet o-col" style="flex:none;padding-top:28px;padding-bottom:max(26px,calc(env(safe-area-inset-bottom) + 10px))">
       <h1 style="font-size:30px;line-height:34px;font-weight:800;letter-spacing:-.02em;text-wrap:balance">Learn finance, ten minutes a day</h1>
-      <p class="o-body o-mut" style="margin-top:10px;font-size:16px;line-height:23px">From the basics to investing, with short lessons, practice and stickers to collect.</p>
+      <p class="o-body o-mut" style="margin-top:10px;font-size:16px;line-height:23px">From the basics up, with short lessons, challenges and stickers to collect.</p>
       <div style="margin-top:22px"><${Btn} cls="lg" onClick=${() => setStep(LANG === 'en' && !LS.raw('fl_country') ? 'country' : 'goal')}>Get started<//></div>
-      <div style="text-align:center;margin-top:4px"><button type="button" class="o-link" onClick=${() => setStep('login')}>I already have an account</button></div></div></div>`;
+      <label class="o-link" style=${{ display: 'block', position: 'relative', marginTop: 8, textAlign: 'center', cursor: 'pointer', opacity: rest && rest.busy ? 0.5 : 1 }}>${rest && rest.busy ? 'One moment…' : 'I have a backup'}
+        <${RestoreInput} busy=${rest && rest.busy} onBusy=${() => setRest({ busy: true })} onErr=${t => setRest({ err: t })}/></label>
+      ${rest && rest.err && html`<p role="alert" style="margin-top:4px;padding:10px 14px;background:${T_ROSA};border-radius:14px;font-size:15px;line-height:20px;font-weight:700">${rest.err}</p>`}</div></div>`;
   else if (step === 'country') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} title=""/>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', 'Your country', 'Where do you live?')}
       <div role="radiogroup" aria-label="Where do you live" class="o-col" style="gap:12px;position:relative">${COUNTRIES.map(([id, t, s]) => html`<${Choice} key=${id} on=${cty === id} onClick=${() => setCty(id)} title=${t} sub=${s}/>`)}</div>
       <p class="o-body o-mut" style="margin-top:18px">Rules on taxes, pensions and banking change from one country to another, and so do the lessons you see. You can change it anytime in Settings.</p>
       <div style="margin-top:20px"><${Btn} cls="lg" onClick=${pickCountry}>Continue<//></div></div><//>`;
-  else if (step === 'goal') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} n=${N} i=${0}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep(exam ? 'exam' : 'start')}>Continue<//>`}>
+  else if (step === 'goal') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} n=${N} i=${0}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep('start')}>Continue<//>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', `Step 1 of ${N}`, 'What do you want to do with FinLearn?')}
       <div role="radiogroup" aria-label="What do you want to do with FinLearn" class="o-col" style="gap:12px;position:relative">${GOALS.map(([id, t, s, I]) => html`<${Choice} key=${id} on=${goal === id} onClick=${() => pickGoal(id)} icon=${Ico(I, 22)} title=${t} sub=${s}/>`)}</div>
       <p class="o-body o-mut" style="margin-top:18px">What you pick here decides what you find in the app. You can change it anytime without losing your progress.</p></div><//>`;
-  else if (step === 'exam') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('goal')} n=${N} i=${1}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep('start')}>Continue<//>`}>
-    <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('insegna', 'Step 2 of 4', 'Which exam are you preparing?')}
-      <div class="o-col" style="gap:10px;position:relative">
-        <${Choice} on=${true} onClick=${() => {}} icon="L2" title=${course.name} sub=${pathMeta(course)}/>
-        ${COMING.filter(x => x.group === 'cert').map(x => html`<div key=${x.id} class="o-rowf" style="gap:14px;min-height:56px;padding:8px 16px;border:2px dashed ${INK};border-radius:20px;background:${T_BG}"><span class="o-grow o-t" style="color:${MUT}">${x.name}</span><span class="o-tag" style="background:#fff">Coming soon</span></div>`)}</div>
-      <h2 class="o-h2" style="margin:24px 0 10px">When is your exam?</h2>
-      <input class="o-inp" type="date" value=${date} onChange=${e => setDate(e.target.value)} aria-label="Exam date"/>
-      <p class="o-body o-mut" style="margin-top:10px;font-size:14px;line-height:20px">With the date, Home shows how many days are left. You can also add it later.</p></div><//>`;
-  else if (step === 'start') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep(exam ? 'exam' : 'goal')} n=${N} i=${iStart}/>`} foot=${html`<${Btn} cls="lg" onClick=${fromStart}>${start === 'some' ? 'Take the 5 questions' : 'Continue'}<//>`}>
+  else if (step === 'start') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('goal')} n=${N} i=${iStart}/>`} foot=${html`<${Btn} cls="lg" onClick=${fromStart}>${start === 'some' ? 'Take the 5 questions' : 'Continue'}<//>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('occhiolino', `Step ${iStart + 1} of ${N}`, 'Where are you starting from?')}
       <div role="radiogroup" aria-label="Where are you starting from" class="o-col" style="gap:12px;position:relative">
         <${Choice} on=${start === 'zero'} onClick=${() => setStart('zero')} title="Starting from zero" sub="I begin with the first lesson."/>
-        <${Choice} on=${start === 'some'} onClick=${() => setStart('some')} title="I know a little already" sub=${exam ? 'Five questions to see where you stand.' : 'Five questions, and Rally lets you skip what you already know.'}/></div>
+        <${Choice} on=${start === 'some'} onClick=${() => setStart('some')} title="I know a little already" sub="Five questions, and Rally lets you skip what you already know."/></div>
       <h2 class="o-h2" style="margin:28px 0 12px">How much time do you have each day?</h2>
       <div role="radiogroup" aria-label="Minutes per day" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${[5, 10, 20].map(m => html`<button key=${m} type="button" role="radio" aria-checked=${mins === m ? 'true' : 'false'} onClick=${() => setMins(m)} class="o-col"
         style=${{ alignItems: 'center', padding: '10px 0 12px', border: `2.5px solid ${INK}`, borderRadius: 18, background: mins === m ? AZ : '#fff', boxShadow: mins === m ? `4px 4px 0 ${INK}` : 'none' }}><span style="font-size:26px;line-height:30px;font-weight:800">${m}</span><span style="font-size:14px;font-weight:700">minutes</span></button>`)}</div>
@@ -3485,8 +3495,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
         <div style="margin-top:6px"><${Rich} key=${'q' + qi} text=${q.q} cls="q" lang=${q.lang}/></div>
         <div style="margin-top:14px"><${Options} key=${'o' + qi} q=${q} sel=${sel} onSel=${setSel} locked=${false}/></div></div></div><//>`; }
   else if (step === 'esito') { const ok = res.filter(Boolean).length, nk = known.length, startU = first ? first.unit : course.units[0];
-    const text = exam ? 'For an exam you start from the first subject. The questions you get wrong come back under weak spots, in Practice.'
-      : nk === 1 ? 'You already know the first unit: Rally marks it as done. It stays open, so you can review it whenever you like.'
+    const text = nk === 1 ? 'You already know the first unit: Rally marks it as done. It stays open, so you can review it whenever you like.'
       : nk > 1 ? `You already know the first ${NUM_IT[nk] || nk} units: Rally marks them as done. They stay open, so you can review them whenever you like.`
       : 'Better to start from the first unit, so no gaps are left. The lessons are short.';
     body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('start')} n=${N} i=${iStart}/>`}
@@ -3495,7 +3504,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
       <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px"><${Rally} pose="occhiolino" w=${190} alt="" style="position:absolute;right:-14px;top:-10px"/>
         <div class="o-col" style="position:relative;align-items:flex-start;gap:12px;min-height:162px;max-width:214px"><${Pill}>${ok} of ${res.length} correct<//><h1 class="o-big">${nk || exam ? 'Start from ' + startU.name : 'Start from the beginning'}</h1></div>
         <p class="o-body o-mut" style="margin-bottom:14px;position:relative">${text}</p>
-        ${!exam && html`<div class="o-col" style="gap:4px">${pl.units.map((u, k) => { const kn = known.includes(u.id), st = u === startU;
+        ${html`<div class="o-col" style="gap:4px">${pl.units.map((u, k) => { const kn = known.includes(u.id), st = u === startU;
           return html`<div key=${u.id} class="o-rowf" style=${{ gap: 12, minHeight: st ? 62 : 58, padding: '0 10px', border: `2.5px solid ${st ? INK : '#fff'}`, borderRadius: 16, background: st ? T_AZ : '#fff', boxShadow: st ? `3px 3px 0 ${INK}` : 'none' }}>
             <span class="o-ibox" style=${{ width: 40, height: 40, borderRadius: 13, fontSize: 15, background: kn ? MENTA : '#fff' }}>${kn ? PathIco(D_CHECK, 20, 3) : k + 1}</span>
             <span class="o-grow o-col" style="gap:1px"><span class="o-t" style=${{ fontWeight: st ? 800 : 700 }}>${u.name}</span><span class="o-s" style=${st ? { color: INK } : null}>${plural(unitLessons(u).length, 'lezione', 'lezioni')}</span></span>
@@ -3505,19 +3514,12 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
       <div style="position:relative;flex:none"><${Rally} pose="festeggia" w=${200} alt="" style="position:absolute;right:-12px;top:0"/>
         <div class="o-col" style="position:relative;align-items:flex-start;gap:12px;padding:18px 20px 22px;max-width:230px"><h1 style="font-size:34px;line-height:36px;font-weight:800;letter-spacing:-.02em">Here is your FinLearn</h1><${Pill}>${P.pill}<//></div></div>
       <div class="o-sheet o-col" style="flex:1 0 auto;padding-bottom:22px">
-        <div class="o-rowf" style="gap:12px"><span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, background: P.color, fontSize: exam ? 18 : 22 }}>${P.ico ? Ico(P.ico, 24) : course.badge}</span>
+        <div class="o-rowf" style="gap:12px"><span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, background: P.color, fontSize: 22 }}>${P.ico ? Ico(P.ico, 24) : course.badge}</span>
           <div class="o-grow o-col" style="gap:1px"><h2 style="font-size:20px;line-height:24px;font-weight:800">${P.name}</h2><span class="o-s">${pathMeta(course)}</span></div></div>
         <${PathRoute} c=${course} first=${first}/></div></div></div>
     <div class="o-foot" style="border-top:2px solid ${SEP}">${err && html`<p class="o-s" style="color:#B3261E;font-weight:700;margin-bottom:8px;text-align:center" role="alert">${err}</p>`}
       <${Btn} cls="lg" disabled=${busy} onClick=${create}>${busy ? 'One moment…' : known.length && first ? 'Start from ' + first.title : 'Start the first lesson'}<//>
       <p class="o-s" style="text-align:center;margin-top:10px">You can change your goal anytime in Settings.</p></div></div>`;
-  else body = html`<${Flow} top=${html`<${TopBar} onBack=${() => { setStep('welcome'); setErr(null); }} title=""/>`}>
-    <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:30px"><${Rally} pose="saluta" w=${180} alt="" style="position:absolute;right:-14px;top:-10px"/>
-      <div class="o-col" style="gap:6px;position:relative;min-height:150px;max-width:200px"><h1 class="o-big" style="font-size:30px;line-height:34px">${mode === 'in' ? 'Welcome back' : 'Create an account'}</h1><p class="o-lab">${mode === 'in' ? 'Sign in with the account you already have.' : 'All you need is a name, email and password.'}</p></div>
-      ${mode === 'in' && html`<${Btn} cls="lg flat" bg="#fff" disabled=${busy} onClick=${() => enter(() => auth.google())}>Continue with Google<//>`}
-      <${AccountForm} mode=${mode === 'in' ? 'in' : 'new'} busy=${busy} err=${err} onSubmit=${p => enter(() => (mode === 'in' ? auth.emailIn(p.email, p.password) : auth.emailUp(p.email, p.password, p.name)))}/>
-      <div style="text-align:center;margin-top:6px"><button type="button" class="o-link" onClick=${() => { setMode(mode === 'in' ? 'new' : 'in'); setErr(null); }}>${mode === 'in' ? 'I don\'t have an account' : 'I already have an account'}</button></div>
-      <p class="o-s" style="text-align:center;margin-top:14px">Trial version: your account stays on this device.</p></div><//>`;
   return html`<div class="o-app">${body}</div>`;
 }
 
@@ -3543,9 +3545,22 @@ const SCREENS = {
   pro: p => html`<${ProScreen} ...${p}/>`,
   catalogo: p => html`<${CatalogScreen} ...${p}/>`,
   livello: p => html`<${LevelScreen} ...${p}/>`,
-  scheda: p => html`<${CourseSheetScreen} ...${p}/>`,
-  salva: p => html`<${SaveScreen} ...${p}/>`
+  scheda: p => html`<${CourseSheetScreen} ...${p}/>`
 };
+// ---- trasloco ----
+// L'app è nata su GitHub (…github.io/app) e adesso esce da Cloudflare, dallo stesso indirizzo dell'arbitro. I progressi stanno nel telefono, legati all'indirizzo:
+// chi apre ancora quello vecchio viene avvisato e accompagnato (scarica i dati lì, li ricarica nel nuovo). L'avviso compare solo se il nuovo indirizzo risponde davvero.
+const NUOVA_CASA = 'https://' + SFIDE_HOST + '/';
+const VECCHIA_CASA = /\.github\.io$/.test(location.hostname);
+function useTrasloco() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    if (!VECCHIA_CASA) return; try { if (sessionStorage.getItem('fl_trasloco')) return; } catch (e) { /* niente */ }
+    const im = new Image(); im.onload = () => setOn(true); im.src = NUOVA_CASA + 'icon-192.png?t=' + Date.now();   // un'icona dell'app che si carica: il nuovo indirizzo c'è
+    return () => { im.onload = null; };
+  }, []);
+  return [on, () => { try { sessionStorage.setItem('fl_trasloco', '1'); } catch (e) { /* niente */ } setOn(false); }];
+}
 let NAV_ID = 0;
 export function OrdineApp({ kit }) {
   const s = useS2();
@@ -3556,6 +3571,7 @@ export function OrdineApp({ kit }) {
   useOrdFit();
   const [tab, setTab] = useState('home'), [sub, setSub] = useState('allenati'), [stack, setStack] = useState([]);
   const [calc, setCalc] = useState(false), [ai, setAi] = useState(null), [toast, setToast] = useState(null);
+  const [trasl, traslDopo] = useTrasloco();
   const tabRef = useRef(tab); tabRef.current = tab;
   const nav = useMemo(() => ({
     tab: id => { setStack([]); setTab(id); if (id === 'allenati') setSub('allenati'); },
@@ -3609,6 +3625,12 @@ export function OrdineApp({ kit }) {
     ${layer(top < 0, tabScreen, 'tab:' + tab + ':' + sub, false)}
     ${stack.map((e, k) => layer(k === top, SCREENS[e.name] ? SCREENS[e.name](Object.assign({ nav }, e.params)) : null, 'st' + e.id, true))}
     <${TermHost}/>
+    ${trasl && html`<${BSheet} onClose=${traslDopo} label="FinLearn has a new address"><h2 class="o-big">FinLearn has a new address</h2>
+      <p class="o-body o-mut" style="margin-top:6px">This address will be switched off soon. Two steps and your progress comes with you.</p>
+      <ol class="o-body" style="margin:12px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-weight:600"><li>Download your data with the button below.</li><li>Open the new address and tap ‘I have a backup’.</li></ol>
+      <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" onClick=${downloadData}>Download my data<//>
+        <a class="o-btn lg flat" style="background:#fff;text-decoration:none" href=${NUOVA_CASA} target="_blank" rel="noopener">Open the new address</a>
+        <button type="button" class="o-link" style="align-self:center" onClick=${traslDopo}>Later</button></div><//>`}
     ${toast && html`<div class="o-toast o-fade" role="status">${toast}</div>`}
   </div>
   ${calc && Calc && html`<${Calc} onClose=${() => setCalc(false)}/>`}

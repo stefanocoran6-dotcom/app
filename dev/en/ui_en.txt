@@ -649,7 +649,7 @@ Cancelli da questo dispositivo progressi, figurine, punti e conversazioni. Non s
 Tengo tutto ⇒ Keep everything
 {0} Elimina account e dati ⇒ {0} Delete account and data
 Il tuo percorso ⇒ Your path
-Da qui dipende cosa trovi in Impara, Allenati, Sfide e AI Coach. Se cambi, i progressi restano. ⇒ What you find in Learn, Practice and AI Coach depends on this. If you change it, your progress stays.
+Da qui dipende cosa trovi in Impara, Allenati, Sfide e AI Coach. Se cambi, i progressi restano. ⇒ What you find in Learn, Practice, Challenges and AI Coach depends on this. If you change it, your progress stays.
 FinLearn 2.0 · {0} ⇒ FinLearn 2.0 · {0}
 Torna al piano gratis ⇒ Back to the free plan
 Prova gratis per 7 giorni ⇒ Try it free for 7 days
@@ -1103,3 +1103,36 @@ rivincita ⇒ =
 {0} non è più nella stanza. ⇒ {0} is no longer in the room.
 La stanza è chiusa. ⇒ The room is closed.
 Tu ⇒ You
+# Impostazioni senza account di prova, dati da ricaricare, benvenuto
+Il tuo percorso, la lingua e i tuoi dati ⇒ Your path, language and data
+Ricarica i miei dati ⇒ Restore my data
+Ricarica i tuoi dati ⇒ Restore your data
+Scegli il file che hai salvato con «Scarica i miei dati». I progressi che ci sono adesso su questo telefono vengono sostituiti da quelli del file. ⇒ Choose the file you saved with ‘Download my data’. The progress now on this phone is replaced by what is in the file.
+FinLearn serve a imparare: quello che leggi qui non è un consiglio su come investire i tuoi soldi. ⇒ FinLearn is for learning: what you read here is not advice on how to invest your money.
+Cancella tutti i dati ⇒ Erase all data
+Cancellare tutto? ⇒ Erase everything?
+{0} Cancella tutto ⇒ {0} Erase everything
+Domande delle Basi della finanza. 5 domande: il punto va a chi risponde giusto per primo, chi sbaglia perde un punto. ⇒ Finance Basics questions. 5 questions: the point goes to whoever answers correctly first; a wrong answer costs a point.
+Dalle basi in su, con lezioni brevi, sfide e figurine da collezionare. ⇒ From the basics up, with short lessons, challenges and stickers to collect.
+Ciao{0}! Chiedimi una parola che non conosci, un dubbio sui soldi o un esempio con le cifre. ⇒ Hi{0}! Ask me about a word you don't know, a question about money or an example with numbers.
+Il file è troppo grande per essere un salvataggio di FinLearn. ⇒ The file is too large to be a FinLearn backup.
+Questo file non è un salvataggio di FinLearn. ⇒ This file is not a FinLearn backup.
+In questo file non ci sono progressi da ricaricare. ⇒ There is no progress to restore in this file.
+Non sono riuscito a salvare i dati su questo telefono: forse lo spazio è finito. ⇒ I couldn't save the data on this phone: it may be out of space.
+file ⇒ =
+empty ⇒ =
+big ⇒ =
+write ⇒ =
+I tuoi dati ⇒ Your data
+load ⇒ =
+pointer ⇒ =
+Scegli il file ⇒ Choose the file
+FinLearn ha un nuovo indirizzo ⇒ FinLearn has a new address
+Questo indirizzo tra poco si spegne. Per portare con te i progressi bastano due passi. ⇒ This address will be switched off soon. Two steps and your progress comes with you.
+Scarica i tuoi dati con il pulsante qui sotto. ⇒ Download your data with the button below.
+Apri il nuovo indirizzo e tocca «Ho già un salvataggio». ⇒ Open the new address and tap ‘I have a backup’.
+Apri il nuovo indirizzo ⇒ Open the new address
+Ho già un salvataggio ⇒ I have a backup
+null ⇒ =
+array ⇒ =
+bad ⇒ =

@@ -77,9 +77,9 @@ export function OrdineSplash({ onComplete }) {
     </div></div>`;
 }
 
-// Primo giorno: benvenuto, obiettivo, (esame), punto di partenza, (5 domande), "Ecco la tua FinLearn".
+// Primo giorno: benvenuto, obiettivo, punto di partenza, (5 domande), "Ecco la tua FinLearn".
 // `auth` arriva da app.js (accesso di prova, salvato sul dispositivo); `pre` porta i dati che servono prima dell'accesso.
-const GOALS = [['zero', 'Capire la finanza da zero', 'Soldi, interessi, inflazione', Sprout], ['invest', 'Investire i miei risparmi', 'Azioni, obbligazioni, fondi', TrendingUp], ['work', 'Usarla al lavoro', 'Bilanci, valutazioni, tassi', Briefcase], ['exam', 'Preparare un esame', 'CFA, FRM, CAIA', GraduationCap]].filter(g => LANG !== 'en' || g[0] !== 'exam');
+const GOALS = [['zero', 'Capire la finanza da zero', 'Soldi, interessi, inflazione', Sprout], ['invest', 'Investire i miei risparmi', 'Azioni, obbligazioni, fondi', TrendingUp], ['work', 'Usarla al lavoro', 'Bilanci, valutazioni, tassi', Briefcase]];
 // i paesi tra cui scegliere (solo in inglese): decidono lezioni e valuta
 const COUNTRIES = [['US', 'Stati Uniti', 'Dollari e regole degli Stati Uniti'], ['IT', 'Italia', 'Euro e regole italiane']];
 function Choice({ on, onClick, icon, title, sub }) {
@@ -120,25 +120,26 @@ function pathMeta(c) {
   return soon ? `${plural(ls.length, 'lezione pronta', 'lezioni pronte')}, ${soon} unità in arrivo` : `${plural(ls.length, 'lezione breve', 'lezioni brevi')} in ${misUnits(c).length} unità`;
 }
 const NUM_IT = ['', 'una', 'due', 'tre', 'quattro', 'cinque'];
+// i passi della registrazione (in STEPS_REG il percorso scelto è già una bozza da mostrare)
+const STEPS_REG = ['goal', 'start', 'quiz', 'esito', 'pronta'], STEPS_ALL = ['country'].concat(STEPS_REG);
 
 export function OrdineWelcome({ auth, onAuth, pre }) {
-  const [step, setStep] = useState(() => { try { const r = sessionStorage.getItem('fl_resume'); if (r) { sessionStorage.removeItem('fl_resume'); return r; } } catch (e) { /* niente */ } return 'welcome'; }), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10), [date, setDate] = useState('');
+  const [step, setStep] = useState(() => { try { const r = sessionStorage.getItem('fl_resume'); if (r) { sessionStorage.removeItem('fl_resume'); return r; } } catch (e) { /* niente */ } return 'welcome'; }), [goal, setGoal] = useState('zero'), [start, setStart] = useState('zero'), [mins, setMins] = useState(10);
   const [pl, setPl] = useState(null), [qi, setQi] = useState(0), [sel, setSel] = useState(null), [res, setRes] = useState([]), [known, setKnown] = useState([]);
-  const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [mode, setMode] = useState('in');
+  const [busy, setBusy] = useState(false), [err, setErr] = useState(null), [rest, setRest] = useState(null);   // rest: ricarica di un salvataggio
   if (!K) K = Object.assign({ losProgress: [], albumLoad: () => ({}) }, pre || {});   // prima dell'accesso: i dati dei percorsi e poco altro
   ordInjectCss();
   useOrdFit();
   // durante la registrazione il percorso scelto è una bozza: le schermate lo leggono come se fosse già salvato
   const draft = useMemo(() => ({ goal, level: start, known, more: [], add: [], t: 0 }), [goal, start, known]);
-  const inReg = step !== 'welcome' && step !== 'login' && step !== 'country';
+  const inReg = STEPS_REG.includes(step);
   MIS_DRAFT = inReg ? draft : null;
   useEffect(() => () => { MIS_DRAFT = null; }, []);
-  const P = MIS_PATHS[goal], course = inReg ? courseById(P.course) : null, exam = goal === 'exam', N = exam ? 4 : 3, iStart = exam ? 2 : 1;
+  const P = MIS_PATHS[goal], course = inReg ? courseById(P.course) : null, N = 3, iStart = 1;
   const first = inReg ? nextLesson(course) : null;
   const enter = async fn => { setBusy(true); setErr(null); try { const r = await fn(); onAuth(r.user, r.data); } catch (e) { setErr((e && e.message) || 'Non ha funzionato, riprova.'); setBusy(false); } };
   const create = () => { const now = Date.now();
     s2set(s => ({ onboard: { goal, start, level: true, t: now }, mis: { goal, level: start, known, more: [], add: [], t: now, go: first ? first.key : null }, cur: P.course, settings: Object.assign({}, s.settings, { goalMin: mins }) }));
-    if (exam && date) { try { localStorage.setItem('finlearn_exam_date', date); } catch (e) {} }
     enter(() => auth.guest()); };
   const [cty, setCty] = useState(COUNTRY);
   const pickCountry = () => { try { localStorage.setItem('fl_country', cty); } catch (e) { /* niente */ } if (cty === COUNTRY) { setStep('goal'); return; } try { sessionStorage.setItem('fl_resume', 'goal'); } catch (e) { /* niente */ } setCountryPref(cty); };
@@ -151,40 +152,35 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
   const head = (pose, lab, title, minH = 156) => html`<${Rally} pose=${pose} w=${190} alt="" style="position:absolute;right:-14px;top:-10px"/>
     <div class="o-col" style=${{ gap: 6, position: 'relative', minHeight: minH, maxWidth: 200 }}><span class="o-lab">${lab}</span><h1 class="o-big" style="font-size:30px;line-height:34px">${title}</h1></div>`;
   let body;
-  if (step === 'welcome') body = html`<div class="o-scr" style="background:${AZ}">
-    <div class="o-top" style="flex:1 1 0;min-height:300px;position:relative;display:flex;flex-direction:column;align-items:center">
+  // benvenuto. Sotto «Inizia» c'è «Ho già un salvataggio»: chi cambia telefono (o arriva dal vecchio indirizzo) riparte dal file di "Scarica i miei dati"
+  if (!STEPS_ALL.includes(step)) body = html`<div class="o-scr" style="background:${AZ};overflow-y:auto;overflow-x:hidden">
+    <div class="o-top o-hero">
       <button type="button" class="o-link" style="position:absolute;right:16px;top:14px;display:inline-flex;align-items:center;gap:6px" aria-label="Language · Lingua" onClick=${() => setLangPref(LANG === 'en' ? 'it' : 'en')}>${Ico(Languages, 18)}<span lang=${LANG === 'en' ? 'it' : 'en'}>${LANG === 'en' ? 'Italiano' : 'English'}</span></button>
       <div style="margin-top:22px"><${Wordmark} size=${34}/></div>
-      <div style="position:relative;width:min(288px,70vw);aspect-ratio:1;margin-top:auto;margin-bottom:-8px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center">
+      <div class="o-hero-c">
         <${Rally} pose="saluta" w=${250} alt="Rally, la mascotte di FinLearn, saluta" style="margin-bottom:-6px;max-width:92%"/>
-        <span style="position:absolute;left:-22px;top:20px"><${Pill} rot=${-8}>Ciao, sono Rally<//></span></div></div>
+        <span class="o-hero-p"><${Pill} rot=${-8}>Ciao, sono Rally<//></span></div></div>
     <div class="o-sheet o-col" style="flex:none;padding-top:28px;padding-bottom:max(26px,calc(env(safe-area-inset-bottom) + 10px))">
       <h1 style="font-size:30px;line-height:34px;font-weight:800;letter-spacing:-.02em;text-wrap:balance">Impara la finanza, dieci minuti al giorno</h1>
-      <p class="o-body o-mut" style="margin-top:10px;font-size:16px;line-height:23px">Dalle basi alle certificazioni, con lezioni brevi, sfide e figurine da collezionare.</p>
+      <p class="o-body o-mut" style="margin-top:10px;font-size:16px;line-height:23px">Dalle basi in su, con lezioni brevi, sfide e figurine da collezionare.</p>
       <div style="margin-top:22px"><${Btn} cls="lg" onClick=${() => setStep(LANG === 'en' && !LS.raw('fl_country') ? 'country' : 'goal')}>Inizia<//></div>
-      <div style="text-align:center;margin-top:4px"><button type="button" class="o-link" onClick=${() => setStep('login')}>Ho già un account</button></div></div></div>`;
+      <label class="o-link" style=${{ display: 'block', position: 'relative', marginTop: 8, textAlign: 'center', cursor: 'pointer', opacity: rest && rest.busy ? 0.5 : 1 }}>${rest && rest.busy ? 'Un attimo…' : 'Ho già un salvataggio'}
+        <${RestoreInput} busy=${rest && rest.busy} onBusy=${() => setRest({ busy: true })} onErr=${t => setRest({ err: t })}/></label>
+      ${rest && rest.err && html`<p role="alert" style="margin-top:4px;padding:10px 14px;background:${T_ROSA};border-radius:14px;font-size:15px;line-height:20px;font-weight:700">${rest.err}</p>`}</div></div>`;
   else if (step === 'country') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} title=""/>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', 'Il tuo paese', 'Dove vivi?')}
       <div role="radiogroup" aria-label="Dove vivi" class="o-col" style="gap:12px;position:relative">${COUNTRIES.map(([id, t, s]) => html`<${Choice} key=${id} on=${cty === id} onClick=${() => setCty(id)} title=${t} sub=${s}/>`)}</div>
       <p class="o-body o-mut" style="margin-top:18px">Le regole su tasse, pensioni e banche cambiano da un paese all'altro, e con loro le lezioni che vedi. Lo cambi quando vuoi, in Impostazioni.</p>
       <div style="margin-top:20px"><${Btn} cls="lg" onClick=${pickCountry}>Continua<//></div></div><//>`;
-  else if (step === 'goal') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} n=${N} i=${0}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep(exam ? 'exam' : 'start')}>Continua<//>`}>
+  else if (step === 'goal') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('welcome')} n=${N} i=${0}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep('start')}>Continua<//>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('indica', `Passo 1 di ${N}`, 'Cosa vuoi fare con FinLearn?')}
       <div role="radiogroup" aria-label="Cosa vuoi fare con FinLearn" class="o-col" style="gap:12px;position:relative">${GOALS.map(([id, t, s, I]) => html`<${Choice} key=${id} on=${goal === id} onClick=${() => pickGoal(id)} icon=${Ico(I, 22)} title=${t} sub=${s}/>`)}</div>
       <p class="o-body o-mut" style="margin-top:18px">Da questa scelta dipende cosa trovi nell'app. La cambi quando vuoi, senza perdere i progressi.</p></div><//>`;
-  else if (step === 'exam') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('goal')} n=${N} i=${1}/>`} foot=${html`<${Btn} cls="lg" onClick=${() => setStep('start')}>Continua<//>`}>
-    <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('insegna', 'Passo 2 di 4', 'Quale esame prepari?')}
-      <div class="o-col" style="gap:10px;position:relative">
-        <${Choice} on=${true} onClick=${() => {}} icon="L2" title=${course.name} sub=${pathMeta(course)}/>
-        ${COMING.filter(x => x.group === 'cert').map(x => html`<div key=${x.id} class="o-rowf" style="gap:14px;min-height:56px;padding:8px 16px;border:2px dashed ${INK};border-radius:20px;background:${T_BG}"><span class="o-grow o-t" style="color:${MUT}">${x.name}</span><span class="o-tag" style="background:#fff">In arrivo</span></div>`)}</div>
-      <h2 class="o-h2" style="margin:24px 0 10px">Quando hai l'esame?</h2>
-      <input class="o-inp" type="date" value=${date} onChange=${e => setDate(e.target.value)} aria-label="Data dell'esame"/>
-      <p class="o-body o-mut" style="margin-top:10px;font-size:14px;line-height:20px">Con la data, in Home vedi quanti giorni mancano. Puoi metterla anche dopo.</p></div><//>`;
-  else if (step === 'start') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep(exam ? 'exam' : 'goal')} n=${N} i=${iStart}/>`} foot=${html`<${Btn} cls="lg" onClick=${fromStart}>${start === 'some' ? 'Fai le 5 domande' : 'Continua'}<//>`}>
+  else if (step === 'start') body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('goal')} n=${N} i=${iStart}/>`} foot=${html`<${Btn} cls="lg" onClick=${fromStart}>${start === 'some' ? 'Fai le 5 domande' : 'Continua'}<//>`}>
     <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px">${head('occhiolino', `Passo ${iStart + 1} di ${N}`, 'Da dove parti?')}
       <div role="radiogroup" aria-label="Da dove parti" class="o-col" style="gap:12px;position:relative">
         <${Choice} on=${start === 'zero'} onClick=${() => setStart('zero')} title="Parto da zero" sub="Comincio dalla prima lezione."/>
-        <${Choice} on=${start === 'some'} onClick=${() => setStart('some')} title="So già qualcosa" sub=${exam ? 'Cinque domande per capire a che punto sei.' : 'Cinque domande, e Rally ti fa saltare quello che sai già.'}/></div>
+        <${Choice} on=${start === 'some'} onClick=${() => setStart('some')} title="So già qualcosa" sub="Cinque domande, e Rally ti fa saltare quello che sai già."/></div>
       <h2 class="o-h2" style="margin:28px 0 12px">Quanto tempo hai al giorno?</h2>
       <div role="radiogroup" aria-label="Minuti al giorno" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${[5, 10, 20].map(m => html`<button key=${m} type="button" role="radio" aria-checked=${mins === m ? 'true' : 'false'} onClick=${() => setMins(m)} class="o-col"
         style=${{ alignItems: 'center', padding: '10px 0 12px', border: `2.5px solid ${INK}`, borderRadius: 18, background: mins === m ? AZ : '#fff', boxShadow: mins === m ? `4px 4px 0 ${INK}` : 'none' }}><span style="font-size:26px;line-height:30px;font-weight:800">${m}</span><span style="font-size:14px;font-weight:700">minuti</span></button>`)}</div>
@@ -195,8 +191,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
         <div style="margin-top:6px"><${Rich} key=${'q' + qi} text=${q.q} cls="q" lang=${q.lang}/></div>
         <div style="margin-top:14px"><${Options} key=${'o' + qi} q=${q} sel=${sel} onSel=${setSel} locked=${false}/></div></div></div><//>`; }
   else if (step === 'esito') { const ok = res.filter(Boolean).length, nk = known.length, startU = first ? first.unit : course.units[0];
-    const text = exam ? 'Per un esame si parte dalla prima materia. Le domande che hai sbagliato le ritrovi tra i punti deboli, in Allenati.'
-      : nk === 1 ? 'La prima unità la sai già: Rally te la segna come fatta. Resta aperta, la ripassi quando vuoi.'
+    const text = nk === 1 ? 'La prima unità la sai già: Rally te la segna come fatta. Resta aperta, la ripassi quando vuoi.'
       : nk > 1 ? `Le prime ${NUM_IT[nk] || nk} unità le sai già: Rally te le segna come fatte. Restano aperte, le ripassi quando vuoi.`
       : 'Meglio partire dalla prima unità, così non resta nessun buco. Le lezioni sono brevi.';
     body = html`<${Flow} top=${html`<${TopBar} onBack=${() => setStep('start')} n=${N} i=${iStart}/>`}
@@ -205,7 +200,7 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
       <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:20px"><${Rally} pose="occhiolino" w=${190} alt="" style="position:absolute;right:-14px;top:-10px"/>
         <div class="o-col" style="position:relative;align-items:flex-start;gap:12px;min-height:162px;max-width:214px"><${Pill}>${ok} ${ok === 1 ? 'giusta' : 'giuste'} su ${res.length}<//><h1 class="o-big">${nk || exam ? 'Parti da ' + startU.name : 'Parti dall\'inizio'}</h1></div>
         <p class="o-body o-mut" style="margin-bottom:14px;position:relative">${text}</p>
-        ${!exam && html`<div class="o-col" style="gap:4px">${pl.units.map((u, k) => { const kn = known.includes(u.id), st = u === startU;
+        ${html`<div class="o-col" style="gap:4px">${pl.units.map((u, k) => { const kn = known.includes(u.id), st = u === startU;
           return html`<div key=${u.id} class="o-rowf" style=${{ gap: 12, minHeight: st ? 62 : 58, padding: '0 10px', border: `2.5px solid ${st ? INK : '#fff'}`, borderRadius: 16, background: st ? T_AZ : '#fff', boxShadow: st ? `3px 3px 0 ${INK}` : 'none' }}>
             <span class="o-ibox" style=${{ width: 40, height: 40, borderRadius: 13, fontSize: 15, background: kn ? MENTA : '#fff' }}>${kn ? PathIco(D_CHECK, 20, 3) : k + 1}</span>
             <span class="o-grow o-col" style="gap:1px"><span class="o-t" style=${{ fontWeight: st ? 800 : 700 }}>${u.name}</span><span class="o-s" style=${st ? { color: INK } : null}>${plural(unitLessons(u).length, 'lezione', 'lezioni')}</span></span>
@@ -215,18 +210,11 @@ export function OrdineWelcome({ auth, onAuth, pre }) {
       <div style="position:relative;flex:none"><${Rally} pose="festeggia" w=${200} alt="" style="position:absolute;right:-12px;top:0"/>
         <div class="o-col" style="position:relative;align-items:flex-start;gap:12px;padding:18px 20px 22px;max-width:230px"><h1 style="font-size:34px;line-height:36px;font-weight:800;letter-spacing:-.02em">Ecco la tua FinLearn</h1><${Pill}>${P.pill}<//></div></div>
       <div class="o-sheet o-col" style="flex:1 0 auto;padding-bottom:22px">
-        <div class="o-rowf" style="gap:12px"><span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, background: P.color, fontSize: exam ? 18 : 22 }}>${P.ico ? Ico(P.ico, 24) : course.badge}</span>
+        <div class="o-rowf" style="gap:12px"><span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, background: P.color, fontSize: 22 }}>${P.ico ? Ico(P.ico, 24) : course.badge}</span>
           <div class="o-grow o-col" style="gap:1px"><h2 style="font-size:20px;line-height:24px;font-weight:800">${P.name}</h2><span class="o-s">${pathMeta(course)}</span></div></div>
         <${PathRoute} c=${course} first=${first}/></div></div></div>
     <div class="o-foot" style="border-top:2px solid ${SEP}">${err && html`<p class="o-s" style="color:#B3261E;font-weight:700;margin-bottom:8px;text-align:center" role="alert">${err}</p>`}
       <${Btn} cls="lg" disabled=${busy} onClick=${create}>${busy ? 'Un attimo…' : known.length && first ? 'Inizia da ' + first.title : 'Inizia la prima lezione'}<//>
       <p class="o-s" style="text-align:center;margin-top:10px">Cambi obiettivo quando vuoi, in Impostazioni.</p></div></div>`;
-  else body = html`<${Flow} top=${html`<${TopBar} onBack=${() => { setStep('welcome'); setErr(null); }} title=""/>`}>
-    <div class="o-pad" style="position:relative;padding-top:22px;padding-bottom:30px"><${Rally} pose="saluta" w=${180} alt="" style="position:absolute;right:-14px;top:-10px"/>
-      <div class="o-col" style="gap:6px;position:relative;min-height:150px;max-width:200px"><h1 class="o-big" style="font-size:30px;line-height:34px">${mode === 'in' ? 'Bentornato' : 'Crea un account'}</h1><p class="o-lab">${mode === 'in' ? 'Entra con l\'account che hai già.' : 'Bastano nome, email e password.'}</p></div>
-      ${mode === 'in' && html`<${Btn} cls="lg flat" bg="#fff" disabled=${busy} onClick=${() => enter(() => auth.google())}>Continua con Google<//>`}
-      <${AccountForm} mode=${mode === 'in' ? 'in' : 'new'} busy=${busy} err=${err} onSubmit=${p => enter(() => (mode === 'in' ? auth.emailIn(p.email, p.password) : auth.emailUp(p.email, p.password, p.name)))}/>
-      <div style="text-align:center;margin-top:6px"><button type="button" class="o-link" onClick=${() => { setMode(mode === 'in' ? 'new' : 'in'); setErr(null); }}>${mode === 'in' ? 'Non ho un account' : 'Ho già un account'}</button></div>
-      <p class="o-s" style="text-align:center;margin-top:14px">Versione di prova: l'account resta su questo dispositivo.</p></div><//>`;
   return html`<div class="o-app">${body}</div>`;
 }

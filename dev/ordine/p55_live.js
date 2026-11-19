@@ -6,15 +6,16 @@
 // Ogni telefono dice all'arbitro la lingua della sua app (`lang` nel saluto) e riceve la domanda in quella lingua:
 // un'app italiana e una inglese giocano la stessa partita, con la risposta giusta nella stessa posizione.
 // Questo telefono misura il proprio tempo di reazione: da quando la domanda compare sullo schermo al tocco.
-const SFIDE_HOST = 'finlearn-sfide.finlearn27.workers.dev';   // indirizzo dell'arbitro su Cloudflare
+const SFIDE_HOST = 'finlearn-sfide.finlearn27.workers.dev';   // l'arbitro su Cloudflare; dallo stesso indirizzo esce anche l'app
 const SFIDE_LOCALE = /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
-const SFIDE_WS = SFIDE_LOCALE ? 'ws://127.0.0.1:8787' : 'wss://' + SFIDE_HOST;
+// In prova sul computer l'arbitro è su 127.0.0.1:8787. Dal vecchio indirizzo su GitHub l'arbitro è su Cloudflare.
+// Da ogni altro indirizzo (Cloudflare oggi, un dominio nostro domani) app e arbitro stanno insieme: si usa lo stesso indirizzo della pagina.
+const SFIDE_WS = SFIDE_LOCALE ? 'ws://127.0.0.1:8787' : /\.github\.io$/.test(location.hostname) ? 'wss://' + SFIDE_HOST : 'wss://' + location.host;
 const SFIDE_ON = SFIDE_LOCALE || !/SOTTODOMINIO/.test(SFIDE_HOST);
 const SFIDE_V = 1;
 const LIVE_RE = /^[A-HJ-NP-Z2-9]{6}$/;
 const LIVE_CORSI = [
-  { id: 'basi', name: 'Basi della finanza', sub: 'Ognuno nella lingua della sua app, 24 secondi per domanda' },
-  { id: 'cfa2', name: 'CFA Level II', sub: 'In inglese come all\'esame, 45 secondi per domanda' }
+  { id: 'basi', name: 'Basi della finanza', sub: 'Ognuno nella lingua della sua app, 24 secondi per domanda' }
 ];
 // invito: il link …/app/#sfida=CODICE apre l'app e porta nella stanza (il codice si toglie subito dall'indirizzo)
 const LIVE_INV = 'finlearn_sfida_invito', LIVE_PID = 'finlearn_sfide_pid';
@@ -82,7 +83,7 @@ class LiveConn {
 function LiveScreen({ nav, codice: cod0, nuova }) {
   const known = userName();
   const [vista, setVista] = useState(cod0 ? 'entra' : nuova ? 'scegli' : 'codice');
-  // le domande arrivano dai percorsi che si hanno nell'app: chi non ha il CFA non lo vede tra le scelte
+  // le domande arrivano dai percorsi che si hanno nell'app
   const corsi = LIVE_CORSI.filter(c => inMyApp(c.id)).length ? LIVE_CORSI.filter(c => inMyApp(c.id)) : LIVE_CORSI;
   const [corso, setCorso] = useState(() => { const c = currentCourse(); return c && corsi.some(x => x.id === c.id) ? c.id : corsi[0].id; });
   const [cod, setCod] = useState(cod0 || ''), [nm, setNm] = useState(known);
@@ -226,7 +227,7 @@ function LiveScreen({ nav, codice: cod0, nuova }) {
             <button type="button" class="o-link" onClick=${() => copy(codice, 'Codice copiato')}>Copia solo il codice</button></div>`}
         <div class="o-col">${gMe && who(gMe, true)}${gOp ? who(gOp, false) : html`<div class="o-rowf" style="gap:12px;min-height:56px">
           <span style="width:40px;height:40px;flex:none;border:2px dashed ${INK};border-radius:50%"></span><span class="o-s">In attesa del tuo amico…</span></div>`}</div>
-        <p class="o-s">${st.benv && st.benv.corso === 'cfa2' ? 'Domande del CFA Level II, in inglese.' : 'Domande delle Basi della finanza.'} 5 domande: il punto va a chi risponde giusto per primo, chi sbaglia perde un punto.</p>
+        <p class="o-s">Domande delle Basi della finanza. 5 domande: il punto va a chi risponde giusto per primo, chi sbaglia perde un punto.</p>
         ${!two && html`<p class="o-s">Su iPhone il link si apre in Safari, non nell'app: chi ha FinLearn sulla schermata Home fa prima a scrivere il codice.</p>`}
       </div><//>`;
   }

@@ -1,5 +1,6 @@
-const CACHE = 'finlearn-v56';
-const SHELL = ['./', './index.html', './app.js', './ordine.js', './ordine_en.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg', './notizie.json', './notizie/indice.json'];
+const CACHE = 'finlearn-v57';
+// La pagina si salva come './' e non come './index.html': su Cloudflare /index.html rimanda a /, e una risposta arrivata da un rimando non può aprire una pagina.
+const SHELL = ['./', './app.js', './ordine.js', './ordine_en.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg', './notizie.json', './notizie/indice.json'];
 
 // install: scarica il guscio saltando la cache HTTP del browser, così non si salva una versione vecchia
 self.addEventListener('install', (e) => {
@@ -13,6 +14,8 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const u = new URL(e.request.url);
+  // senza rete e senza copia salvata: la pagina dell'app si dà solo a chi chiede una pagina, mai al posto di un programma, di un foglio di stile o di un'immagine
+  const page = () => (e.request.mode === 'navigate' ? caches.match('./').then((p) => p || Response.error()) : Response.error());
   // OpenRouter (AI Coach): sempre dalla rete, mai in cache
   if (/(^|\.)openrouter\.ai$/.test(u.hostname)) return;
   const same = u.origin === self.location.origin;
@@ -22,7 +25,7 @@ self.addEventListener('fetch', (e) => {
       // una pagina con parametri (es. il ritorno da OpenRouter con ?code=) non si salva: il codice non deve restare in cache
       if (res.ok && !u.search) { const clone = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, clone)); }
       return res;
-    }).catch(() => caches.match(e.request).then((hit) => hit || caches.match('./index.html'))));
+    }).catch(() => caches.match(e.request).then((hit) => hit || page())));
     return;
   }
   const cacheable = same || /esm\.sh|cdnjs|jsdelivr|tailwindcss|fonts\.g/.test(e.request.url);
@@ -30,6 +33,6 @@ self.addEventListener('fetch', (e) => {
     caches.match(e.request).then((hit) => hit || fetch(e.request).then((res) => {
       if (res.ok && cacheable) { const clone = res.clone(); caches.open(CACHE).then((c) => c.put(e.request, clone)); }
       return res;
-    }).catch(() => caches.match('./index.html')))
+    }).catch(() => page()))
   );
 });

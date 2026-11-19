@@ -1,6 +1,8 @@
 # Sorgenti di lavoro
 
-Questa cartella non serve all'app in funzione: contiene i pezzi da cui si ricostruisce `ordine.js`, la nuova grafica "In ordine".
+Questa cartella non serve all'app in funzione: contiene i pezzi da cui si ricostruisce `ordine.js`, cioè tutta l'app che si vede (la grafica "In ordine").
+
+In `app.js` restano le parti comuni (chat dell'AI Coach, OpenRouter, mascotte, album, calcolatrice) e, non più raggiungibile, il codice della grafica di prima: va tolto in un passo a parte. Dalla versione 57 non ci sono più i contenuti del CFA Level II (erano ricavati dalle dispense di un fornitore: i percorsi professionali si riscrivono da zero) né la scelta tra le due grafiche.
 
 - `ordine/p00_base.js` … `p90_app.js`: i pezzi del codice, nell'ordine in cui vengono uniti (base e stili, dati, componenti, Impara, passi interattivi, notizie, Allenati, Sfide e Profilo, apertura, app).
 - `ordine/basi_src.py`: le lezioni del percorso "Basi della finanza". Si scrivono qui, una per blocco, con pagine, frase "In breve" ed esercizi. Lo script controlla la forma (chiavi uniche, tre risposte per domanda, una domanda per lezione) e scrive `basi.json`.
@@ -16,6 +18,26 @@ Le lezioni che spiegano regole e non solo conti (unità "La banca e i pagamenti"
 L'ordine delle unità nel percorso è la lista `UNITS` in fondo a `basi_src.py`. Si può cambiare liberamente: i progressi sono legati alle chiavi delle lezioni (`basi-7-1`), non alla posizione.
 
 Per cambiare una lezione o la grafica: si modifica il pezzo, si lancia `dev/ordine/build.sh`, si alza di uno il numero in `sw.js` (`CACHE`) e in `app.js` (`FL_VERSION`).
+
+## Dove sta l'app (Cloudflare)
+
+L'app e l'arbitro delle sfide escono dallo stesso indirizzo, da un solo Worker di Cloudflare (`finlearn-sfide`, cartella `sfide/`): oggi `https://finlearn-sfide.finlearn27.workers.dev/`.
+
+- Che cosa viene pubblicato: solo i file che servono al telefono. Li copia `sfide/prepara-sito.mjs` nella cartella `sfide/sito/` (che non entra nel repository) ogni volta che wrangler pubblica o parte in prova. L'elenco è chiuso e sta in cima allo script: un file nuovo dell'app va aggiunto lì e, se deve funzionare senza rete, anche a `SHELL` in `sw.js`. Sorgenti, appunti e strumenti (`dev/`, `sfide/`) non escono.
+- Intestazioni di sicurezza: le scrive lo stesso script nel file `_headers` (la pagina non si può mettere dentro la cornice di un altro sito, i tipi dei file non si indovinano, solo https, niente fotocamera, microfono e posizione). La regola completa su quali programmi possono girare (`script-src`, `connect-src`) si potrà mettere quando React, Tailwind, KaTeX e i caratteri saranno dentro l'app invece che presi da altri siti: oggi fermerebbe l'app.
+- Pubblicare: `git push origin main`. Cloudflare (Workers Builds, collegato al repository con cartella `sfide`) ricostruisce e pubblica da solo app e arbitro. L'esito si vede su GitHub accanto al commit (controllo "Workers Builds: finlearn-sfide") oppure con `gh api repos/stefanocoran6-dotcom/app/commits/<sha>/check-runs`.
+- Prova sul computer: in `sfide/` `npm install`, poi `npx wrangler dev --port 8787`. Su `http://127.0.0.1:8787/` ci sono app e arbitro insieme, come su Cloudflare. Dopo `dev/ordine/build.sh` va rilanciato `node sfide/prepara-sito.mjs`, che aggiorna la copia.
+- L'indirizzo non è scritto dentro l'app: tutto è relativo alla pagina, e l'arbitro si cerca allo stesso indirizzo. Per passare a un dominio nostro basta aggiungerlo al Worker su Cloudflare. `SFIDE_HOST` in `p55_live.js` serve solo a chi apre ancora la vecchia pagina su GitHub. Attenzione: i progressi stanno nel telefono, legati all'indirizzo. Cambiare indirizzo vuol dire farli portare a mano (vedi sotto), finché non ci sono gli account veri.
+- Trasloco da GitHub: l'app è nata su `…github.io/app`. Chi apre ancora quell'indirizzo vede un avviso (`useTrasloco` in `p90_app.js`) che fa scaricare i dati e apre il nuovo indirizzo; l'avviso compare solo se il nuovo indirizzo risponde davvero. Quando il repository diventa privato la vecchia pagina si spegne: a quel punto l'avviso e `…github.io` in `ORIGINI` (`sfide/wrangler.jsonc`) si possono togliere.
+
+## I dati di chi usa l'app
+
+Non ci sono account: tutto resta sul telefono, nella memoria del browser (voci `finlearn_…` e `fl2_…`). Chi entra diventa un utente "ospite" di quel telefono (`mockAuth.signInAsGuest` in `app.js`). Gli account di prova di una volta (email e password, «Continua con Google» che non collegava niente) non si possono più creare: le schermate sono state tolte e le password rimaste sui telefoni si cancellano all'avvio. Gli account veri arriveranno insieme a un server.
+
+- «Scarica i miei dati» (`downloadData` in `p50_more.js`) mette in un file tutte le voci dell'app tranne quelle che non devono uscire dal telefono (`dataKeyOk`): account di prova, chiave di OpenRouter, identità del telefono nelle sfide dal vivo. Su iPhone con l'app sulla schermata Home il file passa dal foglio "Condividi", perché lì lo scaricamento diretto non è affidabile.
+- «Ricarica i miei dati» in Impostazioni e «Ho già un salvataggio» nel benvenuto (`restoreData`, `RestoreInput`) leggono quel file. Il file si controlla, non si crede: al massimo 8 MB, solo voci dell'app con un valore di testo, progressi con la forma giusta (`v: 1`), utente e dati leggibili. Se qualcosa non torna non si scrive niente. I dati di prima vengono sostituiti, non mescolati; se la scrittura si ferma a metà si torna com'era.
+- «Cancella tutti i dati» toglie dal telefono tutte le voci `finlearn_…` e `fl2_…`. Restano solo lingua e paese.
+- All'avvio un valore rovinato (utente o dati che non si leggono) non ferma l'app: vale come "non c'è".
 
 ## Domande generate e «La serie»
 
@@ -56,7 +78,7 @@ L'app spezza da sola le formule lunghe in mezzo al testo dopo `=`, `+`, `-`, `\t
 
 Ogni studente collega il suo account OpenRouter: nell'app non c'è nessuna chiave e non c'è un server nostro. Il Coach usa solo OpenRouter: i vecchi motori (Claude, "Sul telefono", Ollama) non si scelgono più; il modello si cambia dal tasto "Modello" nella chat o da Impostazioni. Il codice sta in `app.js`, nel blocco `OPENROUTER` sopra `AiChatModal`.
 
-- Collegamento (OAuth con PKCE): `flOR.start()` salva verificatore e `state` (`finlearn_or_pkce`) e apre `openrouter.ai/auth` con `callback_url` = la pagina dell'app. OpenRouter rimanda con `?code=…`: `FL_OR_BOOT` toglie subito il codice dall'indirizzo e `FlOrReturn` lo scambia con la chiave (`POST /api/v1/auth/keys` con il verificatore). La chiave sta in `finlearn_or_key`, solo su quel dispositivo; uscire dall'account la toglie.
+- Collegamento (OAuth con PKCE): `flOR.start()` salva verificatore e `state` (`finlearn_or_pkce`) e apre `openrouter.ai/auth` con `callback_url` = la pagina dell'app. OpenRouter rimanda con `?code=…`: `FL_OR_BOOT` toglie subito il codice dall'indirizzo e `FlOrReturn` lo scambia con la chiave (`POST /api/v1/auth/keys` con il verificatore). La chiave sta in `finlearn_or_key`, solo su quel dispositivo; «Scollega» e «Cancella tutti i dati» la tolgono.
 - Dove tornare: `start()` riceve dove si era (`{ tab, chat }`, `{ lesson, at, chat }` o `{ screen: 'impostazioni' }`) e `p90_app.js` lo riapre quando torna la chiave.
 - Domande: `flOR.chat()` manda a `/api/v1/chat/completions` con `stream: true` e legge la risposta a pezzi. Il modello di partenza è `openrouter/free` (OpenRouter sceglie un modello gratis); lo studente può sceglierne un altro in Impostazioni → AI Coach → Modello (`finlearn_or_model`). Con l'interruttore "Solo fornitori che non tengono le domande" si aggiunge `provider: { data_collection: 'deny' }`.
 - Risposte: `flAiTidy` porta il markdown dei modelli alle regole di `RichText` (titoli → grassetto, trattini → •, `$…$` → `\(…\)`, `\[…\]` → `$$…$$`, via HTML e link cliccabili). Le istruzioni del modello (`getSystemPrompt` + `FL_AI_FORMAT`) chiedono le stesse regole delle formule scritte sopra.
@@ -66,27 +88,27 @@ Ogni studente collega il suo account OpenRouter: nell'app non c'è nessuna chiav
 
 ## Sfide dal vivo (Lampo)
 
-Due telefoni giocano le stesse 5 domande nello stesso momento. In mezzo c'è un arbitro su Cloudflare (cartella `sfide/`): un Worker con una "stanza" (Durable Object) per ogni sfida. L'app non contiene chiavi; l'arbitro accetta collegamenti solo dal sito dell'app (`ORIGINI` in `sfide/wrangler.jsonc`).
+Due telefoni giocano le stesse 5 domande nello stesso momento. In mezzo c'è un arbitro su Cloudflare (cartella `sfide/`): un Worker con una "stanza" (Durable Object) per ogni sfida, lo stesso Worker che pubblica l'app. L'app non contiene chiavi; l'arbitro accetta collegamenti solo dalla pagina che esce dal suo stesso indirizzo e dagli indirizzi scritti in `ORIGINI` (`sfide/wrangler.jsonc`).
 
-- Regole: il punto va a chi risponde giusto per primo. Chi sbaglia perde un punto e per quella domanda è fermo, l'altro può ancora rispondere. Due risposte giuste a meno di 5 centesimi l'una dall'altra fanno pari (un punto a testa). Tempo per domanda: 24 secondi le Basi, 45 il CFA Level II.
+- Regole: il punto va a chi risponde giusto per primo. Chi sbaglia perde un punto e per quella domanda è fermo, l'altro può ancora rispondere. Due risposte giuste a meno di 5 centesimi l'una dall'altra fanno pari (un punto a testa). Tempo per domanda: 24 secondi (`SECONDI` nell'arbitro, uno per percorso; oggi c'è solo quello delle Basi).
 - Il tempo lo misura il telefono (`p55_live.js`), da quando la domanda compare sullo schermo al tocco: chi ha la rete lenta non è penalizzato. L'arbitro lo accetta solo se è credibile: non può essere più corto del tempo passato davvero meno il ping più basso misurato per quel telefono e 0,15 s di margine. Dopo la prima risposta giusta la domanda resta aperta ancora un attimo (il ping dell'altro più 0,1 s, tra 0,3 e 1,2 s) per le risposte già in viaggio.
 - Le domande con le risposte giuste le ha l'arbitro (`sfide/src/domande.json`, scritto da `sfide/estrai-domande.mjs`, che `dev/ordine/build.sh` lancia ogni volta). Al telefono arrivano testo e risposte, la giusta solo dopo.
-- Lingue: ogni telefono dice all'arbitro la lingua della sua app (`lang` nel saluto; chi non la dice è in italiano) e riceve domanda, risposte e spiegazione in quella lingua. Per le Basi il testo inglese viene da `dev/en/basi_en.json` (campo `en` in `domande.json`) e vale solo se ha le stesse risposte nello stesso ordine: così la giusta è la stessa per tutti. Se uno dei due gioca in inglese si pescano solo le domande che hanno anche l'inglese (99 su 156). Il CFA è in inglese per tutti. Chi ha scelto gli Stati Uniti vede i dollari al posto degli euro (`usDollars`, come nelle lezioni), tranne nelle domande con `eu` (lezioni con una variante americana, dove l'euro è proprio l'euro). I messaggi di errore dell'arbitro sono in italiano: l'app usa i suoi (`LIVE_ERR`), scelti dal codice dell'errore.
-- Stanza: codice di 6 caratteri senza I, O, 0 e 1. Il link `…/app/#sfida=CODICE` apre l'app nella stanza (il codice si toglie subito dall'indirizzo). Ogni telefono ha un codice segreto per stanza (`finlearn_sfide_pid`) per rientrare nello stesso posto se cade la rete; la stanza tiene lo stato nel suo salvataggio, così sopravvive anche a un riavvio. Si chiude da sola: 15 minuti senza avversario, 5 minuti dopo la fine, un'ora al massimo. Alla chiusura si cancella tutto.
+- Lingue: ogni telefono dice all'arbitro la lingua della sua app (`lang` nel saluto; chi non la dice è in italiano) e riceve domanda, risposte e spiegazione in quella lingua. Per le Basi il testo inglese viene da `dev/en/basi_en.json` (campo `en` in `domande.json`) e vale solo se ha le stesse risposte nello stesso ordine: così la giusta è la stessa per tutti. Se uno dei due gioca in inglese si pescano solo le domande che hanno anche l'inglese (99 su 156). Una sfida su un percorso che l'arbitro non ha (per esempio da un'app vecchia) viene rifiutata con l'invito ad aggiornare. Chi ha scelto gli Stati Uniti vede i dollari al posto degli euro (`usDollars`, come nelle lezioni), tranne nelle domande con `eu` (lezioni con una variante americana, dove l'euro è proprio l'euro). I messaggi di errore dell'arbitro sono in italiano: l'app usa i suoi (`LIVE_ERR`), scelti dal codice dell'errore.
+- Stanza: codice di 6 caratteri senza I, O, 0 e 1. Il link `…/#sfida=CODICE` apre l'app nella stanza (il codice si toglie subito dall'indirizzo). Ogni telefono ha un codice segreto per stanza (`finlearn_sfide_pid`) per rientrare nello stesso posto se cade la rete; la stanza tiene lo stato nel suo salvataggio, così sopravvive anche a un riavvio. Si chiude da sola: 15 minuti senza avversario, 5 minuti dopo la fine, un'ora al massimo. Alla chiusura si cancella tutto.
 - Limiti: al massimo due giocatori, 15 messaggi al secondo per telefono, messaggi corti, nomi ripuliti (20 caratteri, niente caratteri invisibili).
-- Indirizzo: `SFIDE_HOST` in `p55_live.js` (`finlearn-sfide.finlearn27.workers.dev`). Finché c'è `SOTTODOMINIO` la scheda Sfide non mostra la sfida dal vivo. In prova sul computer l'app usa `ws://127.0.0.1:8787`.
-- Prova sul computer: in `sfide/` `npm install`, poi `npx wrangler dev --port 8787` con un file `.dev.vars` che contiene `ORIGINI=http://127.0.0.1:8765` (non va pubblicato).
-- Pubblicazione: su Cloudflare (piano gratuito) si crea un Worker chiamato `finlearn-sfide` collegato a questo repository, con cartella `sfide`. A ogni pubblicazione su `main` Cloudflare aggiorna l'arbitro da solo. Se cambiano i messaggi tra app e arbitro va alzato `SFIDE_V` / `VERSIONE` in tutti e due.
+- Indirizzo: l'app cerca l'arbitro allo stesso indirizzo della pagina (`SFIDE_WS` in `p55_live.js`); dalla vecchia pagina su GitHub lo cerca su `SFIDE_HOST` (`finlearn-sfide.finlearn27.workers.dev`), in prova sul computer su `ws://127.0.0.1:8787`.
+- Prova sul computer: vedi "Dove sta l'app". Se l'app viene servita da un'altra porta (non da wrangler), serve in `sfide/` un file `.dev.vars` con `ORIGINI=http://127.0.0.1:<porta>` (non va pubblicato).
+- Pubblicazione: insieme all'app, a ogni `git push` su `main`. Se cambiano i messaggi tra app e arbitro va alzato `SFIDE_V` / `VERSIONE` in tutti e due.
 
 ## Su misura (obiettivo e percorso)
 
-Alla registrazione si sceglie che cosa fare con l'app (da zero, investire, lavoro, esame) e da dove si parte. Da lì dipende che cosa mostrano tutte le schede: chi non prepara un esame non trova il CFA finché non lo aggiunge da "Scopri".
+Alla registrazione si sceglie che cosa fare con l'app (da zero, investire, lavoro) e da dove si parte. Da lì dipende che cosa mostrano tutte le schede. Oggi c'è un solo percorso scritto, le Basi; i percorsi professionali (valutare le azioni, obbligazioni e tassi…) entreranno come corsi nuovi in `courses()` e, da "Scopri", come percorsi da aggiungere.
 
 - Il modello sta in `dev/ordine/p10_data.js`, blocco "su misura": `MIS_PATHS` dice, per ogni obiettivo, il corso e le unità in ordine (`stops`). Un nome che comincia con `+` è un'unità ancora da scrivere, mostrata come "in arrivo" (testi in `MIS_SOON`).
 - Lo stato salvato è `mis` dentro `fl2_state`: `goal`, `level`, `known` (unità "la sai già"), `more` (unità aggiunte al percorso), `add` (percorsi aggiunti interi).
-- Le schede non leggono più `courses()` direttamente: usano `misCourses()`, `misUnits(c)`, `misLessons(c)`, `misStops(c)`, `misName(c)`. Chi aggiunge una scheda nuova deve fare lo stesso, altrimenti il CFA torna a comparire ai principianti.
+- Le schede non leggono più `courses()` direttamente: usano `misCourses()`, `misUnits(c)`, `misLessons(c)`, `misStops(c)`, `misName(c)`. Chi aggiunge una scheda nuova deve fare lo stesso, altrimenti un percorso aggiunto dopo comparirebbe a tutti, anche a chi non l'ha scelto.
 - Le 5 domande della registrazione (`placementFor`, `placementKnown`) segnano come note le prime unità con tutte le risposte giuste. Le unità note contano nel percorso (`isHad`), ma la figurina si prende solo facendo la lezione (`isDone`).
-- Chi usava l'app prima di questa versione riceve un percorso ricavato da quello che aveva scelto o iniziato (`misDerive`): i percorsi iniziati restano tutti.
+- Chi usava l'app prima riceve un percorso ricavato da quello che aveva scelto o iniziato (`misDerive`). Chi aveva scelto "preparare un esame" passa al percorso da zero: quello che aveva fatto resta scritto sul telefono, ma il percorso d'esame non c'è più.
 - Quando un'unità "in arrivo" viene scritta: aggiungerla alle Basi in `basi_src.py`, poi sostituire il suo `+nome` in `stops` con l'id dell'unità.
 - La registrazione è in `dev/ordine/p60_start.js` (`OrdineWelcome`). Prima dell'accesso i dati dei percorsi arrivano da `app.js` con la proprietà `pre`.
 

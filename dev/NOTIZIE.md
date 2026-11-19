@@ -73,8 +73,8 @@ Un esempio completo è in `notizie/2026-11.json`.
 3. Lanciare `python3 dev/notizie_pubblica.py`. Controlla i testi, aggiorna il file del mese in `notizie/` e rifà `notizie/indice.json`. Se segnala qualcosa da sistemare, si sistema e si rilancia.
 4. Rileggere ogni articolo confrontando numeri, nomi e date con le pagine aperte.
 5. Fare il commit dei soli file `notizie.json` e `notizie/…`, con questo messaggio: `Notizie del AAAA-MM-GG: primo titolo; secondo titolo; terzo titolo`.
-6. Inviare su `main` e tenere allineato `in-ordine`: `git push origin main main:in-ordine`.
-7. Dopo un paio di minuti controllare che `https://stefanocoran6-dotcom.github.io/app/notizie.json` riporti la data di oggi.
+6. Inviare solo su `main`: `git push origin main`. (Il ramo `in-ordine` non serve più e non va aggiornato.)
+7. L'app esce da Cloudflare, che la ricostruisce da solo a ogni invio. Dopo un paio di minuti controllare che la pubblicazione sia riuscita: `gh api repos/stefanocoran6-dotcom/app/commits/$(git rev-parse HEAD)/check-runs --jq '.check_runs[] | select(.app.slug=="cloudflare-workers-and-pages") | .conclusion'` deve dire `success`. Se l'indirizzo è raggiungibile, controllare anche che `https://finlearn-sfide.finlearn27.workers.dev/notizie.json` riporti la data di oggi. Se la pubblicazione risulta fallita (`failure`) lo si scrive nella prima riga del messaggio finale: le notizie sono nel repository ma non nell'app.
 
 ## Che cosa non si tocca
 

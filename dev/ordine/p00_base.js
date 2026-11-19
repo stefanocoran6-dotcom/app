@@ -111,6 +111,10 @@ html.fl-fig .o-app .o-btn:active:not(:disabled){transform:translate(3px,3px);box
 .o-tag{display:inline-flex;align-items:center;padding:1px 9px;background:${GIALLO};border:2px solid ${INK};border-radius:999px;font-size:12px;line-height:16px;font-weight:800;white-space:nowrap}
 .o-card{background:#fff;border:2.5px solid ${INK};border-radius:28px;box-shadow:5px 5px 0 ${INK};padding:20px}
 .o-card.s{border-radius:24px;box-shadow:4px 4px 0 ${INK}}
+.o-hero{flex:1 1 0;min-height:300px;position:relative;display:flex;flex-direction:column;align-items:center}
+.o-hero-c{position:relative;flex:none;width:min(288px,70vw);aspect-ratio:1;margin-top:auto;margin-bottom:-8px;background:#fff;border:2.5px solid ${INK};border-radius:50%;box-shadow:5px 5px 0 ${INK};display:flex;align-items:flex-end;justify-content:center}
+.o-hero-p{position:absolute;left:min(-22px,calc(20.95% - 79.2px));top:clamp(-12px,calc(28.57% - 58px),20px)}
+@supports (width:1cqh){.o-hero{min-height:190px;container-type:size}.o-hero-c{width:min(288px,70vw,calc(100cqh - 70px))}}
 .o-sheet{position:relative;background:#fff;border:2.5px solid ${INK};border-bottom:0;border-radius:32px 32px 0 0;margin:0 -3px;padding:20px 23px 0}
 .o-row{display:flex;align-items:center;gap:14px;width:100%;min-height:66px;padding:8px 0;border-bottom:2px solid ${SEP}}
 .o-row.last,.o-row:last-child{border-bottom:0}

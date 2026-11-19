@@ -94,7 +94,7 @@ Non controlla il significato. Una frase tradotta male passa. Per questo, dopo la
 2. **`ui_en.txt`**: il dizionario `italiano ⇒ inglese` di tutte le scritte dell'interfaccia. Il compilatore estrae ogni frase dal codice e la cerca qui; `{0}`, `{1}` sono i buchi dei template. Se ne manca una, `build.sh` la elenca ("ancora da tradurre"). Per cambiare una scritta si cambia qui, mai in `ordine.js`.
 3. **`basi_en.json`** al posto delle lezioni italiane, con l'etichetta di ogni lezione (`lezioni.json`) e il glossario (`glossario_en.json`).
 
-Restano fuori dall'inglese: notizie, corso CFA, esami, lezioni C ed E (solo italiane), il vecchio aspetto dell'app. Le Sfide ci sono: le scritte passano dal dizionario come le altre, e nelle sfide dal vivo l'arbitro manda a ogni telefono la domanda nella lingua della sua app (vedi dev/LEGGIMI.md, «Sfide dal vivo»).
+Restano fuori dall'inglese: le notizie e le lezioni C ed E (solo italiane). Le Sfide ci sono: le scritte passano dal dizionario come le altre, e nelle sfide dal vivo l'arbitro manda a ogni telefono la domanda nella lingua della sua app (vedi dev/LEGGIMI.md, «Sfide dal vivo»).
 
 `app.js` è unico per le due lingue: le scritte che servono in inglese passano da `L('italiano', 'English')` e il pacchetto giusto (`ordine.js` o `ordine_en.js`) si carica in base a `fl_lang`. `app_patch.mjs` e `app_en.txt` servono a ritrovare le frasi da avvolgere in `L(...)` dentro le zone elencate in `app_patch.mjs`.
 

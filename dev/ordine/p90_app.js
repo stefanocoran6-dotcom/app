@@ -21,9 +21,22 @@ const SCREENS = {
   pro: p => html`<${ProScreen} ...${p}/>`,
   catalogo: p => html`<${CatalogScreen} ...${p}/>`,
   livello: p => html`<${LevelScreen} ...${p}/>`,
-  scheda: p => html`<${CourseSheetScreen} ...${p}/>`,
-  salva: p => html`<${SaveScreen} ...${p}/>`
+  scheda: p => html`<${CourseSheetScreen} ...${p}/>`
 };
+// ---- trasloco ----
+// L'app è nata su GitHub (…github.io/app) e adesso esce da Cloudflare, dallo stesso indirizzo dell'arbitro. I progressi stanno nel telefono, legati all'indirizzo:
+// chi apre ancora quello vecchio viene avvisato e accompagnato (scarica i dati lì, li ricarica nel nuovo). L'avviso compare solo se il nuovo indirizzo risponde davvero.
+const NUOVA_CASA = 'https://' + SFIDE_HOST + '/';
+const VECCHIA_CASA = /\.github\.io$/.test(location.hostname);
+function useTrasloco() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    if (!VECCHIA_CASA) return; try { if (sessionStorage.getItem('fl_trasloco')) return; } catch (e) { /* niente */ }
+    const im = new Image(); im.onload = () => setOn(true); im.src = NUOVA_CASA + 'icon-192.png?t=' + Date.now();   // un'icona dell'app che si carica: il nuovo indirizzo c'è
+    return () => { im.onload = null; };
+  }, []);
+  return [on, () => { try { sessionStorage.setItem('fl_trasloco', '1'); } catch (e) { /* niente */ } setOn(false); }];
+}
 let NAV_ID = 0;
 export function OrdineApp({ kit }) {
   const s = useS2();
@@ -34,6 +47,7 @@ export function OrdineApp({ kit }) {
   useOrdFit();
   const [tab, setTab] = useState('home'), [sub, setSub] = useState('allenati'), [stack, setStack] = useState([]);
   const [calc, setCalc] = useState(false), [ai, setAi] = useState(null), [toast, setToast] = useState(null);
+  const [trasl, traslDopo] = useTrasloco();
   const tabRef = useRef(tab); tabRef.current = tab;
   const nav = useMemo(() => ({
     tab: id => { setStack([]); setTab(id); if (id === 'allenati') setSub('allenati'); },
@@ -87,6 +101,12 @@ export function OrdineApp({ kit }) {
     ${layer(top < 0, tabScreen, 'tab:' + tab + ':' + sub, false)}
     ${stack.map((e, k) => layer(k === top, SCREENS[e.name] ? SCREENS[e.name](Object.assign({ nav }, e.params)) : null, 'st' + e.id, true))}
     <${TermHost}/>
+    ${trasl && html`<${BSheet} onClose=${traslDopo} label="FinLearn ha un nuovo indirizzo"><h2 class="o-big">FinLearn ha un nuovo indirizzo</h2>
+      <p class="o-body o-mut" style="margin-top:6px">Questo indirizzo tra poco si spegne. Per portare con te i progressi bastano due passi.</p>
+      <ol class="o-body" style="margin:12px 0 0;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-weight:600"><li>Scarica i tuoi dati con il pulsante qui sotto.</li><li>Apri il nuovo indirizzo e tocca «Ho già un salvataggio».</li></ol>
+      <div class="o-col" style="gap:10px;margin-top:16px"><${Btn} cls="lg" onClick=${downloadData}>Scarica i miei dati<//>
+        <a class="o-btn lg flat" style="background:#fff;text-decoration:none" href=${NUOVA_CASA} target="_blank" rel="noopener">Apri il nuovo indirizzo</a>
+        <button type="button" class="o-link" style="align-self:center" onClick=${traslDopo}>Più tardi</button></div><//>`}
     ${toast && html`<div class="o-toast o-fade" role="status">${toast}</div>`}
   </div>
   ${calc && Calc && html`<${Calc} onClose=${() => setCalc(false)}/>`}

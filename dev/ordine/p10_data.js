@@ -262,25 +262,14 @@ const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some
 const COMING = [
   { id: 'risparmio', name: 'Risparmio e budget', group: 'basi', color: MENTA, icon: 'wallet' },
   { id: 'azob', name: 'Azioni e obbligazioni', group: 'invest', color: PESCA, icon: 'trend' },
-  { id: 'fondi', name: 'Fondi ed ETF', group: 'invest', color: LILLA, icon: 'pie' },
-  { id: 'cfa1', name: 'CFA Level I', group: 'cert' }, { id: 'frm1', name: 'FRM Part I', group: 'cert' }, { id: 'caia1', name: 'CAIA Level I', group: 'cert' }
+  { id: 'fondi', name: 'Fondi ed ETF', group: 'invest', color: LILLA, icon: 'pie' }
 ];
 
 let COURSES_MEMO = null;
 const losMinutes = l => { const c = l.content || {}; const n = (c.introduction || '').length + (c.sections || []).reduce((s, x) => s + (x.content || '').length, 0); return clamp(Math.round(n / 900) + (l.question ? 2 : 1), 2, 20); };
 function courses() {
   if (COURSES_MEMO) return COURSES_MEMO;
-  const CFA = LANG === 'en' ? {} : (K && K.CFA) || {};   // il CFA ha le domande in italiano e le regole italiane: in inglese per ora non c'è
-  const units = ['equityValuation', 'portfolioManagement', 'equity'].filter(k => CFA[k]).map(k => {
-    const t = CFA[k];
-    return { id: k, name: t.name, sections: t.modules.map(m => ({
-      id: m.id, name: m.title, num: m.number,
-      lessons: m.los.map((l, i) => ({ key: `${m.id}-${l.id}`, kind: 'los', title: K.flShortTitle(l.title), code: (l.code || `LOS ${m.number}${l.id}`).replace(/^LOS\s*/, ''), los: l, minutes: losMinutes(l) }))
-    })) };
-  });
-  const cfa2 = { id: 'cfa2', name: 'CFA Level II', badge: 'L2', color: AZ, group: 'cert', ready: true, pace: 90, tagline: 'Per chi prepara l\'esame',
-    learn: ['Valutare un\'azione con dividendi, flussi di cassa, multipli e residual income', 'ETF, modelli multifattoriali, VaR e gestione attiva', 'Domande in inglese, come all\'esame'], units };
-  COURSES_MEMO = LANG === 'en' ? [BASI] : [BASI, cfa2];
+  COURSES_MEMO = [BASI];   // il percorso d'esame non c'è più: quello professionale, scritto da zero, entrerà qui come corso a sé
   // indici utili
   COURSES_MEMO.forEach(c => { c.lessons = []; c.units.forEach((u, ui) => u.sections.forEach(s => s.lessons.forEach(l => { l.course = c; l.unit = u; l.ui = ui; l.section = s; if (!l.kind) l.kind = 'base'; c.lessons.push(l); }))); });
   return COURSES_MEMO;
@@ -288,13 +277,13 @@ function courses() {
 const courseById = id => courses().find(c => c.id === id);
 let LESSON_MAP = null;
 const lessonByKey = key => { if (!LESSON_MAP) { LESSON_MAP = {}; courses().forEach(c => c.lessons.forEach(l => { LESSON_MAP[l.key] = l; })); } return LESSON_MAP[key]; };
-const isDone = key => (K.losProgress || []).includes(key) || s2get().basi.includes(key);
+const isDone = key => s2get().basi.includes(key);
 const doneCount = list => list.filter(l => isDone(l.key)).length;
 const unitLessons = u => u.sections.flatMap(s => s.lessons);
 
 // ---- su misura: l'obiettivo scelto alla registrazione decide che cosa c'è nell'app ----
 // Un obiettivo porta un percorso di partenza: un corso intero, oppure una scelta ordinata delle sue unità più quelle ancora da scrivere ("in arrivo").
-// Tutte le schede leggono da qui: chi parte da zero non trova il CFA finché non lo aggiunge da "Scopri".
+// Tutte le schede leggono da qui.
 const MIS_SOON = {
   azob: ['Azioni e obbligazioni', 'tutti i tipi di azioni, BOT, BTP e obbligazioni societarie, ognuno con un esempio in cifre'],
   fondi: ['Fondi ed ETF', 'fondi attivi e indicizzati, ad accumulo o a distribuzione, con i costi in cifre'],
@@ -309,18 +298,18 @@ const MIS_SOON = {
 const MIS_SUB = { 'basi-u1': 'Interessi, inflazione, tasso reale', 'basi-u7': 'Budget, fondo di emergenza, obiettivi', 'basi-u11': 'Conto, carte, bonifici, garanzia dei depositi', 'basi-u12': 'Busta paga, IRPEF, detrazioni, TFR', 'basi-u4': 'Prestiti, TAN e TAEG, mutuo', 'basi-u13': 'Affitto o acquisto, mutuo, costi, surroga', 'basi-u14': 'Pensione pubblica, fondi pensione, TFR', 'basi-u15': 'PIL, debito pubblico, spread, indici di Borsa', 'basi-u8': 'Assicurazioni, truffe, polizze vita, reclami', 'basi-u2': 'Azioni, obbligazioni, fondi, conti',
   'basi-u3': 'Rendimento, diversificare, orizzonte temporale', 'basi-u9': 'Un po\' alla volta, regola del 72', 'basi-u10': 'Paura di perdere, seguire la massa', 'basi-u5': 'Bilancio, utile, cassa, prezzo e valore', 'basi-u6': 'Banche centrali, cambi, ciclo economico' };
 // stops: le unità del percorso in ordine; "+nome" è un'unità in arrivo. null = tutto il corso.
-const MIS_PATHS = {
+// (un oggetto senza le voci "di serie": il nome dell'obiettivo arriva anche dai dati salvati, e una parola come "constructor" non deve valere come percorso)
+const MIS_PATHS = Object.assign(Object.create(null), {
   zero: { goal: 'Capire la finanza da zero', name: 'Basi della finanza', pill: 'Per chi parte da zero', course: 'basi', color: AZ, stops: null },
   invest: { goal: 'Investire i miei risparmi', name: 'Investire i miei risparmi', pill: 'Per chi vuole investire', course: 'basi', color: PESCA, ico: TrendingUp, stops: ['basi-u1', 'basi-u2', 'basi-u3', '+azob', '+fondi', 'basi-u9', 'basi-u10'] },
-  work: { goal: 'Usarla al lavoro', name: 'Finanza per il lavoro', pill: 'Per chi la usa al lavoro', course: 'basi', color: MENTA, ico: Briefcase, stops: ['basi-u5', '+w-salute', '+w-cassa', '+w-costi', 'basi-u1', '+w-invest', '+w-finanz', 'basi-u6', '+w-valuta'] },
-  exam: { goal: 'Preparare un esame', name: 'CFA Level II', pill: 'Per l\'esame CFA Level II', course: 'cfa2', color: AZ, stops: null }
-};
+  work: { goal: 'Usarla al lavoro', name: 'Finanza per il lavoro', pill: 'Per chi la usa al lavoro', course: 'basi', color: MENTA, ico: Briefcase, stops: ['basi-u5', '+w-salute', '+w-cassa', '+w-costi', 'basi-u1', '+w-invest', '+w-finanz', 'basi-u6', '+w-valuta'] }
+});
 // Chi usava l'app prima di "su misura": l'obiettivo si ricava da quello che aveva scelto o iniziato, e i percorsi iniziati restano tutti.
 function misDerive(s) {
   const ob = s.onboard || {}, st = new Set(s.started || []), done = s.basi || [];
-  const cfa = LANG !== 'en' && (st.has('cfa2') || !!(K && (K.losProgress || []).length)), basi = st.has('basi') || done.length > 0;
-  const goal = MIS_PATHS[ob.goal] && (LANG !== 'en' || ob.goal !== 'exam') ? ob.goal : cfa ? 'exam' : 'zero', P = MIS_PATHS[goal], add = [];
-  if (cfa && P.course !== 'cfa2') add.push('cfa2');
+  // chi aveva scelto il percorso d'esame (che non c'è più) riparte dalle basi: l'obiettivo si può cambiare da Profilo
+  const basi = st.has('basi') || done.length > 0;
+  const goal = MIS_PATHS[ob.goal] ? ob.goal : 'zero', P = MIS_PATHS[goal], add = [];
   if (basi && P.course !== 'basi') add.push('basi');
   const more = P.stops ? BASI.units.filter(u => !P.stops.includes(u.id) && unitLessons(u).some(l => done.includes(l.key))).map(u => u.id) : [];
   return { goal, level: ob.start === 'some' ? 'some' : 'zero', known: [], more, add, t: 0 };
@@ -328,7 +317,7 @@ function misDerive(s) {
 let MIS_MEMO = null, MIS_DRAFT = null;   // MIS_DRAFT: la registrazione mostra il percorso prima di salvarlo
 function misGet() {
   if (MIS_DRAFT) return MIS_DRAFT;
-  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal] && (LANG !== 'en' || s.mis.goal !== 'exam')) return s.mis;
+  const s = s2get(); if (s.mis && MIS_PATHS[s.mis.goal]) return s.mis;
   const n = (K && (K.losProgress || []).length) || 0;
   if (!MIS_MEMO || MIS_MEMO.s !== s || MIS_MEMO.n !== n) MIS_MEMO = { s, n, m: misDerive(s) };
   return MIS_MEMO.m;
@@ -410,7 +399,7 @@ function lessonSteps(l) {
 }
 // percorso attuale e prossima lezione
 // i percorsi dell'utente sono quelli del suo obiettivo più quelli aggiunti: il primo è sempre quello dell'obiettivo
-function startedCourses() { const s = s2get(); const out = new Set(s.started || []); if ((K.losProgress || []).length) out.add('cfa2'); if (s.basi.length) out.add('basi'); return misCourses().filter(c => out.has(c.id)); }
+function startedCourses() { const s = s2get(); const out = new Set(s.started || []); if (s.basi.length) out.add('basi'); return misCourses().filter(c => out.has(c.id)); }
 function currentCourse() {
   const s = s2get(); const mine = misCourses();
   return mine.find(c => c.id === s.cur) || mine[0] || null;
@@ -482,10 +471,9 @@ function explState() { const s = s2get(); const today = dayKey(); const n = s.ex
 function spendExplanation() { const today = dayKey(); s2set(s => ({ expl: { d: today, n: (s.expl && s.expl.d === today ? s.expl.n : 0) + 1 } })); }
 
 // ---- le 5 domande della registrazione: servono a saltare le unità che si sanno già ----
-// Una domanda per unità (di più se le unità sono poche). Per l'esame non si salta niente: le unità sono materie intere.
+// Una domanda per unità (di più se le unità sono poche).
 function placementFor(goal) {
   const P = MIS_PATHS[goal], c = courseById(P.course), sh = K.flShuffle;
-  if (P.course === 'cfa2') { const u = c.units[0]; return { course: c, units: [], items: sh(allQuestions(unitLessons(u))).slice(0, 5).map(q => ({ q, u })) }; }
   const units = (P.stops ? P.stops.filter(x => x[0] !== '+').map(id => c.units.find(u => u.id === id)) : c.units).filter(Boolean);
   const pick = units.slice(0, 5), items = [];
   for (let i = 0; i < 5; i++) { const u = pick[Math.floor(i * pick.length / 5)], used = items.map(x => x.q.key); const q = sh(allQuestions(unitLessons(u))).find(x => !used.includes(x.key)); if (q) items.push({ q, u }); }

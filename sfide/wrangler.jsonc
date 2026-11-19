@@ -1,16 +1,23 @@
-// Arbitro delle sfide dal vivo di FinLearn: un Worker di Cloudflare con una "stanza" (Durable Object) per ogni sfida.
+// FinLearn su Cloudflare: un solo Worker che fa due cose allo stesso indirizzo.
+// 1. Pubblica l'app: i file della cartella ./sito, che ./prepara-sito.mjs riempie con i soli file che servono al telefono.
+// 2. Fa da arbitro delle sfide dal vivo (/stanza), con una "stanza" (Durable Object) per ogni sfida.
 // Su Cloudflare il Worker deve chiamarsi esattamente come "name" qui sotto.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "finlearn-sfide",
   "main": "src/index.js",
   "compatibility_date": "2026-10-20",
+  // prima di pubblicare (e di provare sul computer) si prepara la cartella del sito
+  "build": { "command": "node prepara-sito.mjs" },
+  // i file dell'app escono direttamente; tutto il resto (per esempio /stanza) passa dal programma dell'arbitro
+  "assets": { "directory": "./sito" },
   "durable_objects": {
     "bindings": [{ "name": "STANZE", "class_name": "Stanza" }]
   },
   // il piano gratuito vuole le stanze con il salvataggio SQLite
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Stanza"] }],
-  // da dove si accettano collegamenti: solo il sito dell'app (in prova sul computer vale .dev.vars)
+  // Da dove si accettano collegamenti all'arbitro. La pagina che esce da questo stesso indirizzo è sempre accettata (vedi src/index.js);
+  // qui si elencano gli altri: finché esiste, il vecchio indirizzo dell'app su GitHub. Più indirizzi si separano con una virgola. In prova sul computer vale .dev.vars.
   "vars": { "ORIGINI": "https://stefanocoran6-dotcom.github.io" },
   "observability": { "enabled": true }
 }

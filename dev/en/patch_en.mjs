@@ -24,15 +24,8 @@ export default [
   // sfida dal vivo: «Tu e Anna» sotto la risposta scelta da tutti e due
   ["k === opC ? opName : null].filter(Boolean).join(' e ') || null", "k === opC ? opName : null].filter(Boolean).join(' and ') || null", 1],
   ['${livePts(f.punti[io] || 0)} a ${livePts(f.punti[op] || 0)}</span>', '${livePts(f.punti[io] || 0)} to ${livePts(f.punti[op] || 0)}</span>', 1],
-  // ============================ catalogo: senza esami (CFA, FRM e CAIA in inglese non ci sono) ============================
-  ["const chips = [['all', 'Tutti'], ['basi', 'Basi'], ['invest', 'Investire'], ['cert', 'Esami']];", "const chips = [['all', 'Tutti'], ['basi', 'Basi'], ['invest', 'Investire']];", 1],
-  ["\n  { id: 'cfa1', name: 'CFA Level I', group: 'cert' }, { id: 'frm1', name: 'FRM Part I', group: 'cert' }, { id: 'caia1', name: 'CAIA Level I', group: 'cert' }", '', 1],
   // ============================ Pro: il piè di pagina ha un pezzo italiano dentro un buco del template ============================
   ["PRO_YEAR + ' l\\'anno'", "PRO_YEAR + ' a year'", 1],
-  // ============================ regole e privacy: in inglese non c'è niente del CFA, quindi nemmeno l'avviso sul marchio ============================
-  ['<p>FinLearn non è affiliata a CFA Institute. CFA® e Chartered Financial Analyst® sono marchi di CFA Institute.</p>', '', 1],
-  // ============================ impostazioni: in inglese non c'è la scelta della grafica (quella di prima è solo in italiano) ============================
-  ["      ${H('Aspetto')}\n      ${R('Grafica', 'In ordine', () => setSheet('ui'), null, true)}\n", '', 1],
   // ============================ p00_base: il plurale dei nomi (il codice passa le parole italiane, qui diventano inglesi) ============================
   ["const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;", "const EN_PL = { lezione: 'lesson', lezioni: 'lessons' };   // le altre parole di plural() le traduce il dizionario\nconst plural = (n, one, many) => { const w = n === 1 ? one : many; return `${n} ${EN_PL[w] || w}`; };"],
   // ============================ p30_learn: Impara, percorso, lezione, domande ============================
@@ -50,7 +43,7 @@ export default [
   ['aria-label=${`${l.title}: ${state}`}', "aria-label=${`${l.title}: ${({ manca: 'missing', viva: 'alive', sbiadisce: 'fading', dorata: 'golden' })[state] || state}`}"],
   // ============================ p50_more: AI Coach, profilo, album, impostazioni, Pro, catalogo ============================
   // il file dei dati scaricati ha il nome in inglese
-  ['a.download = `finlearn-dati-${dayKey()}.json`', 'a.download = `finlearn-data-${dayKey()}.json`', 1],
+  ['const name = `finlearn-dati-${dayKey()}.json`', 'const name = `finlearn-data-${dayKey()}.json`', 1],
   ["const PRO_YEAR = '34,99 €', PRO_MONTH = '5,99 €';", "const PRO_YEAR = CUR + '34.99', PRO_MONTH = CUR + '5.99';"],
   ["'2,92 € al mese'", "CUR + '2.92 a month'"],
   ["const leg = [[AZ, 'solid', 'Viva'], [T_GR, 'solid', 'Sbiadisce'], [GIALLO, 'solid', 'Dorata'], ['transparent', 'dashed', 'Manca']];", "const leg = [[AZ, 'solid', 'Alive'], [T_GR, 'solid', 'Fading'], [GIALLO, 'solid', 'Golden'], ['transparent', 'dashed', 'Missing']];"],

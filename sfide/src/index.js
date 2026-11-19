@@ -17,7 +17,7 @@ const VERSIONE = 1;                                     // versione dei messaggi
 const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';    // niente I, O, 0, 1: si confondono quando il codice si detta a voce
 const CODICE_RE = /^[A-HJ-NP-Z2-9]{6}$/;
 const N_DOMANDE = 5;
-const SECONDI = { basi: 24, cfa2: 45 };                 // tempo per domanda: metà del ritmo del percorso, come nella sfida simulata
+const SECONDI = { basi: 24 };                           // tempo per domanda: metà del ritmo del percorso, come nella sfida simulata
 const PARI_MS = 50;                                     // sotto i 5 centesimi di differenza è un pareggio
 const MARGINE_MS = 150;                                 // tolleranza sul tempo dichiarato, oltre al ping (la rete non è sempre uguale)
 const RTT_BASE = 300, RTT_MAX = 1500;                   // ping supposto quando non è ancora misurato, e il massimo che si accetta
@@ -36,20 +36,24 @@ const TESTI = {
   troppi: 'Troppi messaggi in poco tempo.'
 };
 const PER_CHIAVE = Object.fromEntries(Object.entries(DOMANDE).map(([c, l]) => [c, new Map(l.map(d => [d.k, d]))]));
+// il nome del percorso arriva da fuori: vale solo se è proprio uno degli elenchi di domande (non una parola qualsiasi come "constructor")
+const haCorso = c => typeof c === 'string' && Object.prototype.hasOwnProperty.call(DOMANDE, c) && Array.isArray(DOMANDE[c]);
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
-    if (url.pathname === '/') return new Response('FinLearn: arbitro delle sfide dal vivo\n', { headers: { 'content-type': 'text/plain; charset=utf-8' } });
-    if (url.pathname !== '/stanza') return new Response('Non trovato\n', { status: 404 });
+    // I file dell'app (cartella ./sito) li consegna Cloudflare prima di arrivare qui: a questo programma arriva solo quello che non è un file dell'app.
+    if (url.pathname !== '/stanza') return new Response('Non trovato\n', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8', 'x-content-type-options': 'nosniff' } });
     if ((req.headers.get('Upgrade') || '').toLowerCase() !== 'websocket') return new Response('Serve una connessione WebSocket\n', { status: 426 });
-    // si accettano collegamenti solo dalle pagine dell'app (blocca altri siti; non è una password)
+    // Si accettano collegamenti solo dalle pagine dell'app (blocca altri siti; non è una password):
+    // la pagina che esce da questo stesso indirizzo, più gli indirizzi scritti in ORIGINI (wrangler.jsonc).
+    const origine = req.headers.get('Origin') || '';
     const ammesse = String(env.ORIGINI || '').split(',').map(s => s.trim()).filter(Boolean);
-    if (!ammesse.includes(req.headers.get('Origin') || '')) return new Response('Origine non ammessa\n', { status: 403 });
+    if (!origine || (origine !== url.origin && !ammesse.includes(origine))) return new Response('Origine non ammessa\n', { status: 403 });
     const nuova = url.searchParams.get('nuova') === '1', corso = String(url.searchParams.get('corso') || 'basi');
     let codice = String(url.searchParams.get('codice') || '').toUpperCase();
-    if (nuova) { if (!DOMANDE[corso]) return new Response('Percorso sconosciuto\n', { status: 400 }); codice = nuovoCodice(); }
+    if (nuova) codice = nuovoCodice();   // un percorso che non c'è (più) lo rifiuta la stanza, con un messaggio che l'app sa mostrare
     else if (!CODICE_RE.test(codice)) return new Response('Codice non valido\n', { status: 400 });
     // le intestazioni interne le scrive solo il Worker: quelle mandate da fuori si buttano
     const h = new Headers(req.headers);
@@ -81,7 +85,8 @@ export class Stanza {
     const codice = req.headers.get('X-Codice'), nuova = req.headers.get('X-Nuova') === '1', corso = req.headers.get('X-Corso');
     await this.carica();
     const pair = new WebSocketPair(), client = pair[0], ws = pair[1], now = Date.now();
-    const err = nuova ? (this.S ? 'riprova' : null) : (!this.S ? 'nontrovata' : null);
+    // percorso che l'arbitro non ha (un'app non aggiornata chiede un percorso tolto, o una stanza rimasta da prima): si dice di aggiornare l'app
+    const err = nuova ? (this.S ? 'riprova' : !haCorso(corso) ? 'versione' : null) : (!this.S ? 'nontrovata' : !haCorso(this.S.corso) ? 'finita' : null);
     if (err) {   // connessione rifiutata: si apre solo per dire perché, poi si chiude
       ws.accept(); ws.send(JSON.stringify({ t: 'errore', e: err, m: TESTI[err] })); ws.close(4000, err);
       return new Response(null, { status: 101, webSocket: client });
