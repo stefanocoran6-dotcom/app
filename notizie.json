@@ -1,153 +1,227 @@
 {
  "v": 1,
- "data": "2026-11-16",
+ "data": "2026-11-20",
  "articoli": [
   {
-   "id": "2026-11-16-manovra",
-   "cat": "Manovra",
-   "nastro": "Manovra, modifiche entro martedì 17",
-   "titolo": "Manovra, via il taglio alla scuola: modifiche entro martedì 17",
-   "evid": "via il taglio alla scuola",
-   "sommario": "Venerdì 13 novembre il governo ha annunciato che ritirerà la norma che riduceva di quasi 7.000 posti il personale della scuola. Le proposte di modifica alla legge di bilancio vanno presentate alla Camera entro martedì 17 novembre.",
-   "numero": "7.000",
-   "nota": "posti nella scuola",
-   "didascalia": "I posti tra insegnanti e personale Ata, quasi 7.000, che la manovra prevedeva di ridurre: il governo ha annunciato il ritiro della norma",
+   "id": "2026-11-20-carburanti",
+   "cat": "Prezzi",
+   "nastro": "Benzina self a 1,948 € al litro",
+   "titolo": "Benzina e gasolio ancora in calo: la verde a 1,948 € al litro",
+   "evid": "ancora in calo",
+   "sommario": "Giovedì 19 novembre i prezzi medi dei carburanti sono scesi ancora di qualche decimo di centesimo. Il gasolio resta sopra i 2,20 € al litro.",
+   "numero": "1,948 €",
+   "nota": "il 18: 1,951 €",
+   "didascalia": "Prezzo medio della benzina self service in Italia, giovedì 19 novembre, secondo il ministero delle Imprese (Mimit)",
    "breve": [
-    "Venerdì 13 novembre, dopo un incontro con sindacati e imprese a Palazzo Chigi, il governo ha annunciato il ritiro della norma che riduceva di quasi 7.000 posti il personale della scuola.",
-    "Le proposte di modifica alla manovra, cioè gli emendamenti, vanno presentate in commissione Bilancio alla Camera entro le 18 di martedì 17 novembre.",
-    "Si discute anche di sanità, pensioni e Superbonus, ma su questi punti non c'è ancora nulla di deciso."
+    "Giovedì 19 novembre la benzina self service costa in media 1,948 € al litro, il gasolio 2,202 €.",
+    "Il giorno prima erano a 1,951 € e 2,204 €: un calo di 3 e 2 millesimi.",
+    "In autostrada si paga di più: 1,985 € la benzina e 2,264 € il gasolio."
    ],
    "corpo": [
     {
      "h": "Che cosa è successo",
      "p": [
-      "La manovra è la legge di bilancio: stabilisce le **entrate** e le **uscite** dello Stato per il 2027. La scrive il governo e la esamina il Parlamento, che può cambiarla.",
-      "Venerdì 13 novembre il governo ha incontrato a Palazzo Chigi i sindacati e le associazioni delle imprese. Dopo le critiche ricevute nelle ultime settimane, si è detto disponibile a correggere alcune misure."
+      "Ogni giorno il ministero delle Imprese e del made in Italy (Mimit) calcola il prezzo medio dei carburanti, partendo dai prezzi che i distributori di tutta Italia sono obbligati a comunicare. È una media: nel singolo distributore il prezzo può essere più alto o più basso.",
+      "Giovedì 19 novembre la benzina con il self service costava in media 1,948 € al litro e il gasolio 2,202 €. Mercoledì 18 novembre erano a 1,951 € e 2,204 €. Il calo è piccolo, 3 millesimi per la benzina e 2 per il gasolio, ma prosegue da diversi giorni."
      ]
     },
     {
-     "h": "La scuola",
+     "h": "Quanto costa un pieno",
      "p": [
-      "La manovra prevedeva di ridurre di quasi 7.000 posti il personale della scuola, tra insegnanti e personale Ata, cioè chi lavora nelle segreterie, nei laboratori e nei servizi. Il governo ha annunciato che questa norma sarà ritirata. La presidente del Consiglio, Giorgia Meloni, ha detto in un video che a suo giudizio non si trattava di tagli, ma di un modo per adeguare il personale al numero degli studenti.",
-      "Restano due punti aperti. Non è ancora deciso se la riduzione sarà cancellata del tutto o solo rinviata. E bisogna trovare altrove i soldi che quella norma avrebbe fatto risparmiare."
+      "Facciamo un conto semplice con i prezzi medi di giovedì 19 novembre. Un pieno da 50 litri di benzina costa circa 97,40 €. Lo stesso pieno di gasolio costa circa 110,10 €, quasi 13 € in più.",
+      "Rispetto al giorno prima, sullo stesso pieno si risparmiano appena 15 centesimi con la benzina e 10 con il gasolio. Sono differenze minime: contano di più quando il calo dura settimane."
      ]
     },
     {
-     "h": "Gli altri punti in discussione",
+     "h": "In autostrada costa di più",
      "p": [
-      "Sanità. Il governo si è detto disponibile ad aumentare i fondi, ma non ha indicato cifre. Le Regioni, che gestiscono ospedali e ambulatori, giudicano insufficienti le risorse previste.",
-      "Pensioni. Ogni anno gli assegni vengono adeguati all'aumento dei prezzi, per difendere il **potere d'acquisto**. La manovra riduce questo adeguamento per le pensioni più alte e una parte della maggioranza chiede di attenuare la stretta. Si discute anche di come usare un fondo da 850 milioni di euro pensato per chi vuole lasciare il lavoro prima.",
-      "Superbonus. Una norma allunga a dieci anni i tempi con cui vengono rimborsati i crediti nati dai lavori edilizi agevolati. Banche e imprese la contestano, perché riceverebbero i soldi più lentamente. Il governo sta cercando una soluzione diversa."
+      "Sulle autostrade i prezzi medi sono più alti. Giovedì 19 novembre la benzina self costava 1,985 € al litro e il gasolio 2,264 €. Rispetto alla rete normale sono circa 4 centesimi in più per la benzina e 6 per il gasolio. Anche in autostrada i prezzi sono scesi di 2 o 3 millesimi rispetto al giorno prima."
+     ]
+    },
+    {
+     "h": "Perché il gasolio costa più della benzina",
+     "p": [
+      "Per molti anni in Italia il gasolio è costato meno della benzina. In questi mesi succede il contrario e la differenza è di oltre 25 centesimi al litro. Il prezzo alla pompa dipende dal costo del petrolio e della raffinazione, ma anche dalle tasse, che ne sono una parte molto grande."
+     ]
+    },
+    {
+     "h": "Dove guardare",
+     "p": [
+      "I prezzi di ogni distributore si possono confrontare sul sito Osservaprezzi carburanti del Mimit."
+     ]
+    }
+   ],
+   "perche": "Chi usa l'auto ogni giorno sente subito questi numeri nel portafoglio. Il calo di un giorno vale pochi centesimi a pieno: conviene guardare se la discesa continua nelle prossime settimane e confrontare i prezzi tra i distributori della propria zona.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Mimit, benzina self a 1,948 euro e gasolio a 2,202 (19 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/19/mimit-il-prezzo-medio-self-benzina-scende-a-1948-euro-gasolio-a-2202_33f6f5f5-55ba-4dd5-8d95-4291b2bccfba.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Mimit, i prezzi medi del 18 novembre: benzina 1,951 e gasolio 2,204",
+     "url": "https://www.ansa.it/ansa2030/notizie/energia_energie/2026/11/18/mimit-ancora-giu-il-prezzo-dei-carburanti-la-verde-a-1951-euro-e-il-gasolio_ff6d561a-e764-4406-8159-a23e7fa16c0a.html"
+    },
+    {
+     "nome": "Auto.it",
+     "titolo": "I prezzi di benzina e diesel giovedì 19 novembre, anche in autostrada",
+     "url": "https://www.auto.it/news/attualita/caro-benzina-costi-carburante/2026/11/19-9306445/carburanti_i_prezzi_di_benzina_e_diesel_gioved_19_novembre"
+    },
+    {
+     "nome": "HDmotori",
+     "titolo": "Carburanti in discesa il 19 novembre: i prezzi medi Mimit",
+     "url": "https://www.hdmotori.it/carburanti-prezzi-oggi-19-novembre/"
+    }
+   ]
+  },
+  {
+   "id": "2026-11-20-fed",
+   "cat": "Stati Uniti",
+   "nastro": "Fed: quasi tutti per nuovi rialzi dei tassi",
+   "titolo": "Fed, i verbali: quasi tutti pronti ad alzare ancora i tassi",
+   "evid": "alzare ancora i tassi",
+   "sommario": "Mercoledì 18 novembre la banca centrale degli Stati Uniti ha pubblicato il resoconto della riunione di ottobre. Quasi tutti i partecipanti ritengono probabili altri aumenti dei tassi nei prossimi mesi.",
+   "numero": "3,75-4%",
+   "nota": "fermo a ottobre",
+   "didascalia": "La fascia del tasso di riferimento della Fed, lasciata invariata il 28 ottobre",
+   "breve": [
+    "Il 28 ottobre la Fed ha lasciato il suo tasso tra il 3,75% e il 4%, con due voti contrari che chiedevano un aumento.",
+    "Dai verbali, pubblicati mercoledì 18 novembre, quasi tutti i partecipanti ritengono probabili altri rialzi.",
+    "La prossima riunione è l'8 e il 9 dicembre: due partecipanti hanno parlato di un aumento anche più grande del solito."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "La **Fed** è la **banca centrale** degli Stati Uniti. Decide il **tasso** di riferimento, cioè il costo del denaro a cui si adeguano prestiti e mutui nel Paese. Si riunisce otto volte l'anno e, tre settimane dopo ogni riunione, pubblica i verbali: il resoconto della discussione.",
+      "Mercoledì 18 novembre sono usciti i verbali della riunione del 27 e 28 ottobre. In quella riunione la Fed aveva lasciato il tasso tra il 3,75% e il 4%. La decisione è passata con 10 voti a favore e 2 contrari: i due contrari volevano già un aumento di un quarto di punto."
+     ]
+    },
+    {
+     "h": "Che cosa dicono i verbali",
+     "p": [
+      "Quasi tutti i partecipanti pensano che altri aumenti del tasso saranno probabilmente necessari, per riportare l'**inflazione** verso l'obiettivo del 2%. Secondo il resoconto, due di loro hanno detto che alla prossima riunione si potrebbe valutare un aumento di oltre 25 **punti base**, cioè più di un quarto di punto, se i nuovi dati sui prezzi fossero sfavorevoli."
+     ]
+    },
+    {
+     "h": "Perché",
+     "p": [
+      "L'inflazione negli Stati Uniti resta alta. Secondo le stime dei tecnici della Fed riportate nei verbali, a settembre l'indice dei prezzi che la banca centrale segue di più era salito del 3,6% rispetto a un anno prima.",
+      "Nei verbali si legge che gran parte dei partecipanti vede nei prezzi alti dell'energia una delle cause. Molti indicano come rischio anche i grandi investimenti nell'intelligenza artificiale, che fanno salire la domanda e i prezzi di alcuni beni tecnologici."
      ]
     },
     {
      "h": "Che cosa succede adesso",
      "p": [
-      "Gli emendamenti, cioè le proposte di modifica, vanno presentati in commissione Bilancio alla Camera entro le 18 di martedì 17 novembre. Possono presentarli sia i partiti che sostengono il governo sia quelli di opposizione. Anche il ritiro della norma sulla scuola dovrà passare da un emendamento.",
-      "Poi la commissione li esaminerà e li voterà. La legge di bilancio deve essere approvata dalla Camera e dal Senato entro la fine dell'anno. Fino al voto finale nulla è definitivo: anche le misure annunciate possono ancora cambiare."
+      "La prossima riunione della Fed è in programma martedì 8 e mercoledì 9 dicembre. In quella riunione la Fed deciderà se alzare il tasso e di quanto."
+     ]
+    },
+    {
+     "h": "Perché interessa anche l'Europa",
+     "p": [
+      "Le decisioni della Fed muovono il dollaro e i mercati di tutto il mondo, Borsa di Milano compresa. Quando i tassi americani salgono, il denaro in dollari rende di più e gli investitori spostano i loro soldi di conseguenza."
      ]
     }
    ],
-   "perche": "La manovra decide molte cose che toccano le famiglie: tasse, pensioni, scuola, sanità. Quello che si legge in questi giorni è spesso un annuncio o una proposta: per sapere che cosa cambia davvero bisogna aspettare il testo approvato dal Parlamento.",
+   "perche": "I tassi della Fed non decidono quelli europei, che dipendono dalla Bce. Però influenzano il cambio tra euro e dollaro e l'andamento delle Borse, quindi anche fondi e risparmi investiti all'estero. La data da segnare è mercoledì 9 dicembre.",
    "fonti": [
     {
-     "nome": "LaPresse",
-     "titolo": "L'incontro a Palazzo Chigi, il ritiro della norma sulla scuola e la scadenza degli emendamenti",
-     "url": "https://www.lapresse.it/economia/2026/11/14/manovra-2027-dietrofront-sui-tagli-alla-scuola-si-cercano-risorse-per-la-sanita/"
+     "nome": "Federal Reserve",
+     "titolo": "Verbali della riunione del 27 e 28 ottobre 2026",
+     "url": "https://www.federalreserve.gov/monetarypolicy/fomcminutes20261028.htm"
+    },
+    {
+     "nome": "Federal Reserve",
+     "titolo": "Calendario delle riunioni",
+     "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Verbali Fed: quasi tutti prevedono altri rialzi",
+     "url": "https://www.teleborsa.it/News/2026/11/18/verbali-fed-quasi-tutti-i-funzionari-prevedono-ulteriori-rialzi-dei-tassi-213.html"
     },
     {
      "nome": "ANSA",
-     "titolo": "I punti della manovra su cui si preparano le modifiche",
-     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/14/dal-superbonus-alla-sanita-la-carica-degli-emendamenti-alla-manovra_8573b4c5-be0d-4e03-aa95-0c2d6ea8e11c.html"
+     "titolo": "Nella Fed quasi tutti favorevoli a un rialzo dei tassi",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/18/quasi-tutti-allinterno-della-fed-favorevoli-a-un-rialzo-dei-tassi_345a5e9c-7b93-45f3-b946-62f6982e4ff7.html"
     },
     {
-     "nome": "Fanpage",
-     "titolo": "L'annuncio sulla scuola, il video di Meloni e che cosa resta da decidere",
-     "url": "https://www.fanpage.it/politica/il-governo-meloni-si-rimangia-i-7mila-tagli-alla-scuola-saranno-cancellati-dalla-manovra-2027/"
-    },
-    {
-     "nome": "QuiFinanza",
-     "titolo": "Scuola, sanità, pensioni e Superbonus: le misure in discussione",
-     "url": "https://quifinanza.it/economia/pensioni-exit-tax-emendamenti-manovra-2027/1024403/"
+     "nome": "AP (Yahoo Finance)",
+     "titolo": "I verbali della Fed e il rialzo atteso a dicembre",
+     "url": "https://finance.yahoo.com/economy/policy/articles/fed-minutes-higher-interest-rates-190932735.html"
     }
    ]
   },
   {
-   "id": "2026-11-16-mercati",
+   "id": "2026-11-20-borsa",
    "cat": "Borsa",
-   "nastro": "Borse su nella settimana: Milano +3,61%",
-   "titolo": "Borse, settimana in rialzo: Milano +3,61%. Venerdì frena New York",
-   "evid": "settimana in rialzo",
-   "sommario": "Nella settimana chiusa venerdì 13 novembre la Borsa di Milano ha guadagnato il 3,61% e gli indici americani sono saliti di oltre il 2%. Nell'ultima seduta, però, a New York due indici su tre hanno chiuso in calo: pesano i titoli tecnologici e l'attesa di un rialzo dei tassi negli Stati Uniti.",
-   "numero": "+3,61%",
-   "nota": "S&P 500 +2,51%",
-   "didascalia": "La variazione del Ftse Mib, l'indice principale della Borsa di Milano, nella settimana chiusa venerdì 13 novembre",
+   "nastro": "Milano chiude a −0,46%",
+   "titolo": "Piazza Affari chiude in calo e scende sotto quota 50.000",
+   "evid": "sotto quota 50.000",
+   "sommario": "Giovedì 19 novembre la Borsa di Milano ha perso lo 0,46%, dopo una partenza in rialzo. Le altre Borse europee sono andate peggio.",
+   "numero": "−0,46%",
+   "nota": "Francoforte −1%",
+   "didascalia": "La chiusura della Borsa di Milano, indice FTSE MIB, giovedì 19 novembre",
    "breve": [
-    "Nella settimana chiusa venerdì 13 novembre il Ftse Mib, l'indice principale della Borsa di Milano, è salito del 3,61% e ha chiuso a 51.858 punti.",
-    "A New York la settimana è finita con rialzi di oltre il 2%, ma venerdì 13 l'S&P 500 ha perso lo 0,40% e il Nasdaq lo 0,91%.",
-    "I mercati si aspettano che mercoledì 9 dicembre la Fed, la banca centrale americana, alzi i tassi di interesse per frenare i prezzi."
+    "L'indice FTSE MIB chiude a 49.941 punti, in calo dello 0,46%.",
+    "In mattinata era in rialzo, poi nel pomeriggio ha girato in negativo con il resto d'Europa.",
+    "Bene Saipem dopo i conti, giù Nexi e Tim."
    ],
    "corpo": [
     {
-     "h": "La settimana in numeri",
+     "h": "Com'è andata",
      "p": [
-      "Venerdì 13 novembre il Ftse Mib, l'**indice** che riassume l'andamento delle società più grandi della Borsa di Milano, ha chiuso a 51.858 punti. Rispetto al venerdì precedente ha guadagnato il 3,61%.",
-      "È andata bene anche **Wall Street**, la Borsa di New York. Nella settimana l'S&P 500, l'indice delle 500 maggiori società americane, è salito del 2,51%. Il Nasdaq, dove pesano molto le aziende tecnologiche, ha guadagnato il 2,27% e il Dow Jones il 2,07%."
+      "Il FTSE MIB è l'**indice** che riassume l'andamento delle società più grandi quotate a Milano. Giovedì 19 novembre ha chiuso a 49.941 punti, lo 0,46% in meno del giorno prima. È tornato così sotto la soglia dei 50.000 punti.",
+      "La giornata era cominciata bene: in mattinata l'indice era in rialzo. Nel pomeriggio le Borse europee hanno cambiato direzione e non hanno più recuperato."
      ]
     },
     {
-     "h": "La frenata di venerdì",
+     "h": "Le altre Borse",
      "p": [
-      "L'ultima seduta della settimana è stata però negativa per due indici americani su tre. Venerdì 13 novembre l'S&P 500 ha chiuso in calo dello 0,40%, a 7.562 punti, e il Nasdaq dello 0,91%, a 25.136 punti. Il Dow Jones è salito dello 0,10%, a 52.348 punti.",
-      "A scendere sono state soprattutto le società che producono chip, i componenti che fanno funzionare computer e telefoni. Nvidia, che produce i chip usati per l'intelligenza artificiale, ha perso circa il 2% nella seduta e quasi il 13% nella settimana, dopo le dimissioni del suo amministratore delegato."
+      "Tra le grandi Borse europee Milano ha perso meno di molte altre. Francoforte e Madrid hanno chiuso intorno a −1%, Londra a −0,9% e Parigi a −0,8%."
      ]
     },
     {
-     "h": "Perché si guarda alla Fed",
+     "h": "Chi è salito e chi è sceso",
      "p": [
-      "Negli Stati Uniti i prezzi stanno salendo in fretta. Venerdì 13 novembre è uscito il dato sui prezzi alla produzione, cioè quelli a cui le aziende vendono i loro prodotti prima che arrivino nei negozi. A ottobre erano più alti del 6,5% rispetto a un anno prima: è l'aumento più forte da novembre 2022. Rispetto a settembre sono saliti dello 0,3%, un po' meno delle attese.",
-      "Per frenare l'**inflazione** la **Fed**, la banca centrale americana, può alzare i tassi di interesse: prendere denaro in prestito costa di più e la spesa rallenta. La prossima decisione è attesa mercoledì 9 dicembre. Dai prezzi che si formano sui mercati risulta che gli operatori si aspettano un rialzo di almeno 25 **punti base**, cioè 0,25 punti percentuali, e danno una probabilità di circa il 10% a un rialzo doppio."
+      "In testa Saipem, società che costruisce impianti per l'energia, salita di circa il 4,7% dopo aver presentato i conti dei primi nove mesi dell'anno. Bene anche STMicroelectronics, che fa chip, con circa +1,6%.",
+      "In coda Nexi, che gestisce pagamenti elettronici, con un calo di oltre il 3%, e Tim, in calo di circa il 2,2%."
      ]
     },
     {
-     "h": "Che cosa c'entra con l'Europa",
+     "h": "Un giorno solo dice poco",
      "p": [
-      "Quando ci si aspettano tassi più alti negli Stati Uniti, salgono i rendimenti dei titoli di Stato americani, cioè gli interessi che lo Stato paga a chi gli presta denaro: nei giorni scorsi quello a dieci anni ha superato il 5%.",
-      "Tassi più alti tendono anche a rafforzare il dollaro. Venerdì 13 novembre un euro valeva circa 1,10 dollari. Il cambio conta anche per chi non investe: molte materie prime si pagano in dollari, a cominciare dal petrolio. Il Brent, il petrolio di riferimento in Europa, era intorno a 96 dollari al barile."
+      "Un indice sale e scende ogni giorno, spesso per notizie che arrivano da lontano. Una soglia come i 50.000 punti fa notizia perché è un numero tondo, ma in sé non cambia nulla. Per capire come va un investimento in **azioni** conta l'andamento di anni, non di ore."
      ]
     }
    ],
-   "perche": "Una settimana in rialzo non dice che cosa succederà dopo. Serve di più capire il meccanismo: le decisioni della Fed sui tassi muovono il dollaro, i rendimenti e le Borse di tutto il mondo, comprese quelle europee. La prossima decisione è attesa il 9 dicembre.",
+   "perche": "Se hai un fondo o un **ETF** che investe in azioni italiane, giovedì 19 novembre il suo valore è sceso un po'. Giornate come questa mostrano quanto i prezzi possano cambiare direzione nel giro di poche ore.",
    "fonti": [
     {
-     "nome": "Money.it",
-     "titolo": "La chiusura del Ftse Mib di venerdì 13 novembre e il bilancio della settimana",
-     "url": "https://www.money.it/piazza-affari-chiude-in-lieve-rialzo-ftse-13-11-2026"
-    },
-    {
-     "nome": "SoldiOnline",
-     "titolo": "Il commento alla seduta di Milano del 13 novembre, con euro e petrolio",
-     "url": "https://www.soldionline.it/notizie/azioni-italia/borsa-italiana-commento-giornata-13-novembre-2026"
-    },
-    {
-     "nome": "MarketScreener",
-     "titolo": "La chiusura di Wall Street del 13 novembre, il bilancio della settimana e le attese sulla Fed",
-     "url": "https://it.marketscreener.com/notizie/wall-street-in-calo-l-incertezza-su-nvidia-trascina-al-ribasso-i-titoli-tecnologici-ce785eded98af723"
-    },
-    {
-     "nome": "TheStreet",
-     "titolo": "Gli indici americani del 13 novembre, i prezzi alla produzione e la Fed (in inglese)",
-     "url": "https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-nov-13-2026"
+     "nome": "ANSA",
+     "titolo": "Borsa: Milano chiude in calo, FTSE MIB a 49.941 punti",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/19/borsa-milano-chiude-in-calo-ftse-mib-046_9dd87279-2c83-4520-a71c-69981c9ec9c5.html"
     },
     {
      "nome": "ANSA",
-     "titolo": "Il calo di Nvidia nella seduta e nella settimana",
-     "url": "https://www.ansa.it/sito/notizie/mondo/2026/11/13/nvidia-chiude-a-201-perso-quasi-il-13-nella-settimana-con-lo-scandalo-huang_095fab73-de50-48c7-95a4-030d8c2a504b.html"
+     "titolo": "Milano debole con l'Europa, scivola Nexi, bene Saipem",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/19/borsa-milano-debole-con-leuropa-e-wall-street-scivola-nexi_3f20cc70-ffa0-4754-a8a5-32664c5fe530.html"
     },
     {
-     "nome": "Milano Finanza",
-     "titolo": "Il rendimento dei titoli di Stato americani a dieci anni oltre il 5% e la riunione della Fed",
-     "url": "https://www.milanofinanza.it/investimenti-trading/rendimento-treasury-10y-oltre-il-5-202611121550364779"
+     "nome": "MF Milano Finanza",
+     "titolo": "Il commento di chiusura della Borsa",
+     "url": "https://www.milanofinanza.it/news/borsa-commento-di-chiusura-202611191828017222"
+    },
+    {
+     "nome": "MF Milano Finanza",
+     "titolo": "La giornata delle Borse in diretta, 19 novembre",
+     "url": "https://www.milanofinanza.it/news/borse-oggi-diretta-19-novembre-2026-chiusura-apertura-europee-borsa-milano-ftse-mib-piazza-affari-202611190745318831"
+    },
+    {
+     "nome": "QuiFinanza",
+     "titolo": "La Borsa del 19 novembre, l'apertura in rialzo",
+     "url": "https://quifinanza.it/dirette/borsa-ultime-notizie-19-novembre-2026/1024946/"
     }
    ]
   }

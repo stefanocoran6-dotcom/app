@@ -3,6 +3,232 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-20-carburanti",
+   "cat": "Prezzi",
+   "nastro": "Benzina self a 1,948 € al litro",
+   "titolo": "Benzina e gasolio ancora in calo: la verde a 1,948 € al litro",
+   "evid": "ancora in calo",
+   "sommario": "Giovedì 19 novembre i prezzi medi dei carburanti sono scesi ancora di qualche decimo di centesimo. Il gasolio resta sopra i 2,20 € al litro.",
+   "numero": "1,948 €",
+   "nota": "il 18: 1,951 €",
+   "didascalia": "Prezzo medio della benzina self service in Italia, giovedì 19 novembre, secondo il ministero delle Imprese (Mimit)",
+   "breve": [
+    "Giovedì 19 novembre la benzina self service costa in media 1,948 € al litro, il gasolio 2,202 €.",
+    "Il giorno prima erano a 1,951 € e 2,204 €: un calo di 3 e 2 millesimi.",
+    "In autostrada si paga di più: 1,985 € la benzina e 2,264 € il gasolio."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Ogni giorno il ministero delle Imprese e del made in Italy (Mimit) calcola il prezzo medio dei carburanti, partendo dai prezzi che i distributori di tutta Italia sono obbligati a comunicare. È una media: nel singolo distributore il prezzo può essere più alto o più basso.",
+      "Giovedì 19 novembre la benzina con il self service costava in media 1,948 € al litro e il gasolio 2,202 €. Mercoledì 18 novembre erano a 1,951 € e 2,204 €. Il calo è piccolo, 3 millesimi per la benzina e 2 per il gasolio, ma prosegue da diversi giorni."
+     ]
+    },
+    {
+     "h": "Quanto costa un pieno",
+     "p": [
+      "Facciamo un conto semplice con i prezzi medi di giovedì 19 novembre. Un pieno da 50 litri di benzina costa circa 97,40 €. Lo stesso pieno di gasolio costa circa 110,10 €, quasi 13 € in più.",
+      "Rispetto al giorno prima, sullo stesso pieno si risparmiano appena 15 centesimi con la benzina e 10 con il gasolio. Sono differenze minime: contano di più quando il calo dura settimane."
+     ]
+    },
+    {
+     "h": "In autostrada costa di più",
+     "p": [
+      "Sulle autostrade i prezzi medi sono più alti. Giovedì 19 novembre la benzina self costava 1,985 € al litro e il gasolio 2,264 €. Rispetto alla rete normale sono circa 4 centesimi in più per la benzina e 6 per il gasolio. Anche in autostrada i prezzi sono scesi di 2 o 3 millesimi rispetto al giorno prima."
+     ]
+    },
+    {
+     "h": "Perché il gasolio costa più della benzina",
+     "p": [
+      "Per molti anni in Italia il gasolio è costato meno della benzina. In questi mesi succede il contrario e la differenza è di oltre 25 centesimi al litro. Il prezzo alla pompa dipende dal costo del petrolio e della raffinazione, ma anche dalle tasse, che ne sono una parte molto grande."
+     ]
+    },
+    {
+     "h": "Dove guardare",
+     "p": [
+      "I prezzi di ogni distributore si possono confrontare sul sito Osservaprezzi carburanti del Mimit."
+     ]
+    }
+   ],
+   "perche": "Chi usa l'auto ogni giorno sente subito questi numeri nel portafoglio. Il calo di un giorno vale pochi centesimi a pieno: conviene guardare se la discesa continua nelle prossime settimane e confrontare i prezzi tra i distributori della propria zona.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Mimit, benzina self a 1,948 euro e gasolio a 2,202 (19 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/19/mimit-il-prezzo-medio-self-benzina-scende-a-1948-euro-gasolio-a-2202_33f6f5f5-55ba-4dd5-8d95-4291b2bccfba.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Mimit, i prezzi medi del 18 novembre: benzina 1,951 e gasolio 2,204",
+     "url": "https://www.ansa.it/ansa2030/notizie/energia_energie/2026/11/18/mimit-ancora-giu-il-prezzo-dei-carburanti-la-verde-a-1951-euro-e-il-gasolio_ff6d561a-e764-4406-8159-a23e7fa16c0a.html"
+    },
+    {
+     "nome": "Auto.it",
+     "titolo": "I prezzi di benzina e diesel giovedì 19 novembre, anche in autostrada",
+     "url": "https://www.auto.it/news/attualita/caro-benzina-costi-carburante/2026/11/19-9306445/carburanti_i_prezzi_di_benzina_e_diesel_gioved_19_novembre"
+    },
+    {
+     "nome": "HDmotori",
+     "titolo": "Carburanti in discesa il 19 novembre: i prezzi medi Mimit",
+     "url": "https://www.hdmotori.it/carburanti-prezzi-oggi-19-novembre/"
+    }
+   ],
+   "data": "2026-11-20"
+  },
+  {
+   "id": "2026-11-20-fed",
+   "cat": "Stati Uniti",
+   "nastro": "Fed: quasi tutti per nuovi rialzi dei tassi",
+   "titolo": "Fed, i verbali: quasi tutti pronti ad alzare ancora i tassi",
+   "evid": "alzare ancora i tassi",
+   "sommario": "Mercoledì 18 novembre la banca centrale degli Stati Uniti ha pubblicato il resoconto della riunione di ottobre. Quasi tutti i partecipanti ritengono probabili altri aumenti dei tassi nei prossimi mesi.",
+   "numero": "3,75-4%",
+   "nota": "fermo a ottobre",
+   "didascalia": "La fascia del tasso di riferimento della Fed, lasciata invariata il 28 ottobre",
+   "breve": [
+    "Il 28 ottobre la Fed ha lasciato il suo tasso tra il 3,75% e il 4%, con due voti contrari che chiedevano un aumento.",
+    "Dai verbali, pubblicati mercoledì 18 novembre, quasi tutti i partecipanti ritengono probabili altri rialzi.",
+    "La prossima riunione è l'8 e il 9 dicembre: due partecipanti hanno parlato di un aumento anche più grande del solito."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "La **Fed** è la **banca centrale** degli Stati Uniti. Decide il **tasso** di riferimento, cioè il costo del denaro a cui si adeguano prestiti e mutui nel Paese. Si riunisce otto volte l'anno e, tre settimane dopo ogni riunione, pubblica i verbali: il resoconto della discussione.",
+      "Mercoledì 18 novembre sono usciti i verbali della riunione del 27 e 28 ottobre. In quella riunione la Fed aveva lasciato il tasso tra il 3,75% e il 4%. La decisione è passata con 10 voti a favore e 2 contrari: i due contrari volevano già un aumento di un quarto di punto."
+     ]
+    },
+    {
+     "h": "Che cosa dicono i verbali",
+     "p": [
+      "Quasi tutti i partecipanti pensano che altri aumenti del tasso saranno probabilmente necessari, per riportare l'**inflazione** verso l'obiettivo del 2%. Secondo il resoconto, due di loro hanno detto che alla prossima riunione si potrebbe valutare un aumento di oltre 25 **punti base**, cioè più di un quarto di punto, se i nuovi dati sui prezzi fossero sfavorevoli."
+     ]
+    },
+    {
+     "h": "Perché",
+     "p": [
+      "L'inflazione negli Stati Uniti resta alta. Secondo le stime dei tecnici della Fed riportate nei verbali, a settembre l'indice dei prezzi che la banca centrale segue di più era salito del 3,6% rispetto a un anno prima.",
+      "Nei verbali si legge che gran parte dei partecipanti vede nei prezzi alti dell'energia una delle cause. Molti indicano come rischio anche i grandi investimenti nell'intelligenza artificiale, che fanno salire la domanda e i prezzi di alcuni beni tecnologici."
+     ]
+    },
+    {
+     "h": "Che cosa succede adesso",
+     "p": [
+      "La prossima riunione della Fed è in programma martedì 8 e mercoledì 9 dicembre. In quella riunione la Fed deciderà se alzare il tasso e di quanto."
+     ]
+    },
+    {
+     "h": "Perché interessa anche l'Europa",
+     "p": [
+      "Le decisioni della Fed muovono il dollaro e i mercati di tutto il mondo, Borsa di Milano compresa. Quando i tassi americani salgono, il denaro in dollari rende di più e gli investitori spostano i loro soldi di conseguenza."
+     ]
+    }
+   ],
+   "perche": "I tassi della Fed non decidono quelli europei, che dipendono dalla Bce. Però influenzano il cambio tra euro e dollaro e l'andamento delle Borse, quindi anche fondi e risparmi investiti all'estero. La data da segnare è mercoledì 9 dicembre.",
+   "fonti": [
+    {
+     "nome": "Federal Reserve",
+     "titolo": "Verbali della riunione del 27 e 28 ottobre 2026",
+     "url": "https://www.federalreserve.gov/monetarypolicy/fomcminutes20261028.htm"
+    },
+    {
+     "nome": "Federal Reserve",
+     "titolo": "Calendario delle riunioni",
+     "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Verbali Fed: quasi tutti prevedono altri rialzi",
+     "url": "https://www.teleborsa.it/News/2026/11/18/verbali-fed-quasi-tutti-i-funzionari-prevedono-ulteriori-rialzi-dei-tassi-213.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Nella Fed quasi tutti favorevoli a un rialzo dei tassi",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/18/quasi-tutti-allinterno-della-fed-favorevoli-a-un-rialzo-dei-tassi_345a5e9c-7b93-45f3-b946-62f6982e4ff7.html"
+    },
+    {
+     "nome": "AP (Yahoo Finance)",
+     "titolo": "I verbali della Fed e il rialzo atteso a dicembre",
+     "url": "https://finance.yahoo.com/economy/policy/articles/fed-minutes-higher-interest-rates-190932735.html"
+    }
+   ],
+   "data": "2026-11-20"
+  },
+  {
+   "id": "2026-11-20-borsa",
+   "cat": "Borsa",
+   "nastro": "Milano chiude a −0,46%",
+   "titolo": "Piazza Affari chiude in calo e scende sotto quota 50.000",
+   "evid": "sotto quota 50.000",
+   "sommario": "Giovedì 19 novembre la Borsa di Milano ha perso lo 0,46%, dopo una partenza in rialzo. Le altre Borse europee sono andate peggio.",
+   "numero": "−0,46%",
+   "nota": "Francoforte −1%",
+   "didascalia": "La chiusura della Borsa di Milano, indice FTSE MIB, giovedì 19 novembre",
+   "breve": [
+    "L'indice FTSE MIB chiude a 49.941 punti, in calo dello 0,46%.",
+    "In mattinata era in rialzo, poi nel pomeriggio ha girato in negativo con il resto d'Europa.",
+    "Bene Saipem dopo i conti, giù Nexi e Tim."
+   ],
+   "corpo": [
+    {
+     "h": "Com'è andata",
+     "p": [
+      "Il FTSE MIB è l'**indice** che riassume l'andamento delle società più grandi quotate a Milano. Giovedì 19 novembre ha chiuso a 49.941 punti, lo 0,46% in meno del giorno prima. È tornato così sotto la soglia dei 50.000 punti.",
+      "La giornata era cominciata bene: in mattinata l'indice era in rialzo. Nel pomeriggio le Borse europee hanno cambiato direzione e non hanno più recuperato."
+     ]
+    },
+    {
+     "h": "Le altre Borse",
+     "p": [
+      "Tra le grandi Borse europee Milano ha perso meno di molte altre. Francoforte e Madrid hanno chiuso intorno a −1%, Londra a −0,9% e Parigi a −0,8%."
+     ]
+    },
+    {
+     "h": "Chi è salito e chi è sceso",
+     "p": [
+      "In testa Saipem, società che costruisce impianti per l'energia, salita di circa il 4,7% dopo aver presentato i conti dei primi nove mesi dell'anno. Bene anche STMicroelectronics, che fa chip, con circa +1,6%.",
+      "In coda Nexi, che gestisce pagamenti elettronici, con un calo di oltre il 3%, e Tim, in calo di circa il 2,2%."
+     ]
+    },
+    {
+     "h": "Un giorno solo dice poco",
+     "p": [
+      "Un indice sale e scende ogni giorno, spesso per notizie che arrivano da lontano. Una soglia come i 50.000 punti fa notizia perché è un numero tondo, ma in sé non cambia nulla. Per capire come va un investimento in **azioni** conta l'andamento di anni, non di ore."
+     ]
+    }
+   ],
+   "perche": "Se hai un fondo o un **ETF** che investe in azioni italiane, giovedì 19 novembre il suo valore è sceso un po'. Giornate come questa mostrano quanto i prezzi possano cambiare direzione nel giro di poche ore.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Borsa: Milano chiude in calo, FTSE MIB a 49.941 punti",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/19/borsa-milano-chiude-in-calo-ftse-mib-046_9dd87279-2c83-4520-a71c-69981c9ec9c5.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Milano debole con l'Europa, scivola Nexi, bene Saipem",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/19/borsa-milano-debole-con-leuropa-e-wall-street-scivola-nexi_3f20cc70-ffa0-4754-a8a5-32664c5fe530.html"
+    },
+    {
+     "nome": "MF Milano Finanza",
+     "titolo": "Il commento di chiusura della Borsa",
+     "url": "https://www.milanofinanza.it/news/borsa-commento-di-chiusura-202611191828017222"
+    },
+    {
+     "nome": "MF Milano Finanza",
+     "titolo": "La giornata delle Borse in diretta, 19 novembre",
+     "url": "https://www.milanofinanza.it/news/borse-oggi-diretta-19-novembre-2026-chiusura-apertura-europee-borsa-milano-ftse-mib-piazza-affari-202611190745318831"
+    },
+    {
+     "nome": "QuiFinanza",
+     "titolo": "La Borsa del 19 novembre, l'apertura in rialzo",
+     "url": "https://quifinanza.it/dirette/borsa-ultime-notizie-19-novembre-2026/1024946/"
+    }
+   ],
+   "data": "2026-11-20"
+  },
+  {
    "id": "2026-11-16-manovra",
    "cat": "Manovra",
    "nastro": "Manovra, modifiche entro martedì 17",

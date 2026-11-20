@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-16",
+ "aggiornato": "2026-11-20",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-20-carburanti",
+   "data": "2026-11-20",
+   "cat": "Prezzi",
+   "titolo": "Benzina e gasolio ancora in calo: la verde a 1,948 € al litro",
+   "nastro": "Benzina self a 1,948 € al litro",
+   "numero": "1,948 €",
+   "min": 2
+  },
+  {
+   "id": "2026-11-20-fed",
+   "data": "2026-11-20",
+   "cat": "Stati Uniti",
+   "titolo": "Fed, i verbali: quasi tutti pronti ad alzare ancora i tassi",
+   "nastro": "Fed: quasi tutti per nuovi rialzi dei tassi",
+   "numero": "3,75-4%",
+   "min": 2
+  },
+  {
+   "id": "2026-11-20-borsa",
+   "data": "2026-11-20",
+   "cat": "Borsa",
+   "titolo": "Piazza Affari chiude in calo e scende sotto quota 50.000",
+   "nastro": "Milano chiude a −0,46%",
+   "numero": "−0,46%",
+   "min": 2
+  },
   {
    "id": "2026-11-16-manovra",
    "data": "2026-11-16",
