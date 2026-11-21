@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-20",
+ "aggiornato": "2026-11-21",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-21-carburanti",
+   "data": "2026-11-21",
+   "cat": "Prezzi",
+   "titolo": "Carburanti, prosegue il calo: la benzina self a 1,945 € al litro",
+   "nastro": "Benzina self a 1,945 €, gasolio a 2,199 €",
+   "numero": "1,945 €",
+   "min": 3
+  },
+  {
+   "id": "2026-11-21-costruzioni",
+   "data": "2026-11-21",
+   "cat": "Costruzioni",
+   "titolo": "Costruzioni, a settembre la produzione risale del 3,9% su agosto",
+   "nastro": "Costruzioni, a settembre +3,9% su agosto",
+   "numero": "+3,9%",
+   "min": 2
+  },
+  {
+   "id": "2026-11-21-borsa",
+   "data": "2026-11-21",
+   "cat": "Borsa",
+   "titolo": "Borse giù per i timori sull'intelligenza artificiale: Milano −2,48%",
+   "nastro": "Piazza Affari −2,48%, sotto quota 49.000",
+   "numero": "−2,48%",
+   "min": 2
+  },
   {
    "id": "2026-11-20-carburanti",
    "data": "2026-11-20",
