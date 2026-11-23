@@ -21,7 +21,8 @@ const SCREENS = {
   pro: p => html`<${ProScreen} ...${p}/>`,
   catalogo: p => html`<${CatalogScreen} ...${p}/>`,
   livello: p => html`<${LevelScreen} ...${p}/>`,
-  scheda: p => html`<${CourseSheetScreen} ...${p}/>`
+  scheda: p => html`<${CourseSheetScreen} ...${p}/>`,
+  schedaMateria: p => html`<${MateriaScreen} ...${p}/>`
 };
 // ---- trasloco ----
 // L'app è nata su GitHub (…github.io/app) e adesso esce da Cloudflare, dallo stesso indirizzo dell'arbitro. I progressi stanno nel telefono, legati all'indirizzo:

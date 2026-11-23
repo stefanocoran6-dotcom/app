@@ -333,10 +333,34 @@ const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
 
 // Percorsi non ancora pronti: compaiono nel catalogo come "in arrivo".
-const COMING = [
-  { id: 'risparmio', name: 'Savings and budgeting', group: 'basi', color: MENTA, icon: 'wallet' },
-  { id: 'azob', name: 'Stocks and bonds', group: 'invest', color: PESCA, icon: 'trend' },
-  { id: 'fondi', name: 'Funds and ETFs', group: 'invest', color: LILLA, icon: 'pie' }
+// ---- Scopri: le materie divise in cinque categorie ----
+// Una voce è un corso che c'è già ({ course }), una materia in arrivo ({ name, sub }) oppure una materia in arrivo con la sua scheda ({ id, levels }).
+// La scheda mostra i livelli e i capitoli (ogni capitolo è una domanda); le lezioni entrano un capitolo alla volta, come corsi veri.
+const AZIONI_L = [
+  { tab: 'How it works', name: 'From idea to purchase', learn: ['Understand what a company does, how it makes money and which industry it plays in', 'Read the price, the P/E and the other multiples', 'Buying and selling: orders, costs, dividends, leverage'],
+    parts: [['Get to know it', ['What is a piece of a company?', 'What does it do and how does it make money?', 'What field does it play in?', 'Is it stronger than the others?']], ['Decide and buy', ['Is it expensive or cheap?', 'How do I buy it?']], ['Own it', ['What am I entitled to as a shareholder?', 'How do I measure how it went?', 'Leverage and short selling: why it hurts', 'Can I beat the market?']]] },
+  { tab: 'How to value it', name: 'What it\'s really worth', learn: ['Discount dividends and cash flows', 'Find the right rate: CAPM, beta, WACC', 'Compare using multiples and residual income'],
+    parts: [['', ['What value am I looking for?', 'What is something that pays forever worth?', 'Where does the rate come from?', 'How do I forecast the numbers?', 'Dividends that grow in stages', 'The cash the company generates', 'Terminal value, and how much a mistake costs', 'Comparing it with the others', 'Does it create value or destroy it?', 'What if I only look at what it owns?', 'What if it isn\'t publicly traded?', 'The final case']]] }
+];
+const MATERIE = [
+  { id: 'basi', name: 'Basics', sub: 'Where you start', color: AZ, ico: Sprout, items: [
+    { course: 'basi' },
+    { name: 'Numbers and statistics', sub: 'Time value of money, probability, data' } ] },
+  { id: 'mercati', name: 'Markets', sub: 'What you buy', color: PESCA, ico: TrendingUp, items: [
+    { id: 'azioni', name: 'Stocks', sub: 'Two levels: how they work, what they\'re worth', color: PESCA, levels: AZIONI_L },
+    { name: 'Bonds', sub: 'Price, yield, interest rates, credit' },
+    { name: 'Derivatives', sub: 'Options, futures, forwards, swaps' },
+    { name: 'Alternative investments', sub: 'Real estate, private equity, hedge funds, commodities' } ] },
+  { id: 'aziende', name: 'Companies', sub: 'What\'s behind a security', color: MENTA, ico: Briefcase, items: [
+    { name: 'Financial statements', sub: 'Read the three statements, see if the numbers hold up' },
+    { name: 'Corporate finance', sub: 'Investments, debt or equity, dividends, mergers' } ] },
+  { id: 'portafoglio', name: 'Portfolio', sub: 'How you put the pieces together', color: LILLA, ico: PieChart, items: [
+    { name: 'Building a portfolio', sub: 'Diversification, risk and return, ETFs' },
+    { name: 'Measuring risk and results', sub: 'Sharpe, alpha, VaR, factors' } ] },
+  { id: 'economia', name: 'Economy and rules', sub: 'The world around you', color: GIALLO, ico: Scale, items: [
+    { name: 'Economics for investors', sub: 'Business cycle, inflation, government, trade' },
+    { name: 'Currencies and central banks', sub: 'Interest rates, money, currencies' },
+    { name: 'Ethics and rules', sub: 'The duties of those who manage other people\'s money' } ] }
 ];
 
 let COURSES_MEMO = null;
@@ -2910,31 +2934,60 @@ function ProScreen({ nav }) {
     </div></div></div></div>`;
 }
 
-// ---- Scopri: i percorsi della propria app, quelli che si possono aggiungere, quelli in arrivo ----
-const CAT_ADD = { basi: 'These are the basics: interest, budget, debt, instruments, financial statements. Also useful as a refresher from scratch.' };
+// ---- Scopri: i percorsi della propria app e tutte le materie, divise in categorie che si aprono (MATERIE) ----
 function CatalogScreen({ nav }) {
   useS2();
-  const [f, setF] = useState('all');
-  const chips = [['all', 'All'], ['basi', 'Basics'], ['invest', 'Investing']];
-  const show = c => f === 'all' || c.group === f;
-  const mine = misCourses().filter(show), can = courses().filter(c => !inMyApp(c.id)).filter(show), soon = COMING.filter(show);
-  const H = t => html`<h2 class="o-h2" style="font-size:18px;margin:22px 0 10px">${t}</h2>`;
-  const tile = (c, own) => html`<span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, fontSize: c.group === 'cert' ? 18 : 22, background: own ? (c.id === misP().course ? misP().color : c.color || AZ) : '#fff' }}>${own ? misIcon(c, 24) : c.badge}</span>`;
+  const [open, setOpen] = useState(null);
+  const mine = misCourses();
+  const H = (t, s) => html`<h2 class="o-h2" style="font-size:18px;margin:24px 0 ${s ? 2 : 10}px">${t}</h2>${s && html`<p class="o-s" style="margin-bottom:10px">${s}</p>`}`;
+  const tile = c => html`<span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, fontSize: 22, background: c.id === misP().course ? misP().color : c.color || AZ }}>${misIcon(c, 24)}</span>`;
+  const two = (t, s, mut) => html`<span class="o-grow o-col" style="gap:1px"><span style="font-size:16px;line-height:21px;font-weight:800;color:${mut ? MUT : INK}">${t}</span><span class="o-s">${s}</span></span>`;
+  const box = 'gap:10px;width:100%;min-height:60px;padding:8px 12px 8px 14px;border-radius:16px;text-align:left;';
+  const item = (x, k) => { const c = x.course && courseById(x.course);
+    if (c) return html`<button key=${k} type="button" class="o-rowf" onClick=${() => nav.go(inMyApp(c.id) ? 'percorso' : 'scheda', { course: c.id })} style="${box}border:2px solid ${INK};background:#fff">${two(c.name, plural(c.lessons.length, 'short lesson', 'short lessons'))}${inMyApp(c.id) && html`<span class="o-tag" style="background:${MENTA}">In your app</span>`}${PathIco(D_NEXT, 20, 2.6)}</button>`;
+    if (x.levels) return html`<button key=${k} type="button" class="o-rowf" onClick=${() => nav.go('schedaMateria', { id: x.id })} style="${box}border:2px solid ${INK};background:#fff"><span class="o-grow o-col" style="gap:2px"><span class="o-rowf" style="gap:8px"><span style="font-size:16px;line-height:21px;font-weight:800">${x.name}</span><span class="o-tag">Up next</span></span><span class="o-s">${x.sub}</span></span>${PathIco(D_NEXT, 20, 2.6)}</button>`;
+    return html`<div key=${k} class="o-rowf" style="${box}border:2px dashed ${INK};background:${T_BG}">${two(x.name, x.sub, true)}<span style="flex:none;font-size:12px;line-height:16px;font-weight:800;color:${MUT}">Coming soon</span></div>`; };
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Paths</h1>`}/>`}>
-    <div class="o-pad" style="padding-top:14px;padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
-      <div class="o-rowf" style="gap:8px;flex-wrap:wrap">${chips.map(([id, t]) => html`<button key=${id} type="button" class=${'o-chip' + (f === id ? ' on' : '')} aria-pressed=${f === id ? 'true' : 'false'} onClick=${() => setF(id)}>${t}</button>`)}</div>
+    <div class="o-pad" style="padding-top:2px;padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
       ${mine.length > 0 && html`${H('In your app')}<div class="o-col" style="gap:12px">${mine.map(c => { const ls = misLessons(c), d = hadCount(ls), pct = coursePct(c);
         return html`<button key=${c.id} type="button" class="o-col" onClick=${() => { s2set({ cur: c.id }); nav.go('percorso', { course: c.id }); }} style="gap:10px;width:100%;padding:14px 16px;border:2.5px solid ${INK};border-radius:22px;box-shadow:4px 4px 0 ${INK};text-align:left">
-          <span class="o-rowf" style="gap:12px;width:100%">${tile(c, true)}<span class="o-grow o-col" style="gap:1px"><span style="font-size:17px;line-height:22px;font-weight:800">${misName(c)}</span><span class="o-s">${d} of ${ls.length} lessons done</span></span><span style="font-size:15px;font-weight:800">${pct}%</span></span>
+          <span class="o-rowf" style="gap:12px;width:100%">${tile(c)}<span class="o-grow o-col" style="gap:1px"><span style="font-size:17px;line-height:22px;font-weight:800">${misName(c)}</span><span class="o-s">${d} of ${ls.length} lessons done</span></span><span style="font-size:15px;font-weight:800">${pct}%</span></span>
           <span style="display:block;width:100%"><${Bar} pct=${pct} label=${`${pct} percent of the path`}/></span></button>`; })}</div>`}
-      ${can.length > 0 && html`${H('You can add')}<div class="o-col" style="gap:12px">${can.map(c => html`<div key=${c.id} class="o-col" style="gap:10px;padding:14px 16px 16px;border:2.5px solid ${INK};border-radius:22px">
-        <button type="button" class="o-rowf" onClick=${() => nav.go('scheda', { course: c.id })} style="gap:12px;width:100%;text-align:left" aria-label=${`Open the details of ${c.name}`}>${tile(c, false)}
-          <span class="o-grow o-col" style="gap:1px"><span style="font-size:17px;line-height:22px;font-weight:800">${c.name}</span><span class="o-s">${c.group === 'cert' ? `${plural(c.lessons.length, 'lezione', 'lezioni')}, domande in inglese` : plural(c.lessons.length, 'short lesson', 'short lessons')}</span></span>${PathIco(D_NEXT, 20, 2.6)}</button>
-        <p class="o-s" style="line-height:19px">${CAT_ADD[c.id] || c.tagline}</p>
-        <${Btn} cls="flat" bg="#fff" onClick=${() => { misAddCourse(c.id); nav.toast(`${c.name} is now in your app.`); }}>${PathIco(D_PLUS, 18, 2.8)} Add to my app<//></div>`)}</div>`}
-      ${soon.length > 0 && html`${H('Coming soon')}<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">${soon.map(c => html`<span key=${c.id} class="o-rowf" style="min-height:50px;padding:6px 14px;border:2px dashed ${INK};border-radius:16px;background:${T_BG};font-size:14px;line-height:18px;font-weight:700;color:${MUT}">${c.name}</span>`)}</div>`}
-      <button type="button" class="o-rowf" onClick=${() => nav.tab('coach')} style="gap:12px;width:100%;padding:14px 16px;margin-top:26px;background:${T_GR};border-radius:16px;text-align:left"><span class="o-grow o-t">Can't find a topic? Ask Rally.</span>${PathIco(D_NEXT, 22, 2.6)}</button>
+      ${H('All subjects', 'Tap a category to see what\'s inside.')}
+      <div class="o-col" style="gap:10px">${MATERIE.map(g => { const on = open === g.id;
+        return html`<div key=${g.id} style="border:2.5px solid ${INK};border-radius:22px;background:#fff;box-shadow:${on ? '4px 4px 0 ' + INK : 'none'}">
+          <button type="button" class="o-rowf" aria-expanded=${on ? 'true' : 'false'} onClick=${() => setOpen(on ? null : g.id)} style="gap:12px;width:100%;padding:12px 12px 12px 14px;text-align:left">
+            <span class="o-ibox" style=${{ width: 48, height: 48, borderWidth: 2.5, borderRadius: 15, background: g.color }}>${Ico(g.ico, 24)}</span>
+            <span class="o-grow o-col" style="gap:1px"><span style="font-size:17px;line-height:22px;font-weight:800">${g.name}</span><span class="o-s">${g.sub}</span></span>
+            <span aria-label=${plural(g.items.length, 'subject', 'subjects')} style="flex:none;min-width:26px;height:26px;padding:0 7px;display:flex;align-items:center;justify-content:center;border:2px solid ${INK};border-radius:999px;font-size:13px;font-weight:800">${g.items.length}</span>
+            <span style=${{ flex: 'none', display: 'flex', transform: on ? 'rotate(90deg)' : 'none' }}>${PathIco(D_NEXT, 22, 2.6)}</span></button>
+          ${on && html`<div class="o-col" style="gap:8px;padding:0 12px 14px">${g.items.map(item)}</div>`}</div>`; })}</div>
+      <button type="button" class="o-rowf" onClick=${() => nav.tab('coach')} style="gap:12px;width:100%;padding:14px 16px;margin-top:22px;background:${T_GR};border-radius:16px;text-align:left"><span class="o-grow o-t">Can't find a topic? Ask Rally.</span>${PathIco(D_NEXT, 22, 2.6)}</button>
     </div>
+  <//>`;
+}
+// scheda di una materia in arrivo: i livelli (uno per volta) e i capitoli, che sono domande
+function MateriaScreen({ nav, id }) {
+  const M = MATERIE.flatMap(g => g.items).find(x => x.levels && x.id === id) || MATERIE.flatMap(g => g.items).find(x => x.levels);
+  const [lv, setLv] = useState(0); const L = M.levels[lv], tot = L.parts.reduce((s, p) => s + p[1].length, 0); let n = 0;
+  return html`<${Room} color=${M.color || AZ} tabs=${false} headH=${176}
+    rally=${html`<${Rally} pose="insegna" alt="" style="position:absolute;right:-14px;top:calc(var(--otop) + 27px)"/>`}
+    head=${html`<div class="o-rowf" style="height:44px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Back"/></div>
+      <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:22px;max-width:190px"><h1 class="o-h1m">${M.name}</h1><${Pill}>${M.levels.length === 2 ? 'Two levels' : 'Coming soon'}<//></div>`}>
+    <${Sheet} pad=${false} style=${{ paddingTop: 22 }}>
+      <div class="o-rowf" style="gap:8px;flex-wrap:wrap">${M.levels.map((x, k) => html`<button key=${k} type="button" class=${'o-chip' + (lv === k ? ' on' : '')} aria-pressed=${lv === k ? 'true' : 'false'} onClick=${() => setLv(k)}>${k + 1} · ${x.tab}</button>`)}</div>
+      <h2 class="o-h2" style="font-size:22px;line-height:26px;margin:18px 0 14px">${L.name}</h2>
+      <${Stats3} items=${[[tot, 'chapters'], ['5-8', 'minutes per lesson'], [tot, 'labs']]}/>
+      <div style="height:2px;background:${SEP};margin:18px 0"></div>
+      <h2 class="o-h2" style="font-size:18px;margin-bottom:10px">What you'll learn</h2>
+      <ul class="o-col" style="gap:8px;list-style:none">${L.learn.map(t => html`<li key=${t} class="o-rowf" style="gap:12px;align-items:flex-start">${PathIco(D_CHECK, 20, 3)}<span class="o-t" style="font-size:15px;font-weight:600">${t}</span></li>`)}</ul>
+      <h2 class="o-h2" style="font-size:18px;margin:22px 0 4px">Chapters</h2>
+      <p class="o-s" style="margin-bottom:4px">Each chapter answers one question.</p>
+      ${L.parts.map(([t, qs]) => html`<div key=${t}>${t && html`<p class="o-lab" style="margin:12px 0 6px">${t}</p>`}<ol class="o-col" style="gap:8px;list-style:none;padding:0;margin-top:${t ? 0 : 10}px">${qs.map(q => { n++;
+        return html`<li key=${q} class="o-rowf" style="gap:12px;min-height:48px;padding:6px 14px 6px 10px;border:2px dashed ${INK};border-radius:14px;background:${T_BG}"><span style="width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;border:2px solid ${INK};border-radius:999px;background:#fff;font-size:13px;font-weight:800">${n}</span><span style="font-size:15px;line-height:20px;font-weight:700">${q}</span></li>`; })}</ol></div>`)}
+      <p class="o-s" style="text-align:center;font-size:14px;font-weight:700;color:${INK};margin-top:22px">Chapters arrive one at a time.</p>
+      <div style="padding:12px 0 max(30px,calc(env(safe-area-inset-bottom) + 12px))"><${Btn} cls="lg" disabled=${true}>Coming soon<//></div>
+    <//>
   <//>`;
 }
 // Le 5 domande rifatte dalle Impostazioni: stessa regola della registrazione
@@ -3545,7 +3598,8 @@ const SCREENS = {
   pro: p => html`<${ProScreen} ...${p}/>`,
   catalogo: p => html`<${CatalogScreen} ...${p}/>`,
   livello: p => html`<${LevelScreen} ...${p}/>`,
-  scheda: p => html`<${CourseSheetScreen} ...${p}/>`
+  scheda: p => html`<${CourseSheetScreen} ...${p}/>`,
+  schedaMateria: p => html`<${MateriaScreen} ...${p}/>`
 };
 // ---- trasloco ----
 // L'app è nata su GitHub (…github.io/app) e adesso esce da Cloudflare, dallo stesso indirizzo dell'arbitro. I progressi stanno nel telefono, legati all'indirizzo:

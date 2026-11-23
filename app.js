@@ -24,7 +24,7 @@ const CFA_CURRICULUM = {};   // il percorso d'esame non c'è più: resta vuoto f
 
 
 
-const FL_VERSION = '18.3 · 57';
+const FL_VERSION = '18.3 · 58';
 const TOTAL_CFA_LOS = Object.values(CFA_CURRICULUM).reduce((n, t) => n + t.modules.reduce((k, m) => k + m.los.length, 0), 0);
 
 // ========== THEME SYSTEM ==========
@@ -5120,14 +5120,12 @@ const flOR = {
       .sort((a, b) => a.name.localeCompare(b.name));
     return flOR._models;
   },
-  // modelli di riserva per i modelli gratis: se il primo è occupato (429) o non risponde, OpenRouter passa da solo al successivo.
-  // Solo modelli gratis, così una riserva non costa mai niente. Con la foto, i modelli gratis che leggono le immagini.
+  // Chi sceglie un modello riceve la risposta da quello, sempre: niente modelli di riserva, nemmeno se è gratis ed è occupato (si vede l'errore e si riprova).
+  // Solo con "Automatico" e una foto si dà a OpenRouter un elenco: i modelli gratis che leggono le immagini.
   chain(id, photo) {
-    if (!(id === FL_OR_FREE || /:free$/.test(id))) return [id];
+    if (id !== FL_OR_FREE || !photo) return [id];
     const img = (flOR._models || []).filter(m => m.free && m.img === true).sort((a, b) => (b.ctx || 0) - (a.ctx || 0)).map(m => m.id);
-    const out = photo ? (id === FL_OR_FREE ? img.slice(0, 4).concat(FL_OR_FREE) : [id].concat(img.filter(x => x !== id).slice(0, 3), FL_OR_FREE))
-      : (id === FL_OR_FREE ? [FL_OR_FREE] : [id, FL_OR_FREE]);
-    return out.filter((x, i, a) => x && a.indexOf(x) === i);
+    return img.slice(0, 4).concat(FL_OR_FREE).filter((x, i, a) => x && a.indexOf(x) === i);
   },
   // domande gratis rimaste oggi (OpenRouter: 50 al giorno, 1000 per chi ha comprato almeno 10 $ di crediti); null se non si sa
   async freeLeft() {
@@ -5236,8 +5234,10 @@ function flOr429(e, fl) {
   const d = e && e.detail ? String(e.detail) : '';
   if ((fl && fl.left === 0) || /per[- ]day/i.test(d)) return L(`Hai usato tutte le domande gratis di oggi su OpenRouter${fl ? ` (${fl.limit})` : ''}. Tornano a mezzanotte UTC, in Italia all'1 di notte (alle 2 con l'ora legale). Chi ha comprato almeno 10 $ di crediti su OpenRouter ne ha 1.000 al giorno; oppure scegli un modello a pagamento: la lista mostra quanto costa una domanda.`,
     `You've used all of today's free questions on OpenRouter${fl ? ` (${fl.limit})` : ''}. They come back at midnight UTC. Accounts that have bought at least $10 of credits on OpenRouter get 1,000 a day; or choose a paid model: the list shows what a question costs.`);
-  return L(`I modelli gratis adesso sono occupati: arrivano troppe richieste da tutto il mondo. Ho già riprovato e ho provato anche quelli di riserva. Riprova tra qualche minuto, oppure scegli un modello a pagamento: la lista mostra quanto costa una domanda.${fl ? ` Ti restano ${fl.left} domande gratis oggi.` : ''}`,
-    `The free models are busy right now: too many requests are coming in from around the world. I already retried and tried the backup ones too. Try again in a few minutes, or choose a paid model: the list shows what a question costs.${fl ? ` You have ${fl.left} free questions left today.` : ''}`);
+  const mine = flOR.model() !== FL_OR_FREE, left = fl ? L(` Ti restano ${fl.left} domande gratis oggi.`, ` You have ${fl.left} free questions left today.`) : '';
+  if (mine) return L(`Il modello che hai scelto adesso è occupato: ho già riprovato una volta. Non sono passato a un altro modello, perché hai scelto questo. Riprova tra poco, oppure scegline un altro dal tasto «Modello».`, `The model you chose is busy right now: I already retried once. I didn't switch to another model, because you chose this one. Try again shortly, or pick another one from the ‘Model’ button.`) + left;
+  return L(`I modelli gratis adesso sono occupati: arrivano troppe richieste da tutto il mondo. Ho già riprovato. Riprova tra qualche minuto, oppure scegli un modello a pagamento: la lista mostra quanto costa una domanda.`,
+    `The free models are busy right now: too many requests are coming in from around the world. I already retried. Try again in a few minutes, or choose a paid model: the list shows what a question costs.`) + left;
 }
 // nome breve del modello che ha risposto (sotto la risposta): "llama-3.3-70b-instruct · gratis"
 const flOrModelName = id => { const s = String(id || ''); return s ? s.split('/').pop().replace(/:free$/, '') + (/:free$/.test(s) || s === FL_OR_FREE ? L(' · gratis', " · free") : '') : ''; };

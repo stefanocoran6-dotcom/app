@@ -1,4 +1,4 @@
-const CACHE = 'finlearn-v57';
+const CACHE = 'finlearn-v58';
 // La pagina si salva come './' e non come './index.html': su Cloudflare /index.html rimanda a /, e una risposta arrivata da un rimando non può aprire una pagina.
 const SHELL = ['./', './app.js', './ordine.js', './ordine_en.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-512-maskable.png', './favicon.svg', './notizie.json', './notizie/indice.json'];
 

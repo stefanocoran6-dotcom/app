@@ -1136,3 +1136,91 @@ Ho già un salvataggio ⇒ I have a backup
 null ⇒ =
 array ⇒ =
 bad ⇒ =
+
+# Scopri: le materie per categoria e la scheda di Azioni (v58)
+La prossima ⇒ Up next
+I capitoli ⇒ Chapters
+Ogni capitolo risponde a una domanda. ⇒ Each chapter answers one question.
+I capitoli arrivano uno alla volta. ⇒ Chapters arrive one at a time.
+Come funziona ⇒ How it works
+Dall'idea all'acquisto ⇒ From idea to purchase
+Capire cosa fa un'azienda, come guadagna e in che settore gioca ⇒ Understand what a company does, how it makes money and which industry it plays in
+Leggere prezzo, P/E e gli altri multipli ⇒ Read the price, the P/E and the other multiples
+Comprare e vendere: ordini, costi, dividendi, leva ⇒ Buying and selling: orders, costs, dividends, leverage
+Conoscere ⇒ Get to know it
+Cos'è un pezzo di azienda? ⇒ What is a piece of a company?
+Cosa fa e come guadagna? ⇒ What does it do and how does it make money?
+In che campo gioca? ⇒ What field does it play in?
+È più forte delle altre? ⇒ Is it stronger than the others?
+Decidere e comprare ⇒ Decide and buy
+Costa tanto o poco? ⇒ Is it expensive or cheap?
+Come la compro? ⇒ How do I buy it?
+Possedere ⇒ Own it
+Cosa mi spetta da socio? ⇒ What am I entitled to as a shareholder?
+Come misuro com'è andata? ⇒ How do I measure how it went?
+A leva e al ribasso: perché fa male ⇒ Leverage and short selling: why it hurts
+Posso battere il mercato? ⇒ Can I beat the market?
+Come si valuta ⇒ How to value it
+Quanto vale davvero ⇒ What it's really worth
+Scontare dividendi e flussi di cassa ⇒ Discount dividends and cash flows
+Trovare il tasso giusto: CAPM, beta, WACC ⇒ Find the right rate: CAPM, beta, WACC
+Confrontare con i multipli e con l'utile residuo ⇒ Compare using multiples and residual income
+Che valore sto cercando? ⇒ What value am I looking for?
+Quanto vale una cosa che paga per sempre? ⇒ What is something that pays forever worth?
+Da dove viene il tasso? ⇒ Where does the rate come from?
+Come prevedo i numeri? ⇒ How do I forecast the numbers?
+Dividendi che crescono a fasi ⇒ Dividends that grow in stages
+La cassa che l'azienda produce ⇒ The cash the company generates
+Il valore finale, e quanto pesa un errore ⇒ Terminal value, and how much a mistake costs
+Il confronto con le altre ⇒ Comparing it with the others
+Crea valore o lo distrugge? ⇒ Does it create value or destroy it?
+E se guardo solo quello che possiede? ⇒ What if I only look at what it owns?
+E se non è quotata? ⇒ What if it isn't publicly traded?
+Il caso finale ⇒ The final case
+Da dove si parte ⇒ Where you start
+Numeri e statistica ⇒ Numbers and statistics
+Valore del denaro nel tempo, probabilità, dati ⇒ Time value of money, probability, data
+mercati ⇒ =
+Mercati ⇒ Markets
+Cosa compri ⇒ What you buy
+azioni ⇒ =
+Azioni ⇒ Stocks
+Due livelli: come funzionano, quanto valgono ⇒ Two levels: how they work, what they're worth
+Obbligazioni ⇒ Bonds
+Prezzo, rendimento, tassi, credito ⇒ Price, yield, interest rates, credit
+Derivati ⇒ Derivatives
+Opzioni, future, forward, swap ⇒ Options, futures, forwards, swaps
+Altri investimenti ⇒ Alternative investments
+Immobili, private equity, hedge fund, materie prime ⇒ Real estate, private equity, hedge funds, commodities
+aziende ⇒ =
+Aziende ⇒ Companies
+Cosa c'è dietro a un titolo ⇒ What's behind a security
+Bilancio ⇒ Financial statements
+Leggere i tre prospetti, capire se i numeri reggono ⇒ Read the three statements, see if the numbers hold up
+Finanza d'impresa ⇒ Corporate finance
+Investimenti, debito o capitale, dividendi, fusioni ⇒ Investments, debt or equity, dividends, mergers
+portafoglio ⇒ =
+Portafoglio ⇒ Portfolio
+Come metti insieme i pezzi ⇒ How you put the pieces together
+Costruire un portafoglio ⇒ Building a portfolio
+Diversificare, rischio e rendimento, ETF ⇒ Diversification, risk and return, ETFs
+Misurare rischio e risultati ⇒ Measuring risk and results
+Sharpe, alfa, VaR, fattori ⇒ Sharpe, alpha, VaR, factors
+economia ⇒ =
+Economia e regole ⇒ Economy and rules
+Il mondo intorno ⇒ The world around you
+Economia per investire ⇒ Economics for investors
+Ciclo, inflazione, Stato, commercio ⇒ Business cycle, inflation, government, trade
+Cambi e banche centrali ⇒ Currencies and central banks
+Tassi, moneta, valute ⇒ Interest rates, money, currencies
+Etica e regole ⇒ Ethics and rules
+I doveri di chi gestisce soldi altrui ⇒ The duties of those who manage other people's money
+materia ⇒ subject
+Tutte le materie ⇒ All subjects
+Tocca una categoria per vedere cosa c'è dentro. ⇒ Tap a category to see what's inside.
+materie ⇒ subjects
+Due livelli ⇒ Two levels
+capitoli ⇒ chapters
+5-8 ⇒ =
+minuti a lezione ⇒ minutes per lesson
+laboratori ⇒ labs

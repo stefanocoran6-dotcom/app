@@ -259,10 +259,34 @@ const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
 
 // Percorsi non ancora pronti: compaiono nel catalogo come "in arrivo".
-const COMING = [
-  { id: 'risparmio', name: 'Risparmio e budget', group: 'basi', color: MENTA, icon: 'wallet' },
-  { id: 'azob', name: 'Azioni e obbligazioni', group: 'invest', color: PESCA, icon: 'trend' },
-  { id: 'fondi', name: 'Fondi ed ETF', group: 'invest', color: LILLA, icon: 'pie' }
+// ---- Scopri: le materie divise in cinque categorie ----
+// Una voce è un corso che c'è già ({ course }), una materia in arrivo ({ name, sub }) oppure una materia in arrivo con la sua scheda ({ id, levels }).
+// La scheda mostra i livelli e i capitoli (ogni capitolo è una domanda); le lezioni entrano un capitolo alla volta, come corsi veri.
+const AZIONI_L = [
+  { tab: 'Come funziona', name: 'Dall\'idea all\'acquisto', learn: ['Capire cosa fa un\'azienda, come guadagna e in che settore gioca', 'Leggere prezzo, P/E e gli altri multipli', 'Comprare e vendere: ordini, costi, dividendi, leva'],
+    parts: [['Conoscere', ['Cos\'è un pezzo di azienda?', 'Cosa fa e come guadagna?', 'In che campo gioca?', 'È più forte delle altre?']], ['Decidere e comprare', ['Costa tanto o poco?', 'Come la compro?']], ['Possedere', ['Cosa mi spetta da socio?', 'Come misuro com\'è andata?', 'A leva e al ribasso: perché fa male', 'Posso battere il mercato?']]] },
+  { tab: 'Come si valuta', name: 'Quanto vale davvero', learn: ['Scontare dividendi e flussi di cassa', 'Trovare il tasso giusto: CAPM, beta, WACC', 'Confrontare con i multipli e con l\'utile residuo'],
+    parts: [['', ['Che valore sto cercando?', 'Quanto vale una cosa che paga per sempre?', 'Da dove viene il tasso?', 'Come prevedo i numeri?', 'Dividendi che crescono a fasi', 'La cassa che l\'azienda produce', 'Il valore finale, e quanto pesa un errore', 'Il confronto con le altre', 'Crea valore o lo distrugge?', 'E se guardo solo quello che possiede?', 'E se non è quotata?', 'Il caso finale']]] }
+];
+const MATERIE = [
+  { id: 'basi', name: 'Basi', sub: 'Da dove si parte', color: AZ, ico: Sprout, items: [
+    { course: 'basi' },
+    { name: 'Numeri e statistica', sub: 'Valore del denaro nel tempo, probabilità, dati' } ] },
+  { id: 'mercati', name: 'Mercati', sub: 'Cosa compri', color: PESCA, ico: TrendingUp, items: [
+    { id: 'azioni', name: 'Azioni', sub: 'Due livelli: come funzionano, quanto valgono', color: PESCA, levels: AZIONI_L },
+    { name: 'Obbligazioni', sub: 'Prezzo, rendimento, tassi, credito' },
+    { name: 'Derivati', sub: 'Opzioni, future, forward, swap' },
+    { name: 'Altri investimenti', sub: 'Immobili, private equity, hedge fund, materie prime' } ] },
+  { id: 'aziende', name: 'Aziende', sub: 'Cosa c\'è dietro a un titolo', color: MENTA, ico: Briefcase, items: [
+    { name: 'Bilancio', sub: 'Leggere i tre prospetti, capire se i numeri reggono' },
+    { name: 'Finanza d\'impresa', sub: 'Investimenti, debito o capitale, dividendi, fusioni' } ] },
+  { id: 'portafoglio', name: 'Portafoglio', sub: 'Come metti insieme i pezzi', color: LILLA, ico: PieChart, items: [
+    { name: 'Costruire un portafoglio', sub: 'Diversificare, rischio e rendimento, ETF' },
+    { name: 'Misurare rischio e risultati', sub: 'Sharpe, alfa, VaR, fattori' } ] },
+  { id: 'economia', name: 'Economia e regole', sub: 'Il mondo intorno', color: GIALLO, ico: Scale, items: [
+    { name: 'Economia per investire', sub: 'Ciclo, inflazione, Stato, commercio' },
+    { name: 'Cambi e banche centrali', sub: 'Tassi, moneta, valute' },
+    { name: 'Etica e regole', sub: 'I doveri di chi gestisce soldi altrui' } ] }
 ];
 
 let COURSES_MEMO = null;
