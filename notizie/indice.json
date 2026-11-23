@@ -1,10 +1,28 @@
 {
  "v": 1,
- "aggiornato": "2026-11-21",
+ "aggiornato": "2026-11-23",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-23-pensioni",
+   "data": "2026-11-23",
+   "cat": "Pensioni",
+   "titolo": "Pensioni 2027, proposte per adeguare per intero gli assegni più alti",
+   "nastro": "Pensioni, proposte per l'aumento pieno",
+   "numero": "3.059 €",
+   "min": 3
+  },
+  {
+   "id": "2026-11-23-wall-street",
+   "data": "2026-11-23",
+   "cat": "Borsa",
+   "titolo": "Wall Street, venerdì nero per la tecnologia: Nasdaq giù di oltre il 5%",
+   "nastro": "Wall Street, Nasdaq giù di oltre il 5%",
+   "numero": "−14%",
+   "min": 3
+  },
   {
    "id": "2026-11-21-carburanti",
    "data": "2026-11-21",

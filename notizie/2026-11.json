@@ -3,6 +3,156 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-23-pensioni",
+   "cat": "Pensioni",
+   "nastro": "Pensioni, proposte per l'aumento pieno",
+   "titolo": "Pensioni 2027, proposte per adeguare per intero gli assegni più alti",
+   "evid": "adeguare per intero",
+   "sommario": "La manovra del governo riduce l'adeguamento all'inflazione per le pensioni sopra 2.447 € lordi al mese. Fratelli d'Italia e Lega hanno presentato proposte per alzare la soglia. Per ora nulla è deciso.",
+   "numero": "3.059 €",
+   "nota": "5 volte il minimo",
+   "didascalia": "La pensione lorda mensile fino a cui la proposta di Fratelli d'Italia darebbe l'adeguamento pieno all'inflazione: cinque volte il minimo Inps del 2026 (611,85 €)",
+   "breve": [
+    "Nella legge di bilancio del governo l'adeguamento pieno all'inflazione resta solo per le pensioni fino a quattro volte il minimo Inps, cioè 2.447,40 € lordi al mese.",
+    "Fratelli d'Italia propone di portare la soglia a cinque volte il minimo, cioè 3.059,25 €; la Lega chiede di arrivare fino a sei volte.",
+    "Sono proposte di modifica, rese note sabato 21 novembre: devono ancora essere esaminate e votate in Parlamento."
+   ],
+   "corpo": [
+    {
+     "h": "Che cos'è l'adeguamento delle pensioni",
+     "p": [
+      "Ogni anno, a gennaio, le pensioni vengono aumentate per tenere conto dell'**inflazione**, cioè della crescita dei prezzi. Se i prezzi salgono e la pensione resta ferma, con gli stessi soldi si compra di meno. Questo meccanismo si chiama rivalutazione, o perequazione.",
+      "Le soglie si calcolano come multipli del trattamento minimo dell'Inps, la pensione minima, che nel 2026 è di 611,85 € al mese. Quattro volte il minimo sono 2.447,40 € al mese al **lordo**, cioè prima delle tasse; cinque volte sono 3.059,25 €."
+     ]
+    },
+    {
+     "h": "Che cosa prevede il testo del governo",
+     "p": [
+      "Secondo il disegno di legge di bilancio per il 2027, le pensioni fino a quattro volte il minimo vengono adeguate al 100% dell'inflazione. Sopra questa soglia l'adeguamento è più basso e scende per scaglioni: 85% tra quattro e cinque volte il minimo, 53% tra cinque e sei, 47% tra sei e otto, 37% tra otto e dieci, 32% sopra dieci volte.",
+      "Gli scaglioni passano così da tre a sei e, per gli assegni sopra le quattro volte il minimo, le percentuali sono più basse di quelle in vigore nel 2026. Chi ha un assegno medio alto riceverebbe quindi nel 2027 un aumento più piccolo."
+     ]
+    },
+    {
+     "h": "Le proposte di modifica",
+     "p": [
+      "Sabato 21 novembre sono state rese note le migliaia di proposte di modifica, chiamate emendamenti, presentate dai partiti al testo della manovra. Sulle pensioni diversi partiti della maggioranza chiedono di allargare l'adeguamento pieno.",
+      "Fratelli d'Italia propone di dare il 100% dell'inflazione fino a cinque volte il minimo, cioè fino a 3.059,25 € lordi al mese. La Lega chiede di arrivare fino a cinque o sei volte il minimo. Resta aperto il tema di dove trovare i soldi per coprire la spesa."
+     ]
+    },
+    {
+     "h": "Che cosa succede adesso",
+     "p": [
+      "Gli emendamenti devono essere esaminati dalla commissione Bilancio e poi votati. La legge di bilancio deve essere approvata entro la fine dell'anno.",
+      "Un esempio con un numero inventato, non una previsione: se l'inflazione da recuperare fosse del 2%, una pensione di 2.000 € lordi al mese, sotto la soglia delle quattro volte il minimo, salirebbe di 40 €."
+     ]
+    }
+   ],
+   "perche": "Chi riceve una pensione sopra i 2.447 € lordi al mese potrebbe avere nel 2027 un aumento più piccolo di quello che avrebbe con le regole attuali. Da seguire nelle prossime settimane: quali proposte verranno votate e con quali coperture.",
+   "fonti": [
+    {
+     "nome": "AGI",
+     "titolo": "Manovra, le proposte di modifica su pensioni, condono ed exit tax (21 novembre)",
+     "url": "https://www.agi.it/economia/news/2026-11-21/manovra-emendamenti-pensioni-condono-exit-tax-40135099/"
+    },
+    {
+     "nome": "Milano Finanza",
+     "titolo": "Manovra 2027, gli emendamenti su banche e rivalutazione delle pensioni",
+     "url": "https://www.milanofinanza.it/news/manovra-2027-valanga-di-emendamenti-braccio-di-ferro-sulle-banche-e-unita-sulla-rivalutazione-delle-202611211211353277"
+    },
+    {
+     "nome": "Affaritaliani",
+     "titolo": "Pensioni 2027, gli scaglioni della manovra e la proposta di Fratelli d'Italia",
+     "url": "https://www.affaritaliani.it/economia/pensioni-2027-rivalutazione-piena-fino-a-3-059-euro-la-proposta-di-fdi.html"
+    },
+    {
+     "nome": "QuiFinanza",
+     "titolo": "Come cambia la rivalutazione delle pensioni con la manovra 2027",
+     "url": "https://quifinanza.it/pensioni/meccanismo-rivalutazione-pensioni-manovra-2027/1024603/"
+    },
+    {
+     "nome": "Informazione Fiscale",
+     "titolo": "Le soglie in euro della rivalutazione e le ipotesi di modifica",
+     "url": "https://www.informazionefiscale.it/pensioni-2027-rivalutazione-piena-assegni-5-volte-minimo-novita-emendamento"
+    }
+   ],
+   "data": "2026-11-23"
+  },
+  {
+   "id": "2026-11-23-wall-street",
+   "cat": "Borsa",
+   "nastro": "Wall Street, Nasdaq giù di oltre il 5%",
+   "titolo": "Wall Street, venerdì nero per la tecnologia: Nasdaq giù di oltre il 5%",
+   "evid": "venerdì nero",
+   "sommario": "Venerdì 20 novembre le Borse americane sono scese con forza, trascinate dai titoli legati all'intelligenza artificiale. Nvidia ha perso il 14% in un giorno.",
+   "numero": "−14%",
+   "nota": "Nvidia",
+   "didascalia": "Il calo delle azioni di Nvidia, tra i maggiori produttori di chip per l'intelligenza artificiale, alla Borsa di New York venerdì 20 novembre",
+   "breve": [
+    "Venerdì 20 novembre il Nasdaq, l'indice dei titoli tecnologici americani, ha perso più del 5%; l'S&P 500 più del 3,5% e il Dow Jones circa il 2%.",
+    "Con questo calo l'S&P 500 e il Dow Jones sono più del 10% sotto i loro massimi, e il Nasdaq ha cancellato i guadagni del 2026.",
+    "A pesare sono stati i dubbi sulle enormi spese per l'intelligenza artificiale: Nvidia ha perso il 14%, altri produttori di chip tra il 12% e il 14%."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Venerdì 20 novembre Wall Street, la Borsa di New York, ha chiuso in forte calo. Il Nasdaq, l'**indice** che raccoglie soprattutto società tecnologiche, ha chiuso in calo di oltre il 5%. L'S&P 500, che segue le 500 società americane più grandi, ha perso più del 3,5%, il Dow Jones circa il 2%.",
+      "Le fonti hanno dato numeri di chiusura leggermente diversi tra loro, ma tutte raccontano lo stesso quadro: il calo più forte ha colpito i titoli della tecnologia."
+     ]
+    },
+    {
+     "h": "Perché le Borse sono scese",
+     "p": [
+      "Secondo le agenzie di stampa, tra gli investitori crescono i dubbi che le centinaia di miliardi spesi per l'intelligenza artificiale rendano davvero quanto promesso. Quando molti hanno paura di una **bolla**, cioè di prezzi saliti molto più del valore reale, vendono in fretta.",
+      "Le **azioni** di Nvidia, tra i maggiori produttori di chip per l'intelligenza artificiale, hanno perso il 14% e hanno chiuso a 125,53 dollari. Anche altri produttori di chip come AMD, Micron e Broadcom hanno perso tra il 12% e il 14%. Anthropic, entrata in Borsa giovedì 19 novembre, ha perso l'8,5%, restando sopra il prezzo di debutto di 83 dollari."
+     ]
+    },
+    {
+     "h": "Che cosa vuol dire correzione",
+     "p": [
+      "Con questa giornata l'S&P 500 e il Dow Jones sono scesi di oltre il 10% rispetto ai loro massimi: per l'S&P 500 il record era di martedì 6 ottobre. Nel linguaggio dei mercati un calo di questa misura si chiama correzione. Il Nasdaq, invece, ha cancellato tutto quello che aveva guadagnato dall'inizio del 2026.",
+      "Nelle giornate di paura molti investitori spostano soldi verso i titoli di Stato americani. Il loro rendimento a dieci anni è sceso poco sotto il 5%, intorno al 4,9%."
+     ]
+    },
+    {
+     "h": "Chi riguarda",
+     "p": [
+      "Wall Street ha chiuso dopo le Borse europee. Venerdì 20 novembre Milano aveva già perso il 2,48% per gli stessi timori; le Borse europee tornano a contrattare lunedì 23 novembre.",
+      "Molti fondi, **ETF** e **fondi pensione** venduti anche in Italia investono in azioni americane, spesso proprio nelle grandi società tecnologiche. In giornate come questa il loro valore scende. Per chi investe contano soprattutto gli orizzonti lunghi, non una sola seduta."
+     ]
+    }
+   ],
+   "perche": "Le grandi società tecnologiche americane pesano molto in tanti fondi e fondi pensione, anche italiani. Da guardare nei prossimi giorni se i timori sull'intelligenza artificiale si calmano o si allargano.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Wall Street chiude in forte calo (20 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/20/wall-street-chiude-in-forte-calo.-dj-203-nasdaq-537_2603c36d-1094-48af-b17a-590d5705aa0b.html"
+    },
+    {
+     "nome": "Fox Business",
+     "titolo": "Dow e S&P 500 in correzione, Nvidia perde il 14%",
+     "url": "https://www.foxbusiness.com/markets/wall-street-suffers-historic-losses-dow-sp-500-plunge-correction-territory"
+    },
+    {
+     "nome": "StockTitan",
+     "titolo": "La seduta di Wall Street del 20 novembre, titolo per titolo",
+     "url": "https://www.stocktitan.net/articles/stock-market-today-live-november-20-2026"
+    },
+    {
+     "nome": "CEO Economy (AP)",
+     "titolo": "L'S&P 500 entra in correzione, il Nasdaq azzera i guadagni dell'anno",
+     "url": "https://ceoeconomy.com/article/sp-500-correction-nasdaq-plunges-ai-chip-selloff-nov-20-2026"
+    },
+    {
+     "nome": "Il Sole 24 Ore",
+     "titolo": "Venerdì nero per i titoli tecnologici: Nasdaq in picchiata",
+     "url": "https://en.ilsole24ore.com/art/asian-stock-markets-fall-anthropic-takes-a-cautious-approach-to-its-record-debut-AJpG3xMC"
+    }
+   ],
+   "data": "2026-11-23"
+  },
+  {
    "id": "2026-11-21-carburanti",
    "cat": "Prezzi",
    "nastro": "Benzina self a 1,945 €, gasolio a 2,199 €",
