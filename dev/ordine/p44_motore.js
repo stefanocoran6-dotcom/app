@@ -10,6 +10,7 @@
 // Regole dei contenuti:
 //   - la risposta giusta di uno stampo la calcola `ok`; le sbagliate nascono dagli errori tipici (`err`), ognuno con la sua spiegazione;
 //   - ogni stampo e ogni fatto è scritto in tutte le lingue attive (it, en): senza una lingua non entra nel gioco;
+//   - uno stampo con `lab` appartiene al laboratorio di un capitolo (p45_serie.js, LabRun): la Serie non lo pesca;
 //   - i fatti hanno la fonte in dev/ordine/FONTI_GIOCHI.md; niente fatti che scadono (cariche, tassi del momento) o contestati.
 // Il collaudo (dev/giochi/collauda.mjs) genera migliaia di domande per tipo e rifà i conti con un secondo programma scritto a parte.
 const GEN = (() => {
@@ -34,7 +35,10 @@ const GEN = (() => {
     pct2: { d: 2, rel: 0.04, abs: 0.15 },
     seg: { d: 1, rel: 0.08, abs: 0.5, segno: true },
     seg2: { d: 2, rel: 0.08, abs: 0.4, segno: true },
-    anni: { d: 0, rel: 0.2, abs: 2 }
+    anni: { d: 0, rel: 0.2, abs: 2 },
+    mln: { d: 0, rel: 0.05, abs: 5 },       // milioni: 240 milioni
+    volte: { d: 1, rel: 0.08, abs: 0.4 },   // multipli: 16 · 12,5
+    euro2: { d: 2, rel: 0.05, abs: 0.05 }   // valuta con i centesimi: 0,75 €
   };
 
   // ---- la penna: numeri, soldi e percentuali scritti come vuole la lingua ----
@@ -58,7 +62,7 @@ const GEN = (() => {
     const f = s => String(s).replace(/−/g, '-').replace(/,/g, '{,}').replace(/%/g, '\\%');
     const fn = (x, d = 0, fisso) => f(n(x, d, fisso));
     const fs = x => intero(x) ? fn(x) : fn(x, 2, true);   // una cifra in valuta dentro una formula: 20 oppure 0,20
-    const valore = (forma, x) => forma === 'soldi' ? soldi(x) : forma === 'anni' ? (en ? 'About ' : 'Circa ') + anni(x) : forma === 'seg' || forma === 'seg2' ? seg(x, FORMA[forma].d) : pct(x, FORMA[forma].d);
+    const valore = (forma, x) => forma === 'soldi' || forma === 'euro2' ? soldi(x) : forma === 'mln' ? n(x) + (en ? ' million' : ' milioni') : forma === 'volte' ? n(x, 1) : forma === 'anni' ? (en ? 'About ' : 'Circa ') + anni(x) : forma === 'seg' || forma === 'seg2' ? seg(x, FORMA[forma].d) : pct(x, FORMA[forma].d);
     return { en, n, soldi, pct, ilp, alp, delp, seg, anni, f, fn, fs, valore };
   }
 
@@ -259,6 +263,192 @@ const GEN = (() => {
         q: (p, W) => `In one year a company takes in ${W.soldi(p.R)} from sales and spends ${W.soldi(p.C)}. What share of its sales is left as profit, as a percentage?`,
         exp: (p, W, ok) => `This is the **profit margin**: how much the company keeps for every 100 of sales.\n\n$$\\text{margin} = \\frac{R - C}{R}$$\n\n\\(R\\) = revenue (what it takes in from sales), \\(C\\) = costs.\n\n$$\\frac{${W.fn(p.R)} - ${W.fn(p.C)}}{${W.fn(p.R)}} = ${W.f(W.pct(ok))}$$`,
         err: { costi: 'This is the share of sales that goes to costs: the profit is what is left.', suicosti: 'You divided the profit by the costs: the margin is figured on sales.', rapporto: 'You divided sales by costs: first find the profit, then divide it by sales.' }
+      }
+    },
+    // =====================================================================================================
+    // LABORATORIO «multipli» (materia Azioni, capitolo «Costa tanto o poco?»). Gli stampi con `lab` si usano solo nel laboratorio
+    // del loro capitolo: la Serie non li pesca, perché danno per fatte le lezioni. Le cifre delle aziende sono in milioni.
+    // =====================================================================================================
+    capz: {
+      liv: 2, tema: 'valutare', forma: 'mln', lab: 'multipli',
+      par: R => { const P = scegli(R, [2.5, 4, 5, 7.5, 8, 12, 15, 20, 25, 40, 60]), N = scegli(R, [4, 5, 8, 10, 20, 25, 40, 50, 80, 100]); return intero(P * N) && P * N >= 40 ? { P, N } : null; },
+      ok: p => p.P * p.N,
+      err: { somma: p => p.P + p.N, dieci: p => p.P * p.N / 10, cento: p => p.P * p.N * 10 },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)} e le azioni in circolazione sono ${W.n(p.N)} milioni. Quanto vale in Borsa tutta l'azienda?`,
+        exp: (p, W, ok) => `La **capitalizzazione** è il prezzo di un'azione per il numero di azioni.\n\n$$\\text{Cap} = P \\times N$$\n\n\\(P\\) = prezzo di un'azione, \\(N\\) = numero di azioni (qui in milioni).\n\n$$\\text{Cap} = ${W.fs(p.P)} \\times ${W.fn(p.N)} = ${W.fn(ok)}$$\n\nL'azienda vale in Borsa **${W.n(ok)} milioni**.`,
+        err: { somma: 'Hai sommato prezzo e numero di azioni: vanno moltiplicati.', dieci: 'Hai perso uno zero per strada: rifai la moltiplicazione.', cento: 'Hai aggiunto uno zero di troppo: rifai la moltiplicazione.' }
+      },
+      en: {
+        q: (p, W) => `A share costs ${W.soldi(p.P)} and there are ${W.n(p.N)} million shares outstanding. What is the whole company worth on the stock market?`,
+        exp: (p, W, ok) => `**Market capitalization** is the price of one share times the number of shares.\n\n$$\\text{Cap} = P \\times N$$\n\n\\(P\\) = price of one share, \\(N\\) = number of shares (here in millions).\n\n$$\\text{Cap} = ${W.fs(p.P)} \\times ${W.fn(p.N)} = ${W.fn(ok)}$$\n\nThe company is worth **${W.n(ok)} million** on the stock market.`,
+        err: { somma: 'You added the price and the number of shares: they must be multiplied.', dieci: 'You lost a zero along the way: redo the multiplication.', cento: 'You added one zero too many: redo the multiplication.' }
+      }
+    },
+    eps: {
+      liv: 2, tema: 'valutare', forma: 'euro2', lab: 'multipli',
+      par: R => { const U = scegli(R, [6, 9, 12, 15, 18, 21, 24, 30, 36, 45, 60]), N = scegli(R, [4, 5, 8, 10, 12, 20, 25, 40, 50]), m = scegli(R, [8, 10, 12, 15, 16, 20, 25]), E = U / N, P = m * E;
+        return intero(E * 100) && E >= 0.2 && E <= 9 && intero(P * 100) ? { U, N, P: giro(P, 2) } : null; },
+      ok: p => p.U / p.N,
+      err: { capov: p => p.N / p.U, pe: p => p.P / (p.U / p.N), dieci: p => p.U / p.N * 10 },
+      it: {
+        q: (p, W) => `Un'azienda ha chiuso l'anno con un utile netto di ${W.n(p.U)} milioni. Le azioni sono ${W.n(p.N)} milioni e ognuna costa ${W.soldi(p.P)}. Quanto vale l'utile per azione?`,
+        exp: (p, W, ok) => `L'**utile per azione** (EPS) è l'utile netto diviso il numero di azioni. Il prezzo qui non serve.\n\n$$\\text{EPS} = \\frac{U}{N}$$\n\n\\(U\\) = utile netto, \\(N\\) = numero di azioni.\n\n$$\\text{EPS} = \\frac{${W.fn(p.U)}}{${W.fn(p.N)}} = ${W.fs(ok)}$$\n\nA ogni azione spettano **${W.soldi(ok)}** di utile.`,
+        err: { capov: 'Hai diviso il numero di azioni per l\'utile: va fatto il contrario.', pe: 'Questo è il P/E, cioè il prezzo diviso l\'utile per azione: la domanda chiede solo l\'utile per azione.', dieci: 'Controlla la virgola: il risultato giusto è dieci volte più piccolo.' }
+      },
+      en: {
+        q: (p, W) => `A company closed the year with a net income of ${W.n(p.U)} million. It has ${W.n(p.N)} million shares, and each one costs ${W.soldi(p.P)}. What are its earnings per share?`,
+        exp: (p, W, ok) => `**Earnings per share** (EPS) is net income divided by the number of shares. The price is not needed here.\n\n$$\\text{EPS} = \\frac{U}{N}$$\n\n\\(U\\) = net income, \\(N\\) = number of shares.\n\n$$\\text{EPS} = \\frac{${W.fn(p.U)}}{${W.fn(p.N)}} = ${W.fs(ok)}$$\n\nEach share is entitled to **${W.soldi(ok)}** of earnings.`,
+        err: { capov: 'You divided the number of shares by the net income: it goes the other way.', pe: 'This is the P/E, the price divided by earnings per share: the question asks only for earnings per share.', dieci: 'Check the decimal point: the right result is ten times smaller.' }
+      }
+    },
+    pe: {
+      liv: 2, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const E = scegli(R, [0.25, 0.4, 0.5, 0.75, 0.8, 1.2, 1.25, 1.5, 2, 2.5, 3, 4]), m = scegli(R, [6, 8, 9, 10, 12, 12.5, 14, 15, 16, 18, 20, 22, 24, 25, 28, 30, 35, 40]), P = m * E; return intero(P * 100) ? { P: giro(P, 2), E } : null; },
+      ok: p => p.P / p.E,
+      err: { resa: p => p.E / p.P * 100, diff: p => p.P - p.E, per: p => p.P * p.E },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)} e l'utile per azione è ${W.soldi(p.E)}. Quanto vale il P/E?`,
+        exp: (p, W, ok) => `Il **P/E** è il prezzo diviso l'utile per azione: quanto paghi per ogni euro di utile annuo.\n\n$$\\text{P/E} = \\frac{P}{\\text{EPS}}$$\n\n\\(P\\) = prezzo di un'azione, \\(\\text{EPS}\\) = utile per azione.\n\n$$\\text{P/E} = \\frac{${W.fs(p.P)}}{${W.fs(p.E)}} = ${W.fn(ok, 1)}$$\n\nPer ogni euro di utile annuo il mercato paga **${W.soldi(ok)}**.`,
+        err: { resa: 'Hai capovolto il rapporto: questo è l\'utile in percentuale del prezzo, cioè il rendimento degli utili.', diff: 'Hai tolto l\'utile dal prezzo: il prezzo va diviso per l\'utile per azione.', per: 'Hai moltiplicato prezzo e utile: il prezzo va diviso per l\'utile per azione.' }
+      },
+      en: {
+        q: (p, W) => `A share costs ${W.soldi(p.P)} and earnings per share are ${W.soldi(p.E)}. What is the P/E?`,
+        exp: (p, W, ok) => `The **P/E** is the price divided by earnings per share: how much you pay for every ${W.soldi(1)} of yearly earnings.\n\n$$\\text{P/E} = \\frac{P}{\\text{EPS}}$$\n\n\\(P\\) = price of one share, \\(\\text{EPS}\\) = earnings per share.\n\n$$\\text{P/E} = \\frac{${W.fs(p.P)}}{${W.fs(p.E)}} = ${W.fn(ok, 1)}$$\n\nFor every ${W.soldi(1)} of yearly earnings the market pays **${W.soldi(ok)}**.`,
+        err: { resa: 'You flipped the ratio: this is earnings as a percentage of the price, the earnings yield.', diff: 'You subtracted earnings from the price: the price must be divided by earnings per share.', per: 'You multiplied price and earnings: the price must be divided by earnings per share.' }
+      }
+    },
+    petot: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const P = scegli(R, [2.5, 4, 5, 8, 12, 15, 20, 25, 40]), N = scegli(R, [4, 5, 8, 10, 20, 25, 40, 50]), m = scegli(R, [8, 10, 12, 12.5, 15, 16, 20, 25, 30]), U = P * N / m;
+        return intero(P * N) && intero(U * 10) && U >= 2 ? { P, N, U: giro(U, 1) } : null; },
+      ok: p => p.P * p.N / p.U,
+      err: { senzaN: p => p.P / p.U, eps: p => p.U / p.N, resa: p => p.U / (p.P * p.N) * 100 },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)}. Le azioni sono ${W.n(p.N)} milioni e l'utile netto dell'anno è ${W.n(p.U, 1)} milioni. Quanto vale il P/E?`,
+        exp: (p, W, ok) => `Si può fare con le cifre di tutta l'azienda: capitalizzazione diviso utile netto.\n\n$$\\text{P/E} = \\frac{P \\times N}{U}$$\n\n\\(P\\) = prezzo di un'azione, \\(N\\) = numero di azioni, \\(U\\) = utile netto.\n\n$$\\text{P/E} = \\frac{${W.fs(p.P)} \\times ${W.fn(p.N)}}{${W.fn(p.U, 1)}} = \\frac{${W.fn(p.P * p.N)}}{${W.fn(p.U, 1)}} = ${W.fn(ok, 1)}$$\n\nÈ lo stesso numero che esce dividendo il prezzo per l'utile per azione.`,
+        err: { senzaN: 'Hai diviso il prezzo di una sola azione per l\'utile di tutta l\'azienda: prima serve la capitalizzazione, oppure l\'utile per azione.', eps: 'Questo è l\'utile per azione: è il primo passo, poi va messo sotto il prezzo.', resa: 'Hai capovolto il rapporto: questo è l\'utile in percentuale della capitalizzazione.' }
+      },
+      en: {
+        q: (p, W) => `A share costs ${W.soldi(p.P)}. There are ${W.n(p.N)} million shares, and net income for the year is ${W.n(p.U, 1)} million. What is the P/E?`,
+        exp: (p, W, ok) => `You can use the figures for the whole company: market capitalization divided by net income.\n\n$$\\text{P/E} = \\frac{P \\times N}{U}$$\n\n\\(P\\) = price of one share, \\(N\\) = number of shares, \\(U\\) = net income.\n\n$$\\text{P/E} = \\frac{${W.fs(p.P)} \\times ${W.fn(p.N)}}{${W.fn(p.U, 1)}} = \\frac{${W.fn(p.P * p.N)}}{${W.fn(p.U, 1)}} = ${W.fn(ok, 1)}$$\n\nIt is the same number you get by dividing the price by earnings per share.`,
+        err: { senzaN: 'You divided the price of a single share by the net income of the whole company: first you need the market capitalization, or the earnings per share.', eps: 'This is earnings per share: it is the first step, then it goes under the price.', resa: 'You flipped the ratio: this is net income as a percentage of market capitalization.' }
+      }
+    },
+    ey: {
+      liv: 3, tema: 'valutare', forma: 'pct2', lab: 'multipli',
+      par: R => { const m = scegli(R, [5, 8, 10, 12.5, 16, 20, 25, 40]), E = scegli(R, [0.25, 0.4, 0.5, 0.8, 1, 1.25, 2, 2.5, 4]), P = m * E; return intero(P * 100) ? { P: giro(P, 2), E } : null; },
+      ok: p => p.E / p.P * 100,
+      err: { pe: p => p.P / p.E, cento: p => p.E / p.P, diff: p => (p.P - p.E) / p.P * 100 },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)} e l'utile per azione è ${W.soldi(p.E)}. Quanto vale il rendimento degli utili, cioè l'utile per azione in percentuale del prezzo?`,
+        exp: (p, W, ok) => `Il **rendimento degli utili** è il P/E capovolto: utile per azione diviso prezzo.\n\n$$\\frac{\\text{EPS}}{P}$$\n\n\\(\\text{EPS}\\) = utile per azione, \\(P\\) = prezzo di un'azione.\n\n$$\\frac{${W.fs(p.E)}}{${W.fs(p.P)}} = ${W.f(W.pct(ok, 2))}$$\n\nA ogni 100 spesi in azioni corrispondono ${W.n(ok, 2)} di utili l'anno.`,
+        err: { pe: 'Questo è il P/E, prezzo diviso utile: il rendimento degli utili è il rapporto capovolto.', cento: 'Hai dimenticato di moltiplicare per 100 per avere la percentuale.', diff: 'Hai tolto l\'utile dal prezzo: l\'utile va diviso per il prezzo.' }
+      },
+      en: {
+        q: (p, W) => `A share costs ${W.soldi(p.P)} and earnings per share are ${W.soldi(p.E)}. What is the earnings yield, that is, earnings per share as a percentage of the price?`,
+        exp: (p, W, ok) => `The **earnings yield** is the P/E flipped over: earnings per share divided by price.\n\n$$\\frac{\\text{EPS}}{P}$$\n\n\\(\\text{EPS}\\) = earnings per share, \\(P\\) = price of one share.\n\n$$\\frac{${W.fs(p.E)}}{${W.fs(p.P)}} = ${W.f(W.pct(ok, 2))}$$\n\nEvery 100 spent on the stock corresponds to ${W.n(ok, 2)} of earnings a year.`,
+        err: { pe: 'This is the P/E, price divided by earnings: the earnings yield is the ratio flipped over.', cento: 'You forgot to multiply by 100 to get the percentage.', diff: 'You subtracted earnings from the price: earnings must be divided by the price.' }
+      }
+    },
+    pb: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const B = scegli(R, [2, 2.5, 4, 5, 6, 8, 10, 12.5, 20]), N = scegli(R, [4, 10, 20, 40, 50]), m = scegli(R, [0.5, 0.6, 0.7, 0.8, 1.2, 1.5, 1.8, 2, 2.5, 3, 4, 5]), P = m * B;
+        return intero(P * 100) && intero(B * N) ? { P: giro(P, 2), PN: giro(B * N), N } : null; },
+      ok: p => p.P / (p.PN / p.N),
+      err: { bvps: p => p.PN / p.N, capov: p => p.PN / p.N / p.P, senzaN: p => p.P / p.PN },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)}. Il patrimonio netto dell'azienda è ${W.n(p.PN)} milioni e le azioni sono ${W.n(p.N)} milioni. Quanto vale il P/B?`,
+        exp: (p, W, ok) => `Prima il **valore contabile per azione**, poi il rapporto con il prezzo.\n\n$$\\text{BVPS} = \\frac{PN}{N} = \\frac{${W.fn(p.PN)}}{${W.fn(p.N)}} = ${W.fs(p.PN / p.N)}$$\n\n$$\\text{P/B} = \\frac{P}{\\text{BVPS}} = \\frac{${W.fs(p.P)}}{${W.fs(p.PN / p.N)}} = ${W.fn(ok, 1)}$$\n\n\\(PN\\) = patrimonio netto, \\(N\\) = numero di azioni, \\(P\\) = prezzo di un'azione.\n\n${ok < 1 ? 'In Borsa l\'azienda vale meno del patrimonio scritto nei conti.' : `Per ogni euro di patrimonio scritto nei conti il mercato paga ${W.soldi(ok)}.`}`,
+        err: { bvps: 'Questo è il valore contabile per azione: è il primo passo, poi va messo sotto il prezzo.', capov: 'Hai capovolto il rapporto: il prezzo va sopra, il valore contabile per azione sotto.', senzaN: 'Hai diviso il prezzo di una sola azione per il patrimonio di tutta l\'azienda: prima serve il patrimonio per azione.' }
+      },
+      en: {
+        q: (p, W) => `A share costs ${W.soldi(p.P)}. The company's book equity is ${W.n(p.PN)} million and it has ${W.n(p.N)} million shares. What is the P/B?`,
+        exp: (p, W, ok) => `First the **book value per share**, then its ratio to the price.\n\n$$\\text{BVPS} = \\frac{PN}{N} = \\frac{${W.fn(p.PN)}}{${W.fn(p.N)}} = ${W.fs(p.PN / p.N)}$$\n\n$$\\text{P/B} = \\frac{P}{\\text{BVPS}} = \\frac{${W.fs(p.P)}}{${W.fs(p.PN / p.N)}} = ${W.fn(ok, 1)}$$\n\n\\(PN\\) = book equity, \\(N\\) = number of shares, \\(P\\) = price of one share.\n\n${ok < 1 ? 'On the stock market the company is worth less than the equity recorded in its books.' : `For every ${W.soldi(1)} of equity recorded in the books the market pays ${W.soldi(ok)}.`}`,
+        err: { bvps: 'This is the book value per share: it is the first step, then it goes under the price.', capov: 'You flipped the ratio: the price goes on top, the book value per share underneath.', senzaN: 'You divided the price of a single share by the equity of the whole company: first you need the equity per share.' }
+      }
+    },
+    ps: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const P = scegli(R, [2.5, 4, 5, 8, 12, 15, 20, 25, 40]), N = scegli(R, [4, 5, 8, 10, 20, 25, 40, 50]), m = scegli(R, [0.2, 0.4, 0.5, 0.8, 1.2, 1.5, 2, 2.5, 3, 4, 5]), Ri = P * N / m;
+        return intero(P * N) && intero(Ri) ? { P, N, R: giro(Ri) } : null; },
+      ok: p => p.P * p.N / p.R,
+      err: { capov: p => p.R / (p.P * p.N), perazione: p => p.R / p.N, dieci: p => p.P * p.N / p.R * 10 },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)} e le azioni sono ${W.n(p.N)} milioni. I ricavi dell'anno sono ${W.n(p.R)} milioni. Quanto vale il P/S?`,
+        exp: (p, W, ok) => `Il **P/S** è la capitalizzazione divisa per i ricavi.\n\n$$\\text{P/S} = \\frac{P \\times N}{R}$$\n\n\\(P\\) = prezzo di un'azione, \\(N\\) = numero di azioni, \\(R\\) = ricavi dell'anno.\n\n$$\\text{P/S} = \\frac{${W.fs(p.P)} \\times ${W.fn(p.N)}}{${W.fn(p.R)}} = \\frac{${W.fn(p.P * p.N)}}{${W.fn(p.R)}} = ${W.fn(ok, 1)}$$\n\nPer ogni euro di vendite il mercato paga **${W.soldi(ok)}**.`,
+        err: { capov: 'Hai capovolto il rapporto: la capitalizzazione va sopra, i ricavi sotto.', perazione: 'Questi sono i ricavi per azione: è un primo passo, poi vanno messi sotto il prezzo.', dieci: 'Controlla la virgola: il risultato giusto è dieci volte più piccolo.' }
+      },
+      en: {
+        q: (p, W) => `A share costs ${W.soldi(p.P)} and there are ${W.n(p.N)} million shares. Revenue for the year is ${W.n(p.R)} million. What is the P/S?`,
+        exp: (p, W, ok) => `The **P/S** is market capitalization divided by revenue.\n\n$$\\text{P/S} = \\frac{P \\times N}{R}$$\n\n\\(P\\) = price of one share, \\(N\\) = number of shares, \\(R\\) = revenue for the year.\n\n$$\\text{P/S} = \\frac{${W.fs(p.P)} \\times ${W.fn(p.N)}}{${W.fn(p.R)}} = \\frac{${W.fn(p.P * p.N)}}{${W.fn(p.R)}} = ${W.fn(ok, 1)}$$\n\nFor every ${W.soldi(1)} of sales the market pays **${W.soldi(ok)}**.`,
+        err: { capov: 'You flipped the ratio: market capitalization goes on top, revenue underneath.', perazione: 'This is revenue per share: it is a first step, then it goes under the price.', dieci: 'Check the decimal point: the right result is ten times smaller.' }
+      }
+    },
+    ev: {
+      liv: 2, tema: 'valutare', forma: 'mln', lab: 'multipli',
+      par: R => ({ cap: scegli(R, [120, 150, 180, 200, 240, 300, 360, 400, 500, 600, 800]), D: scegli(R, [20, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250]), C: scegli(R, [10, 20, 30, 40, 50, 60, 80]) }),
+      ok: p => p.cap + p.D - p.C,
+      err: { piucassa: p => p.cap + p.D + p.C, senzacassa: p => p.cap + p.D, contrario: p => p.cap - p.D + p.C },
+      it: {
+        q: (p, W) => `Un'azienda vale in Borsa ${W.n(p.cap)} milioni. Ha debiti finanziari per ${W.n(p.D)} milioni e ${W.n(p.C)} milioni in cassa. Quanto vale il suo valore d'impresa (EV)?`,
+        exp: (p, W, ok) => `Il **valore d'impresa** è quello che costa comprare tutta l'attività: le azioni, più i debiti di cui ti fai carico, meno la cassa che ti ritrovi.\n\n$$\\text{EV} = \\text{Cap} + D - C$$\n\n\\(\\text{Cap}\\) = capitalizzazione, \\(D\\) = debiti finanziari, \\(C\\) = cassa.\n\n$$\\text{EV} = ${W.fn(p.cap)} + ${W.fn(p.D)} - ${W.fn(p.C)} = ${W.fn(ok)}$$\n\nL'EV è **${W.n(ok)} milioni**.`,
+        err: { piucassa: 'Hai aggiunto anche la cassa: la cassa si toglie, perché chi compra l\'azienda se la ritrova.', senzacassa: 'Hai dimenticato di togliere la cassa.', contrario: 'Hai tolto i debiti e aggiunto la cassa: è il contrario.' }
+      },
+      en: {
+        q: (p, W) => `A company is worth ${W.n(p.cap)} million on the stock market. It has ${W.n(p.D)} million of financial debt and ${W.n(p.C)} million in cash. What is its enterprise value (EV)?`,
+        exp: (p, W, ok) => `**Enterprise value** is what it costs to buy the whole business: the shares, plus the debt you take on, minus the cash you get.\n\n$$\\text{EV} = \\text{Cap} + D - C$$\n\n\\(\\text{Cap}\\) = market capitalization, \\(D\\) = financial debt, \\(C\\) = cash.\n\n$$\\text{EV} = ${W.fn(p.cap)} + ${W.fn(p.D)} - ${W.fn(p.C)} = ${W.fn(ok)}$$\n\nThe EV is **${W.n(ok)} million**.`,
+        err: { piucassa: 'You added the cash too: cash is subtracted, because whoever buys the company gets it.', senzacassa: 'You forgot to subtract the cash.', contrario: 'You subtracted the debt and added the cash: it is the other way around.' }
+      }
+    },
+    confronto: {
+      liv: 3, tema: 'valutare', forma: 'euro2', lab: 'multipli',
+      par: R => { const L = [8, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 30], a = scegli(R, L), b = scegli(R, L), E = scegli(R, [0.4, 0.5, 0.8, 1.2, 1.5, 2, 2.5, 3, 4]);
+        return Math.abs(a - b) >= 4 && intero((a + b) / 2 * E * 100) ? { a, b, E } : null; },
+      ok: p => (p.a + p.b) / 2 * p.E,
+      err: { somma: p => (p.a + p.b) * p.E, alto: p => Math.max(p.a, p.b) * p.E, basso: p => Math.min(p.a, p.b) * p.E },
+      it: {
+        q: (p, W) => `I due concorrenti di un'azienda hanno un P/E di ${W.n(p.a)} e di ${W.n(p.b)}. L'azienda ha un utile per azione di ${W.soldi(p.E)}. Con il metodo del confronto, usando la media dei due P/E, quanto vale una sua azione?`,
+        exp: (p, W, ok) => `Il metodo del confronto applica all'azienda il multiplo medio delle aziende simili.\n\n$$V = \\text{P/E}_{\\text{simili}} \\times \\text{EPS}$$\n\n\\(\\text{P/E}_{\\text{simili}}\\) = media dei P/E dei concorrenti, \\(\\text{EPS}\\) = utile per azione.\n\nLa media è \\(\\dfrac{${W.fn(p.a)} + ${W.fn(p.b)}}{2} = ${W.fn((p.a + p.b) / 2, 1)}\\).\n\n$$V = ${W.fn((p.a + p.b) / 2, 1)} \\times ${W.fs(p.E)} = ${W.fs(ok)}$$\n\nSe il mercato la pagasse come i concorrenti, l'azione costerebbe **${W.soldi(ok)}**.`,
+        err: { somma: 'Hai sommato i due P/E senza dividere per due: serve la media.', alto: 'Hai usato solo il P/E più alto: serve la media dei due.', basso: 'Hai usato solo il P/E più basso: serve la media dei due.' }
+      },
+      en: {
+        q: (p, W) => `A company's two competitors have a P/E of ${W.n(p.a)} and ${W.n(p.b)}. The company has earnings per share of ${W.soldi(p.E)}. Using the comparison method with the average of the two P/Es, what is one of its shares worth?`,
+        exp: (p, W, ok) => `The comparison method applies to the company the average multiple of similar companies.\n\n$$V = \\text{P/E}_{\\text{peers}} \\times \\text{EPS}$$\n\n\\(\\text{P/E}_{\\text{peers}}\\) = average P/E of the competitors, \\(\\text{EPS}\\) = earnings per share.\n\nThe average is \\(\\dfrac{${W.fn(p.a)} + ${W.fn(p.b)}}{2} = ${W.fn((p.a + p.b) / 2, 1)}\\).\n\n$$V = ${W.fn((p.a + p.b) / 2, 1)} \\times ${W.fs(p.E)} = ${W.fs(ok)}$$\n\nIf the market paid for it the way it pays for its competitors, the share would cost **${W.soldi(ok)}**.`,
+        err: { somma: 'You added the two P/Es without dividing by two: you need the average.', alto: 'You used only the higher P/E: you need the average of the two.', basso: 'You used only the lower P/E: you need the average of the two.' }
+      }
+    },
+    evebit: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const E = scegli(R, [10, 12, 15, 16, 20, 24, 25, 30, 40, 50]), m = scegli(R, [6, 8, 10, 12, 12.5, 15, 16, 20]), D = scegli(R, [20, 40, 50, 60, 80, 100, 150]), C = scegli(R, [10, 20, 30, 40]), cap = m * E - D + C;
+        return intero(m * E) && cap >= 40 ? { cap: giro(cap), D, C, E } : null; },
+      ok: p => (p.cap + p.D - p.C) / p.E,
+      err: { cap: p => p.cap / p.E, piucassa: p => (p.cap + p.D + p.C) / p.E, senzacassa: p => (p.cap + p.D) / p.E },
+      it: {
+        q: (p, W) => `Un'azienda vale in Borsa ${W.n(p.cap)} milioni, ha debiti finanziari per ${W.n(p.D)} milioni e ${W.n(p.C)} milioni in cassa. Il suo risultato operativo è ${W.n(p.E)} milioni. Quanto vale il rapporto tra valore d'impresa (EV) e risultato operativo?`,
+        exp: (p, W, ok) => `Prima l'EV, poi il rapporto.\n\n$$\\text{EV} = \\text{Cap} + D - C = ${W.fn(p.cap)} + ${W.fn(p.D)} - ${W.fn(p.C)} = ${W.fn(p.cap + p.D - p.C)}$$\n\n$$\\frac{\\text{EV}}{\\text{EBIT}} = \\frac{${W.fn(p.cap + p.D - p.C)}}{${W.fn(p.E)}} = ${W.fn(ok, 1)}$$\n\n\\(\\text{Cap}\\) = capitalizzazione, \\(D\\) = debiti finanziari, \\(C\\) = cassa, \\(\\text{EBIT}\\) = risultato operativo.`,
+        err: { cap: 'Hai usato la capitalizzazione al posto dell\'EV: sopra il risultato operativo va il valore di tutta l\'attività, debiti compresi.', piucassa: 'Nel calcolo dell\'EV hai aggiunto la cassa: va tolta.', senzacassa: 'Nel calcolo dell\'EV hai dimenticato di togliere la cassa.' }
+      },
+      en: {
+        q: (p, W) => `A company is worth ${W.n(p.cap)} million on the stock market, has ${W.n(p.D)} million of financial debt and ${W.n(p.C)} million in cash. Its operating income is ${W.n(p.E)} million. What is the ratio of enterprise value (EV) to operating income?`,
+        exp: (p, W, ok) => `First the EV, then the ratio.\n\n$$\\text{EV} = \\text{Cap} + D - C = ${W.fn(p.cap)} + ${W.fn(p.D)} - ${W.fn(p.C)} = ${W.fn(p.cap + p.D - p.C)}$$\n\n$$\\frac{\\text{EV}}{\\text{EBIT}} = \\frac{${W.fn(p.cap + p.D - p.C)}}{${W.fn(p.E)}} = ${W.fn(ok, 1)}$$\n\n\\(\\text{Cap}\\) = market capitalization, \\(D\\) = financial debt, \\(C\\) = cash, \\(\\text{EBIT}\\) = operating income.`,
+        err: { cap: 'You used market capitalization instead of EV: on top of operating income goes the value of the whole business, debt included.', piucassa: 'In the EV you added the cash: it must be subtracted.', senzacassa: 'In the EV you forgot to subtract the cash.' }
+      }
+    },
+    margsic: {
+      liv: 2, tema: 'valutare', forma: 'pct', lab: 'multipli',
+      par: R => { const V = scegli(R, [10, 12, 15, 20, 25, 30, 40, 50, 60, 80, 100, 120]), m = scegli(R, [10, 12.5, 15, 20, 25, 30, 35, 40]), P = V * (100 - m) / 100; return intero(P * 100) ? { V, P: giro(P, 2) } : null; },
+      ok: p => (p.V - p.P) / p.V * 100,
+      err: { suprezzo: p => (p.V - p.P) / p.P * 100, rapporto: p => p.P / p.V * 100, diff: p => p.V - p.P },
+      it: {
+        q: (p, W) => `Stimi che un'azione valga ${W.soldi(p.V)}. In Borsa costa ${W.soldi(p.P)}. Quanto vale il margine di sicurezza, in percentuale del valore stimato?`,
+        exp: (p, W, ok) => `Il **margine di sicurezza** è la distanza tra il valore stimato e il prezzo, misurata sul valore stimato.\n\n$$M = \\frac{V - P}{V}$$\n\n\\(V\\) = valore stimato, \\(P\\) = prezzo.\n\n$$M = \\frac{${W.fs(p.V)} - ${W.fs(p.P)}}{${W.fs(p.V)}} = ${W.f(W.pct(ok))}$$`,
+        err: { suprezzo: 'Hai diviso per il prezzo: il margine si misura sul valore stimato.', rapporto: 'Questo è il prezzo in percentuale del valore: il margine è quello che manca per arrivare a 100.', diff: 'Questa è la distanza in valuta: va divisa per il valore stimato.' }
+      },
+      en: {
+        q: (p, W) => `You estimate that a stock is worth ${W.soldi(p.V)}. On the stock market it costs ${W.soldi(p.P)}. What is the margin of safety, as a percentage of the estimated value?`,
+        exp: (p, W, ok) => `The **margin of safety** is the gap between the estimated value and the price, measured on the estimated value.\n\n$$M = \\frac{V - P}{V}$$\n\n\\(V\\) = estimated value, \\(P\\) = price.\n\n$$M = \\frac{${W.fs(p.V)} - ${W.fs(p.P)}}{${W.fs(p.V)}} = ${W.f(W.pct(ok))}$$`,
+        err: { suprezzo: 'You divided by the price: the margin is measured on the estimated value.', rapporto: 'This is the price as a percentage of the value: the margin is what is missing to reach 100.', diff: 'This is the gap in money: it must be divided by the estimated value.' }
       }
     }
   };
@@ -493,7 +683,7 @@ const GEN = (() => {
   // LE DUE FUNZIONI CHE SI USANO DA FUORI
   // =====================================================================================================
   const LINGUE = ['it', 'en'];
-  const tipi = Object.keys(STAMPI).map(id => ({ id, fam: 'calcolo', liv: STAMPI[id].liv, tema: STAMPI[id].tema })).concat(Object.keys(FATTI).map(id => ({ id, fam: 'fatti', liv: FATTI[id].liv, tema: FATTI[id].tema })));
+  const tipi = Object.keys(STAMPI).map(id => ({ id, fam: 'calcolo', liv: STAMPI[id].liv, tema: STAMPI[id].tema, lab: STAMPI[id].lab || null })).concat(Object.keys(FATTI).map(id => ({ id, fam: 'fatti', liv: FATTI[id].liv, tema: FATTI[id].tema })));
   // il nucleo di una domanda: { v, t: tipo, s: seme, fam, liv, p: dati, o: risposte [{ k, v }], a: posizione della giusta }
   function crea(tipo, seme) {
     const s = seme >>> 0, R = caso(s), T = STAMPI[tipo], F = FATTI[tipo];

@@ -146,6 +146,7 @@ html.fl-fig .o-app .o-btn:active:not(:disabled){transform:translate(3px,3px);box
 .o-tab.on{font-weight:800;color:${INK}}
 .o-tabpad{height:calc(64px + max(16px,calc(env(safe-area-inset-bottom) - 10px)) + 20px)}
 .o-note{padding:12px 16px;background:${T_GR};border-radius:16px;font-size:15px;line-height:21px;font-weight:700}
+.o-deep{margin-top:18px;background:${T_LILLA};border:2.5px solid ${INK};border-radius:18px;overflow:hidden}
 .o-chip{flex:none;display:inline-flex;align-items:center;height:36px;padding:0 14px;background:#fff;border:2px solid ${INK};border-radius:999px;font-size:14px;line-height:18px;font-weight:800;white-space:nowrap}
 .o-chip.on{background:${INK};color:#fff}
 .o-rich{font-size:16px;line-height:25px;font-weight:500;color:${INK};overflow-wrap:anywhere}
@@ -159,6 +160,9 @@ html .o-app .o-rich .fl-table{width:100%;border-collapse:collapse;font-size:13.5
 html .o-app .o-rich .fl-table th{background:${AZ};text-align:left;padding:8px 10px;font-weight:800;white-space:nowrap}
 html .o-app .o-rich .fl-table td{padding:7px 10px;border-top:2px solid ${SEP};white-space:nowrap}
 html .o-app .o-rich .fl-table .fl-cw{white-space:normal;min-width:132px}
+html .o-app .o-rich .fl-table.fl-t4{font-size:13px}
+html .o-app .o-rich .fl-table.fl-t4 th,html .o-app .o-rich .fl-table.fl-t4 td{padding-left:7px;padding-right:7px}
+html .o-app .o-rich .fl-table.fl-t4 th:first-child,html .o-app .o-rich .fl-table.fl-t4 td:first-child{padding-left:10px}
 html .o-app .o-coach button{text-align:center}
 html .o-app .o-coach div[style*="position: fixed"]{bottom:calc(max(92px, env(safe-area-inset-bottom) + 66px) - var(--ord-gap, 0px))!important}
 .o-rich.sm{font-size:15px;line-height:22px;font-weight:600}
@@ -262,7 +266,7 @@ const LS = {
   raw(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 };
 const S2_KEY = 'fl2_state';
-const S2_DEF = { v: 1, name: '', onboard: null, mis: null, started: [], cur: null, basi: [], expl: { d: '', n: 0 }, tests: {}, ans: {}, duel: { w: 0, l: 0, last: null }, serie: { best: 0, n: 0, last: 0 }, xp: {}, gold: {}, seen: {},
+const S2_DEF = { v: 1, name: '', onboard: null, mis: null, started: [], cur: null, basi: [], expl: { d: '', n: 0 }, tests: {}, ans: {}, duel: { w: 0, l: 0, last: null }, serie: { best: 0, n: 0, last: 0 }, labs: {}, xp: {}, gold: {}, seen: {},
   settings: { goalMin: 10, remind: false, remindAt: '19:30', lang: 'Italiano', examEn: true } };
 let s2 = null; const s2subs = new Set();
 // dati salvati con una forma sbagliata (versioni vecchie, memoria rovinata): si torna al valore di partenza di quel campo

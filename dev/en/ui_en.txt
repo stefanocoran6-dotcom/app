@@ -1224,3 +1224,67 @@ capitoli ⇒ chapters
 5-8 ⇒ =
 minuti a lezione ⇒ minutes per lesson
 laboratori ⇒ labs
+
+# Materia Azioni a capitoli: capitolo, prima di cominciare, per andare a fondo, scheda dell'azienda, leve nuove, laboratorio di calcolo (v59)
+Laboratorio di calcolo ⇒ Calculation lab
+Già fatta ⇒ Already done
+Da fare ⇒ To do
+Prima di cominciare ⇒ Before you start
+Per andare a fondo ⇒ Going deeper
+Rifai con numeri nuovi ⇒ Try again with new numbers
+Torna al capitolo ⇒ Back to the chapter
+Conti giusti ⇒ Correct answers
+{0}, con laboratorio e caso ⇒ {0}, with a lab and a case
+Distinguere il prezzo di un'azione dal suo valore ⇒ Tell a stock's price from its value
+Calcolare capitalizzazione, P/E, P/B e P/S, e sapere quando usarli ⇒ Calculate market cap, P/E, P/B and P/S, and know when to use them
+Confrontare aziende con debiti diversi usando il valore d'impresa ⇒ Compare companies with different debt using enterprise value
+Stimare un valore per tre strade e concludere con un intervallo ⇒ Estimate a value three ways and conclude with a range
+Il tuo percorso, capitolo per capitolo ⇒ Your path, chapter by chapter
+Capitolo {0} di {1} ⇒ Chapter {0} of {1}
+Le lezioni ⇒ Lessons
+lab ⇒ =
+Il tuo risultato migliore: {0} su {1}. Ogni volta i numeri cambiano ⇒ Your best score: {0} of {1}. The numbers change every time
+{0} conti con numeri sempre diversi ⇒ {0} problems with numbers that always change
+Questo capitolo parte da cose che hai già fatto. ⇒ This chapter builds on things you have already done.
+Questo capitolo dà per scontate queste unità delle Basi. ⇒ This chapter takes these Basics units for granted.
+Per andare a fondo, {0}: {1} ⇒ Going deeper, {0}: {1}
+La scheda di {0}: ⇒ {0} fact sheet:
+Solo le voci che servono qui ⇒ Only the items needed here
+Tutta la scheda ⇒ Full fact sheet
+tot ⇒ =
+minus ⇒ =
+left .75s cubic-bezier(.2,.8,.2,1), width .75s cubic-bezier(.2,.8,.2,1) ⇒ =
+background .2s ⇒ =
+card ⇒ =
+bridge ⇒ =
+ticks ⇒ =
+P/E sugli utili tra {0} ⇒ P/E on earnings in {0}
+P/E sugli utili di oggi ⇒ P/E on today's earnings
+Utile per azione ⇒ Earnings per share
+Utile di oggi ⇒ Today's earnings
+Crescita ⇒ Growth
+Capitalizzazione ⇒ Market cap
+mln € ⇒ =
+EV / risultato operativo ⇒ EV / operating income
+Soci ⇒ Shareholders
+Creditori ⇒ Lenders
+Valore stimato oggi ⇒ Estimated value today
+Rispetto al prezzo di Borsa ⇒ Versus the market price
+Per chi fa questa stima è ⇒ To whoever makes this estimate it is
+sottovalutata ⇒ undervalued
+sopravvalutata ⇒ overvalued
+al prezzo giusto ⇒ fairly priced
+Se passi, le figurine del capitolo diventano dorate e restano vive più a lungo. ⇒ If you pass, the chapter's stickers turn golden and stay alive longer.
+Tutti giusti! ⇒ All correct!
+Laboratorio superato ⇒ Lab passed
+Laboratorio finito ⇒ Lab finished
+Nessun errore: questi conti ormai li fai a occhi chiusi. ⇒ No mistakes: by now you can do this math with your eyes closed.
+I conti del capitolo li sai fare. Se vuoi, riprova per farli tutti giusti: i numeri cambiano ogni volta. ⇒ You can do the chapter's math. If you like, try again to get them all right: the numbers change every time.
+Qualche conto è ancora da sistemare. Rileggi le spiegazioni e riprova: i numeri cambiano, il metodo no. ⇒ A few problems still need work. Reread the explanations and try again: the numbers change, the method doesn't.
+Prima il tuo risultato migliore era {0}. ⇒ Your best score before was {0}.
+Vedi il risultato ⇒ See the result
+Conto {0} di {1} ⇒ Problem {0} of {1}
+Nuovo ⇒ New
+capitolo pronto ⇒ chapter ready
+capitoli pronti ⇒ chapters ready
+Per ora c'è il capitolo {0}. Gli altri arrivano uno alla volta. ⇒ For now there is chapter {0}. The others arrive one at a time.

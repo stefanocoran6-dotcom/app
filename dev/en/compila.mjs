@@ -112,11 +112,12 @@ function classifica(key, u) {
 
 // ---------- analisi ----------
 const ast = acorn.parse(src, { ecmaVersion: 'latest', sourceType: 'module' });
-const SALTA = []; let BASI_DECL = null;   // le lezioni inline e il glossario non si leggono frase per frase: si sostituiscono per intero
+const SALTA = []; let BASI_DECL = null, AZIONI_DECL = null;   // le lezioni inline e il glossario non si leggono frase per frase: si sostituiscono per intero
 for (const n of ast.body) {
   const nome = n.type === 'VariableDeclaration' && n.declarations[0].id && n.declarations[0].id.name;
   if (nome === 'BASI_UNITS') BASI_DECL = n;
-  if (nome === 'BASI_UNITS' || nome === 'GLOSS_DEF' || nome === 'GLOSS_ALIAS' || nome === 'GEN') SALTA.push([n.start, n.end]);   // GEN (p44_motore.js) ha già dentro le sue lingue
+  if (nome === 'AZIONI_UNITS') AZIONI_DECL = n;
+  if (nome === 'BASI_UNITS' || nome === 'AZIONI_UNITS' || nome === 'GLOSS_DEF' || nome === 'GLOSS_ALIAS' || nome === 'GEN') SALTA.push([n.start, n.end]);   // GEN (p44_motore.js) ha già dentro le sue lingue
 }
 const dentroSalta = n => SALTA.some(r => n.start >= r[0] && n.end <= r[1]);
 
@@ -252,6 +253,9 @@ function sostituisciDati() {
     basi.forEach(u => u.lessons.forEach(l => { l.lab = lab[l.key] || 'B'; if (SIGLE[l.sym]) l.sym = SIGLE[l.sym]; }));
     edits.push({ start: BASI_DECL.start, end: BASI_DECL.end, render: () => 'const BASI_UNITS = ' + JSON.stringify(basi) + ';' });
   }
+  // la materia Azioni: i capitoli non sono ancora tradotti. In inglese l'elenco è vuoto, quindi il corso non c'è e in Scopri la materia resta "in arrivo".
+  // Quando ci sarà dev/en/azioni_en.json (stessa forma di azioni.json), entra qui al posto dell'elenco vuoto.
+  if (AZIONI_DECL) { const az = leggiJson('azioni_en.json'); edits.push({ start: AZIONI_DECL.start, end: AZIONI_DECL.end, render: () => 'const AZIONI_UNITS = ' + JSON.stringify(az || []) + ';' }); }
   // il glossario: dalle voci di glossario_en.json (scritto da glossario.py) si ricavano GLOSS_DEF e GLOSS_ALIAS
   const gl = costruisciGlossario(leggiJson('glossario_en.json'));
   if (gl) for (const n of ast.body) {

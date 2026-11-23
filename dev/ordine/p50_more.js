@@ -46,7 +46,7 @@ function SfideScreen({ nav }) {
     <//>
   <//>`;
 }
-function duelQuestions() { const st = startedCourses(); const pool = (st.length ? st : misCourses()).flatMap(misLessons); const done = pool.filter(l => isHad(l.key)); const src = allQuestions(done).length >= 5 ? done : pool; return K.flShuffle(allQuestions(src)).slice(0, 5); }
+function duelQuestions() { const st = startedCourses(); const pool = (st.length ? st : misCourses()).flatMap(misLessons); const done = pool.filter(l => isHad(l.key)); const src = allQuestions(done).length >= 5 ? done : pool; return K.flShuffle(allQuestions(src).filter(q => !splitCase(q))).slice(0, 5); }   // niente domande con un caso lungo da leggere: in una sfida a tempo non ci stanno
 function DuelRun({ nav, rival }) {
   const qs = useMemo(duelQuestions, []);
   const [i, setI] = useState(0), [sel, setSel] = useState(null), [show, setShow] = useState(false), [mine, setMine] = useState([]), [his, setHis] = useState([]), [el, setEl] = useState(0);
@@ -423,7 +423,7 @@ function CatalogScreen({ nav }) {
   const box = 'gap:10px;width:100%;min-height:60px;padding:8px 12px 8px 14px;border-radius:16px;text-align:left;';
   const item = (x, k) => { const c = x.course && courseById(x.course);
     if (c) return html`<button key=${k} type="button" class="o-rowf" onClick=${() => nav.go(inMyApp(c.id) ? 'percorso' : 'scheda', { course: c.id })} style="${box}border:2px solid ${INK};background:#fff">${two(c.name, plural(c.lessons.length, 'lezione breve', 'lezioni brevi'))}${inMyApp(c.id) && html`<span class="o-tag" style="background:${MENTA}">Nella tua app</span>`}${PathIco(D_NEXT, 20, 2.6)}</button>`;
-    if (x.levels) return html`<button key=${k} type="button" class="o-rowf" onClick=${() => nav.go('schedaMateria', { id: x.id })} style="${box}border:2px solid ${INK};background:#fff"><span class="o-grow o-col" style="gap:2px"><span class="o-rowf" style="gap:8px"><span style="font-size:16px;line-height:21px;font-weight:800">${x.name}</span><span class="o-tag">La prossima</span></span><span class="o-s">${x.sub}</span></span>${PathIco(D_NEXT, 20, 2.6)}</button>`;
+    if (x.levels) { const mc = x.corso ? courseById(x.corso) : null, mio = mc && inMyApp(mc.id); return html`<button key=${k} type="button" class="o-rowf" onClick=${() => nav.go('schedaMateria', { id: x.id })} style="${box}border:2px solid ${INK};background:#fff"><span class="o-grow o-col" style="gap:2px"><span class="o-rowf" style="gap:8px"><span style="font-size:16px;line-height:21px;font-weight:800">${x.name}</span><span class="o-tag" style=${mio ? { background: MENTA } : null}>${mio ? 'Nella tua app' : mc ? 'Nuovo' : 'La prossima'}</span></span><span class="o-s">${x.sub}</span></span>${PathIco(D_NEXT, 20, 2.6)}</button>`; }
     return html`<div key=${k} class="o-rowf" style="${box}border:2px dashed ${INK};background:${T_BG}">${two(x.name, x.sub, true)}<span style="flex:none;font-size:12px;line-height:16px;font-weight:800;color:${MUT}">In arrivo</span></div>`; };
   return html`<${Flow} top=${html`<${TopBar} onBack=${nav.back} mid=${html`<h1 class="o-grow" style="font-size:28px;line-height:32px;font-weight:800;letter-spacing:-.02em">Percorsi</h1>`}/>`}>
     <div class="o-pad" style="padding-top:2px;padding-bottom:max(30px,calc(env(safe-area-inset-bottom) + 14px))">
@@ -444,14 +444,20 @@ function CatalogScreen({ nav }) {
     </div>
   <//>`;
 }
-// scheda di una materia in arrivo: i livelli (uno per volta) e i capitoli, che sono domande
+// scheda di una materia a capitoli: i livelli (uno per volta) e i capitoli, che sono domande.
+// I capitoli già scritti (le unità del corso della materia, con il loro numero) si aprono; gli altri restano "in arrivo".
 function MateriaScreen({ nav, id }) {
+  useS2();
   const M = MATERIE.flatMap(g => g.items).find(x => x.levels && x.id === id) || MATERIE.flatMap(g => g.items).find(x => x.levels);
+  const c = M.corso ? courseById(M.corso) : null, mine = !!c && inMyApp(c.id), begun = !!c && doneCount(c.lessons) > 0, pronti = c ? c.units.length : 0;
   const [lv, setLv] = useState(0); const L = M.levels[lv], tot = L.parts.reduce((s, p) => s + p[1].length, 0); let n = 0;
+  const ready = k => (c && lv === 0 ? c.units.find(u => u.num === k) : null);
+  // aggiunge la materia ai propri percorsi (se non c'è già) e apre il capitolo
+  const open = u => { misAddCourse(c.id); s2set(x => ({ cur: c.id, started: Array.from(new Set([...(x.started || []), c.id])) })); nav.replace('percorso', { course: c.id, unit: u ? u.id : null }); };
   return html`<${Room} color=${M.color || AZ} tabs=${false} headH=${176}
     rally=${html`<${Rally} pose="insegna" alt="" style="position:absolute;right:-14px;top:calc(var(--otop) + 27px)"/>`}
     head=${html`<div class="o-rowf" style="height:44px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Indietro"/></div>
-      <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:22px;max-width:190px"><h1 class="o-h1m">${M.name}</h1><${Pill}>${M.levels.length === 2 ? 'Due livelli' : 'In arrivo'}<//></div>`}>
+      <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:22px;max-width:190px"><h1 class="o-h1m">${M.name}</h1><${Pill}>${pronti ? plural(pronti, 'capitolo pronto', 'capitoli pronti') : M.levels.length === 2 ? 'Due livelli' : 'In arrivo'}<//></div>`}>
     <${Sheet} pad=${false} style=${{ paddingTop: 22 }}>
       <div class="o-rowf" style="gap:8px;flex-wrap:wrap">${M.levels.map((x, k) => html`<button key=${k} type="button" class=${'o-chip' + (lv === k ? ' on' : '')} aria-pressed=${lv === k ? 'true' : 'false'} onClick=${() => setLv(k)}>${k + 1} · ${x.tab}</button>`)}</div>
       <h2 class="o-h2" style="font-size:22px;line-height:26px;margin:18px 0 14px">${L.name}</h2>
@@ -461,10 +467,13 @@ function MateriaScreen({ nav, id }) {
       <ul class="o-col" style="gap:8px;list-style:none">${L.learn.map(t => html`<li key=${t} class="o-rowf" style="gap:12px;align-items:flex-start">${PathIco(D_CHECK, 20, 3)}<span class="o-t" style="font-size:15px;font-weight:600">${t}</span></li>`)}</ul>
       <h2 class="o-h2" style="font-size:18px;margin:22px 0 4px">I capitoli</h2>
       <p class="o-s" style="margin-bottom:4px">Ogni capitolo risponde a una domanda.</p>
-      ${L.parts.map(([t, qs]) => html`<div key=${t}>${t && html`<p class="o-lab" style="margin:12px 0 6px">${t}</p>`}<ol class="o-col" style="gap:8px;list-style:none;padding:0;margin-top:${t ? 0 : 10}px">${qs.map(q => { n++;
-        return html`<li key=${q} class="o-rowf" style="gap:12px;min-height:48px;padding:6px 14px 6px 10px;border:2px dashed ${INK};border-radius:14px;background:${T_BG}"><span style="width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;border:2px solid ${INK};border-radius:999px;background:#fff;font-size:13px;font-weight:800">${n}</span><span style="font-size:15px;line-height:20px;font-weight:700">${q}</span></li>`; })}</ol></div>`)}
-      <p class="o-s" style="text-align:center;font-size:14px;font-weight:700;color:${INK};margin-top:22px">I capitoli arrivano uno alla volta.</p>
-      <div style="padding:12px 0 max(30px,calc(env(safe-area-inset-bottom) + 12px))"><${Btn} cls="lg" disabled=${true}>In arrivo<//></div>
+      ${L.parts.map(([t, qs]) => html`<div key=${t}>${t && html`<p class="o-lab" style="margin:12px 0 6px">${t}</p>`}<ol class="o-col" style="gap:8px;list-style:none;padding:0;margin-top:${t ? 0 : 10}px">${qs.map(q => { n++; const u = ready(n), num = n;
+        const dot = html`<span style="width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;border:2px solid ${INK};border-radius:999px;background:${u ? M.color || AZ : '#fff'};font-size:13px;font-weight:800">${num}</span>`;
+        return u ? html`<li key=${q}><button type="button" class="o-rowf" onClick=${() => open(u)} style="gap:12px;width:100%;min-height:56px;padding:6px 10px 6px 10px;border:2.5px solid ${INK};border-radius:14px;background:#fff;box-shadow:3px 3px 0 ${INK};text-align:left">${dot}
+            <span class="o-grow o-col" style="gap:1px"><span style="font-size:15px;line-height:20px;font-weight:800">${q}</span><span class="o-s">${plural(unitLessons(u).length, 'lezione', 'lezioni')}, con laboratorio e caso</span></span><span class="o-tag" style="background:${MENTA}">Pronto</span>${PathIco(D_NEXT, 18, 2.6)}</button></li>`
+          : html`<li key=${q} class="o-rowf" style="gap:12px;min-height:48px;padding:6px 14px 6px 10px;border:2px dashed ${INK};border-radius:14px;background:${T_BG}">${dot}<span style="font-size:15px;line-height:20px;font-weight:700">${q}</span></li>`; })}</ol></div>`)}
+      <p class="o-s" style="text-align:center;font-size:14px;font-weight:700;color:${INK};margin-top:22px">${pronti === 1 ? `Per ora c'è il capitolo ${c.units[0].num}. Gli altri arrivano uno alla volta.` : 'I capitoli arrivano uno alla volta.'}</p>
+      <div style="padding:12px 0 max(30px,calc(env(safe-area-inset-bottom) + 12px))">${c ? html`<${Btn} cls="lg" onClick=${() => open(null)}>${!mine ? 'Aggiungi alla mia app e inizia' : begun ? 'Continua il percorso' : 'Inizia il percorso'}<//>` : html`<${Btn} cls="lg" disabled=${true}>In arrivo<//>`}</div>
     <//>
   <//>`;
 }

@@ -23,7 +23,62 @@ function Slider({ value, min, max, step, onChange, label, disabled }) {
 
 // figura che accompagna una spiegazione: una o più barre divise in pezzi colorati, con la legenda sotto. Le barre crescono quando la pagina compare.
 const FIG_COL = { az: AZ, pesca: PESCA, menta: MENTA, giallo: GIALLO, lilla: LILLA, rosa: ROSA, bianco: '#fff' };
+// La scheda dell'azienda che accompagna un capitolo: sempre le stesse voci, con in evidenza quelle che servono nella pagina.
+// Di solito si vedono solo le voci in evidenza e il resto si apre con un tocco; `full` la mostra tutta (la prima volta che compare).
+function FigCard({ fig }) {
+  const hl = fig.rows.filter(r => r[2]), some = hl.length > 0 && hl.length < fig.rows.length && !fig.full;
+  const [all, setAll] = useState(!some);
+  const rows = all ? fig.rows : hl;
+  return html`<figure class="o-fig" style="gap:0;padding:0;overflow:hidden" aria-label=${`La scheda di ${fig.name}: ` + rows.map(r => r[0] + ' ' + r[1]).join(', ')}>
+    <div class="o-rowf" style="gap:12px;padding:12px 14px;background:${PESCA};border-bottom:2.5px solid ${INK}">
+      <span class="o-ibox" style="width:40px;height:40px;border-radius:12px;font-size:20px;font-weight:800" aria-hidden="true">${fig.name[0]}</span>
+      <span class="o-grow o-col" style="gap:0"><span style="font-size:17px;line-height:22px;font-weight:800">${fig.name}</span><span class="o-s" style=${{ color: INK }}>${fig.sub}</span></span></div>
+    <div class="o-col">${rows.map((r, k) => html`<div key=${r[0]} class="o-rowf" style=${{ justifyContent: 'space-between', gap: 12, minHeight: 38, padding: '6px 14px', borderTop: k ? `2px solid ${SEP}` : 0, background: r[2] && all && some ? T_GIALLO : '#fff' }}>
+      <span style=${{ fontSize: 14, lineHeight: '19px', fontWeight: 700, color: r[2] || !some ? INK : MUT }}>${r[0]}</span><span style=${{ fontSize: 15, lineHeight: '20px', fontWeight: 800, whiteSpace: 'nowrap', color: r[2] || !some ? INK : MUT }}>${r[1]}</span></div>`)}</div>
+    ${some && html`<button type="button" class="o-rowf" aria-expanded=${all ? 'true' : 'false'} onClick=${() => setAll(!all)} style="justify-content:center;gap:6px;width:100%;min-height:40px;border-top:2px solid ${SEP};background:${T_BG};font-size:13px;line-height:18px;font-weight:800">
+      ${all ? 'Solo le voci che servono qui' : 'Tutta la scheda'}<span style=${{ display: 'flex', transform: all ? 'rotate(180deg)' : 'none' }}>${Ico(ChevronDown, 18, 2.6)}</span></button>`}
+    ${fig.cap && html`<figcaption class="o-s" style="padding:8px 14px 10px;border-top:2px solid ${SEP}">${fig.cap}</figcaption>`}</figure>`;
+}
+// Il ponte: da un numero a un altro aggiungendo e togliendo pezzi. Ogni barra parte dove finisce quella prima.
+const BRIDGE_COL = { base: AZ, plus: PESCA, minus: MENTA, tot: GIALLO }, BRIDGE_SIGN = { base: '', plus: '+ ', minus: '− ', tot: '= ' };
+function FigBridge({ fig }) {
+  const [go, setGo] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
+  let run = 0; const rows = fig.rows.map(([lab, v, tipo]) => { const da = tipo === 'tot' ? 0 : tipo === 'minus' ? run - v : run; if (tipo !== 'tot') run += tipo === 'minus' ? -v : v; return { lab, v, tipo, da }; });
+  const max = Math.max.apply(null, rows.map(r => r.da + r.v));
+  return html`<figure class="o-fig" style="gap:10px" role="img" aria-label=${rows.map(r => BRIDGE_SIGN[r.tipo] + r.lab + ' ' + fmtN(r.v) + ' ' + fig.unit).join(', ')}>
+    ${rows.map((r, k) => html`<div key=${k} class="o-col" style=${{ gap: 4, paddingTop: r.tipo === 'tot' ? 10 : 0, borderTop: r.tipo === 'tot' ? `2.5px solid ${INK}` : 0 }}>
+      <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style=${{ fontWeight: r.tipo === 'tot' ? 800 : 700 }}>${r.lab}</span><span class="o-t" style="font-weight:800;white-space:nowrap">${BRIDGE_SIGN[r.tipo]}${fmtN(r.v)} ${fig.unit}</span></div>
+      <div style="height:22px;position:relative"><i style=${{ position: 'absolute', top: 0, bottom: 0, left: (go ? r.da / max * 100 : 0) + '%', width: (go ? r.v / max * 100 : 0) + '%', minWidth: 14, background: BRIDGE_COL[r.tipo], border: `2.5px solid ${INK}`, borderRadius: 8, transition: 'left .75s cubic-bezier(.2,.8,.2,1), width .75s cubic-bezier(.2,.8,.2,1)' }}></i></div></div>`)}
+    ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
+}
+// Le tacche: una barra divisa in n parti uguali (il prezzo come tanti anni di utili)
+function FigTicks({ fig }) {
+  const [go, setGo] = useState(0);
+  useEffect(() => { const t = setInterval(() => setGo(g => { if (g >= fig.n) { clearInterval(t); return g; } return g + 1; }), 55); return () => clearInterval(t); }, []);
+  return html`<figure class="o-fig" style="gap:8px" role="img" aria-label=${`${fig.lab} ${fig.val}: ${fig.each}`}>
+    <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style="font-weight:800">${fig.lab}</span><span class="o-t" style="font-weight:800;white-space:nowrap">${fig.val}</span></div>
+    <div style="display:flex;height:28px;border:2.5px solid ${INK};border-radius:10px;overflow:hidden">${Array.from({ length: fig.n }, (_, k) => html`<i key=${k} style=${{ flex: '1 1 0', background: k < go ? AZ : '#fff', borderLeft: k ? `2px solid ${INK}` : 0, transition: 'background .2s' }}></i>`)}</div>
+    <span class="o-s" style=${{ color: INK }}>${fig.each}</span>
+    ${fig.cap && html`<figcaption class="o-s">${fig.cap}</figcaption>`}</figure>`;
+}
+// «Per andare a fondo»: un riquadro chiuso sotto la pagina. Chi lo apre trova il passo in più; chi lo salta non perde il filo della lezione.
+function Deep({ d }) {
+  const [open, setOpen] = useState(false);
+  return html`<div class="o-deep">
+    <button type="button" class="o-rowf" aria-expanded=${open ? 'true' : 'false'} onClick=${() => setOpen(!open)} style="gap:12px;width:100%;padding:12px 14px;text-align:left">
+      <span class="o-ibox" style="width:36px;height:36px;border-radius:11px">${Ico(Lightbulb, 18, 2.4)}</span>
+      <span class="o-grow o-col" style="gap:0"><span class="o-s" style=${{ color: INK }}>Per andare a fondo</span><span style="font-size:16px;line-height:21px;font-weight:800">${d.t}</span></span>
+      <span style=${{ flex: 'none', display: 'flex', transform: open ? 'rotate(180deg)' : 'none' }}>${Ico(ChevronDown, 22, 2.6)}</span></button>
+    ${open && html`<div class="o-in" style="padding:0 14px 14px"><${Rich} text=${d.x} cls="sm"/></div>`}</div>`;
+}
 function Fig({ fig }) {
+  if (fig.kind === 'card') return html`<${FigCard} fig=${fig}/>`;
+  if (fig.kind === 'bridge') return html`<${FigBridge} fig=${fig}/>`;
+  if (fig.kind === 'ticks') return html`<${FigTicks} fig=${fig}/>`;
+  return html`<${FigBars} fig=${fig}/>`;
+}
+function FigBars({ fig }) {
   const [go, setGo] = useState(false);
   useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
   const sum = r => r.segs.reduce((a, x) => a + x[0], 0), max = Math.max.apply(null, fig.rows.map(sum));
@@ -228,6 +283,24 @@ const LEVERS = {
     calc: (v, p) => { const ind = (p.pa * v.a + p.pb * v.b + p.pc * v.c) / 100, su = (v.a > 0 ? 1 : 0) + (v.b > 0 ? 1 : 0) + (v.c > 0 ? 1 : 0), media = (v.a + v.b + v.c) / 3; return { ind, ind10: ind * 10, media, su, a: v.a, b: v.b, c: v.c }; },
     view: o => ({ lab: "L'indice oggi", big: (o.ind > 0 ? '+' : '') + fmtN(o.ind, 1) + '%', sideLab: 'Titoli in rialzo', side: o.su + ' su 3', side2Lab: 'Media semplice dei tre', side2: (o.media > 0 ? '+' : '') + fmtN(o.media, 1) + '%', bar: null })
   }
+};
+// ---- le leve del capitolo «Costa tanto o poco?» (materia Azioni). I risultati con il nome che finisce in 10 o in c sono gli stessi numeri
+// moltiplicati per 10 o per 100: gli obiettivi confrontano numeri interi, e così si può chiedere "P/E sotto 12" o "valore sotto 12,00 €" ----
+// prezzo fermo, utili che crescono: leve "g" (crescita annua in %) e "anni"; parametri P = prezzo, E = utile per azione di oggi
+LEVERS.pecresc = {
+  calc: (v, p) => { const eps = p.E * Math.pow(1 + v.g / 100, v.anni), pe = p.P / eps; return { pe, pe10: pe * 10, eps, eps0: p.E, g: v.g, anni: v.anni }; },
+  view: o => ({ lab: o.anni ? `P/E sugli utili tra ${plural(o.anni, 'anno', 'anni')}` : 'P/E sugli utili di oggi', big: fmtN(o.pe, 1), sideLab: 'Utile per azione', side: withUnit(o.eps, '€', 2), bar: [o.eps0, o.eps - o.eps0], barLab: ['Utile di oggi', 'Crescita'], barCol: ['#fff', MENTA] })
+};
+// stessa attività, debiti diversi: leva "D" (debiti finanziari, in milioni); parametri EV e EBIT dell'attività, cassa, i = interessi in %, tax = imposte in %
+LEVERS.leva = {
+  calc: (v, p) => { const nd = v.D - p.cassa, cap = p.EV - nd, utile = (p.EBIT - p.i / 100 * v.D) * (1 - p.tax / 100), pe = cap / utile; return { pe, pe10: pe * 10, cap, utile, nd, D: v.D, evebit: p.EV / p.EBIT }; },
+  view: o => ({ lab: 'P/E', big: fmtN(o.pe, 1), sideLab: 'Capitalizzazione', side: fmtN(o.cap) + ' mln €', side2Lab: 'EV / risultato operativo', side2: fmtN(o.evebit, 1), bar: [o.cap, Math.max(0, o.nd)], barLab: ['Soci', 'Creditori'], barCol: [AZ, PESCA] })
+};
+// il valore di un'azione tenuta un anno: leve "p1" (prezzo atteso tra un anno) e "rr" (rendimento richiesto in %); parametri D1 = dividendo, P = prezzo di oggi
+LEVERS.unanno = {
+  calc: (v, p) => { const V = (p.D1 + v.p1) / (1 + v.rr / 100); return { V, Vc: V * 100, rr: v.rr, P: p.P, diff: (V / p.P - 1) * 100 }; },
+  view: o => ({ lab: 'Valore stimato oggi', big: withUnit(o.V, '€', 2), sideLab: 'Rispetto al prezzo di Borsa', side: (o.diff > 0.05 ? '+' : '') + fmtN(Math.abs(o.diff) < 0.05 ? 0 : o.diff, 1) + '%',
+    side2Lab: 'Per chi fa questa stima è', side2: o.diff > 1 ? 'sottovalutata' : o.diff < -1 ? 'sopravvalutata' : 'al prezzo giusto' })
 };
 // i conti dello stipendio 2026, usati dalle leve "netto", "irpef" e "sconto" (stesse formule di dev/ordine/FONTI_BASI.md)
 const STIP = {

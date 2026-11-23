@@ -49,8 +49,36 @@ def totale(p):
 def margine(p):
     return C - D(p['C']) * C / D(p['R'])
 
+# ---- laboratorio «multipli» (capitolo «Costa tanto o poco?»): ogni conto per una strada diversa da quella del motore ----
+def S(x): return D(str(x))
+def capz(p):                  # tante azioni quante sono, sommate una alla volta sarebbe lungo: si passa dal valore di 1.000 azioni
+    return S(p['P']) * 1000 * S(p['N']) / 1000
+def eps(p):                   # l'utile per azione è il numero che, moltiplicato per le azioni, ridà l'utile
+    e = S(p['U']) / S(p['N'])
+    assert e * S(p['N']) == S(p['U']), ('utile per azione', p)
+    return e
+def pe(p):                    # quanti utili per azione stanno nel prezzo
+    return S(p['P']) * 100 / (S(p['E']) * 100)
+def petot(p):                 # passando dall'utile per azione
+    return S(p['P']) / (S(p['U']) / S(p['N']))
+def ey(p):                    # 100 diviso il P/E
+    return C / (S(p['P']) / S(p['E']))
+def pb(p):                    # con le cifre di tutta l'azienda: capitalizzazione diviso patrimonio netto
+    return S(p['P']) * S(p['N']) / S(p['PN'])
+def ps(p):                    # per azione: prezzo diviso ricavi per azione
+    return S(p['P']) / (S(p['R']) / S(p['N']))
+def ev(p):                    # capitalizzazione più debito netto
+    return S(p['cap']) + (S(p['D']) - S(p['C']))
+def confronto(p):             # metà del valore con un P/E, metà con l'altro
+    return S(p['a']) * S(p['E']) / 2 + S(p['b']) * S(p['E']) / 2
+def evebit(p):
+    return (S(p['cap']) + (S(p['D']) - S(p['C']))) / S(p['E'])
+def margsic(p):               # quello che manca al prezzo per arrivare a 100 di valore
+    return C - S(p['P']) * C / S(p['V'])
+
 CONTI = dict(semplice=(semplice, 0), composto=(composto, 0), attuale=(attuale, 0), reale=(reale, 1), variazione=(variazione, 1), recupero=(recupero, 1),
-             raddoppio=(raddoppio, 0), dividendo=(dividendo, 1), cedola=(cedola, 2), portafoglio=(portafoglio, 2), totale=(totale, 1), margine=(margine, 1))
+             raddoppio=(raddoppio, 0), dividendo=(dividendo, 1), cedola=(cedola, 2), portafoglio=(portafoglio, 2), totale=(totale, 1), margine=(margine, 1),
+             capz=(capz, 0), eps=(eps, 2), pe=(pe, 1), petot=(petot, 1), ey=(ey, 2), pb=(pb, 1), ps=(ps, 1), ev=(ev, 0), confronto=(confronto, 2), evebit=(evebit, 1), margsic=(margsic, 1))
 
 def main(f):
     n, guai, visti = 0, [], {}

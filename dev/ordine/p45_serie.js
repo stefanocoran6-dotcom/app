@@ -10,7 +10,7 @@ const serieStato = () => { const v = s2get().serie; return v && typeof v.best ==
 // la domanda numero n (da 0): prima le facili, poi entrano le medie e le difficili; mai due volte di fila lo stesso tipo, mai lo stesso fatto in una partita
 function serieDomanda(n, viste, ultimo) {
   const tetto = n < 4 ? 1 : n < 10 ? 2 : 3;
-  const adatti = GEN.tipi.filter(t => t.liv <= tetto && t.id !== ultimo), alti = adatti.filter(t => t.liv === tetto);
+  const adatti = GEN.tipi.filter(t => !t.lab && t.liv <= tetto && t.id !== ultimo), alti = adatti.filter(t => t.liv === tetto);
   for (let giri = 0; giri < 80; giri++) {
     const rosa = alti.length && Math.random() < 0.5 ? alti : adatti;   // metà delle volte dal livello più alto raggiunto: così la partita sale
     const tipo = rosa[Math.floor(Math.random() * rosa.length)], N = GEN.crea(tipo.id, semeNuovo());
@@ -61,4 +61,53 @@ function SerieRun({ nav }) {
     top=${html`<${TopBar} onClose=${nav.back} mid=${html`<span class="o-grow" style="font-size:15px;line-height:20px;font-weight:800;white-space:nowrap">Giuste: ${okN}</span>`} right=${cuori}/>`}
     foot=${html`<div class="o-rowf" style="gap:12px"><${IBtn} lg=${true} icon=${Ico(Calculator, 24, 2.2)} onClick=${nav.openCalc} label="Calcolatrice"/><div class="o-grow"><${Btn} cls="lg" bg=${MENTA} disabled=${sel == null || locked} onClick=${check}>Controlla<//></div></div>`} over=${over}>
     <div class="o-test"><${QuestionBody} key=${n} q=${q} label=${`Domanda ${n + 1}`} sel=${sel} onSel=${setSel} locked=${locked} tab=${tab} setTab=${setTab}/></div><//>`;
+}
+
+// =====================================================================================================
+// LABORATORIO DI CALCOLO: i conti di un capitolo, con numeri sempre diversi (gli stampi con `lab` del motore).
+// =====================================================================================================
+// Niente vite e niente tempo: si arriva in fondo, si conta quante sono giuste e si può rifare con numeri nuovi.
+// Dopo un errore la spiegazione comincia dalla riga che dice quale errore è, come nella Serie. Il risultato migliore resta nei dati salvati (labs).
+const LAB_N = 8, LAB_OK = 6;   // conti per giro; da quanti giusti in su il laboratorio vale come superato
+const labStato = id => { const v = (s2get().labs || {})[id]; return v && typeof v.best === 'number' ? v : { best: 0, n: 0, last: 0 }; };
+// un giro: tipi diversi tra loro, pescati a caso tra quelli del laboratorio
+function labDomande(id) {
+  const out = [], viste = new Set();
+  K.flShuffle(GEN.tipi.filter(t => t.lab === id)).slice(0, LAB_N).forEach(t => {
+    for (let giri = 0; giri < 40; giri++) { const N = GEN.crea(t.id, semeNuovo()); if (!N || viste.has(GEN.impronta(N))) continue; viste.add(GEN.impronta(N)); out.push(Object.assign(GEN.testo(N, LANG, CUR), { tipo: t.id })); break; }
+  });
+  return out;
+}
+function LabRun({ nav, lab }) {
+  useS2();
+  const scrollRef = useRef(null), partenza = useRef(labStato(lab).best);
+  const [qs, setQs] = useState(() => labDomande(lab));
+  const [i, setI] = useState(0), [okN, setOkN] = useState(0), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [tab, setTab] = useState('case'), [fine, setFine] = useState(false);
+  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [i]);
+  const n = qs.length, q = qs[i];
+  if (fine || !q) {
+    const record = okN > partenza.current, ok = okN >= Math.min(LAB_OK, n);
+    const ancora = () => { partenza.current = labStato(lab).best; setQs(labDomande(lab)); setI(0); setOkN(0); setSel(null); setFb(null); setTab('case'); setFine(false); };
+    return html`<${Flow} bg=${ok ? MENTA : T_AZ} top=${html`<${TopBar} onClose=${nav.back} title=""/>`}
+      foot=${html`<${Btn} cls="lg" bg="#fff" onClick=${ancora}>Rifai con numeri nuovi<//><div style="text-align:center;margin-top:6px"><button type="button" class="o-link" onClick=${nav.back}>Torna al capitolo</button></div>`}>
+      <div class="o-col o-pad" style="align-items:center;text-align:center;padding-top:6px"><${Rally} pose=${ok ? 'festeggia' : 'pensa'} w=${250} alt=""/>
+        <h1 class="o-pop" style="font-size:40px;line-height:44px;font-weight:800;letter-spacing:-.02em;margin-top:-6px">${okN === n ? 'Tutti giusti!' : ok ? 'Laboratorio superato' : 'Laboratorio finito'}</h1>
+        <p class="o-body" style="margin-top:8px;max-width:310px">${okN === n ? 'Nessun errore: questi conti ormai li fai a occhi chiusi.' : ok ? 'I conti del capitolo li sai fare. Se vuoi, riprova per farli tutti giusti: i numeri cambiano ogni volta.' : 'Qualche conto è ancora da sistemare. Rileggi le spiegazioni e riprova: i numeri cambiano, il metodo no.'}${record && partenza.current > 0 ? ` Prima il tuo risultato migliore era ${partenza.current}.` : ''}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:24px">
+          <div class="o-col" style="padding:10px 14px;background:${GIALLO};border:2.5px solid ${INK};border-radius:18px;text-align:left"><span style="font-size:13px;font-weight:700">Conti giusti</span><span style="font-size:22px;line-height:26px;font-weight:800">${okN} su ${n}</span></div>
+          <div class="o-col" style="padding:10px 14px;background:#fff;border:2.5px solid ${INK};border-radius:18px;text-align:left"><span class="o-s">Punti</span><span style="font-size:22px;line-height:26px;font-weight:800">+${okN * 5} XP</span></div></div>
+      </div><//>`;
+  }
+  const locked = !!fb;
+  const next = () => {
+    if (i < n - 1) { setI(i + 1); setSel(null); setFb(null); setTab('case'); return; }
+    const st = labStato(lab); s2set(s => ({ labs: Object.assign({}, s.labs, { [lab]: { best: Math.max(st.best, okN), n: (st.n || 0) + 1, last: okN, t: Date.now() } }) }));
+    setFine(true);
+  };
+  const check = () => { if (sel === q.ans) { setOkN(okN + 1); addXp(5); return setFb('ok'); } setFb('ko'); };   // come nella Serie, la spiegazione dopo un errore c'è sempre
+  const qFb = fb === 'ko' && q.note[sel] ? Object.assign({}, q, { exp: q.note[sel] + '\n\n' + q.exp }) : q;
+  const over = fb === 'ok' ? html`<${FeedbackSheet} ok=${true} q=${qFb} xp=${5} onNext=${next} next=${i < n - 1 ? 'Continua' : 'Vedi il risultato'}/>` : fb === 'ko' ? html`<${FeedbackSheet} ok=${false} q=${qFb} onNext=${next}/>` : null;
+  return html`<${Flow} scrollRef=${scrollRef} top=${html`<${TopBar} onClose=${nav.back} n=${n} i=${i}/>`}
+    foot=${html`<div class="o-rowf" style="gap:12px"><${IBtn} lg=${true} icon=${Ico(Calculator, 24, 2.2)} onClick=${nav.openCalc} label="Calcolatrice"/><div class="o-grow"><${Btn} cls="lg" bg=${MENTA} disabled=${sel == null || locked} onClick=${check}>Controlla<//></div></div>`} over=${over}>
+    <div class="o-test"><${QuestionBody} key=${i} q=${q} label=${`Conto ${i + 1} di ${n}`} sel=${sel} onSel=${setSel} locked=${locked} tab=${tab} setTab=${setTab}/></div><//>`;
 }

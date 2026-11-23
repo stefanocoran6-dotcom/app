@@ -40,7 +40,7 @@ function walk(n, parent, top) {
   if (parent && parent.type === 'Program') {
     const nome = n.type === 'FunctionDeclaration' || n.type === 'ClassDeclaration' ? n.id.name : n.type === 'VariableDeclaration' ? (n.declarations[0].id.name || '') : '';
     top = nome; if (!tutto && SALTA.has(nome)) return;
-    if (nome === 'BASI_UNITS' || nome === 'GLOSS_DEF') return;   // le lezioni e il glossario si controllano con basi_en.json / glossario.py
+    if (nome === 'BASI_UNITS' || nome === 'AZIONI_UNITS' || nome === 'GLOSS_DEF') return;   // le lezioni e il glossario si controllano con basi_en.json / glossario.py
   }
   if (n.type === 'Literal' && typeof n.value === 'string' && !(parent && (parent.type === 'ImportDeclaration' || (parent.type === 'Property' && parent.key === n)))) nota(n, 'str', n.value, top);
   if (n.type === 'TemplateLiteral') {

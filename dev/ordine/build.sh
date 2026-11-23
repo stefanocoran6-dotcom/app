@@ -5,7 +5,8 @@
 set -e
 D="$(cd "$(dirname "$0")" && pwd)"; OUT="$D/../../ordine.js"
 python3 "$D/basi_src.py"   # controlla le lezioni di "Basi della finanza" e scrive basi.json
-{ cat "$D/p00_base.js"; printf '\n// Lezioni di "Basi della finanza" (generate da dev/ordine/basi_src.py)\nconst BASI_UNITS = '; cat "$D/basi.json"; printf ';\n'
+python3 -B "$D/azioni_src.py"   # controlla le lezioni di "Azioni" (con i conti della storia) e scrive azioni.json
+{ cat "$D/p00_base.js"; printf '\n// Lezioni di "Basi della finanza" (generate da dev/ordine/basi_src.py)\nconst BASI_UNITS = '; cat "$D/basi.json"; printf ';\n// Lezioni di "Azioni" (generate da dev/ordine/azioni_src.py)\nconst AZIONI_UNITS = '; cat "$D/azioni.json"; printf ';\n'
   cat "$D/p10_data.js" "$D/p20_ui.js" "$D/p30_learn.js" "$D/p35_steps.js" "$D/p37_news.js" "$D/p40_train.js" "$D/p44_motore.js" "$D/p45_serie.js" "$D/p50_more.js" "$D/p55_live.js" "$D/p60_start.js" "$D/p90_app.js"; } > "$OUT"
 T="$(mktemp -d)"; cp "$OUT" "$T/ordine.mjs"; node --check "$T/ordine.mjs" && echo "ordine.js ok, $(wc -c < "$OUT") byte"; rm -rf "$T"
 # la versione inglese: stesso codice, frasi tradotte. Se nel codice italiano ci sono frasi nuove senza traduzione lo dice qui (e resta in italiano lì).

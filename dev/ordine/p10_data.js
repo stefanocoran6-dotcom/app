@@ -27,6 +27,15 @@ const BASI = {
   learn: ['Come lavorano interessi, inflazione e tempo', 'Come tenere in ordine entrate, uscite e risparmio', 'Come si leggono la busta paga, il conto e le carte', 'Quanto costano prestiti e mutuo, e i conti da fare prima di comprare casa', 'Come proteggersi da imprevisti e truffe', 'Cosa sono azioni, obbligazioni, fondi ed ETF, e come si investe un po\' alla volta', 'Quali errori fa la nostra testa quando investe', 'Come funzionano pensione, fondi pensione e TFR', 'Come si leggono un bilancio e le notizie di economia'],
   units: BASI_LIST.map(u => ({ id: u.id, name: u.name, sections: [{ id: u.sid, name: u.name, lessons: u.lessons.filter(lessonOk) }] })).filter(u => u.sections[0].lessons.length)
 };
+// "Azioni": la prima materia a capitoli. Ogni capitolo (un'unità del corso) è una domanda; le lezioni stanno in azioni_src.py e arrivano qui come AZIONI_UNITS.
+// I capitoli escono uno alla volta: quelli non ancora scritti si vedono "in arrivo" (i nomi stanno in AZIONI_L, più sotto).
+// Nella versione inglese AZIONI_UNITS è vuoto finché i capitoli non sono tradotti: il corso non c'è, e in Scopri la materia resta "in arrivo".
+const AZIONI = AZIONI_UNITS.length ? {
+  id: 'azioni', name: 'Azioni', badge: 'Az', ico: TrendingUp, color: PESCA, group: 'mercati', ready: true, pace: 75, chapters: true,
+  tagline: 'Dall\'idea all\'acquisto',
+  learn: ['Distinguere il prezzo di un\'azione dal suo valore', 'Calcolare capitalizzazione, P/E, P/B e P/S, e sapere quando usarli', 'Confrontare aziende con debiti diversi usando il valore d\'impresa', 'Stimare un valore per tre strade e concludere con un intervallo'],
+  units: AZIONI_UNITS.map(u => ({ id: u.id, name: u.name, num: u.num, lab: u.lab, pre: u.pre || [], sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
+} : null;
 // Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
 // La chiave è la parola in minuscolo, come compare in grassetto nelle lezioni; le forme diverse (singolare, plurale) stanno in GLOSS_ALIAS.
 const GLOSS_DEF = {
@@ -245,7 +254,31 @@ const GLOSS_DEF = {
   pun: ['PUN', 'Prezzo unico nazionale: il prezzo all\'ingrosso dell\'elettricità in Italia. Molte offerte della luce a prezzo variabile lo seguono.'],
   megawattora: ['Megawattora', 'Mille chilowattora. Una famiglia consuma in media tra 2 e 3 megawattora di elettricità in un anno.'],
   fed: ['Fed', 'La Federal Reserve, la banca centrale degli Stati Uniti. Decide i tassi di interesse del dollaro.'],
-  'wall street': ['Wall Street', 'La via di New York dove ha sede la Borsa. Per estensione indica il mercato azionario americano.']
+  'wall street': ['Wall Street', 'La via di New York dove ha sede la Borsa. Per estensione indica il mercato azionario americano.'],
+  // ---- azioni: costa tanto o poco? ----
+  'valore intrinseco': ['Valore intrinseco', 'Quanto vale davvero un\'azione, per quello che l\'azienda darà ai soci nel tempo. Non si legge da nessuna parte: si stima, e stime diverse danno cifre diverse.'],
+  sottovalutata: ['Sottovalutata', 'Si dice di un\'azione che costa meno del valore che le è stato stimato.'],
+  sopravvalutata: ['Sopravvalutata', 'Si dice di un\'azione che costa più del valore che le è stato stimato.'],
+  'margine di sicurezza': ['Margine di sicurezza', 'La distanza tra il valore stimato e il prezzo che paghi, in percentuale del valore stimato. È un cuscinetto contro gli errori della stima.'],
+  'valore di liquidazione': ['Valore di liquidazione', 'Quello che resterebbe ai soci se l\'azienda chiudesse, vendesse tutto quello che ha e pagasse tutti i debiti.'],
+  'premio di controllo': ['Premio di controllo', 'Quanto in più del prezzo di Borsa paga chi compra un\'intera azienda: insieme alle azioni compra il potere di decidere.'],
+  frazionamento: ['Frazionamento', 'Dividere ogni azione in più azioni più piccole. Il numero di azioni sale, il prezzo di ognuna scende e il valore dell\'azienda non cambia.'],
+  'large cap': ['Large cap', 'Le aziende quotate con la capitalizzazione più grande. Le soglie cambiano da una Borsa all\'altra.'],
+  'mid cap': ['Mid cap', 'Le aziende quotate di capitalizzazione media, tra le grandi e le piccole.'],
+  'small cap': ['Small cap', 'Le aziende quotate con una capitalizzazione piccola. Possono crescere in fretta, ma i loro prezzi oscillano di più.'],
+  flottante: ['Flottante', 'La parte delle azioni di un\'azienda che circola davvero in Borsa, senza contare quelle tenute ferme da fondatori, famiglie o Stato.'],
+  'utile per azione': ['Utile per azione (EPS)', 'L\'utile netto dell\'anno diviso il numero di azioni: quanto utile spetta a ogni azione.'],
+  'rendimento degli utili': ['Rendimento degli utili', 'L\'utile per azione diviso il prezzo, in percentuale. È il P/E capovolto.'],
+  'valore contabile': ['Valore contabile', 'Il patrimonio netto così come è scritto nei conti: attività meno passività. In inglese book value.'],
+  'valore contabile per azione': ['Valore contabile per azione (BVPS)', 'Il patrimonio netto scritto nei conti diviso il numero di azioni.'],
+  'p/b': ['P/B', 'Il rapporto tra il prezzo di un\'azione e il valore contabile per azione: quanti euro paghi per ogni euro di patrimonio scritto nei conti.'],
+  roe: ['ROE', 'L\'utile netto diviso il patrimonio netto: quanti euro di utile produce in un anno ogni 100 € di patrimonio.'],
+  'p/s': ['P/S', 'Il rapporto tra la capitalizzazione e i ricavi di un anno: quanto paghi per ogni euro di vendite.'],
+  'valore d\'impresa': ['Valore d\'impresa (EV)', 'Capitalizzazione più debiti finanziari meno cassa: quello che costa comprare tutta l\'attività, debiti compresi.'],
+  'debiti finanziari': ['Debiti finanziari', 'I debiti su cui un\'azienda paga interessi: prestiti delle banche e obbligazioni. Non comprendono le fatture da pagare ai fornitori.'],
+  'debito netto': ['Debito netto', 'I debiti finanziari meno la cassa. In Italia si chiama spesso posizione finanziaria netta.'],
+  'ev/ebitda': ['EV/EBITDA', 'Il valore d\'impresa diviso l\'EBITDA, cioè il risultato operativo a cui si riaggiungono gli ammortamenti.'],
+  multipli: ['Multipli', 'I rapporti tra un prezzo e una misura dell\'azienda, come P/E, P/B, P/S o valore d\'impresa diviso risultato operativo. Servono a confrontare aziende di dimensioni diverse.']
 };
 const GLOSS_ALIAS = { indice: 'indice di borsa', interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile', 'interessi sugli interessi': 'interesse composto', azione: 'azioni', obbligazione: 'obbligazioni',
   rc: 'responsabilità civile', 'prezzo/utili': 'p/e', esclusione: 'esclusioni', quota: 'quote', 'schema di ponzi': 'schema ponzi', investimento: 'investimenti', commissioni: 'commissione', 'spesa fissa': 'spese fisse', 'spesa variabile': 'spese variabili',
@@ -254,14 +287,15 @@ const GLOSS_ALIAS = { indice: 'indice di borsa', interesse: 'interessi', rate: '
   compromesso: 'contratto preliminare', 'portabilità': 'surroga', 'portabilità del mutuo': 'surroga', garanti: 'garante', 'fondo di garanzia prima casa': 'fondo prima casa', 'fondo di garanzia per la prima casa': 'fondo prima casa',
   'arbitro bancario finanziario': 'abf', 'arbitro per le controversie finanziarie': 'acf', 'reclamo scritto': 'reclamo', 'furto di identità': 'furto d\'identità', 'unit linked': 'unit-linked', tcm: 'temporanea caso morte', 'polizze rivalutabili': 'polizza rivalutabile', caricamenti: 'caricamento',
   ripartizione: 'a ripartizione', 'sistema a ripartizione': 'a ripartizione', 'fondi pensione': 'fondo pensione', 'fondo negoziale': 'fondi negoziali', 'fondo aperto': 'fondi aperti', 'coefficienti di trasformazione': 'coefficiente di trasformazione', 'previdenza complementare': 'fondo pensione',
-  inattivo: 'inattivi', 'avanzo primario': 'saldo primario', 'punto base': 'punti base', 'disavanzo': 'deficit', 'capitalizzazione di mercato': 'capitalizzazione' };
+  inattivo: 'inattivi', 'avanzo primario': 'saldo primario', 'punto base': 'punti base', 'disavanzo': 'deficit', 'capitalizzazione di mercato': 'capitalizzazione',
+  eps: 'utile per azione', ev: 'valore d\'impresa', dividendi: 'dividendo', multiplo: 'multipli', bvps: 'valore contabile per azione', 'enterprise value': 'valore d\'impresa' };
 const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?()«»“”]/g, '').replace(/\s+/g, ' ').trim(); return GLOSS_DEF[k] ? k : GLOSS_ALIAS[k] || null; };
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
 
 // Percorsi non ancora pronti: compaiono nel catalogo come "in arrivo".
 // ---- Scopri: le materie divise in cinque categorie ----
-// Una voce è un corso che c'è già ({ course }), una materia in arrivo ({ name, sub }) oppure una materia in arrivo con la sua scheda ({ id, levels }).
-// La scheda mostra i livelli e i capitoli (ogni capitolo è una domanda); le lezioni entrano un capitolo alla volta, come corsi veri.
+// Una voce è un corso che c'è già ({ course }), una materia in arrivo ({ name, sub }) oppure una materia a capitoli con la sua scheda ({ id, levels, corso }).
+// La scheda mostra i livelli e i capitoli (ogni capitolo è una domanda). I capitoli scritti stanno nel corso `corso`, come unità con il loro numero (num).
 const AZIONI_L = [
   { tab: 'Come funziona', name: 'Dall\'idea all\'acquisto', learn: ['Capire cosa fa un\'azienda, come guadagna e in che settore gioca', 'Leggere prezzo, P/E e gli altri multipli', 'Comprare e vendere: ordini, costi, dividendi, leva'],
     parts: [['Conoscere', ['Cos\'è un pezzo di azienda?', 'Cosa fa e come guadagna?', 'In che campo gioca?', 'È più forte delle altre?']], ['Decidere e comprare', ['Costa tanto o poco?', 'Come la compro?']], ['Possedere', ['Cosa mi spetta da socio?', 'Come misuro com\'è andata?', 'A leva e al ribasso: perché fa male', 'Posso battere il mercato?']]] },
@@ -273,7 +307,7 @@ const MATERIE = [
     { course: 'basi' },
     { name: 'Numeri e statistica', sub: 'Valore del denaro nel tempo, probabilità, dati' } ] },
   { id: 'mercati', name: 'Mercati', sub: 'Cosa compri', color: PESCA, ico: TrendingUp, items: [
-    { id: 'azioni', name: 'Azioni', sub: 'Due livelli: come funzionano, quanto valgono', color: PESCA, levels: AZIONI_L },
+    { id: 'azioni', name: 'Azioni', sub: 'Due livelli: come funzionano, quanto valgono', color: PESCA, levels: AZIONI_L, corso: 'azioni' },
     { name: 'Obbligazioni', sub: 'Prezzo, rendimento, tassi, credito' },
     { name: 'Derivati', sub: 'Opzioni, future, forward, swap' },
     { name: 'Altri investimenti', sub: 'Immobili, private equity, hedge fund, materie prime' } ] },
@@ -293,7 +327,7 @@ let COURSES_MEMO = null;
 const losMinutes = l => { const c = l.content || {}; const n = (c.introduction || '').length + (c.sections || []).reduce((s, x) => s + (x.content || '').length, 0); return clamp(Math.round(n / 900) + (l.question ? 2 : 1), 2, 20); };
 function courses() {
   if (COURSES_MEMO) return COURSES_MEMO;
-  COURSES_MEMO = [BASI];   // il percorso d'esame non c'è più: quello professionale, scritto da zero, entrerà qui come corso a sé
+  COURSES_MEMO = AZIONI ? [BASI, AZIONI] : [BASI];   // le materie nuove entrano qui come corsi a sé, un capitolo alla volta
   // indici utili
   COURSES_MEMO.forEach(c => { c.lessons = []; c.units.forEach((u, ui) => u.sections.forEach(s => s.lessons.forEach(l => { l.course = c; l.unit = u; l.ui = ui; l.section = s; if (!l.kind) l.kind = 'base'; c.lessons.push(l); }))); });
   return COURSES_MEMO;
@@ -357,9 +391,17 @@ function misUnits(c) {
   return [...ids, ...c.units.map(u => u.id).filter(x => more.includes(x) && !ids.includes(x))].map(id => c.units.find(u => u.id === id)).filter(Boolean);
 }
 const misLessons = c => misUnits(c).flatMap(unitLessons);
+// i capitoli di una materia in ordine (per ora quelli del primo livello), con quelli ancora da scrivere al loro posto: [{ u }] oppure [{ soon: { id, name, num } }]
+function chapterStops(c) {
+  const M = MATERIE.flatMap(g => g.items).find(x => x.corso === c.id), names = M ? M.levels[0].parts.flatMap(p => p[1]) : [];
+  const out = names.map((name, k) => { const u = c.units.find(x => x.num === k + 1); return u ? { u } : { soon: { id: c.id + '-c' + (k + 1), name, num: k + 1 } }; });
+  c.units.forEach(u => { if (!out.some(x => x.u === u)) out.push({ u }); });
+  return out;
+}
 // come misUnits, ma con le unità "in arrivo" al loro posto: [{ u }] oppure [{ soon: { id, name, sub } }]
 function misStops(c) {
   if (!c) return [];
+  if (c.chapters) return chapterStops(c);
   const P = misP(); if (c.id !== P.course || !P.stops) return c.units.map(u => ({ u }));
   const out = P.stops.map(x => (x[0] === '+' ? { soon: { id: x.slice(1), name: MIS_SOON[x.slice(1)][0], sub: MIS_SOON[x.slice(1)][1] } } : { u: c.units.find(u => u.id === x) })).filter(x => x.soon || x.u);
   const more = misGet().more || []; c.units.forEach(u => { if (more.includes(u.id) && !P.stops.includes(u.id)) out.push({ u }); });
@@ -367,7 +409,7 @@ function misStops(c) {
 }
 const misRest = c => { const inP = misUnits(c); return c.units.filter(u => !inP.includes(u)); };   // unità del corso che il percorso non usa
 const misName = c => (c && c.id === misP().course ? misP().name : c ? c.name : '');
-const misIcon = (c, size = 22) => (c && c.id === misP().course && misP().ico ? Ico(misP().ico, size) : c ? c.badge : null);
+const misIcon = (c, size = 22) => (c && c.id === misP().course && misP().ico ? Ico(misP().ico, size) : c ? (c.ico ? Ico(c.ico, size) : c.badge) : null);
 const misAll = () => misCourses().flatMap(misLessons);
 // le lezioni pronte del percorso di un obiettivo (per dire quante sono prima di cambiare)
 const misGoalLessons = goal => { const P = MIS_PATHS[goal], c = courseById(P.course); return (P.stops ? P.stops.filter(x => x[0] !== '+').map(id => c.units.find(u => u.id === id)).filter(Boolean) : c.units).flatMap(unitLessons); };
@@ -410,7 +452,7 @@ function lessonSteps(l) {
     // lezione a passi corti: pagine brevi alternate a cose da fare; "In breve" chiude l'ultima pagina
     const qs = lessonQuestions(l), lastPage = l.flow.map(s => s.type).lastIndexOf('page');
     l.flow.forEach((s, i) => {
-      if (s.type === 'page') steps.push({ k: 'page', title: s.t, text: s.x, widget: s.widget, fig: s.fig, first: !steps.length, note: i === lastPage ? l.note : null });
+      if (s.type === 'page') steps.push({ k: 'page', title: s.t, text: s.x, widget: s.widget, fig: s.fig, deep: s.deep, first: !steps.length, note: i === lastPage ? l.note : null });
       else if (s.type === 'ex') { const e = l.ex[s.i]; if (e.type === 'match') steps.push({ k: 'match', pairs: e.pairs }); else steps.push({ k: 'q', q: qs[l.ex.slice(0, s.i).filter(x => x.type === 'mcq').length] }); }
       else steps.push(Object.assign({}, s, { k: s.type, n: i }));
     });

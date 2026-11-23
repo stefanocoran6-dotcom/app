@@ -52,19 +52,19 @@ function HomeScreen({ nav }) {
     </div></div>
     <${NewsTicker} nav=${nav}/>
     <${Sheet}>
-      <h2 class="o-h2" style="margin-bottom:4px">${isExam ? `Gli argomenti di ${title}` : 'Il tuo percorso, unità per unità'}</h2>
+      <h2 class="o-h2" style="margin-bottom:4px">${isExam ? `Gli argomenti di ${title}` : cur.chapters ? 'Il tuo percorso, capitolo per capitolo' : 'Il tuo percorso, unità per unità'}</h2>
       ${stops.map(s => {
-        if (s.soon) return html`<div key=${s.soon.id} class="o-row"><span class="o-ibox" style="font-size:15px;background:${T_BG};border-style:dashed;color:${MUT}">${unitInitials(s.soon.name)}</span>
+        if (s.soon) return html`<div key=${s.soon.id} class="o-row"><span class="o-ibox" style="font-size:15px;background:${T_BG};border-style:dashed;color:${MUT}">${s.soon.num || unitInitials(s.soon.name)}</span>
           <span class="o-grow o-col" style="gap:1px"><span class="o-t" style="color:${MUT}">${s.soon.name}</span><span class="o-s">In arrivo</span></span></div>`;
         const u = s.u, ls = unitLessons(u), d = hadCount(ls), kn = known.includes(u.id) && doneCount(ls) < ls.length, here = next && next.unit === u;
         if (here) return html`<button key=${u.id} type="button" class="o-rowf" onClick=${() => open(u)} style="gap:14px;width:calc(100% + 20px);min-height:62px;margin:4px -10px;padding:0 10px;background:${T_AZ};border:2.5px solid ${INK};border-radius:16px;text-align:left">
-          <span class="o-ibox" style="font-size:15px">${unitInitials(u.name)}</span><span class="o-grow o-col" style="gap:1px"><span class="o-t" style="font-weight:800">${u.name}</span><span class="o-s" style="color:${INK}">Sei qui: ${d} di ${plural(ls.length, 'lezione', 'lezioni')}</span></span>${PathIco(D_NEXT, 22, 2.6)}</button>`;
-        return html`<${Row} key=${u.id} icon=${html`<span style="font-size:15px">${unitInitials(u.name)}</span>`} title=${u.name}
+          <span class="o-ibox" style="font-size:15px">${u.num || unitInitials(u.name)}</span><span class="o-grow o-col" style="gap:1px"><span class="o-t" style="font-weight:800">${u.name}</span><span class="o-s" style="color:${INK}">Sei qui: ${d} di ${plural(ls.length, 'lezione', 'lezioni')}</span></span>${PathIco(D_NEXT, 22, 2.6)}</button>`;
+        return html`<${Row} key=${u.id} icon=${html`<span style="font-size:15px">${u.num || unitInitials(u.name)}</span>`} title=${u.name}
           sub=${kn ? `La sai già: ${plural(ls.length, 'lezione', 'lezioni')}` : `${d} di ${plural(ls.length, 'lezione', 'lezioni')}`}
           right=${kn ? html`<span style="width:36px;height:36px;flex:none;display:flex;align-items:center;justify-content:center;background:${MENTA};border:2px solid ${INK};border-radius:50%" role="img" aria-label="La sai già">${PathIco(D_CHECK, 18, 3)}</span>` : html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} onClick=${() => open(u)}/>`; })}
       ${rest.length > 0 && html`<${Row} icon=${PathIco(D_PLUS, 20, 2.6)} title="Aggiungi altre unità" sub=${`${rest.length === 1 ? 'Un\'altra unità' : 'Altre ' + rest.length + ' unità'} delle Basi, ${plural(restN, 'lezione', 'lezioni')}`} chev=${true} onClick=${() => setAddOpen(true)}/>`}
       ${others.length > 0 && html`<h2 class="o-h2" style="margin:22px 0 4px">Gli altri tuoi percorsi</h2>`}
-      ${others.map(c => { const ls = misLessons(c); return html`<${Row} key=${c.id} icon=${c.badge} title=${c.name} sub=${`${hadCount(ls)} di ${plural(ls.length, 'lezione', 'lezioni')}`} right=${html`<${Ring} pct=${coursePct(c)}/>`} onClick=${() => { s2set({ cur: c.id }); }}/>`; })}
+      ${others.map(c => { const ls = misLessons(c); return html`<${Row} key=${c.id} icon=${misIcon(c, 20)} title=${c.name} sub=${`${hadCount(ls)} di ${plural(ls.length, 'lezione', 'lezioni')}`} right=${html`<${Ring} pct=${coursePct(c)}/>`} onClick=${() => { s2set({ cur: c.id }); }}/>`; })}
       <${NewsHomeRow} nav=${nav}/>
       <${Row} icon=${Ico(LayoutGrid, 22)} ibg=${AZ} title="Scopri tutti i percorsi" sub="Da aggiungere e in arrivo" chev=${true} last=${true} onClick=${() => nav.go('catalogo')}/>
     <//>
@@ -88,6 +88,8 @@ function PercorsoScreen({ nav, course, unit }) {
   // le unità del percorso; se se ne apre una che il percorso non usa, compare in fondo
   const u = c.units.find(x => x.id === uid) || misUnits(c)[0], units = misUnits(c).includes(u) ? misUnits(c) : [...misUnits(c), u], ui = units.indexOf(u);
   const album = K.albumLoad(), now = Date.now(), tests = s2get().tests;
+  // una materia a capitoli: «Capitolo 5 di 10», con i capitoli ancora da scrivere in elenco
+  const caps = c.chapters ? chapterStops(c) : null;
   const curL = unitLessons(u).find(l => !isDone(l.key));
   const curRef = useRef(null), scrollRef = useRef(null);
   useEffect(() => { const t = setTimeout(() => { const el = curRef.current, sc = scrollRef.current; if (el && sc) sc.scrollTop = Math.max(0, el.offsetTop - sc.clientHeight / 2 + 60); }, 40); return () => clearTimeout(t); }, [uid]);
@@ -98,15 +100,16 @@ function PercorsoScreen({ nav, course, unit }) {
     head=${html`<div class="o-rowf" style="height:44px;gap:12px"><${IBtn} d=${D_BACK} onClick=${nav.back} label="Torna a Impara"/><span style="font-size:15px;line-height:20px;font-weight:800">${misName(c)}</span></div>
       <div class="o-col" style="align-items:flex-start;gap:12px;margin-top:12px;max-width:225px">
         <h1 class="o-h1m" style=${u.name.length > 14 ? { fontSize: 26, lineHeight: '28px' } : null}>${u.name}</h1>
-        <button type="button" onClick=${() => setPick(true)} aria-label="Cambia argomento"><${Pill}>Unità ${ui + 1} di ${units.length}<//></button>
+        <button type="button" onClick=${() => setPick(true)} aria-label="Cambia argomento"><${Pill}>${caps && u.num ? `Capitolo ${u.num} di ${caps.length}` : `Unità ${ui + 1} di ${units.length}`}<//></button>
       </div>`}>
     <${Sheet} style=${{ paddingTop: 22 }}>
-      ${u.sections.map((sec, si) => { const d = doneCount(sec.lessons), qn = allQuestions(sec.lessons).length, tid = 'unit:' + sec.id, tr = tests[tid];
+      ${u.pre && u.pre.length > 0 && html`<${PreCard} nav=${nav} pre=${u.pre}/>`}
+      ${u.sections.map((sec, si) => { const d = doneCount(sec.lessons), qn = allQuestions(sec.lessons).length, tid = 'unit:' + sec.id, tr = tests[tid], lab = si === u.sections.length - 1 ? u.lab : null, lb = lab ? labStato(lab) : null;
         return html`<section key=${sec.id} style=${{ marginBottom: 28 }}>
           <div class="o-col" style="gap:2px;margin-bottom:10px">${sec.num && html`<span class="o-s">Reading ${sec.num}</span>`}
-            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h2 class="o-h2">${sec.name}</h2><span class="o-lab" style="flex:none">${d} su ${sec.lessons.length} fatte</span></div></div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h2 class="o-h2">${caps ? 'Le lezioni' : sec.name}</h2><span class="o-lab" style="flex:none">${d} su ${sec.lessons.length} fatte</span></div></div>
           <div class="o-col">
-            ${sec.lessons.map((l, k) => { const done = isDone(l.key), isCur = l === curL, last = k === sec.lessons.length - 1 && qn < 3;
+            ${sec.lessons.map((l, k) => { const done = isDone(l.key), isCur = l === curL, last = k === sec.lessons.length - 1 && qn < 3 && !lab;
               if (isCur) return html`<div key=${l.key} ref=${curRef} style="position:relative;display:flex;align-items:flex-start;gap:14px;padding:8px 0">${!last && line(false)}
                 <span style="width:48px;flex:none;display:flex;justify-content:center;padding-top:14px;position:relative"><span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:${AZ};border:2.5px solid ${INK};border-radius:50%;box-shadow:0 0 0 5px #fff">${PathIco('M8 5l11 7-11 7z', 20, 2, INK, INK)}</span></span>
                 <div class="o-grow o-col" style="gap:12px;padding:14px 16px 16px;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:4px 4px 0 ${INK}">
@@ -117,6 +120,9 @@ function PercorsoScreen({ nav, course, unit }) {
                   ? html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:${INK};border:2px solid ${INK};border-radius:50%;color:#fff">${PathIco(D_CHECK, 20, 3)}</span>`
                   : html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid ${INK};border-radius:50%;font-size:15px;font-weight:800">${k + 1}</span>`}</span>
                 <span class="o-grow o-col" style="gap:1px"><span class="o-t" style="overflow-wrap:anywhere">${l.title}</span><span class="o-s">${done ? subOf(l) : l.minutes + ' minuti'}</span></span></button>`; })}
+            ${lab && html`<button type="button" onClick=${() => nav.go('pratica', { mode: 'lab', lab })} style="position:relative;min-height:56px;display:flex;align-items:center;gap:14px;padding:6px 0;width:100%">${qn >= 3 && line(false)}
+              <span style="width:48px;flex:none;display:flex;justify-content:center;position:relative"><span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:${lb.best > 0 ? MENTA : '#fff'};border:2px solid ${INK};border-radius:50%">${Ico(Calculator, 18, 2.4)}</span></span>
+              <span class="o-grow o-col" style="gap:1px"><span class="o-t">Laboratorio di calcolo</span><span class="o-s">${lb.best > 0 ? `Il tuo risultato migliore: ${lb.best} su ${LAB_N}. Ogni volta i numeri cambiano` : `${LAB_N} conti con numeri sempre diversi`}</span></span></button>`}
             ${qn >= 3 && html`<button type="button" onClick=${() => nav.go('testInizio', { kind: 'unit', course: c.id, section: sec.id })} style="position:relative;min-height:56px;display:flex;align-items:center;gap:14px;padding:6px 0;width:100%">
               <span style="width:48px;flex:none;display:flex;justify-content:center"><span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:${tr && tr.passedEver ? GIALLO : '#fff'};border:2px solid ${INK};border-radius:50%">${tr && tr.passedEver ? PathIco(D_STAR, 20, 2.2, INK, INK) : Ico(Flag, 18, 2.4)}</span></span>
               <span class="o-grow o-col" style="gap:1px"><span class="o-t">Verifica</span><span class="o-s">${tr && tr.passedEver ? `Superata con ${tr.best} su ${tr.n}: figurine dorate` : `${Math.min(10, qn)} domande, se passi le figurine diventano dorate`}</span></span></button>`}
@@ -124,9 +130,24 @@ function PercorsoScreen({ nav, course, unit }) {
     <//>
     ${pick && html`<${BSheet} onClose=${() => setPick(false)} label="Argomenti">
       <h2 class="o-big" style="margin-bottom:6px">${misName(c)}</h2>
-      ${units.map((x, k) => { const ls = unitLessons(x), d = doneCount(ls); return html`<${Row} key=${x.id} icon=${k + 1} ibg=${x === u ? AZ : null} title=${x.name} sub=${`${d} di ${ls.length} lezioni`} right=${html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} last=${k === units.length - 1} onClick=${() => { setUid(x.id); setPick(false); }}/>`; })}
+      ${caps ? html`<div class="o-scroll" style="flex:0 1 auto;max-height:62vh">${caps.map((s, k) => { if (s.soon) return html`<div key=${s.soon.id} class=${'o-row' + (k === caps.length - 1 ? ' last' : '')}><span class="o-ibox" style="font-size:15px;background:${T_BG};border-style:dashed;color:${MUT}">${s.soon.num}</span>
+            <span class="o-grow o-col" style="gap:1px"><span class="o-t" style="color:${MUT}">${s.soon.name}</span><span class="o-s">In arrivo</span></span></div>`;
+          const x = s.u, ls = unitLessons(x), d = doneCount(ls); return html`<${Row} key=${x.id} icon=${x.num || k + 1} ibg=${x === u ? c.color || AZ : null} title=${x.name} sub=${`${d} di ${ls.length} lezioni`} right=${html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} last=${k === caps.length - 1} onClick=${() => { setUid(x.id); setPick(false); }}/>`; })}</div>`
+        : units.map((x, k) => { const ls = unitLessons(x), d = doneCount(ls); return html`<${Row} key=${x.id} icon=${k + 1} ibg=${x === u ? AZ : null} title=${x.name} sub=${`${d} di ${ls.length} lezioni`} right=${html`<${Ring} pct=${ls.length ? d / ls.length * 100 : 0}/>`} last=${k === units.length - 1} onClick=${() => { setUid(x.id); setPick(false); }}/>`; })}
     <//>`}
   <//>`;
+}
+
+// «Prima di cominciare»: un capitolo dice quali unità dà per scontate. Si aprono con un tocco; quelle già fatte hanno la spunta.
+function PreCard({ nav, pre }) {
+  const rows = pre.map(p => { const pc = courseById(p.course), pu = pc && pc.units.find(x => x.id === p.unit); return pu ? { p, pc, pu, ok: unitLessons(pu).every(l => isHad(l.key)) } : null; }).filter(Boolean);
+  if (!rows.length) return null;
+  return html`<div class="o-col" style="gap:8px;margin-bottom:26px;padding:14px 14px 12px;background:${T_GR};border-radius:18px">
+    <div class="o-col" style="gap:1px"><span style="font-size:16px;line-height:21px;font-weight:800">Prima di cominciare</span><span class="o-s">${rows.every(r => r.ok) ? 'Questo capitolo parte da cose che hai già fatto.' : 'Questo capitolo dà per scontate queste unità delle Basi.'}</span></div>
+    ${rows.map(r => html`<button key=${r.p.unit} type="button" class="o-rowf" onClick=${() => nav.go('percorso', { course: r.pc.id, unit: r.pu.id })} style="gap:10px;width:100%;min-height:46px;padding:6px 10px 6px 12px;background:#fff;border:2px solid ${INK};border-radius:14px;text-align:left">
+      <span class="o-grow" style="font-size:15px;line-height:20px;font-weight:800">${r.pu.name}</span>
+      ${r.ok ? html`<span style="width:26px;height:26px;flex:none;display:flex;align-items:center;justify-content:center;background:${MENTA};border:2px solid ${INK};border-radius:50%" role="img" aria-label="Già fatta">${PathIco(D_CHECK, 14, 3.4)}</span>` : html`<span class="o-s" style="flex:none;font-weight:800;color:${INK}">Da fare</span>`}
+      ${PathIco(D_NEXT, 18, 2.6)}</button>`)}</div>`;
 }
 
 // ---- pezzi delle domande ----
@@ -271,7 +292,7 @@ function LessonScreen({ nav, lessonKey, at, ask }) {
     }
     const page = st.k === 'recap' ? 'In breve' : st.title;
     const text = st.k === 'recap' ? [...st.points.map(p => '• ' + p), ...(st.tips.length ? ['All\'esame:', ...st.tips.map(p => '• ' + p)] : [])].join('\n')
-      : [st.text, st.note ? 'In breve: ' + st.note : ''].filter(Boolean).join('\n\n');
+      : [st.text, st.deep ? `Per andare a fondo, ${st.deep.t}: ${st.deep.x}` : '', st.note ? 'In breve: ' + st.note : ''].filter(Boolean).join('\n\n');
     const others = steps.filter((s, k) => k !== i && s.k === 'page' && s.title).map(s => s.title).join('; ');
     nav.askAbout({ id, back, title: 'Lezione: ' + l.title,
       first: `Stai leggendo "${page}". Cosa non ti torna? Posso spiegartelo più semplice, farti un esempio con i numeri o interrogarti.`,
@@ -302,6 +323,7 @@ function LessonScreen({ nav, lessonKey, at, ask }) {
       <div style="margin-top:12px">${(() => { const parts = st.fig ? String(st.text).split(/\n*\[fig\]\n*/) : [st.text]; return html`<${React.Fragment}><${Rich} text=${parts[0]}/>${st.fig && html`<${Fig} key=${'f' + i} fig=${st.fig}/>`}${parts[1] && html`<${Rich} text=${parts[1]}/>`}<//>`; })()}</div>
       ${i === firstTermPage && html`<p class="o-s" style="margin-top:14px">Le parole sottolineate si possono toccare: ti dicono che cosa vogliono dire.</p>`}
       ${st.widget === 'compound' && html`<${CompoundWidget}/>`}
+      ${st.deep && html`<${Deep} key=${'d' + i} d=${st.deep}/>`}
       ${st.note && html`<div class="o-note" style="margin-top:18px"><${Rich} text=${'In breve: ' + st.note} cls="sm" style=${{ fontSize: 'inherit', lineHeight: 'inherit', fontWeight: 'inherit' }}/></div>`}
     </div>`;
     foot = html`<${Btn} cls="lg" onClick=${next}>Ho capito<//>`;

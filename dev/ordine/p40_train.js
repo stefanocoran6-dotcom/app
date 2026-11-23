@@ -10,7 +10,7 @@ const AllenaSwitch = ({ on, nav }) => html`<div role="tablist" style="display:in
 // miniatura di una figurina (album, allenati, profilo)
 function Sticker({ l, state, w = 92, onClick, big }) {
   const emoji = lessonEmoji(l), miss = state === 'manca', fade = state === 'sbiadisce', gold = state === 'dorata';
-  const tile = miss ? 'transparent' : gold ? GIALLO : fade ? T_GR : (l.course.id === 'basi' ? [AZ, GIALLO, MENTA, PESCA, LILLA][l.course.lessons.indexOf(l) % 5] : [AZ, MENTA, PESCA, LILLA, ROSA][(l.section.num || 0) % 5]);
+  const tile = miss ? 'transparent' : gold ? GIALLO : fade ? T_GR : (l.kind !== 'los' ? [AZ, GIALLO, MENTA, PESCA, LILLA][l.course.lessons.indexOf(l) % 5] : [AZ, MENTA, PESCA, LILLA, ROSA][(l.section.num || 0) % 5]);
   const inner = html`<span class="o-col" style=${{ width: w, gap: 6, padding: miss ? 6 : '6px 6px 8px', background: miss ? 'transparent' : '#fff', border: miss ? `2px dashed ${INK}` : `2.5px solid ${fade ? '#8A93A0' : INK}`, borderRadius: 16,
       boxShadow: miss || fade ? 'none' : `3px 3px 0 ${INK}`, transform: miss || fade ? 'none' : `rotate(${[-2, 2, -1, 1][(l.key.length + l.key.charCodeAt(l.key.length - 1)) % 4]}deg)`, color: fade ? DIMT : INK }}>
     <span style=${{ height: big ? 64 : 52, display: 'flex', alignItems: 'center', justifyContent: 'center', background: tile, border: miss ? `2px dashed ${INK}` : `2px solid ${fade ? '#8A93A0' : INK}`, borderRadius: 10, fontSize: emoji && !miss ? 26 : 20, lineHeight: 1, fontWeight: 800, filter: fade ? 'grayscale(1)' : 'none', opacity: fade ? .7 : 1 }}>${miss ? '?' : (emoji || stickerSym(l))}${gold && html`<span style="font-size:12px;margin-left:3px">★</span>`}</span>
@@ -103,7 +103,7 @@ function TestIntro({ nav, kind, course, section }) {
         ${[['Domande', t.qs.length], ['Tempo', fmtDur(Math.round(t.secs / 60))], ['Per passare', `${t.pass} giuste`]].map(([a, b], k) => html`<div key=${a} class="o-rowf" style=${{ height: 48, justifyContent: 'space-between', gap: 12, borderBottom: k < 2 ? `2px solid ${SEP}` : 0 }}><span style="font-size:15px;font-weight:600">${a}</span><span style="font-size:18px;font-weight:800">${b}</span></div>`)}
       </div>
       <div class="o-col" style="gap:14px;margin-top:20px">${info.map(([I, tx]) => html`<div key=${tx} class="o-rowf" style="gap:14px"><span class="o-ibox" style="width:36px;height:36px;border-radius:11px">${Ico(I, 18, 2.4)}</span><span class="o-t" style="font-size:15px;font-weight:600">${tx}</span></div>`)}</div>
-      ${kind === 'unit' && html`<div class="o-rowf" style="gap:12px;padding:12px 14px;margin-top:20px;background:${T_GIALLO};border-radius:16px"><span style="width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;background:${GIALLO};border:2px solid ${INK};border-radius:10px">${PathIco(D_STAR, 18, 2, INK, INK)}</span><span class="o-t" style="font-size:15px">Se passi, le figurine dell'unità diventano dorate e restano vive più a lungo.</span></div>`}
+      ${kind === 'unit' && html`<div class="o-rowf" style="gap:12px;padding:12px 14px;margin-top:20px;background:${T_GIALLO};border-radius:16px"><span style="width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;background:${GIALLO};border:2px solid ${INK};border-radius:10px">${PathIco(D_STAR, 18, 2, INK, INK)}</span><span class="o-t" style="font-size:15px">${c.chapters ? 'Se passi, le figurine del capitolo diventano dorate e restano vive più a lungo.' : 'Se passi, le figurine dell\'unità diventano dorate e restano vive più a lungo.'}</span></div>`}
     </div>
   <//>`;
 }
@@ -217,7 +217,8 @@ function buildPractice(mode, sectionId) {
   return sh(allQuestions(src)).slice(0, 10).map(q => ({ q, l: q.lesson }));
 }
 // 'serie' è il gioco delle domande generate (p45_serie.js): passa da qui per non aggiungere una schermata nuova all'elenco dell'app
-function PracticeRun(p) { return p.mode === 'serie' ? html`<${SerieRun} nav=${p.nav}/>` : html`<${PracticeQuiz} ...${p}/>`; }
+// 'lab' è il laboratorio di calcolo di un capitolo (stesso file)
+function PracticeRun(p) { return p.mode === 'serie' ? html`<${SerieRun} nav=${p.nav}/>` : p.mode === 'lab' ? html`<${LabRun} nav=${p.nav} lab=${p.lab}/>` : html`<${PracticeQuiz} ...${p}/>`; }
 function PracticeQuiz({ nav, mode, section }) {
   const items = useMemo(() => buildPractice(mode, section), [mode, section]);
   const [i, setI] = useState(0), [sel, setSel] = useState(null), [fb, setFb] = useState(null), [okN, setOkN] = useState(0), [left, setLeft] = useState(null), [tab, setTab] = useState('case'), [end, setEnd] = useState(false);

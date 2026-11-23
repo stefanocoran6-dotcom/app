@@ -24,7 +24,7 @@ const CFA_CURRICULUM = {};   // il percorso d'esame non c'è più: resta vuoto f
 
 
 
-const FL_VERSION = '18.3 · 58';
+const FL_VERSION = '18.3 · 59';
 const TOTAL_CFA_LOS = Object.values(CFA_CURRICULUM).reduce((n, t) => n + t.modules.reduce((k, m) => k + m.los.length, 0), 0);
 
 // ========== THEME SYSTEM ==========
@@ -2897,7 +2897,7 @@ function RichText({ text, className = '' }) {
       const body = b.rows.filter(r => !/^\|\s*:?-{2,}/.test(r));
       const [head, ...rest] = body;
       const cw = c => (c.replace(/\*\*|\\\(|\\\)|\$/g, '').length > 18 ? 'fl-cw' : undefined);   // cella con un testo lungo: nella nuova grafica va a capo invece di allargare la tabella
-      return React.createElement('div', { key: bi, className: 'fl-table-wrap' }, React.createElement('table', { className: 'fl-table' },
+      return React.createElement('div', { key: bi, className: 'fl-table-wrap' }, React.createElement('table', { className: cells(head).length >= 4 ? 'fl-table fl-t4' : 'fl-table' },   // con quattro colonne o più le celle si stringono (nuova grafica)
         React.createElement('thead', null, React.createElement('tr', null, cells(head).map((c, ci) => React.createElement('th', { key: ci, className: cw(c) }, flInline(c, bi + '-h' + ci))))),
         React.createElement('tbody', null, rest.map((r, ri) => React.createElement('tr', { key: ri }, cells(r).map((c, ci) => React.createElement('td', { key: ci, className: cw(c) }, flInline(c, bi + '-' + ri + '-' + ci))))))));
     }
