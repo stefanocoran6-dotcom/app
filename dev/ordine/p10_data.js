@@ -33,8 +33,10 @@ const BASI = {
 const AZIONI = AZIONI_UNITS.length ? {
   id: 'azioni', name: 'Azioni', badge: 'Az', ico: TrendingUp, color: PESCA, group: 'mercati', ready: true, pace: 75, chapters: true,
   tagline: 'Dall\'idea all\'acquisto',
-  learn: ['Distinguere il prezzo di un\'azione dal suo valore', 'Calcolare capitalizzazione, P/E, P/B e P/S, e sapere quando usarli', 'Confrontare aziende con debiti diversi usando il valore d\'impresa', 'Stimare un valore per tre strade e concludere con un intervallo'],
-  units: AZIONI_UNITS.map(u => ({ id: u.id, name: u.name, num: u.num, lab: u.lab, pre: u.pre || [], sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
+  learn: ['Distinguere il prezzo di un\'azione dal suo valore', 'Calcolare e leggere P/E, P/B, P/S, P/CF ed EV/EBITDA', 'Scontare i dividendi: dal modello di Gordon alle due fasi', 'Stimare un valore per tre strade e concludere con un intervallo'],
+  // un capitolo lungo è diviso in parti: ogni parte è una sezione del percorso, con la sua verifica e, se c'è, il suo laboratorio di calcolo (lab)
+  units: AZIONI_UNITS.map(u => ({ id: u.id, name: u.name, num: u.num, pre: u.pre || [],
+    sections: (u.parts || [{ sid: u.sid, name: u.name, lab: u.lab, lessons: u.lessons }]).map(x => ({ id: x.sid, name: x.name, lab: x.lab || null, lessons: x.lessons })) }))
 } : null;
 // Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
 // La chiave è la parola in minuscolo, come compare in grassetto nelle lezioni; le forme diverse (singolare, plurale) stanno in GLOSS_ALIAS.
@@ -278,7 +280,51 @@ const GLOSS_DEF = {
   'debiti finanziari': ['Debiti finanziari', 'I debiti su cui un\'azienda paga interessi: prestiti delle banche e obbligazioni. Non comprendono le fatture da pagare ai fornitori.'],
   'debito netto': ['Debito netto', 'I debiti finanziari meno la cassa. In Italia si chiama spesso posizione finanziaria netta.'],
   'ev/ebitda': ['EV/EBITDA', 'Il valore d\'impresa diviso l\'EBITDA, cioè il risultato operativo a cui si riaggiungono gli ammortamenti.'],
-  multipli: ['Multipli', 'I rapporti tra un prezzo e una misura dell\'azienda, come P/E, P/B, P/S o valore d\'impresa diviso risultato operativo. Servono a confrontare aziende di dimensioni diverse.']
+  multipli: ['Multipli', 'I rapporti tra un prezzo e una misura dell\'azienda, come P/E, P/B, P/S o valore d\'impresa diviso risultato operativo. Servono a confrontare aziende di dimensioni diverse.'],
+  // ---- valutare un'azione, seconda stesura: valori, diluizione, cassa, simili, dividendi scontati, metodo patrimoniale ----
+  'prezzo giusto': ['Prezzo giusto', 'Un prezzo vicino al valore stimato: chi compra non paga né troppo né troppo poco, e può aspettarsi proprio il rendimento che chiede.'],
+  'valore in continuità': ['Valore in continuità', 'Il valore di un\'azienda che continua a lavorare: dipende dagli utili che produrrà, non da quanto si ricaverebbe vendendo i suoi beni.'],
+  'valore equo': ['Valore equo', 'Il prezzo su cui si accorderebbero un compratore e un venditore informati, nessuno dei due costretto a concludere. In inglese fair value.'],
+  'valore d\'investimento': ['Valore d\'investimento', 'Quanto vale un\'azienda per un compratore preciso, contando i vantaggi che solo lui può ottenere.'],
+  sinergie: ['Sinergie', 'I risparmi o i guadagni in più che nascono quando due aziende si uniscono: per esempio una sola rete di negozi al posto di due.'],
+  raggruppamento: ['Raggruppamento', 'Il contrario del frazionamento: più azioni vecchie diventano una sola azione nuova, che costa di più. Il valore dell\'azienda non cambia.'],
+  'azioni in circolazione': ['Azioni in circolazione', 'Le azioni emesse da un\'azienda, meno quelle che ha ricomprato e tiene per sé. Sono quelle che contano per la capitalizzazione e per l\'utile per azione.'],
+  'azioni proprie': ['Azioni proprie', 'Le azioni che un\'azienda ha ricomprato e tiene per sé. Non votano e non ricevono dividendi.'],
+  diluizione: ['Diluizione', 'Quando nascono azioni nuove, lo stesso utile si divide tra più azioni e a ognuna ne spetta una fetta più piccola.'],
+  'azioni privilegiate': ['Azioni privilegiate', 'Azioni che ricevono il dividendo prima di quelle ordinarie, di solito in misura fissa. In cambio, di norma, non danno diritto di voto.'],
+  opzioni: ['Opzioni', 'Qui: il diritto, dato per esempio ai dirigenti, di comprare azioni dell\'azienda a un prezzo fissato in partenza. Se viene usato, nascono azioni nuove.'],
+  'obbligazioni convertibili': ['Obbligazioni convertibili', 'Obbligazioni che chi le possiede può scambiare con azioni dell\'azienda, a condizioni fissate in partenza.'],
+  'utile per azione base': ['Utile per azione base', 'L\'utile dei soci ordinari diviso il numero medio di azioni in circolazione nell\'anno.'],
+  'utile per azione diluito': ['Utile per azione diluito', 'L\'utile per azione calcolato come se opzioni e obbligazioni convertibili fossero già diventate azioni. Non è mai più alto di quello base.'],
+  'p/e passato': ['P/E passato', 'Il P/E calcolato con l\'utile degli ultimi dodici mesi. In inglese trailing P/E.'],
+  'p/e atteso': ['P/E atteso', 'Il P/E calcolato con l\'utile previsto per i prossimi dodici mesi. In inglese forward P/E.'],
+  'flusso di cassa operativo': ['Flusso di cassa operativo', 'La cassa prodotta in un anno dall\'attività di tutti i giorni: utile netto più ammortamenti, meno i soldi rimasti fermi in più in magazzino e crediti.'],
+  'p/cf': ['P/CF', 'Il rapporto tra la capitalizzazione e il flusso di cassa di un anno: quanto paghi per ogni euro di cassa prodotta.'],
+  'flusso di cassa per i soci': ['Flusso di cassa per i soci (FCFE)', 'La cassa che resta ai soci dopo gli investimenti: flusso di cassa operativo, meno investimenti, più debiti nuovi.'],
+  'rendimento del dividendo': ['Rendimento del dividendo', 'Il dividendo di un anno diviso il prezzo dell\'azione, in percentuale.'],
+  'legge del prezzo unico': ['Legge del prezzo unico', 'L\'idea che due cose uguali debbano costare uguale. Se i prezzi sono diversi, o uno è sbagliato o le due cose non sono davvero uguali.'],
+  'metodo dei simili': ['Metodo dei simili', 'Stimare il valore di un\'azienda applicandole il multiplo tipico di aziende che le assomigliano.'],
+  mediana: ['Mediana', 'Il valore che sta nel mezzo quando metti i numeri in fila. A differenza della media, non si fa trascinare dai casi estremi.'],
+  'quote di terzi': ['Quote di terzi', 'La parte di una società controllata che appartiene ad altri soci. Nel valore d\'impresa di un gruppo si aggiunge.'],
+  ebitda: ['EBITDA', 'Il risultato operativo a cui si riaggiungono ammortamenti e svalutazioni. In italiano margine operativo lordo.'],
+  'ev/ebit': ['EV/EBIT', 'Il valore d\'impresa diviso il risultato operativo.'],
+  scontare: ['Scontare', 'Riportare a oggi una cifra futura: la si divide per uno più il rendimento, una volta per ogni anno che manca.'],
+  'valore attuale': ['Valore attuale', 'Quanto vale oggi una cifra che arriverà in futuro.'],
+  'rendimento richiesto': ['Rendimento richiesto', 'Il rendimento che un investitore chiede per mettere i suoi soldi in un\'azione: quello di un investimento senza rischio, più un premio per il rischio.'],
+  'premio per il rischio': ['Premio per il rischio', 'Il rendimento in più, rispetto a un investimento senza rischio, che si chiede per accettare un rischio.'],
+  'modello dei dividendi scontati': ['Modello dei dividendi scontati', 'Stima il valore di un\'azione come somma di tutti i dividendi che pagherà, riportati a oggi.'],
+  'rendita perpetua': ['Rendita perpetua', 'Una serie di pagamenti uguali che non finisce mai. Vale il pagamento diviso il rendimento richiesto.'],
+  'modello di gordon': ['Modello di Gordon', 'Il valore di un\'azione il cui dividendo cresce per sempre allo stesso ritmo: dividendo del prossimo anno diviso la differenza tra rendimento richiesto e crescita.'],
+  'utili trattenuti': ['Utili trattenuti', 'La parte di utile che non viene distribuita ai soci e resta in azienda.'],
+  payout: ['Payout', 'La quota di utile che un\'azienda distribuisce ai soci come dividendo.'],
+  'quota trattenuta': ['Quota trattenuta', 'La quota di utile che resta in azienda: uno meno il payout.'],
+  'crescita sostenibile': ['Crescita sostenibile', 'La crescita che un\'azienda può finanziare con i soli utili trattenuti: quota trattenuta per ROE.'],
+  'p/e giusto': ['P/E giusto', 'Il P/E atteso che un\'azienda merita per quanto distribuisce, quanto cresce e quanto rischia: payout diviso la differenza tra rendimento richiesto e crescita.'],
+  'valore finale': ['Valore finale', 'In un modello a due fasi, il prezzo stimato dell\'azione alla fine della prima fase: racchiude tutti i dividendi successivi.'],
+  'metodo patrimoniale': ['Metodo patrimoniale', 'Stima il valore per i soci come attività al valore di oggi meno tutti i debiti.'],
+  avviamento: ['Avviamento', 'Quello che un\'azienda in funzione vale in più della somma dei suoi beni: organizzazione, clienti, saper fare.'],
+  holding: ['Holding', 'Una società che possiede soprattutto quote di altre società.'],
+  nav: ['NAV', 'Il valore netto di quello che una società possiede: attività al valore di oggi meno debiti. In inglese net asset value.']
 };
 const GLOSS_ALIAS = { indice: 'indice di borsa', interesse: 'interessi', rate: 'rata', fisso: 'tasso fisso', variabile: 'tasso variabile', 'interessi sugli interessi': 'interesse composto', azione: 'azioni', obbligazione: 'obbligazioni',
   rc: 'responsabilità civile', 'prezzo/utili': 'p/e', esclusione: 'esclusioni', quota: 'quote', 'schema di ponzi': 'schema ponzi', investimento: 'investimenti', commissioni: 'commissione', 'spesa fissa': 'spese fisse', 'spesa variabile': 'spese variabili',
@@ -288,7 +334,8 @@ const GLOSS_ALIAS = { indice: 'indice di borsa', interesse: 'interessi', rate: '
   'arbitro bancario finanziario': 'abf', 'arbitro per le controversie finanziarie': 'acf', 'reclamo scritto': 'reclamo', 'furto di identità': 'furto d\'identità', 'unit linked': 'unit-linked', tcm: 'temporanea caso morte', 'polizze rivalutabili': 'polizza rivalutabile', caricamenti: 'caricamento',
   ripartizione: 'a ripartizione', 'sistema a ripartizione': 'a ripartizione', 'fondi pensione': 'fondo pensione', 'fondo negoziale': 'fondi negoziali', 'fondo aperto': 'fondi aperti', 'coefficienti di trasformazione': 'coefficiente di trasformazione', 'previdenza complementare': 'fondo pensione',
   inattivo: 'inattivi', 'avanzo primario': 'saldo primario', 'punto base': 'punti base', 'disavanzo': 'deficit', 'capitalizzazione di mercato': 'capitalizzazione',
-  eps: 'utile per azione', ev: 'valore d\'impresa', dividendi: 'dividendo', multiplo: 'multipli', bvps: 'valore contabile per azione', 'enterprise value': 'valore d\'impresa' };
+  eps: 'utile per azione', ev: 'valore d\'impresa', dividendi: 'dividendo', multiplo: 'multipli', bvps: 'valore contabile per azione', 'enterprise value': 'valore d\'impresa',
+  'al prezzo giusto': 'prezzo giusto', 'in continuità': 'valore in continuità', 'il premio per il rischio': 'premio per il rischio', fcfe: 'flusso di cassa per i soci', 'azione privilegiata': 'azioni privilegiate' };
 const glossKey = t => { const k = String(t || '').toLowerCase().replace(/[.,;:!?()«»“”]/g, '').replace(/\s+/g, ' ').trim(); return GLOSS_DEF[k] ? k : GLOSS_ALIAS[k] || null; };
 const hasTerms = text => (String(text || '').match(/\*\*[^*]+\*\*/g) || []).some(m => glossKey(m.slice(2, -2)));
 

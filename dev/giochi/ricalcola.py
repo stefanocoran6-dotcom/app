@@ -76,9 +76,78 @@ def evebit(p):
 def margsic(p):               # quello che manca al prezzo per arrivare a 100 di valore
     return C - S(p['P']) * C / S(p['V'])
 
+# ---- ancora laboratorio «multipli»: i conti della seconda stesura ----
+def epsdil(p):                # ogni opzione aggiunge solo la parte di azione che i soldi incassati non bastano a ricomprare
+    parte = (S(p['Pm']) - S(p['K'])) / S(p['Pm'])
+    return S(p['U']) / (S(p['N']) + S(p['n']) * parte)
+def peatt(p):                 # il P/E passato, diviso per quanto crescono gli utili
+    return (S(p['P']) / S(p['E'])) / (1 + S(p['g']) / C)
+def pcf(p):                   # la cassa un passo alla volta, poi quante volte sta nella capitalizzazione
+    cassa = S(p['U']); cassa += S(p['A']); cassa -= S(p['Wk'])
+    return S(p['cap']) / cassa
+def fcfe(p):                  # i debiti nuovi pagano una parte degli investimenti: il resto esce dalla cassa prodotta
+    return S(p['CF']) - (S(p['I']) - S(p['dD']))
+def evpieno(p):               # tutti quelli che vanno pagati, meno la cassa
+    return sum(S(p[k]) for k in ('cap', 'D', 'Pr', 'Tz')) - S(p['C'])
+def evebitda(p):              # capovolto: quanto EBITDA rende ogni 100 di valore d'impresa
+    resa = (S(p['E']) + S(p['A'])) * C / (S(p['cap']) + S(p['D']) - S(p['C']))
+    return C / resa
+def evprezzo(p):              # per azione: valore dell'attività per azione, meno debito netto per azione
+    return S(p['m']) * S(p['B']) / S(p['N']) - (S(p['D']) - S(p['C'])) / S(p['N'])
+
+# ---- laboratorio «flussi» (i soldi che arriveranno) ----
+def unanno(p):                # la cifra che, cresciuta al rendimento richiesto, dà dividendo più prezzo
+    v = (S(p['D1']) + S(p['P1'])) * C / (C + S(p['r']))
+    assert v + v * S(p['r']) / C == S(p['D1']) + S(p['P1']), ('un anno', p)
+    return v
+def dueanni(p):               # un anno alla volta, tornando indietro: prima il valore tra un anno, poi quello di oggi
+    k = 1 + S(p['r']) / C
+    tra_un_anno = S(p['D1']) + (S(p['D2']) + S(p['P2'])) / k
+    return tra_un_anno / k
+VISTI_G = [0]
+def serie(d1, r, g):          # la somma dei dividendi scontati, un anno dopo l'altro, finché i pezzi diventano trascurabili
+    v, pezzo, q = D(0), d1 / (1 + r), (1 + g) / (1 + r)
+    while pezzo > D('1e-30'):
+        v += pezzo; pezzo *= q
+    return v
+def gordon(p):                # il valore di oggi è dividendo più valore tra un anno (cresciuto di g), scontati di un anno
+    r, g, d1 = S(p['r']) / C, S(p['g']) / C, S(p['D1'])
+    v = d1 / (r - g)
+    assert v * (1 + r) == d1 + v * (1 + g), ('gordon', p)
+    VISTI_G[0] += 1
+    if VISTI_G[0] % 200 == 1: assert abs(serie(d1, r, g) - v) < D('1e-20'), ('gordon, somma anno per anno', p)   # ogni tanto anche la somma lunga
+    return v
+def gordon0(p):
+    r, g = S(p['r']) / C, S(p['g']) / C
+    d1 = S(p['D0']) + S(p['D0']) * g
+    v = d1 / (r - g)
+    assert v * (1 + r) == d1 + v * (1 + g), ('gordon0', p)
+    return v
+def rimpl(p):                 # il rendimento che, messo in Gordon, ridà il prezzo
+    r = S(p['D1']) * C / S(p['P']) + S(p['g'])
+    assert S(p['D1']) * C / (r - S(p['g'])) == S(p['P']), ('rendimento offerto', p)
+    return r
+def gsost(p):                 # su 100 di patrimonio: l'utile è il ROE, e quello che resta in azienda fa crescere il patrimonio
+    utile = S(p['roe'])
+    return utile - utile * S(p['pay']) / C
+def pegiusto(p):              # il valore di Gordon di un'azione con 1 di utile atteso
+    d1 = S(p['pay']) / C
+    return d1 / ((S(p['r']) - S(p['g'])) / C)
+def priv(p):                  # il capitale che, al rendimento richiesto, dà ogni anno quel dividendo
+    v = S(p['D']) * C / S(p['r'])
+    assert v * S(p['r']) / C == S(p['D']), ('privilegiata', p)
+    return v
+def duefasi(p):               # indietro di un anno alla volta, partendo dal valore finale
+    r, g = S(p['r']) / C, S(p['g']) / C
+    finale = S(p['D2']) * (1 + g) / (r - g)
+    tra_un_anno = (S(p['D2']) + finale) / (1 + r)
+    return (S(p['D1']) + tra_un_anno) / (1 + r)
+
 CONTI = dict(semplice=(semplice, 0), composto=(composto, 0), attuale=(attuale, 0), reale=(reale, 1), variazione=(variazione, 1), recupero=(recupero, 1),
              raddoppio=(raddoppio, 0), dividendo=(dividendo, 1), cedola=(cedola, 2), portafoglio=(portafoglio, 2), totale=(totale, 1), margine=(margine, 1),
-             capz=(capz, 0), eps=(eps, 2), pe=(pe, 1), petot=(petot, 1), ey=(ey, 2), pb=(pb, 1), ps=(ps, 1), ev=(ev, 0), confronto=(confronto, 2), evebit=(evebit, 1), margsic=(margsic, 1))
+             capz=(capz, 0), eps=(eps, 2), pe=(pe, 1), petot=(petot, 1), ey=(ey, 2), pb=(pb, 1), ps=(ps, 1), ev=(ev, 0), confronto=(confronto, 2), evebit=(evebit, 1), margsic=(margsic, 1),
+             epsdil=(epsdil, 2), peatt=(peatt, 1), pcf=(pcf, 1), fcfe=(fcfe, 0), evpieno=(evpieno, 0), evebitda=(evebitda, 1), evprezzo=(evprezzo, 2),
+             unanno=(unanno, 2), dueanni=(dueanni, 2), gordon=(gordon, 2), gordon0=(gordon0, 2), rimpl=(rimpl, 1), gsost=(gsost, 1), pegiusto=(pegiusto, 1), priv=(priv, 2), duefasi=(duefasi, 2))
 
 def main(f):
     n, guai, visti = 0, [], {}

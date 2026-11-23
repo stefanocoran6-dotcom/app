@@ -461,7 +461,7 @@ function MateriaScreen({ nav, id }) {
     <${Sheet} pad=${false} style=${{ paddingTop: 22 }}>
       <div class="o-rowf" style="gap:8px;flex-wrap:wrap">${M.levels.map((x, k) => html`<button key=${k} type="button" class=${'o-chip' + (lv === k ? ' on' : '')} aria-pressed=${lv === k ? 'true' : 'false'} onClick=${() => setLv(k)}>${k + 1} · ${x.tab}</button>`)}</div>
       <h2 class="o-h2" style="font-size:22px;line-height:26px;margin:18px 0 14px">${L.name}</h2>
-      <${Stats3} items=${[[tot, 'capitoli'], ['5-8', 'minuti a lezione'], [tot, 'laboratori']]}/>
+      <${Stats3} items=${[[tot, 'capitoli'], ['6-12', 'minuti a lezione'], [tot, 'laboratori']]}/>
       <div style="height:2px;background:${SEP};margin:18px 0"></div>
       <h2 class="o-h2" style="font-size:18px;margin-bottom:10px">Cosa impari</h2>
       <ul class="o-col" style="gap:8px;list-style:none">${L.learn.map(t => html`<li key=${t} class="o-rowf" style="gap:12px;align-items:flex-start">${PathIco(D_CHECK, 20, 3)}<span class="o-t" style="font-size:15px;font-weight:600">${t}</span></li>`)}</ul>
@@ -470,7 +470,7 @@ function MateriaScreen({ nav, id }) {
       ${L.parts.map(([t, qs]) => html`<div key=${t}>${t && html`<p class="o-lab" style="margin:12px 0 6px">${t}</p>`}<ol class="o-col" style="gap:8px;list-style:none;padding:0;margin-top:${t ? 0 : 10}px">${qs.map(q => { n++; const u = ready(n), num = n;
         const dot = html`<span style="width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;border:2px solid ${INK};border-radius:999px;background:${u ? M.color || AZ : '#fff'};font-size:13px;font-weight:800">${num}</span>`;
         return u ? html`<li key=${q}><button type="button" class="o-rowf" onClick=${() => open(u)} style="gap:12px;width:100%;min-height:56px;padding:6px 10px 6px 10px;border:2.5px solid ${INK};border-radius:14px;background:#fff;box-shadow:3px 3px 0 ${INK};text-align:left">${dot}
-            <span class="o-grow o-col" style="gap:1px"><span style="font-size:15px;line-height:20px;font-weight:800">${q}</span><span class="o-s">${plural(unitLessons(u).length, 'lezione', 'lezioni')}, con laboratorio e caso</span></span><span class="o-tag" style="background:${MENTA}">Pronto</span>${PathIco(D_NEXT, 18, 2.6)}</button></li>`
+            <span class="o-grow o-col" style="gap:1px"><span style="font-size:15px;line-height:20px;font-weight:800">${q}</span><span class="o-s">${plural(unitLessons(u).length, 'lezione', 'lezioni')}, con ${u.sections.filter(x => x.lab).length > 1 ? 'laboratori' : 'laboratorio'} e caso</span></span><span class="o-tag" style="background:${MENTA}">Pronto</span>${PathIco(D_NEXT, 18, 2.6)}</button></li>`
           : html`<li key=${q} class="o-rowf" style="gap:12px;min-height:48px;padding:6px 14px 6px 10px;border:2px dashed ${INK};border-radius:14px;background:${T_BG}">${dot}<span style="font-size:15px;line-height:20px;font-weight:700">${q}</span></li>`; })}</ol></div>`)}
       <p class="o-s" style="text-align:center;font-size:14px;font-weight:700;color:${INK};margin-top:22px">${pronti === 1 ? `Per ora c'è il capitolo ${c.units[0].num}. Gli altri arrivano uno alla volta.` : 'I capitoli arrivano uno alla volta.'}</p>
       <div style="padding:12px 0 max(30px,calc(env(safe-area-inset-bottom) + 12px))">${c ? html`<${Btn} cls="lg" onClick=${() => open(null)}>${!mine ? 'Aggiungi alla mia app e inizia' : begun ? 'Continua il percorso' : 'Inizia il percorso'}<//>` : html`<${Btn} cls="lg" disabled=${true}>In arrivo<//>`}</div>

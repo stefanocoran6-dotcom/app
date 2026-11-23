@@ -24,7 +24,7 @@ const CFA_CURRICULUM = {};   // il percorso d'esame non c'è più: resta vuoto f
 
 
 
-const FL_VERSION = '18.3 · 59';
+const FL_VERSION = '18.3 · 60';
 const TOTAL_CFA_LOS = Object.values(CFA_CURRICULUM).reduce((n, t) => n + t.modules.reduce((k, m) => k + m.los.length, 0), 0);
 
 // ========== THEME SYSTEM ==========

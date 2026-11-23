@@ -1288,3 +1288,23 @@ Nuovo ⇒ New
 capitolo pronto ⇒ chapter ready
 capitoli pronti ⇒ chapters ready
 Per ora c'è il capitolo {0}. Gli altri arrivano uno alla volta. ⇒ For now there is chapter {0}. The others arrive one at a time.
+
+# Capitolo 5 di Azioni, seconda stesura: parti del capitolo, campo delle stime, leve nuove (v60)
+Parte {0} di {1} ⇒ Part {0} of {1}
+{0}, con {1} e caso ⇒ {0}, with {1} and a case
+laboratorio ⇒ a lab
+Calcolare e leggere P/E, P/B, P/S, P/CF ed EV/EBITDA ⇒ Calculate and read P/E, P/B, P/S, P/CF and EV/EBITDA
+Scontare i dividendi: dal modello di Gordon alle due fasi ⇒ Discount dividends: from the Gordon growth model to two stages
+3px dashed {0} ⇒ =
+range ⇒ =
+Valore di un'azione ⇒ Value of one share
+Non si può ⇒ Not possible
+Rendimento richiesto meno crescita ⇒ Required return minus growth
+zero o meno ⇒ zero or less
+punto ⇒ point
+la formula non vale ⇒ the formula does not apply
+Crescita sostenibile ⇒ Sustainable growth
+P/E giusto ⇒ Justified P/E
+non si può: cresce troppo ⇒ not possible: growth is too high
+Utile distribuito ⇒ Earnings paid out
+Utile trattenuto ⇒ Earnings retained

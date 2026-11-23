@@ -104,21 +104,23 @@ function PercorsoScreen({ nav, course, unit }) {
       </div>`}>
     <${Sheet} style=${{ paddingTop: 22 }}>
       ${u.pre && u.pre.length > 0 && html`<${PreCard} nav=${nav} pre=${u.pre}/>`}
-      ${u.sections.map((sec, si) => { const d = doneCount(sec.lessons), qn = allQuestions(sec.lessons).length, tid = 'unit:' + sec.id, tr = tests[tid], lab = si === u.sections.length - 1 ? u.lab : null, lb = lab ? labStato(lab) : null;
+      ${u.sections.map((sec, si) => { const d = doneCount(sec.lessons), qn = allQuestions(sec.lessons).length, tid = 'unit:' + sec.id, tr = tests[tid], lab = sec.lab || null, lb = lab ? labStato(lab) : null;
+        // un capitolo diviso in parti: ogni parte ha il suo nome, ma le lezioni si contano dall'inizio del capitolo
+        const parti = caps && u.sections.length > 1, off = parti ? u.sections.slice(0, si).reduce((n, x) => n + x.lessons.length, 0) : 0;
         return html`<section key=${sec.id} style=${{ marginBottom: 28 }}>
-          <div class="o-col" style="gap:2px;margin-bottom:10px">${sec.num && html`<span class="o-s">Reading ${sec.num}</span>`}
-            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h2 class="o-h2">${caps ? 'Le lezioni' : sec.name}</h2><span class="o-lab" style="flex:none">${d} su ${sec.lessons.length} fatte</span></div></div>
+          <div class="o-col" style="gap:2px;margin-bottom:10px">${sec.num && html`<span class="o-s">Reading ${sec.num}</span>`}${parti && html`<span class="o-s">Parte ${si + 1} di ${u.sections.length}</span>`}
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h2 class="o-h2">${parti ? sec.name : caps ? 'Le lezioni' : sec.name}</h2><span class="o-lab" style="flex:none">${d} su ${sec.lessons.length} fatte</span></div></div>
           <div class="o-col">
             ${sec.lessons.map((l, k) => { const done = isDone(l.key), isCur = l === curL, last = k === sec.lessons.length - 1 && qn < 3 && !lab;
               if (isCur) return html`<div key=${l.key} ref=${curRef} style="position:relative;display:flex;align-items:flex-start;gap:14px;padding:8px 0">${!last && line(false)}
                 <span style="width:48px;flex:none;display:flex;justify-content:center;padding-top:14px;position:relative"><span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:${AZ};border:2.5px solid ${INK};border-radius:50%;box-shadow:0 0 0 5px #fff">${PathIco('M8 5l11 7-11 7z', 20, 2, INK, INK)}</span></span>
                 <div class="o-grow o-col" style="gap:12px;padding:14px 16px 16px;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:4px 4px 0 ${INK}">
-                  <div class="o-col" style="gap:2px"><span style="font-size:20px;line-height:24px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden">${l.title}</span><span class="o-lab" style="font-weight:600">Lezione ${k + 1}, ${l.minutes} minuti</span></div>
+                  <div class="o-col" style="gap:2px"><span style="font-size:20px;line-height:24px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden">${l.title}</span><span class="o-lab" style="font-weight:600">Lezione ${off + k + 1}, ${l.minutes} minuti</span></div>
                   <${Btn} cls="sm" onClick=${() => nav.go('lezione', { key: l.key })}>Inizia<//></div></div>`;
               return html`<button key=${l.key} type="button" onClick=${() => nav.go('lezione', { key: l.key })} style="position:relative;min-height:56px;display:flex;align-items:center;gap:14px;padding:6px 0;width:100%">${!last && line(done)}
                 <span style="width:48px;flex:none;display:flex;justify-content:center;position:relative">${done
                   ? html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:${INK};border:2px solid ${INK};border-radius:50%;color:#fff">${PathIco(D_CHECK, 20, 3)}</span>`
-                  : html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid ${INK};border-radius:50%;font-size:15px;font-weight:800">${k + 1}</span>`}</span>
+                  : html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid ${INK};border-radius:50%;font-size:15px;font-weight:800">${off + k + 1}</span>`}</span>
                 <span class="o-grow o-col" style="gap:1px"><span class="o-t" style="overflow-wrap:anywhere">${l.title}</span><span class="o-s">${done ? subOf(l) : l.minutes + ' minuti'}</span></span></button>`; })}
             ${lab && html`<button type="button" onClick=${() => nav.go('pratica', { mode: 'lab', lab })} style="position:relative;min-height:56px;display:flex;align-items:center;gap:14px;padding:6px 0;width:100%">${qn >= 3 && line(false)}
               <span style="width:48px;flex:none;display:flex;justify-content:center;position:relative"><span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:${lb.best > 0 ? MENTA : '#fff'};border:2px solid ${INK};border-radius:50%">${Ico(Calculator, 18, 2.4)}</span></span>

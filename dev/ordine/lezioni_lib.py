@@ -21,12 +21,17 @@ def SCHEDA(name, sub, rows, hl=(), cap=None):  # la scheda dell'azienda: righe (
     d = dict(kind='card', name=name, sub=sub, rows=[[r[0], r[1], 1 if r[0] in hl else 0] for r in rows])
     if cap: d['cap'] = cap
     return d
-def PONTE(rows, unit, cap=None):               # ponte: (voce, valore, tipo) con tipo base | plus | minus | tot; ogni barra parte dove finisce quella prima
+def PONTE(rows, unit, cap=None, uno=None):     # ponte: (voce, valore, tipo) con tipo base | plus | minus | tot; ogni barra parte dove finisce quella prima; uno = l'unità al singolare ("milione")
     d = dict(kind='bridge', unit=unit, rows=[list(r) for r in rows])
+    if uno: d['unit1'] = uno
     if cap: d['cap'] = cap
     return d
 def TACCHE(n, lab, val, each, cap=None):       # una barra divisa in n tacche uguali (il prezzo come tanti anni di utili)
     d = dict(kind='ticks', n=n, lab=lab, val=val, each=each)
+    if cap: d['cap'] = cap
+    return d
+def CAMPO(rows, segno, cap=None):                # il campo delle stime: righe (voce, da, a, scritta, colore), con una riga verticale sul prezzo; segno = (valore, scritta)
+    d = dict(kind='range', rows=[list(r) for r in rows], mark=list(segno))
     if cap: d['cap'] = cap
     return d
 # ---- passi da fare ----
@@ -61,9 +66,11 @@ PAGINA_MAX = 1000   # caratteri: una pagina si legge senza perdere il filo
 FONDO_MAX = 900
 
 # ---- controlli di forma: stesse regole delle Basi, più i pezzi nuovi ----
+def lezioni(u):                                   # le lezioni di un capitolo, che sia diviso in parti oppure no
+    return [l for p in u['parts'] for l in p['lessons']] if 'parts' in u else u['lessons']
 def controlla(units, leve):
     """leve: { nome del modello: (id dei cursori, nomi dei risultati usabili negli obiettivi) }"""
-    keys = [l['key'] for u in units for l in u['lessons']]
+    keys = [l['key'] for u in units for l in lezioni(u)]
     assert len(keys) == len(set(keys)), 'chiavi doppie'
     pos = collections.Counter(); steps = collections.Counter(); nq = 0
     def testo(s, dove):
@@ -82,10 +89,17 @@ def controlla(units, leve):
                 if tipo == 'tot': assert abs(tot - v) < 1e-9, (dove, 'il ponte non arriva al totale', tot, v)
                 else: tot += -v if tipo == 'minus' else v
         elif k == 'ticks': assert 2 <= f['n'] <= 40, dove
+        elif k == 'range':
+            assert len(f['rows']) >= 2 and f['mark'][0] > 0 and f['mark'][1], dove
+            for (lab, da, a, txt, col) in f['rows']: assert lab and txt and 0 < da <= a and col in COLORI, (dove, lab)
         else: raise AssertionError((dove, 'disegno sconosciuto', k))
     for u in units:
-        assert u['id'] and u['sid'] and u['name'] and u['lessons'], u.get('id')
-        for l in u['lessons']:
+        assert u['id'] and u['name'] and lezioni(u), u.get('id')
+        if 'parts' in u:
+            sids = [p['sid'] for p in u['parts']]
+            assert len(sids) == len(set(sids)) and all(p['sid'] and p['name'] and p['lessons'] for p in u['parts']), (u['id'], 'parti')
+        else: assert u['sid'], u['id']
+        for l in lezioni(u):
             fl = l['flow']; K = l['key']
             assert fl and l['note'] and l['ex'] and l['sym'] and len(l['sym']) <= 5, K
             assert any(e['type'] == 'mcq' for e in l['ex']), 'manca la domanda in ' + K
@@ -123,10 +137,20 @@ def controlla(units, leve):
         elif isinstance(o, list): [apici(x, dove) for x in o]
         elif isinstance(o, dict): [apici(v, o.get('key') or dove) for v in o.values()]
     apici(units)
-    return dict(lezioni=len(keys), domande=nq, giusta=[pos[i] for i in range(3)], minuti=sum(l['minutes'] for u in units for l in u['lessons']), passi=dict((k, v) for k, v in steps.items() if k not in ('page', 'ex')))
+    return dict(lezioni=len(keys), domande=nq, giusta=[pos[i] for i in range(3)], minuti=sum(l['minutes'] for u in units for l in lezioni(u)), passi=dict((k, v) for k, v in steps.items() if k not in ('page', 'ex')))
+
+# La risposta giusta non deve stare sempre allo stesso posto: chi scrive le domande tende a metterla in mezzo.
+# Qui i posti si distribuiscono in parti uguali tra A, B e C, in un ordine che dipende solo dal seme: a ogni build esce la stessa cosa.
+def bilancia(units, seme='finlearn'):
+    import random
+    qs = [e for u in units for l in lezioni(u) for e in l['ex'] if e['type'] == 'mcq']
+    posti = ([0, 1, 2] * (len(qs) // 3 + 1))[:len(qs)]; random.Random(seme).shuffle(posti)
+    for e, k in zip(qs, posti):
+        a = e['ans']
+        if a != k: e['options'][a], e['options'][k] = e['options'][k], e['options'][a]; e['ans'] = k
 
 # spazio che non va a capo tra la cifra e la valuta ("150 €" resta sulla stessa riga)
-FERMI = ('key', 'id', 'sid', 'sym', 'type', 'widget', 'model', 'unit', 'cond', 'params', 'kind', 'lab_id', 'course')
+FERMI = ('key', 'id', 'sid', 'sym', 'type', 'widget', 'model', 'unit', 'cond', 'params', 'kind', 'lab', 'course')
 def nb(o):
     if isinstance(o, str): return re.sub(r'(?<=\\\)) (?=[€$])', ' ', re.sub(r'(?<=\d) (?=[€$])', ' ', o))
     if isinstance(o, list): return [nb(x) for x in o]

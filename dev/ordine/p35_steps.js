@@ -6,6 +6,8 @@ const NBSP = ' ';
 const grp = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, GRP);
 const fmtN = (v, d = 0) => { const s = Math.abs(Number(v)).toFixed(d).split('.'); return (v < 0 ? '−' : '') + grp(s[0]) + (s[1] ? DEC + s[1] : ''); };
 const isMoney = unit => unit === '€' || unit === '$';
+// un numero con al massimo d decimali, senza zeri in fondo: 5 · 4,5 · 6,25
+const fmtC = (v, d = 1) => { const s = fmtN(v, d); return s.indexOf(DEC) < 0 ? s : s.replace(/0+$/, '').replace(new RegExp('\\' + DEC + '$'), ''); };
 // la valuta in inglese sta davanti alla cifra (€1,000), in italiano dopo (1.000 €)
 const withUnit = (v, unit, d = 0) => (LANG === 'en' && isMoney(unit) ? CUR + fmtN(v, d) : fmtN(v, d) + (unit === '%' ? '%' : unit ? NBSP + unit : ''));
 const eur0 = x => (LANG === 'en' ? CUR + fmtN(Math.round(x)) : fmtN(Math.round(x)) + NBSP + '€');
@@ -46,9 +48,10 @@ function FigBridge({ fig }) {
   useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
   let run = 0; const rows = fig.rows.map(([lab, v, tipo]) => { const da = tipo === 'tot' ? 0 : tipo === 'minus' ? run - v : run; if (tipo !== 'tot') run += tipo === 'minus' ? -v : v; return { lab, v, tipo, da }; });
   const max = Math.max.apply(null, rows.map(r => r.da + r.v));
-  return html`<figure class="o-fig" style="gap:10px" role="img" aria-label=${rows.map(r => BRIDGE_SIGN[r.tipo] + r.lab + ' ' + fmtN(r.v) + ' ' + fig.unit).join(', ')}>
+  const un = r => (r.v === 1 && fig.unit1) || fig.unit;   // "1 milione", non "1 milioni"
+  return html`<figure class="o-fig" style="gap:10px" role="img" aria-label=${rows.map(r => BRIDGE_SIGN[r.tipo] + r.lab + ' ' + fmtN(r.v) + ' ' + un(r)).join(', ')}>
     ${rows.map((r, k) => html`<div key=${k} class="o-col" style=${{ gap: 4, paddingTop: r.tipo === 'tot' ? 10 : 0, borderTop: r.tipo === 'tot' ? `2.5px solid ${INK}` : 0 }}>
-      <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style=${{ fontWeight: r.tipo === 'tot' ? 800 : 700 }}>${r.lab}</span><span class="o-t" style="font-weight:800;white-space:nowrap">${BRIDGE_SIGN[r.tipo]}${fmtN(r.v)} ${fig.unit}</span></div>
+      <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style=${{ fontWeight: r.tipo === 'tot' ? 800 : 700 }}>${r.lab}</span><span class="o-t" style="font-weight:800;white-space:nowrap">${BRIDGE_SIGN[r.tipo]}${fmtN(r.v)} ${un(r)}</span></div>
       <div style="height:22px;position:relative"><i style=${{ position: 'absolute', top: 0, bottom: 0, left: (go ? r.da / max * 100 : 0) + '%', width: (go ? r.v / max * 100 : 0) + '%', minWidth: 14, background: BRIDGE_COL[r.tipo], border: `2.5px solid ${INK}`, borderRadius: 8, transition: 'left .75s cubic-bezier(.2,.8,.2,1), width .75s cubic-bezier(.2,.8,.2,1)' }}></i></div></div>`)}
     ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
 }
@@ -72,7 +75,25 @@ function Deep({ d }) {
       <span style=${{ flex: 'none', display: 'flex', transform: open ? 'rotate(180deg)' : 'none' }}>${Ico(ChevronDown, 22, 2.6)}</span></button>
     ${open && html`<div class="o-in" style="padding:0 14px 14px"><${Rich} text=${d.x} cls="sm"/></div>`}</div>`;
 }
+// Il campo delle stime: ogni riga è una stima (un punto, o un intervallo) sulla stessa scala; la riga tratteggiata segna il prezzo.
+// È il disegno con cui si chiude una valutazione: si vede a colpo d'occhio dove le stime si incontrano e dove cade il prezzo.
+function FigRange({ fig }) {
+  const [go, setGo] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
+  const max = Math.max.apply(null, fig.rows.map(r => r[2]).concat(fig.mark[0])) * 1.06, pc = v => v / max * 100, mx = pc(fig.mark[0]);
+  const moto = 'left .75s cubic-bezier(.2,.8,.2,1), width .75s cubic-bezier(.2,.8,.2,1)';
+  return html`<figure class="o-fig" style="gap:10px" role="img" aria-label=${fig.rows.map(r => r[0] + ': ' + r[3]).join('. ') + '. ' + fig.mark[1]}>
+    <div class="o-rowf" style="gap:8px"><i style=${{ width: 0, height: 16, flex: 'none', borderLeft: `3px dashed ${INK}` }}></i><span class="o-s" style=${{ color: INK, fontWeight: 800 }}>${fig.mark[1]}</span></div>
+    ${fig.rows.map((r, k) => { const da = r[1], a = r[2], punto = a - da < 1e-9;
+      return html`<div key=${k} class="o-col" style="gap:4px">
+        <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style="font-size:14px;line-height:19px">${r[0]}</span><span class="o-t" style="font-size:14px;line-height:19px;font-weight:800;white-space:nowrap">${r[3]}</span></div>
+        <div style="height:18px;position:relative;background:${T_BG};border-radius:9px">
+          <i style=${{ position: 'absolute', top: 0, bottom: 0, left: punto ? `calc(${go ? pc(da) : 0}% - 9px)` : (go ? pc(da) : 0) + '%', width: punto ? 18 : (go ? pc(a) - pc(da) : 0) + '%', minWidth: 14, background: FIG_COL[r[4]] || AZ, border: `2.5px solid ${INK}`, borderRadius: 9, transition: moto }}></i>
+          <i style=${{ position: 'absolute', top: -4, bottom: -4, left: `calc(${mx}% - 1.5px)`, width: 0, borderLeft: `3px dashed ${INK}` }}></i></div></div>`; })}
+    ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
+}
 function Fig({ fig }) {
+  if (fig.kind === 'range') return html`<${FigRange} fig=${fig}/>`;
   if (fig.kind === 'card') return html`<${FigCard} fig=${fig}/>`;
   if (fig.kind === 'bridge') return html`<${FigBridge} fig=${fig}/>`;
   if (fig.kind === 'ticks') return html`<${FigTicks} fig=${fig}/>`;
@@ -82,11 +103,12 @@ function FigBars({ fig }) {
   const [go, setGo] = useState(false);
   useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
   const sum = r => r.segs.reduce((a, x) => a + x[0], 0), max = Math.max.apply(null, fig.rows.map(sum));
+  // la larghezza di ogni pezzo è la sua quota della riga (pesi che sommano a meno di 1, come 0,44, altrimenti lascerebbero la barra mezza vuota)
   const dot = c => html`<i style=${{ width: 12, height: 12, flex: 'none', borderRadius: 4, background: FIG_COL[c] || AZ, border: `2px solid ${INK}` }}></i>`;
   return html`<figure class="o-fig" role="img" aria-label=${fig.alt || fig.rows.map(r => r.lab + (r.val ? ' ' + r.val : '') + ': ' + r.segs.map(x => x[1] + (x[3] ? ' ' + x[3] : '')).join(', ')).join('. ')}>
     ${fig.rows.map((r, k) => html`<div key=${k} class="o-col" style="gap:6px">
       <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style="font-weight:800">${r.lab}</span>${r.val && html`<span class="o-t" style="font-weight:800;white-space:nowrap">${r.val}</span>`}</div>
-      <div class="o-figbar" style=${{ width: (go ? Math.max(8, sum(r) / max * 100) : 0) + '%' }}>${r.segs.map((x, j) => html`<i key=${j} style=${{ flex: x[0] + ' 1 0', background: FIG_COL[x[2]] || AZ, borderLeft: j ? `2.5px solid ${INK}` : 0 }}></i>`)}</div>
+      <div class="o-figbar" style=${{ width: (go ? Math.max(8, sum(r) / max * 100) : 0) + '%' }}>${r.segs.map((x, j) => html`<i key=${j} style=${{ flex: (x[0] / sum(r) * 100) + ' 1 0', background: FIG_COL[x[2]] || AZ, borderLeft: j ? `2.5px solid ${INK}` : 0 }}></i>`)}</div>
       <div class="o-rowf" style="flex-wrap:wrap;gap:4px 14px">${r.segs.map((x, j) => html`<span key=${j} class="o-s" style=${{ color: INK, display: 'inline-flex', alignItems: 'center', gap: 6 }}>${dot(x[2])}${x[1]}${x[3] ? ' ' + x[3] : ''}</span>`)}</div></div>`)}
     ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
 }
@@ -301,6 +323,19 @@ LEVERS.unanno = {
   calc: (v, p) => { const V = (p.D1 + v.p1) / (1 + v.rr / 100); return { V, Vc: V * 100, rr: v.rr, P: p.P, diff: (V / p.P - 1) * 100 }; },
   view: o => ({ lab: 'Valore stimato oggi', big: withUnit(o.V, '€', 2), sideLab: 'Rispetto al prezzo di Borsa', side: (o.diff > 0.05 ? '+' : '') + fmtN(Math.abs(o.diff) < 0.05 ? 0 : o.diff, 1) + '%',
     side2Lab: 'Per chi fa questa stima è', side2: o.diff > 1 ? 'sottovalutata' : o.diff < -1 ? 'sopravvalutata' : 'al prezzo giusto' })
+};
+// un dividendo che cresce per sempre (modello di Gordon): leve "g" (crescita in %) e "rr" (rendimento richiesto in %); parametri D1 = dividendo del prossimo anno, P = prezzo di oggi.
+// Quando la crescita raggiunge il rendimento richiesto la formula non vale: il valore non c'è, e Vc resta fuori da ogni obiettivo.
+LEVERS.gordon = {
+  calc: (v, p) => { const d = v.rr - v.g, no = d <= 1e-9, V = no ? 0 : p.D1 / (d / 100); return { V, Vc: no ? -1 : V * 100, no, d, g10: v.g * 10, r10: v.rr * 10, diff: no ? 0 : (V / p.P - 1) * 100 }; },
+  view: o => ({ lab: "Valore di un'azione", big: o.no ? 'Non si può' : withUnit(o.V, '€', 2), sideLab: 'Rendimento richiesto meno crescita', side: o.no ? 'zero o meno' : fmtC(o.d, 1) + ' ' + (o.d === 1 ? 'punto' : 'punti'),
+    side2Lab: 'Rispetto al prezzo di Borsa', side2: o.no ? 'la formula non vale' : (o.diff > 0.5 ? '+' : '') + fmtN(Math.abs(o.diff) < 0.5 ? 0 : o.diff, 0) + '%' })
+};
+// crescita sostenibile e P/E giusto: leve "pay" (payout, in %) e "roe" (in %); parametro rr = rendimento richiesto in %.
+// crescita = quota trattenuta x ROE; P/E giusto = payout / (rendimento richiesto - crescita), finché la crescita resta sotto il rendimento richiesto.
+LEVERS.sostenibile = {
+  calc: (v, p) => { const g = (100 - v.pay) / 100 * v.roe, d = p.rr - g, no = d <= 1e-9, pe = no ? 0 : v.pay / d; return { g, pe, no, g10: g * 10, pe10: no ? -1 : pe * 10, pay: v.pay, roe10: v.roe * 10 }; },
+  view: o => ({ lab: 'Crescita sostenibile', big: fmtC(o.g, 2) + '%', sideLab: 'P/E giusto', side: o.no ? 'non si può: cresce troppo' : fmtC(o.pe, 1), bar: [o.pay, 100 - o.pay], barLab: ['Utile distribuito', 'Utile trattenuto'], barCol: [GIALLO, MENTA] })
 };
 // i conti dello stipendio 2026, usati dalle leve "netto", "irpef" e "sconto" (stesse formule di dev/ordine/FONTI_BASI.md)
 const STIP = {

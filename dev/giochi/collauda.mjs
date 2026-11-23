@@ -13,7 +13,7 @@ const guai = []; const guaio = (t, s, m) => { if (guai.length < 60) guai.push(`$
 const out = fs.createWriteStream(CONTI);
 // i numeri di un testo, come valori: "2.000 €" e "€2,000" devono dare lo stesso elenco
 const numeri = (testo, en) => (testo.replace(/\\\(|\\\)|\$\$/g, ' ').match(/\d[\d.,{}]*\d|\d/g) || []).map(x => { x = x.replace(/[{}]/g, ''); x = en ? x.replace(/,/g, '') : x.replace(/\./g, '').replace(',', '.'); return String(Number(x)); }).sort().join(' ');
-const FORME = { soldi: [0.03, 5], pct: [0.08, 0.5], pct2: [0.04, 0.15], seg: [0.08, 0.5], seg2: [0.08, 0.4], anni: [0.2, 2], mln: [0.05, 5], volte: [0.08, 0.4], euro2: [0.05, 0.05] };
+const FORME = { soldi: [0.03, 5], pct: [0.08, 0.5], pct2: [0.04, 0.15], seg: [0.08, 0.5], seg2: [0.08, 0.4], anni: [0.2, 2], mln: [0.05, 5], volte: [0.08, 0.4], euro2: [0.05, 0.05], euro2f: [0.015, 0.05] };
 const riga = [];
 for (const tipo of GEN.tipi) {
   const pos = [0, 0, 0], viste = new Set(); let lungaQ = 0, lungaO = 0;

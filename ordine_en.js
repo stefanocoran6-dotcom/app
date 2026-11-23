@@ -337,8 +337,10 @@ const BASI = {
 const AZIONI = AZIONI_UNITS.length ? {
   id: 'azioni', name: 'Stocks', badge: 'Az', ico: TrendingUp, color: PESCA, group: 'mercati', ready: true, pace: 75, chapters: true,
   tagline: 'From idea to purchase',
-  learn: ['Tell a stock\'s price from its value', 'Calculate market cap, P/E, P/B and P/S, and know when to use them', 'Compare companies with different debt using enterprise value', 'Estimate a value three ways and conclude with a range'],
-  units: AZIONI_UNITS.map(u => ({ id: u.id, name: u.name, num: u.num, lab: u.lab, pre: u.pre || [], sections: [{ id: u.sid, name: u.name, lessons: u.lessons }] }))
+  learn: ['Tell a stock\'s price from its value', 'Calculate and read P/E, P/B, P/S, P/CF and EV/EBITDA', 'Discount dividends: from the Gordon growth model to two stages', 'Estimate a value three ways and conclude with a range'],
+  // un capitolo lungo è diviso in parti: ogni parte è una sezione del percorso, con la sua verifica e, se c'è, il suo laboratorio di calcolo (lab)
+  units: AZIONI_UNITS.map(u => ({ id: u.id, name: u.name, num: u.num, pre: u.pre || [],
+    sections: (u.parts || [{ sid: u.sid, name: u.name, lab: u.lab, lessons: u.lessons }]).map(x => ({ id: x.sid, name: x.name, lab: x.lab || null, lessons: x.lessons })) }))
 } : null;
 // Parole da toccare nelle lezioni di base: ogni parola in grassetto che sta qui si apre con un tocco e mostra una spiegazione in parole semplici.
 // La chiave è la parola in minuscolo, come compare in grassetto nelle lezioni; le forme diverse (singolare, plurale) stanno in GLOSS_ALIAS.
@@ -875,21 +877,23 @@ function PercorsoScreen({ nav, course, unit }) {
       </div>`}>
     <${Sheet} style=${{ paddingTop: 22 }}>
       ${u.pre && u.pre.length > 0 && html`<${PreCard} nav=${nav} pre=${u.pre}/>`}
-      ${u.sections.map((sec, si) => { const d = doneCount(sec.lessons), qn = allQuestions(sec.lessons).length, tid = 'unit:' + sec.id, tr = tests[tid], lab = si === u.sections.length - 1 ? u.lab : null, lb = lab ? labStato(lab) : null;
+      ${u.sections.map((sec, si) => { const d = doneCount(sec.lessons), qn = allQuestions(sec.lessons).length, tid = 'unit:' + sec.id, tr = tests[tid], lab = sec.lab || null, lb = lab ? labStato(lab) : null;
+        // un capitolo diviso in parti: ogni parte ha il suo nome, ma le lezioni si contano dall'inizio del capitolo
+        const parti = caps && u.sections.length > 1, off = parti ? u.sections.slice(0, si).reduce((n, x) => n + x.lessons.length, 0) : 0;
         return html`<section key=${sec.id} style=${{ marginBottom: 28 }}>
-          <div class="o-col" style="gap:2px;margin-bottom:10px">${sec.num && html`<span class="o-s">Reading ${sec.num}</span>`}
-            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h2 class="o-h2">${caps ? 'Lessons' : sec.name}</h2><span class="o-lab" style="flex:none">${d} of ${sec.lessons.length} done</span></div></div>
+          <div class="o-col" style="gap:2px;margin-bottom:10px">${sec.num && html`<span class="o-s">Reading ${sec.num}</span>`}${parti && html`<span class="o-s">Part ${si + 1} of ${u.sections.length}</span>`}
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h2 class="o-h2">${parti ? sec.name : caps ? 'Lessons' : sec.name}</h2><span class="o-lab" style="flex:none">${d} of ${sec.lessons.length} done</span></div></div>
           <div class="o-col">
             ${sec.lessons.map((l, k) => { const done = isDone(l.key), isCur = l === curL, last = k === sec.lessons.length - 1 && qn < 3 && !lab;
               if (isCur) return html`<div key=${l.key} ref=${curRef} style="position:relative;display:flex;align-items:flex-start;gap:14px;padding:8px 0">${!last && line(false)}
                 <span style="width:48px;flex:none;display:flex;justify-content:center;padding-top:14px;position:relative"><span style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:${AZ};border:2.5px solid ${INK};border-radius:50%;box-shadow:0 0 0 5px #fff">${PathIco('M8 5l11 7-11 7z', 20, 2, INK, INK)}</span></span>
                 <div class="o-grow o-col" style="gap:12px;padding:14px 16px 16px;background:#fff;border:2.5px solid ${INK};border-radius:22px;box-shadow:4px 4px 0 ${INK}">
-                  <div class="o-col" style="gap:2px"><span style="font-size:20px;line-height:24px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden">${l.title}</span><span class="o-lab" style="font-weight:600">Lesson ${k + 1}, ${l.minutes} minutes</span></div>
+                  <div class="o-col" style="gap:2px"><span style="font-size:20px;line-height:24px;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden">${l.title}</span><span class="o-lab" style="font-weight:600">Lesson ${off + k + 1}, ${l.minutes} minutes</span></div>
                   <${Btn} cls="sm" onClick=${() => nav.go('lezione', { key: l.key })}>Get started<//></div></div>`;
               return html`<button key=${l.key} type="button" onClick=${() => nav.go('lezione', { key: l.key })} style="position:relative;min-height:56px;display:flex;align-items:center;gap:14px;padding:6px 0;width:100%">${!last && line(done)}
                 <span style="width:48px;flex:none;display:flex;justify-content:center;position:relative">${done
                   ? html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:${INK};border:2px solid ${INK};border-radius:50%;color:#fff">${PathIco(D_CHECK, 20, 3)}</span>`
-                  : html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid ${INK};border-radius:50%;font-size:15px;font-weight:800">${k + 1}</span>`}</span>
+                  : html`<span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid ${INK};border-radius:50%;font-size:15px;font-weight:800">${off + k + 1}</span>`}</span>
                 <span class="o-grow o-col" style="gap:1px"><span class="o-t" style="overflow-wrap:anywhere">${l.title}</span><span class="o-s">${done ? subOf(l) : l.minutes + ' minutes'}</span></span></button>`; })}
             ${lab && html`<button type="button" onClick=${() => nav.go('pratica', { mode: 'lab', lab })} style="position:relative;min-height:56px;display:flex;align-items:center;gap:14px;padding:6px 0;width:100%">${qn >= 3 && line(false)}
               <span style="width:48px;flex:none;display:flex;justify-content:center;position:relative"><span style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:${lb.best > 0 ? MENTA : '#fff'};border:2px solid ${INK};border-radius:50%">${Ico(Calculator, 18, 2.4)}</span></span>
@@ -1165,6 +1169,8 @@ const NBSP = ' ';
 const grp = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, GRP);
 const fmtN = (v, d = 0) => { const s = Math.abs(Number(v)).toFixed(d).split('.'); return (v < 0 ? '−' : '') + grp(s[0]) + (s[1] ? DEC + s[1] : ''); };
 const isMoney = unit => unit === '€' || unit === '$';
+// un numero con al massimo d decimali, senza zeri in fondo: 5 · 4,5 · 6,25
+const fmtC = (v, d = 1) => { const s = fmtN(v, d); return s.indexOf(DEC) < 0 ? s : s.replace(/0+$/, '').replace(new RegExp('\\' + DEC + '$'), ''); };
 // la valuta in inglese sta davanti alla cifra (€1,000), in italiano dopo (1.000 €)
 const withUnit = (v, unit, d = 0) => (LANG === 'en' && isMoney(unit) ? CUR + fmtN(v, d) : fmtN(v, d) + (unit === '%' ? '%' : unit ? NBSP + unit : ''));
 const eur0 = x => (LANG === 'en' ? CUR + fmtN(Math.round(x)) : fmtN(Math.round(x)) + NBSP + '€');
@@ -1205,9 +1211,10 @@ function FigBridge({ fig }) {
   useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
   let run = 0; const rows = fig.rows.map(([lab, v, tipo]) => { const da = tipo === 'tot' ? 0 : tipo === 'minus' ? run - v : run; if (tipo !== 'tot') run += tipo === 'minus' ? -v : v; return { lab, v, tipo, da }; });
   const max = Math.max.apply(null, rows.map(r => r.da + r.v));
-  return html`<figure class="o-fig" style="gap:10px" role="img" aria-label=${rows.map(r => BRIDGE_SIGN[r.tipo] + r.lab + ' ' + fmtN(r.v) + ' ' + fig.unit).join(', ')}>
+  const un = r => (r.v === 1 && fig.unit1) || fig.unit;   // "1 milione", non "1 milioni"
+  return html`<figure class="o-fig" style="gap:10px" role="img" aria-label=${rows.map(r => BRIDGE_SIGN[r.tipo] + r.lab + ' ' + fmtN(r.v) + ' ' + un(r)).join(', ')}>
     ${rows.map((r, k) => html`<div key=${k} class="o-col" style=${{ gap: 4, paddingTop: r.tipo === 'tot' ? 10 : 0, borderTop: r.tipo === 'tot' ? `2.5px solid ${INK}` : 0 }}>
-      <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style=${{ fontWeight: r.tipo === 'tot' ? 800 : 700 }}>${r.lab}</span><span class="o-t" style="font-weight:800;white-space:nowrap">${BRIDGE_SIGN[r.tipo]}${fmtN(r.v)} ${fig.unit}</span></div>
+      <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style=${{ fontWeight: r.tipo === 'tot' ? 800 : 700 }}>${r.lab}</span><span class="o-t" style="font-weight:800;white-space:nowrap">${BRIDGE_SIGN[r.tipo]}${fmtN(r.v)} ${un(r)}</span></div>
       <div style="height:22px;position:relative"><i style=${{ position: 'absolute', top: 0, bottom: 0, left: (go ? r.da / max * 100 : 0) + '%', width: (go ? r.v / max * 100 : 0) + '%', minWidth: 14, background: BRIDGE_COL[r.tipo], border: `2.5px solid ${INK}`, borderRadius: 8, transition: 'left .75s cubic-bezier(.2,.8,.2,1), width .75s cubic-bezier(.2,.8,.2,1)' }}></i></div></div>`)}
     ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
 }
@@ -1231,7 +1238,25 @@ function Deep({ d }) {
       <span style=${{ flex: 'none', display: 'flex', transform: open ? 'rotate(180deg)' : 'none' }}>${Ico(ChevronDown, 22, 2.6)}</span></button>
     ${open && html`<div class="o-in" style="padding:0 14px 14px"><${Rich} text=${d.x} cls="sm"/></div>`}</div>`;
 }
+// Il campo delle stime: ogni riga è una stima (un punto, o un intervallo) sulla stessa scala; la riga tratteggiata segna il prezzo.
+// È il disegno con cui si chiude una valutazione: si vede a colpo d'occhio dove le stime si incontrano e dove cade il prezzo.
+function FigRange({ fig }) {
+  const [go, setGo] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
+  const max = Math.max.apply(null, fig.rows.map(r => r[2]).concat(fig.mark[0])) * 1.06, pc = v => v / max * 100, mx = pc(fig.mark[0]);
+  const moto = 'left .75s cubic-bezier(.2,.8,.2,1), width .75s cubic-bezier(.2,.8,.2,1)';
+  return html`<figure class="o-fig" style="gap:10px" role="img" aria-label=${fig.rows.map(r => r[0] + ': ' + r[3]).join('. ') + '. ' + fig.mark[1]}>
+    <div class="o-rowf" style="gap:8px"><i style=${{ width: 0, height: 16, flex: 'none', borderLeft: `3px dashed ${INK}` }}></i><span class="o-s" style=${{ color: INK, fontWeight: 800 }}>${fig.mark[1]}</span></div>
+    ${fig.rows.map((r, k) => { const da = r[1], a = r[2], punto = a - da < 1e-9;
+      return html`<div key=${k} class="o-col" style="gap:4px">
+        <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style="font-size:14px;line-height:19px">${r[0]}</span><span class="o-t" style="font-size:14px;line-height:19px;font-weight:800;white-space:nowrap">${r[3]}</span></div>
+        <div style="height:18px;position:relative;background:${T_BG};border-radius:9px">
+          <i style=${{ position: 'absolute', top: 0, bottom: 0, left: punto ? `calc(${go ? pc(da) : 0}% - 9px)` : (go ? pc(da) : 0) + '%', width: punto ? 18 : (go ? pc(a) - pc(da) : 0) + '%', minWidth: 14, background: FIG_COL[r[4]] || AZ, border: `2.5px solid ${INK}`, borderRadius: 9, transition: moto }}></i>
+          <i style=${{ position: 'absolute', top: -4, bottom: -4, left: `calc(${mx}% - 1.5px)`, width: 0, borderLeft: `3px dashed ${INK}` }}></i></div></div>`; })}
+    ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
+}
 function Fig({ fig }) {
+  if (fig.kind === 'range') return html`<${FigRange} fig=${fig}/>`;
   if (fig.kind === 'card') return html`<${FigCard} fig=${fig}/>`;
   if (fig.kind === 'bridge') return html`<${FigBridge} fig=${fig}/>`;
   if (fig.kind === 'ticks') return html`<${FigTicks} fig=${fig}/>`;
@@ -1241,11 +1266,12 @@ function FigBars({ fig }) {
   const [go, setGo] = useState(false);
   useEffect(() => { const t = setTimeout(() => setGo(true), 80); return () => clearTimeout(t); }, []);
   const sum = r => r.segs.reduce((a, x) => a + x[0], 0), max = Math.max.apply(null, fig.rows.map(sum));
+  // la larghezza di ogni pezzo è la sua quota della riga (pesi che sommano a meno di 1, come 0,44, altrimenti lascerebbero la barra mezza vuota)
   const dot = c => html`<i style=${{ width: 12, height: 12, flex: 'none', borderRadius: 4, background: FIG_COL[c] || AZ, border: `2px solid ${INK}` }}></i>`;
   return html`<figure class="o-fig" role="img" aria-label=${fig.alt || fig.rows.map(r => r.lab + (r.val ? ' ' + r.val : '') + ': ' + r.segs.map(x => x[1] + (x[3] ? ' ' + x[3] : '')).join(', ')).join('. ')}>
     ${fig.rows.map((r, k) => html`<div key=${k} class="o-col" style="gap:6px">
       <div class="o-rowf" style="justify-content:space-between;gap:10px;align-items:baseline"><span class="o-t" style="font-weight:800">${r.lab}</span>${r.val && html`<span class="o-t" style="font-weight:800;white-space:nowrap">${r.val}</span>`}</div>
-      <div class="o-figbar" style=${{ width: (go ? Math.max(8, sum(r) / max * 100) : 0) + '%' }}>${r.segs.map((x, j) => html`<i key=${j} style=${{ flex: x[0] + ' 1 0', background: FIG_COL[x[2]] || AZ, borderLeft: j ? `2.5px solid ${INK}` : 0 }}></i>`)}</div>
+      <div class="o-figbar" style=${{ width: (go ? Math.max(8, sum(r) / max * 100) : 0) + '%' }}>${r.segs.map((x, j) => html`<i key=${j} style=${{ flex: (x[0] / sum(r) * 100) + ' 1 0', background: FIG_COL[x[2]] || AZ, borderLeft: j ? `2.5px solid ${INK}` : 0 }}></i>`)}</div>
       <div class="o-rowf" style="flex-wrap:wrap;gap:4px 14px">${r.segs.map((x, j) => html`<span key=${j} class="o-s" style=${{ color: INK, display: 'inline-flex', alignItems: 'center', gap: 6 }}>${dot(x[2])}${x[1]}${x[3] ? ' ' + x[3] : ''}</span>`)}</div></div>`)}
     ${fig.cap && html`<figcaption class="o-s" style="margin-top:2px">${fig.cap}</figcaption>`}</figure>`;
 }
@@ -1460,6 +1486,19 @@ LEVERS.unanno = {
   calc: (v, p) => { const V = (p.D1 + v.p1) / (1 + v.rr / 100); return { V, Vc: V * 100, rr: v.rr, P: p.P, diff: (V / p.P - 1) * 100 }; },
   view: o => ({ lab: 'Estimated value today', big: withUnit(o.V, '€', 2), sideLab: 'Versus the market price', side: (o.diff > 0.05 ? '+' : '') + fmtN(Math.abs(o.diff) < 0.05 ? 0 : o.diff, 1) + '%',
     side2Lab: 'To whoever makes this estimate it is', side2: o.diff > 1 ? 'undervalued' : o.diff < -1 ? 'overvalued' : 'fairly priced' })
+};
+// un dividendo che cresce per sempre (modello di Gordon): leve "g" (crescita in %) e "rr" (rendimento richiesto in %); parametri D1 = dividendo del prossimo anno, P = prezzo di oggi.
+// Quando la crescita raggiunge il rendimento richiesto la formula non vale: il valore non c'è, e Vc resta fuori da ogni obiettivo.
+LEVERS.gordon = {
+  calc: (v, p) => { const d = v.rr - v.g, no = d <= 1e-9, V = no ? 0 : p.D1 / (d / 100); return { V, Vc: no ? -1 : V * 100, no, d, g10: v.g * 10, r10: v.rr * 10, diff: no ? 0 : (V / p.P - 1) * 100 }; },
+  view: o => ({ lab: "Value of one share", big: o.no ? 'Not possible' : withUnit(o.V, '€', 2), sideLab: 'Required return minus growth', side: o.no ? 'zero or less' : fmtC(o.d, 1) + ' ' + (o.d === 1 ? 'point' : 'points'),
+    side2Lab: 'Versus the market price', side2: o.no ? 'the formula does not apply' : (o.diff > 0.5 ? '+' : '') + fmtN(Math.abs(o.diff) < 0.5 ? 0 : o.diff, 0) + '%' })
+};
+// crescita sostenibile e P/E giusto: leve "pay" (payout, in %) e "roe" (in %); parametro rr = rendimento richiesto in %.
+// crescita = quota trattenuta x ROE; P/E giusto = payout / (rendimento richiesto - crescita), finché la crescita resta sotto il rendimento richiesto.
+LEVERS.sostenibile = {
+  calc: (v, p) => { const g = (100 - v.pay) / 100 * v.roe, d = p.rr - g, no = d <= 1e-9, pe = no ? 0 : v.pay / d; return { g, pe, no, g10: g * 10, pe10: no ? -1 : pe * 10, pay: v.pay, roe10: v.roe * 10 }; },
+  view: o => ({ lab: 'Sustainable growth', big: fmtC(o.g, 2) + '%', sideLab: 'Justified P/E', side: o.no ? 'not possible: growth is too high' : fmtC(o.pe, 1), bar: [o.pay, 100 - o.pay], barLab: ['Earnings paid out', 'Earnings retained'], barCol: [GIALLO, MENTA] })
 };
 // i conti dello stipendio 2026, usati dalle leve "netto", "irpef" e "sconto" (stesse formule di dev/ordine/FONTI_BASI.md)
 const STIP = {
@@ -2097,7 +2136,8 @@ const GEN = (() => {
     anni: { d: 0, rel: 0.2, abs: 2 },
     mln: { d: 0, rel: 0.05, abs: 5 },       // milioni: 240 milioni
     volte: { d: 1, rel: 0.08, abs: 0.4 },   // multipli: 16 · 12,5
-    euro2: { d: 2, rel: 0.05, abs: 0.05 }   // valuta con i centesimi: 0,75 €
+    euro2: { d: 2, rel: 0.05, abs: 0.05 },  // valuta con i centesimi: 0,75 €
+    euro2f: { d: 2, rel: 0.015, abs: 0.05 } // lo stesso, quando due risposte vicine nascono da due formule diverse (26 € e 25 €)
   };
 
   // ---- la penna: numeri, soldi e percentuali scritti come vuole la lingua ----
@@ -2121,7 +2161,7 @@ const GEN = (() => {
     const f = s => String(s).replace(/−/g, '-').replace(/,/g, '{,}').replace(/%/g, '\\%');
     const fn = (x, d = 0, fisso) => f(n(x, d, fisso));
     const fs = x => intero(x) ? fn(x) : fn(x, 2, true);   // una cifra in valuta dentro una formula: 20 oppure 0,20
-    const valore = (forma, x) => forma === 'soldi' || forma === 'euro2' ? soldi(x) : forma === 'mln' ? n(x) + (en ? ' million' : ' milioni') : forma === 'volte' ? n(x, 1) : forma === 'anni' ? (en ? 'About ' : 'Circa ') + anni(x) : forma === 'seg' || forma === 'seg2' ? seg(x, FORMA[forma].d) : pct(x, FORMA[forma].d);
+    const valore = (forma, x) => forma === 'soldi' || forma === 'euro2' || forma === 'euro2f' ? soldi(x) : forma === 'mln' ? n(x) + (en ? ' million' : ' milioni') : forma === 'volte' ? n(x, 1) : forma === 'anni' ? (en ? 'About ' : 'Circa ') + anni(x) : forma === 'seg' || forma === 'seg2' ? seg(x, FORMA[forma].d) : pct(x, FORMA[forma].d);
     return { en, n, soldi, pct, ilp, alp, delp, seg, anni, f, fn, fs, valore };
   }
 
@@ -2508,6 +2548,285 @@ const GEN = (() => {
         q: (p, W) => `You estimate that a stock is worth ${W.soldi(p.V)}. On the stock market it costs ${W.soldi(p.P)}. What is the margin of safety, as a percentage of the estimated value?`,
         exp: (p, W, ok) => `The **margin of safety** is the gap between the estimated value and the price, measured on the estimated value.\n\n$$M = \\frac{V - P}{V}$$\n\n\\(V\\) = estimated value, \\(P\\) = price.\n\n$$M = \\frac{${W.fs(p.V)} - ${W.fs(p.P)}}{${W.fs(p.V)}} = ${W.f(W.pct(ok))}$$`,
         err: { suprezzo: 'You divided by the price: the margin is measured on the estimated value.', rapporto: 'This is the price as a percentage of the value: the margin is what is missing to reach 100.', diff: 'This is the gap in money: it must be divided by the estimated value.' }
+      }
+    },
+    // ---- ancora laboratorio «multipli»: i conti nati con la seconda stesura del capitolo (utile diluito, P/E atteso, cassa, valore d'impresa completo) ----
+    epsdil: {
+      liv: 3, tema: 'valutare', forma: 'euro2', lab: 'multipli',
+      par: R => { const Pm = scegli(R, [10, 12, 15, 20, 24, 30, 40]), fr = scegli(R, [[1, 2], [2, 3], [3, 4], [1, 3], [3, 5], [4, 5]]), K = Pm * fr[0] / fr[1], n = scegli(R, [1, 2, 3, 4, 5, 6]), N = scegli(R, [8, 9, 10, 12, 14, 15, 18, 19, 20, 24]);
+        const E = scegli(R, [0.5, 0.6, 0.75, 0.8, 1, 1.2, 1.25, 1.5, 2, 2.5, 3]), ric = n * K / Pm, net = n - ric, U = E * (N + net);
+        return intero(K) && intero(ric * 2) && net / N >= 0.06 && net / N <= 0.25 && intero(U * 10) ? { U: giro(U, 1), N, n, K, Pm } : null; },
+      ok: p => p.U / (p.N + p.n - p.n * p.K / p.Pm),
+      err: { base: p => p.U / p.N, tutte: p => p.U / (p.N + p.n), ricompra: p => p.U / (p.N + p.n * p.K / p.Pm) },
+      it: {
+        q: (p, W) => `Un'azienda ha un utile netto di ${W.n(p.U, 1)} milioni e ${W.n(p.N)} milioni di azioni. I dirigenti hanno ${W.n(p.n)} ${p.n === 1 ? 'milione' : 'milioni'} di opzioni, ciascuna per comprare un'azione a ${W.soldi(p.K)}. Nell'anno l'azione è costata in media ${W.soldi(p.Pm)}. Quanto vale l'utile per azione diluito?`,
+        exp: (p, W, ok) => { const inc = p.n * p.K, ric = inc / p.Pm, net = p.n - ric;
+          return `Chi usa le opzioni paga le azioni nuove, e con quei soldi l'azienda può ricomprarne una parte: contano solo le **azioni in più**.\n\n• Incasso: \\(${W.fn(p.n)} \\times ${W.fs(p.K)} = ${W.fn(inc, 1)}\\) milioni.\n• Azioni ricomprate a ${W.soldi(p.Pm)}: \\(\\dfrac{${W.fn(inc, 1)}}{${W.fs(p.Pm)}} = ${W.fn(ric, 1)}\\) milioni.\n• Azioni in più: \\(${W.fn(p.n)} - ${W.fn(ric, 1)} = ${W.fn(net, 1)}\\) milioni.\n\n$$\\text{EPS diluito} = \\frac{U}{N + \\text{azioni in più}} = \\frac{${W.fn(p.U, 1)}}{${W.fn(p.N)} + ${W.fn(net, 1)}} = ${W.fs(ok)}$$\n\n\\(U\\) = utile netto, \\(N\\) = azioni di oggi.`; },
+        err: { base: 'Questo è l\'utile per azione base: non hai contato le azioni che nascerebbero dalle opzioni.', tutte: 'Hai aggiunto tutte le azioni delle opzioni: con i soldi incassati l\'azienda ne ricompra una parte, e conta solo la differenza.', ricompra: 'Hai aggiunto le azioni ricomprate: quelle in più sono le opzioni meno le azioni ricomprate.' }
+      },
+      en: {
+        q: (p, W) => `A company has net income of ${W.n(p.U, 1)} million and ${W.n(p.N)} million shares. Its managers hold ${W.n(p.n)} million stock options, each to buy one share at ${W.soldi(p.K)}. During the year the stock traded at an average of ${W.soldi(p.Pm)}. What are diluted earnings per share?`,
+        exp: (p, W, ok) => { const inc = p.n * p.K, ric = inc / p.Pm, net = p.n - ric;
+          return `Whoever exercises the options pays for the new shares, and with that money the company can buy some back: only the **extra shares** count.\n\n• Proceeds: \\(${W.fn(p.n)} \\times ${W.fs(p.K)} = ${W.fn(inc, 1)}\\) million.\n• Shares bought back at ${W.soldi(p.Pm)}: \\(\\dfrac{${W.fn(inc, 1)}}{${W.fs(p.Pm)}} = ${W.fn(ric, 1)}\\) million.\n• Extra shares: \\(${W.fn(p.n)} - ${W.fn(ric, 1)} = ${W.fn(net, 1)}\\) million.\n\n$$\\text{Diluted EPS} = \\frac{U}{N + \\text{extra shares}} = \\frac{${W.fn(p.U, 1)}}{${W.fn(p.N)} + ${W.fn(net, 1)}} = ${W.fs(ok)}$$\n\n\\(U\\) = net income, \\(N\\) = shares today.`; },
+        err: { base: 'This is basic earnings per share: you did not count the shares the options would create.', tutte: 'You added all the option shares: with the proceeds the company buys some back, and only the difference counts.', ricompra: 'You added the shares bought back: the extra shares are the options minus the shares bought back.' }
+      }
+    },
+    peatt: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const E = scegli(R, [0.5, 0.8, 1, 1.2, 1.5, 2, 2.5, 4]), g = scegli(R, [10, 20, 25, 50]), m = scegli(R, [8, 10, 12, 15, 16, 20, 24, 25, 30]), P = m * E * (1 + g / 100); return intero(P * 100) && intero(E * (1 + g / 100) * 100) ? { P: giro(P, 2), E, g } : null; },
+      ok: p => p.P / (p.E * (1 + p.g / 100)),
+      err: { passato: p => p.P / p.E, utile: p => p.E * (1 + p.g / 100), doppio: p => p.P / p.E * (1 + p.g / 100) },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)}. Negli ultimi dodici mesi l'utile per azione è stato ${W.soldi(p.E)}. Per i prossimi dodici mesi gli analisti si aspettano una crescita ${W.delp(p.g)}. Quanto vale il P/E atteso?`,
+        exp: (p, W, ok) => `Il **P/E atteso** usa l'utile previsto per i prossimi dodici mesi.\n\n$$\\text{EPS atteso} = ${W.fs(p.E)} \\times ${W.fn(1 + p.g / 100, 2)} = ${W.fs(p.E * (1 + p.g / 100))}$$\n\n$$\\text{P/E atteso} = \\frac{P}{\\text{EPS atteso}} = \\frac{${W.fs(p.P)}}{${W.fs(p.E * (1 + p.g / 100))}} = ${W.fn(ok, 1)}$$\n\n\\(P\\) = prezzo di un'azione. Il P/E passato è ${W.n(p.P / p.E, 1)}: con gli utili in crescita, quello atteso è sempre più basso.`,
+        err: { passato: 'Questo è il P/E passato: hai usato l\'utile degli ultimi dodici mesi, senza farlo crescere.', utile: 'Questo è l\'utile per azione atteso: è il primo passo, poi va messo sotto il prezzo.', doppio: 'Hai moltiplicato il P/E passato per la crescita: va diviso, perché l\'utile atteso sta sotto.' }
+      },
+      en: {
+        q: (p, W) => `A share costs ${W.soldi(p.P)}. Over the last twelve months earnings per share were ${W.soldi(p.E)}. For the next twelve months analysts expect growth of ${W.pct(p.g)}. What is the forward P/E?`,
+        exp: (p, W, ok) => `The **forward P/E** uses the earnings expected for the next twelve months.\n\n$$\\text{Expected EPS} = ${W.fs(p.E)} \\times ${W.fn(1 + p.g / 100, 2)} = ${W.fs(p.E * (1 + p.g / 100))}$$\n\n$$\\text{Forward P/E} = \\frac{P}{\\text{Expected EPS}} = \\frac{${W.fs(p.P)}}{${W.fs(p.E * (1 + p.g / 100))}} = ${W.fn(ok, 1)}$$\n\n\\(P\\) = price of one share. The trailing P/E is ${W.n(p.P / p.E, 1)}: with growing earnings, the forward one is always lower.`,
+        err: { passato: 'This is the trailing P/E: you used the earnings of the last twelve months, without growing them.', utile: 'This is the expected earnings per share: it is the first step, then it goes under the price.', doppio: 'You multiplied the trailing P/E by the growth: it must be divided, because expected earnings go underneath.' }
+      }
+    },
+    pcf: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const CF = scegli(R, [10, 12, 15, 20, 25, 30, 40, 50]), m = scegli(R, [5, 6, 8, 10, 12, 12.5, 15, 16, 18, 20]), A = scegli(R, [3, 4, 5, 6, 8, 10, 12, 15]), Wk = scegli(R, [1, 2, 3, 4, 5, 6]), U = CF - A + Wk;
+        return intero(m * CF) && U >= 4 && Wk / CF >= 0.1 && (A - Wk) / CF >= 0.1 ? { cap: giro(m * CF), U, A, Wk } : null; },
+      ok: p => p.cap / (p.U + p.A - p.Wk),
+      err: { pe: p => p.cap / p.U, rapido: p => p.cap / (p.U + p.A), storto: p => p.cap / (p.U + p.A + p.Wk) },
+      it: {
+        q: (p, W) => `Un'azienda vale in Borsa ${W.n(p.cap)} milioni. Ha un utile netto di ${W.n(p.U)} milioni e ammortamenti per ${W.n(p.A)} milioni. Nell'anno magazzino e crediti sono aumentati di ${W.n(p.Wk)} ${p.Wk === 1 ? 'milione' : 'milioni'}. Quanto vale il P/CF, calcolato sul flusso di cassa operativo?`,
+        exp: (p, W, ok) => `Prima il **flusso di cassa operativo**: all'utile si riaggiungono gli ammortamenti e si tolgono i soldi rimasti fermi in più.\n\n$$CF = U + \\text{ammortamenti} - \\text{soldi fermi} = ${W.fn(p.U)} + ${W.fn(p.A)} - ${W.fn(p.Wk)} = ${W.fn(p.U + p.A - p.Wk)}$$\n\n$$\\text{P/CF} = \\frac{\\text{Cap}}{CF} = \\frac{${W.fn(p.cap)}}{${W.fn(p.U + p.A - p.Wk)}} = ${W.fn(ok, 1)}$$\n\n\\(U\\) = utile netto, \\(\\text{Cap}\\) = capitalizzazione.`,
+        err: { pe: 'Questo è il P/E: sotto hai messo l\'utile netto, non il flusso di cassa.', rapido: 'Hai usato utile più ammortamenti: mancano i soldi rimasti fermi in magazzino e crediti, che vanno tolti.', storto: 'Hai aggiunto l\'aumento di magazzino e crediti: sono soldi rimasti fermi, vanno tolti.' }
+      },
+      en: {
+        q: (p, W) => `A company is worth ${W.n(p.cap)} million on the stock market. It has net income of ${W.n(p.U)} million and depreciation of ${W.n(p.A)} million. During the year inventory and receivables grew by ${W.n(p.Wk)} million. What is the P/CF, based on cash flow from operations?`,
+        exp: (p, W, ok) => `First the **cash flow from operations**: add depreciation back to net income and subtract the extra money tied up.\n\n$$CF = U + \\text{depreciation} - \\text{money tied up} = ${W.fn(p.U)} + ${W.fn(p.A)} - ${W.fn(p.Wk)} = ${W.fn(p.U + p.A - p.Wk)}$$\n\n$$\\text{P/CF} = \\frac{\\text{Cap}}{CF} = \\frac{${W.fn(p.cap)}}{${W.fn(p.U + p.A - p.Wk)}} = ${W.fn(ok, 1)}$$\n\n\\(U\\) = net income, \\(\\text{Cap}\\) = market capitalization.`,
+        err: { pe: 'This is the P/E: you put net income underneath, not cash flow.', rapido: 'You used net income plus depreciation: the extra money tied up in inventory and receivables is missing, and it must be subtracted.', storto: 'You added the increase in inventory and receivables: that money is tied up, so it must be subtracted.' }
+      }
+    },
+    fcfe: {
+      liv: 2, tema: 'valutare', forma: 'mln', lab: 'multipli',
+      par: R => { const CF = scegli(R, [40, 50, 60, 80, 100, 120, 150, 200]), I = scegli(R, [20, 30, 40, 50, 60, 80, 100]), dD = scegli(R, [10, 15, 20, 25, 30]); return CF - I >= 15 && I >= 2 * dD ? { CF, I, dD } : null; },
+      ok: p => p.CF - p.I + p.dD,
+      err: { senza: p => p.CF - p.I, meno: p => p.CF - p.I - p.dD, storto: p => p.CF + p.I - p.dD },
+      it: {
+        q: (p, W) => `In un anno l'attività di un'azienda produce ${W.n(p.CF)} milioni di cassa. L'azienda investe ${W.n(p.I)} milioni in impianti nuovi e prende ${W.n(p.dD)} milioni di debiti in più. Quanto vale il flusso di cassa per i soci?`,
+        exp: (p, W, ok) => `Il **flusso di cassa per i soci** è la cassa che resta dopo gli investimenti, contando anche i debiti nuovi.\n\n$$\\text{FCFE} = CF - I + \\Delta D$$\n\n\\(CF\\) = flusso di cassa operativo, \\(I\\) = investimenti, \\(\\Delta D\\) = debiti nuovi.\n\n$$\\text{FCFE} = ${W.fn(p.CF)} - ${W.fn(p.I)} + ${W.fn(p.dD)} = ${W.fn(ok)}$$\n\nAi soci restano **${W.n(ok)} milioni**.`,
+        err: { senza: 'Hai dimenticato i debiti nuovi: sono soldi entrati in cassa, e vanno aggiunti.', meno: 'Hai tolto i debiti nuovi: portano cassa, quindi vanno aggiunti.', storto: 'Hai aggiunto gli investimenti e tolto i debiti: è il contrario.' }
+      },
+      en: {
+        q: (p, W) => `In one year a company's operations generate ${W.n(p.CF)} million of cash. The company invests ${W.n(p.I)} million in new plant and takes on ${W.n(p.dD)} million of additional debt. What is its free cash flow to equity?`,
+        exp: (p, W, ok) => `**Free cash flow to equity** is the cash left after investment, counting new borrowing too.\n\n$$\\text{FCFE} = CF - I + \\Delta D$$\n\n\\(CF\\) = cash flow from operations, \\(I\\) = investment, \\(\\Delta D\\) = new debt.\n\n$$\\text{FCFE} = ${W.fn(p.CF)} - ${W.fn(p.I)} + ${W.fn(p.dD)} = ${W.fn(ok)}$$\n\n**${W.n(ok)} million** is left for shareholders.`,
+        err: { senza: 'You forgot the new debt: it is cash coming in, so it must be added.', meno: 'You subtracted the new debt: it brings in cash, so it must be added.', storto: 'You added the investment and subtracted the debt: it is the other way around.' }
+      }
+    },
+    evpieno: {
+      liv: 3, tema: 'valutare', forma: 'mln', lab: 'multipli',
+      par: R => ({ cap: scegli(R, [300, 400, 500, 600, 800]), D: scegli(R, [100, 120, 150, 200, 250]), Pr: scegli(R, [30, 40, 50, 60]), Tz: scegli(R, [30, 40, 50, 60, 80]), C: scegli(R, [40, 50, 60, 80, 100]) }),
+      ok: p => p.cap + p.D + p.Pr + p.Tz - p.C,
+      err: { corto: p => p.cap + p.D - p.C, piucassa: p => p.cap + p.D + p.Pr + p.Tz + p.C, tolti: p => p.cap + p.D - p.Pr - p.Tz - p.C },
+      it: {
+        q: (p, W) => `Un gruppo vale in Borsa ${W.n(p.cap)} milioni. Ha debiti finanziari per ${W.n(p.D)} milioni, azioni privilegiate per ${W.n(p.Pr)} milioni, quote di terzi per ${W.n(p.Tz)} milioni e ${W.n(p.C)} milioni in cassa. Quanto vale il suo valore d'impresa (EV)?`,
+        exp: (p, W, ok) => `Nell'EV entra tutto quello che spetta a qualcuno prima dei soci ordinari; si toglie solo la cassa.\n\n$$\\text{EV} = \\text{Cap} + D + \\text{Priv} + \\text{Terzi} - C$$\n\n\\(\\text{Cap}\\) = capitalizzazione, \\(D\\) = debiti finanziari, \\(\\text{Priv}\\) = azioni privilegiate, \\(\\text{Terzi}\\) = quote di terzi, \\(C\\) = cassa.\n\n$$\\text{EV} = ${W.fn(p.cap)} + ${W.fn(p.D)} + ${W.fn(p.Pr)} + ${W.fn(p.Tz)} - ${W.fn(p.C)} = ${W.fn(ok)}$$\n\nL'EV è **${W.n(ok)} milioni**.`,
+        err: { corto: 'Hai dimenticato azioni privilegiate e quote di terzi: vanno aggiunte, come i debiti.', piucassa: 'Hai aggiunto anche la cassa: la cassa si toglie.', tolti: 'Hai tolto azioni privilegiate e quote di terzi: vanno aggiunte.' }
+      },
+      en: {
+        q: (p, W) => `A group is worth ${W.n(p.cap)} million on the stock market. It has ${W.n(p.D)} million of financial debt, ${W.n(p.Pr)} million of preferred stock, ${W.n(p.Tz)} million of noncontrolling interests and ${W.n(p.C)} million in cash. What is its enterprise value (EV)?`,
+        exp: (p, W, ok) => `EV includes everything owed to someone ahead of common shareholders; only cash is subtracted.\n\n$$\\text{EV} = \\text{Cap} + D + \\text{Pref} + \\text{NCI} - C$$\n\n\\(\\text{Cap}\\) = market capitalization, \\(D\\) = financial debt, \\(\\text{Pref}\\) = preferred stock, \\(\\text{NCI}\\) = noncontrolling interests, \\(C\\) = cash.\n\n$$\\text{EV} = ${W.fn(p.cap)} + ${W.fn(p.D)} + ${W.fn(p.Pr)} + ${W.fn(p.Tz)} - ${W.fn(p.C)} = ${W.fn(ok)}$$\n\nThe EV is **${W.n(ok)} million**.`,
+        err: { corto: 'You forgot preferred stock and noncontrolling interests: they are added, like debt.', piucassa: 'You added the cash too: cash is subtracted.', tolti: 'You subtracted preferred stock and noncontrolling interests: they must be added.' }
+      }
+    },
+    evebitda: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'multipli',
+      par: R => { const B = scegli(R, [20, 25, 30, 40, 50, 60, 80]), A = scegli(R, [5, 8, 10, 12, 15, 20]), m = scegli(R, [5, 6, 7, 8, 9, 10, 12]), D = scegli(R, [40, 60, 80, 100, 150]), C = scegli(R, [10, 20, 30, 40]), cap = m * B - D + C;
+        return A <= B / 2 && A >= B / 6 && cap >= 60 ? { cap, D, C, E: B - A, A } : null; },
+      ok: p => (p.cap + p.D - p.C) / (p.E + p.A),
+      err: { ebit: p => (p.cap + p.D - p.C) / p.E, cap: p => p.cap / (p.E + p.A), meno: p => (p.cap + p.D - p.C) / (p.E - p.A) },
+      it: {
+        q: (p, W) => `Un'azienda vale in Borsa ${W.n(p.cap)} milioni, ha debiti finanziari per ${W.n(p.D)} milioni e ${W.n(p.C)} milioni in cassa. Il suo risultato operativo è ${W.n(p.E)} milioni e gli ammortamenti sono ${W.n(p.A)} milioni. Quanto vale il suo EV/EBITDA?`,
+        exp: (p, W, ok) => `Sopra il valore d'impresa, sotto l'EBITDA: il risultato operativo a cui si riaggiungono gli ammortamenti.\n\n$$\\text{EV} = \\text{Cap} + D - C = ${W.fn(p.cap)} + ${W.fn(p.D)} - ${W.fn(p.C)} = ${W.fn(p.cap + p.D - p.C)}$$\n\n$$\\text{EBITDA} = \\text{EBIT} + \\text{ammortamenti} = ${W.fn(p.E)} + ${W.fn(p.A)} = ${W.fn(p.E + p.A)}$$\n\n$$\\frac{\\text{EV}}{\\text{EBITDA}} = \\frac{${W.fn(p.cap + p.D - p.C)}}{${W.fn(p.E + p.A)}} = ${W.fn(ok, 1)}$$\n\n\\(\\text{Cap}\\) = capitalizzazione, \\(D\\) = debiti finanziari, \\(C\\) = cassa, \\(\\text{EBIT}\\) = risultato operativo.`,
+        err: { ebit: 'Hai diviso per il solo risultato operativo: questo è EV/EBIT. Per l\'EBITDA vanno riaggiunti gli ammortamenti.', cap: 'Hai messo sopra la capitalizzazione: con l\'EBITDA va il valore di tutta l\'attività, debiti compresi.', meno: 'Hai tolto gli ammortamenti dal risultato operativo: per arrivare all\'EBITDA vanno aggiunti.' }
+      },
+      en: {
+        q: (p, W) => `A company is worth ${W.n(p.cap)} million on the stock market, has ${W.n(p.D)} million of financial debt and ${W.n(p.C)} million in cash. Its operating income is ${W.n(p.E)} million and depreciation is ${W.n(p.A)} million. What is its EV/EBITDA?`,
+        exp: (p, W, ok) => `Enterprise value on top, EBITDA underneath: operating income with depreciation added back.\n\n$$\\text{EV} = \\text{Cap} + D - C = ${W.fn(p.cap)} + ${W.fn(p.D)} - ${W.fn(p.C)} = ${W.fn(p.cap + p.D - p.C)}$$\n\n$$\\text{EBITDA} = \\text{EBIT} + \\text{depreciation} = ${W.fn(p.E)} + ${W.fn(p.A)} = ${W.fn(p.E + p.A)}$$\n\n$$\\frac{\\text{EV}}{\\text{EBITDA}} = \\frac{${W.fn(p.cap + p.D - p.C)}}{${W.fn(p.E + p.A)}} = ${W.fn(ok, 1)}$$\n\n\\(\\text{Cap}\\) = market capitalization, \\(D\\) = financial debt, \\(C\\) = cash, \\(\\text{EBIT}\\) = operating income.`,
+        err: { ebit: 'You divided by operating income alone: this is EV/EBIT. For EBITDA, depreciation must be added back.', cap: 'You put market capitalization on top: EBITDA goes with the value of the whole business, debt included.', meno: 'You subtracted depreciation from operating income: to get EBITDA it must be added.' }
+      }
+    },
+    evprezzo: {
+      liv: 3, tema: 'valutare', forma: 'euro2', lab: 'multipli',
+      par: R => { const m = scegli(R, [6, 7, 8, 9, 10, 12]), B = scegli(R, [20, 25, 30, 40, 50, 60, 80]), D = scegli(R, [40, 60, 80, 100, 120, 150]), C = scegli(R, [10, 20, 30, 40]), N = scegli(R, [5, 8, 10, 20, 25, 40, 50]), eq = m * B - D + C, V = eq / N;
+        return eq >= 60 && (D - C) / (m * B) >= 0.12 && intero(V * 100) ? { m, B, D, C, N } : null; },
+      ok: p => (p.m * p.B - p.D + p.C) / p.N,
+      err: { lordo: p => p.m * p.B / p.N, piu: p => (p.m * p.B + p.D - p.C) / p.N, senzacassa: p => (p.m * p.B - p.D) / p.N },
+      it: {
+        q: (p, W) => `Le aziende simili valgono in media ${W.n(p.m)} volte l'EBITDA. L'azienda da valutare ha un EBITDA di ${W.n(p.B)} milioni, debiti finanziari per ${W.n(p.D)} milioni, ${W.n(p.C)} milioni in cassa e ${W.n(p.N)} milioni di azioni. Con il metodo dei simili, quanto vale una sua azione?`,
+        exp: (p, W, ok) => `Dal multiplo si arriva al valore di tutta l'attività; poi si toglie il debito netto e si divide per le azioni.\n\n$$\\text{EV} = ${W.fn(p.m)} \\times ${W.fn(p.B)} = ${W.fn(p.m * p.B)}$$\n\n$$\\text{Valore per i soci} = \\text{EV} - (D - C) = ${W.fn(p.m * p.B)} - ${W.fn(p.D - p.C)} = ${W.fn(p.m * p.B - p.D + p.C)}$$\n\n$$V = \\frac{${W.fn(p.m * p.B - p.D + p.C)}}{${W.fn(p.N)}} = ${W.fs(ok)}$$\n\n\\(D\\) = debiti finanziari, \\(C\\) = cassa. Un'azione vale **${W.soldi(ok)}**.`,
+        err: { lordo: 'Hai diviso per le azioni il valore di tutta l\'attività: prima va tolto il debito netto, che spetta ai creditori.', piu: 'Hai aggiunto il debito netto: va tolto, perché si passa dal valore dell\'attività a quello dei soci.', senzacassa: 'Hai tolto i debiti ma non hai riaggiunto la cassa: si toglie il debito netto, cioè debiti meno cassa.' }
+      },
+      en: {
+        q: (p, W) => `Similar companies are worth on average ${W.n(p.m)} times EBITDA. The company you are valuing has EBITDA of ${W.n(p.B)} million, ${W.n(p.D)} million of financial debt, ${W.n(p.C)} million in cash and ${W.n(p.N)} million shares. Using comparables, what is one of its shares worth?`,
+        exp: (p, W, ok) => `The multiple gives the value of the whole business; then subtract net debt and divide by the number of shares.\n\n$$\\text{EV} = ${W.fn(p.m)} \\times ${W.fn(p.B)} = ${W.fn(p.m * p.B)}$$\n\n$$\\text{Equity value} = \\text{EV} - (D - C) = ${W.fn(p.m * p.B)} - ${W.fn(p.D - p.C)} = ${W.fn(p.m * p.B - p.D + p.C)}$$\n\n$$V = \\frac{${W.fn(p.m * p.B - p.D + p.C)}}{${W.fn(p.N)}} = ${W.fs(ok)}$$\n\n\\(D\\) = financial debt, \\(C\\) = cash. One share is worth **${W.soldi(ok)}**.`,
+        err: { lordo: 'You divided the value of the whole business by the shares: first subtract net debt, which belongs to lenders.', piu: 'You added net debt: it must be subtracted, because you are going from the value of the business to the value for shareholders.', senzacassa: 'You subtracted the debt but did not add back the cash: what is subtracted is net debt, debt minus cash.' }
+      }
+    },
+    // =====================================================================================================
+    // LABORATORIO «flussi» (materia Azioni, capitolo «Costa tanto o poco?», parte «I soldi che arriveranno»): dividendi scontati,
+    // crescita costante, rendimento offerto da un prezzo, crescita sostenibile, P/E giusto, azioni privilegiate, due fasi.
+    // =====================================================================================================
+    unanno: {
+      liv: 2, tema: 'valutare', forma: 'euro2', lab: 'flussi',
+      par: R => { const r = scegli(R, [8, 10, 12, 20, 25]), V = scegli(R, [10, 12, 15, 20, 25, 30, 40, 50]), D1 = scegli(R, [0.5, 0.6, 0.8, 1, 1.2, 1.5, 2, 2.5, 3]), P1 = V * (1 + r / 100) - D1;
+        return intero(P1 * 100) && D1 / V <= 0.08 ? { D1, P1: giro(P1, 2), r } : null; },
+      ok: p => (p.D1 + p.P1) / (1 + p.r / 100),
+      err: { senza: p => p.D1 + p.P1, per: p => (p.D1 + p.P1) * (1 + p.r / 100), meno: p => (p.D1 + p.P1) * (1 - p.r / 100), solop: p => p.P1 / (1 + p.r / 100) },
+      it: {
+        q: (p, W) => `Tra un anno un'azione pagherà un dividendo di ${W.soldi(p.D1)} e pensi di rivenderla a ${W.soldi(p.P1)}. Chiedi un rendimento ${W.delp(p.r)}. Quanto vale oggi l'azione per te?`,
+        exp: (p, W, ok) => `Quello che incasserai tra un anno si riporta a oggi dividendo per uno più il rendimento che chiedi.\n\n$$V = \\frac{\\text{Div}_1 + P_1}{1 + r}$$\n\n\\(\\text{Div}_1\\) = dividendo tra un anno, \\(P_1\\) = prezzo tra un anno, \\(r\\) = rendimento richiesto.\n\n$$V = \\frac{${W.fs(p.D1)} + ${W.fs(p.P1)}}{${W.fn(1 + p.r / 100, 2, true)}} = ${W.fs(ok)}$$\n\nPer te l'azione vale oggi **${W.soldi(ok)}**.`,
+        err: { senza: 'Questo è quello che incasserai tra un anno: per portarlo a oggi va diviso per uno più il rendimento richiesto.', per: 'Hai moltiplicato per uno più il rendimento: così porti la cifra ancora più avanti nel tempo. Per tornare a oggi si divide.', meno: 'Hai tolto il rendimento in percentuale: per scontare si divide per uno più il rendimento, non si toglie la percentuale.', solop: 'Hai scontato solo il prezzo di rivendita: tra un anno incassi anche il dividendo.' }
+      },
+      en: {
+        q: (p, W) => `A year from now a stock will pay a dividend of ${W.soldi(p.D1)} and you expect to sell it for ${W.soldi(p.P1)}. You require a return of ${W.pct(p.r)}. What is the stock worth to you today?`,
+        exp: (p, W, ok) => `What you will collect in a year is brought back to today by dividing by one plus the return you require.\n\n$$V = \\frac{\\text{Div}_1 + P_1}{1 + r}$$\n\n\\(\\text{Div}_1\\) = dividend in one year, \\(P_1\\) = price in one year, \\(r\\) = required return.\n\n$$V = \\frac{${W.fs(p.D1)} + ${W.fs(p.P1)}}{${W.fn(1 + p.r / 100, 2, true)}} = ${W.fs(ok)}$$\n\nTo you the stock is worth **${W.soldi(ok)}** today.`,
+        err: { senza: 'This is what you will collect in a year: to bring it back to today, divide by one plus the required return.', per: 'You multiplied by one plus the return: that pushes the amount even further into the future. To come back to today, divide.', meno: 'You took the return off as a percentage: to discount you divide by one plus the return, you do not subtract the percentage.', solop: 'You discounted only the sale price: in a year you collect the dividend too.' }
+      }
+    },
+    dueanni: {
+      liv: 3, tema: 'valutare', forma: 'euro2', lab: 'flussi',
+      par: R => { const r = scegli(R, [10, 20]), k = 1 + r / 100, a = scegli(R, [0.5, 1, 1.5, 2]), b = scegli(R, [10, 12, 15, 20, 24, 25, 30, 40]), D1 = a * k, D2 = scegli(R, [0.6, 0.72, 1.1, 1.2, 1.21, 1.44, 1.8, 2.2, 2.4]), P2 = b * k * k - D2;
+        return intero(P2 * 100) && D2 >= D1 && D2 <= 1.5 * D1 ? { D1: giro(D1, 2), D2, P2: giro(P2, 2), r } : null; },
+      ok: p => p.D1 / (1 + p.r / 100) + (p.D2 + p.P2) / Math.pow(1 + p.r / 100, 2),
+      err: { unsolo: p => (p.D1 + p.D2 + p.P2) / (1 + p.r / 100), senza: p => p.D1 + p.D2 + p.P2, semplice: p => p.D1 / (1 + p.r / 100) + (p.D2 + p.P2) / (1 + 2 * p.r / 100) },
+      it: {
+        q: (p, W) => `Un'azione pagherà un dividendo di ${W.soldi(p.D1)} tra un anno e di ${W.soldi(p.D2)} tra due anni. Tra due anni pensi di rivenderla a ${W.soldi(p.P2)}. Chiedi un rendimento ${W.delp(p.r)}. Quanto vale oggi l'azione per te?`,
+        exp: (p, W, ok) => { const k = 1 + p.r / 100, a = p.D1 / k, b = (p.D2 + p.P2) / (k * k);
+          return `Ogni cifra si sconta per gli anni che mancano: una volta il primo dividendo, due volte il secondo e il prezzo di rivendita.\n\n$$V = \\frac{\\text{Div}_1}{1 + r} + \\frac{\\text{Div}_2 + P_2}{(1 + r)^2}$$\n\n\\(\\text{Div}_1\\), \\(\\text{Div}_2\\) = dividendi tra uno e due anni, \\(P_2\\) = prezzo tra due anni, \\(r\\) = rendimento richiesto.\n\n$$V = \\frac{${W.fs(p.D1)}}{${W.fn(k, 2, true)}} + \\frac{${W.fs(p.D2)} + ${W.fs(p.P2)}}{${W.fn(k * k, 2, true)}} = ${W.fs(a)} + ${W.fs(b)} = ${W.fs(ok)}$$\n\nPer te l'azione vale oggi **${W.soldi(ok)}**.`; },
+        err: { unsolo: 'Hai scontato tutto per un anno solo: il secondo dividendo e il prezzo di rivendita arrivano tra due anni.', senza: 'Hai sommato le cifre senza scontarle: i soldi futuri valgono meno di quelli di oggi.', semplice: 'Per due anni hai diviso per uno più due volte il tasso: si divide per uno più il tasso, al quadrato.' }
+      },
+      en: {
+        q: (p, W) => `A stock will pay a dividend of ${W.soldi(p.D1)} in one year and ${W.soldi(p.D2)} in two years. In two years you expect to sell it for ${W.soldi(p.P2)}. You require a return of ${W.pct(p.r)}. What is the stock worth to you today?`,
+        exp: (p, W, ok) => { const k = 1 + p.r / 100, a = p.D1 / k, b = (p.D2 + p.P2) / (k * k);
+          return `Each amount is discounted for the years left: once for the first dividend, twice for the second dividend and the sale price.\n\n$$V = \\frac{\\text{Div}_1}{1 + r} + \\frac{\\text{Div}_2 + P_2}{(1 + r)^2}$$\n\n\\(\\text{Div}_1\\), \\(\\text{Div}_2\\) = dividends in one and two years, \\(P_2\\) = price in two years, \\(r\\) = required return.\n\n$$V = \\frac{${W.fs(p.D1)}}{${W.fn(k, 2, true)}} + \\frac{${W.fs(p.D2)} + ${W.fs(p.P2)}}{${W.fn(k * k, 2, true)}} = ${W.fs(a)} + ${W.fs(b)} = ${W.fs(ok)}$$\n\nTo you the stock is worth **${W.soldi(ok)}** today.`; },
+        err: { unsolo: 'You discounted everything for one year only: the second dividend and the sale price arrive in two years.', senza: 'You added the amounts without discounting them: future money is worth less than money today.', semplice: 'For two years you divided by one plus twice the rate: divide by one plus the rate, squared.' }
+      }
+    },
+    gordon: {
+      liv: 2, tema: 'valutare', forma: 'euro2f', lab: 'flussi',
+      par: R => { const r = scegli(R, [7, 8, 9, 10, 11, 12]), g = scegli(R, [1, 2, 3, 4, 5, 6]), V = scegli(R, [10, 12, 15, 16, 20, 24, 25, 30, 40, 50, 60]), D1 = V * (r - g) / 100;
+        return r - g >= 2 && r - g <= 8 && intero(D1 * 100) && D1 >= 0.3 ? { D1: giro(D1, 2), r, g } : null; },
+      ok: p => p.D1 / ((p.r - p.g) / 100),
+      err: { senzag: p => p.D1 / (p.r / 100), somma: p => p.D1 / ((p.r + p.g) / 100), piug: p => p.D1 * (1 + p.g / 100) / ((p.r - p.g) / 100) },
+      it: {
+        q: (p, W) => `Un'azione pagherà l'anno prossimo un dividendo di ${W.soldi(p.D1)}. Ti aspetti che il dividendo cresca ${W.delp(p.g)} l'anno per sempre, e chiedi un rendimento ${W.delp(p.r)}. Quanto vale l'azione?`,
+        exp: (p, W, ok) => `Con un dividendo che cresce per sempre allo stesso ritmo si usa il **modello di Gordon**.\n\n$$V = \\frac{\\text{Div}_1}{r - g}$$\n\n\\(\\text{Div}_1\\) = dividendo del prossimo anno, \\(r\\) = rendimento richiesto, \\(g\\) = crescita.\n\n$$V = \\frac{${W.fs(p.D1)}}{${p.r}\\% - ${p.g}\\%} = \\frac{${W.fs(p.D1)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fs(ok)}$$\n\nL'azione vale **${W.soldi(ok)}**.`,
+        err: { senzag: 'Hai diviso per il solo rendimento richiesto: è il valore di un dividendo che non cresce mai. Sotto va la differenza tra rendimento richiesto e crescita.', somma: 'Hai sommato rendimento richiesto e crescita: la crescita va tolta.', piug: 'Hai fatto crescere un dividendo che era già quello del prossimo anno: sopra va così com\'è.' }
+      },
+      en: {
+        q: (p, W) => `A stock will pay a dividend of ${W.soldi(p.D1)} next year. You expect the dividend to grow ${W.pct(p.g)} a year forever, and you require a return of ${W.pct(p.r)}. What is the stock worth?`,
+        exp: (p, W, ok) => `For a dividend that grows forever at the same rate, use the **Gordon growth model**.\n\n$$V = \\frac{\\text{Div}_1}{r - g}$$\n\n\\(\\text{Div}_1\\) = next year's dividend, \\(r\\) = required return, \\(g\\) = growth.\n\n$$V = \\frac{${W.fs(p.D1)}}{${p.r}\\% - ${p.g}\\%} = \\frac{${W.fs(p.D1)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fs(ok)}$$\n\nThe stock is worth **${W.soldi(ok)}**.`,
+        err: { senzag: 'You divided by the required return alone: that is the value of a dividend that never grows. The difference between required return and growth goes underneath.', somma: 'You added required return and growth: growth must be subtracted.', piug: 'You grew a dividend that was already next year\'s: it goes on top as it is.' }
+      }
+    },
+    gordon0: {
+      liv: 3, tema: 'valutare', forma: 'euro2f', lab: 'flussi',
+      par: R => { const r = scegli(R, [7, 8, 9, 10, 11, 12]), g = scegli(R, [2, 3, 4, 5, 6]), D0 = scegli(R, [0.4, 0.5, 0.6, 0.8, 1, 1.2, 1.5, 1.6, 2, 2.4, 2.5, 3, 3.2, 4, 5, 6]), D1 = D0 * (1 + g / 100), V = D1 / ((r - g) / 100);
+        return r - g >= 3 && intero(D1 * 1000) && intero(V * 100) ? { D0, r, g } : null; },
+      ok: p => p.D0 * (1 + p.g / 100) / ((p.r - p.g) / 100),
+      err: { fermo: p => p.D0 / ((p.r - p.g) / 100), senzag: p => p.D0 * (1 + p.g / 100) / (p.r / 100), somma: p => p.D0 * (1 + p.g / 100) / ((p.r + p.g) / 100) },
+      it: {
+        q: (p, W) => `Un'azienda ha appena pagato un dividendo di ${W.soldi(p.D0)} per azione. Ti aspetti che cresca ${W.delp(p.g)} l'anno per sempre, e chiedi un rendimento ${W.delp(p.r)}. Quanto vale l'azione?`,
+        exp: (p, W, ok) => `Nel modello di Gordon sopra va il dividendo **del prossimo anno**: quello appena pagato va prima fatto crescere.\n\n$$\\text{Div}_1 = \\text{Div}_0 \\times (1 + g) = ${W.fs(p.D0)} \\times ${W.fn(1 + p.g / 100, 2, true)} = ${W.fn(p.D0 * (1 + p.g / 100), 3)}$$\n\n$$V = \\frac{\\text{Div}_1}{r - g} = \\frac{${W.fn(p.D0 * (1 + p.g / 100), 3)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fs(ok)}$$\n\n\\(\\text{Div}_0\\) = ultimo dividendo pagato, \\(r\\) = rendimento richiesto, \\(g\\) = crescita. L'azione vale **${W.soldi(ok)}**.`,
+        err: { fermo: 'Hai messo sopra l\'ultimo dividendo pagato: va usato quello del prossimo anno, cioè l\'ultimo fatto crescere di un anno.', senzag: 'Hai diviso per il solo rendimento richiesto: sotto va la differenza tra rendimento richiesto e crescita.', somma: 'Hai sommato rendimento richiesto e crescita: la crescita va tolta.' }
+      },
+      en: {
+        q: (p, W) => `A company has just paid a dividend of ${W.soldi(p.D0)} per share. You expect it to grow ${W.pct(p.g)} a year forever, and you require a return of ${W.pct(p.r)}. What is the stock worth?`,
+        exp: (p, W, ok) => `In the Gordon growth model **next year's** dividend goes on top: the one just paid must be grown first.\n\n$$\\text{Div}_1 = \\text{Div}_0 \\times (1 + g) = ${W.fs(p.D0)} \\times ${W.fn(1 + p.g / 100, 2, true)} = ${W.fn(p.D0 * (1 + p.g / 100), 3)}$$\n\n$$V = \\frac{\\text{Div}_1}{r - g} = \\frac{${W.fn(p.D0 * (1 + p.g / 100), 3)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fs(ok)}$$\n\n\\(\\text{Div}_0\\) = last dividend paid, \\(r\\) = required return, \\(g\\) = growth. The stock is worth **${W.soldi(ok)}**.`,
+        err: { fermo: 'You put the last dividend paid on top: use next year\'s, that is, the last one grown by one year.', senzag: 'You divided by the required return alone: the difference between required return and growth goes underneath.', somma: 'You added required return and growth: growth must be subtracted.' }
+      }
+    },
+    rimpl: {
+      liv: 2, tema: 'valutare', forma: 'pct', lab: 'flussi',
+      par: R => { const y = scegli(R, [2, 2.5, 3, 4, 5, 6]), g = scegli(R, [2, 3, 4, 5, 6]), P = scegli(R, [10, 20, 25, 40, 50, 80]), D1 = P * y / 100; return intero(D1 * 100) && Math.abs(y - g) >= 1 ? { P, D1: giro(D1, 2), g } : null; },
+      ok: p => p.D1 / p.P * 100 + p.g,
+      err: { soloy: p => p.D1 / p.P * 100, solog: p => p.g, pe: p => p.P / p.D1 },
+      it: {
+        q: (p, W) => `Un'azione costa ${W.soldi(p.P)}. L'anno prossimo pagherà un dividendo di ${W.soldi(p.D1)}, che poi crescerà ${W.delp(p.g)} l'anno per sempre. Che rendimento offre a chi la compra oggi?`,
+        exp: (p, W, ok) => `Girando il modello di Gordon, il rendimento offerto da un prezzo è il rendimento del dividendo più la crescita.\n\n$$r = \\frac{\\text{Div}_1}{P} + g$$\n\n\\(\\text{Div}_1\\) = dividendo del prossimo anno, \\(P\\) = prezzo di oggi, \\(g\\) = crescita.\n\n$$r = \\frac{${W.fs(p.D1)}}{${W.fs(p.P)}} + ${p.g}\\% = ${W.f(W.pct(p.D1 / p.P * 100))} + ${p.g}\\% = ${W.f(W.pct(ok))}$$\n\nChi compra oggi può aspettarsi **${W.ilp(ok)}** l'anno, se le ipotesi reggono.`,
+        err: { soloy: 'Questo è solo il rendimento del dividendo: manca la crescita.', solog: 'Questa è solo la crescita: manca il rendimento del dividendo.', pe: 'Hai diviso il prezzo per il dividendo: va fatto il contrario, e poi si aggiunge la crescita.' }
+      },
+      en: {
+        q: (p, W) => `A stock costs ${W.soldi(p.P)}. Next year it will pay a dividend of ${W.soldi(p.D1)}, which will then grow ${W.pct(p.g)} a year forever. What return does it offer to someone who buys it today?`,
+        exp: (p, W, ok) => `Turning the Gordon growth model around, the return a price offers is the dividend yield plus growth.\n\n$$r = \\frac{\\text{Div}_1}{P} + g$$\n\n\\(\\text{Div}_1\\) = next year's dividend, \\(P\\) = today's price, \\(g\\) = growth.\n\n$$r = \\frac{${W.fs(p.D1)}}{${W.fs(p.P)}} + ${p.g}\\% = ${W.f(W.pct(p.D1 / p.P * 100))} + ${p.g}\\% = ${W.f(W.pct(ok))}$$\n\nA buyer today can expect **${W.pct(ok)}** a year, if the assumptions hold.`,
+        err: { soloy: 'This is only the dividend yield: growth is missing.', solog: 'This is only the growth: the dividend yield is missing.', pe: 'You divided the price by the dividend: it goes the other way, and then you add growth.' }
+      }
+    },
+    gsost: {
+      liv: 2, tema: 'valutare', forma: 'pct', lab: 'flussi',
+      par: R => { const pay = scegli(R, [10, 20, 25, 30, 35, 40, 45, 55, 60, 65, 70, 75, 80, 90]), roe = scegli(R, [6, 8, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 30]), g = (100 - pay) * roe / 100; return intero(g * 10) && g >= 1.5 ? { pay, roe } : null; },
+      ok: p => (100 - p.pay) * p.roe / 100,
+      err: { payout: p => p.pay * p.roe / 100, roe: p => p.roe, diviso: p => p.roe * 100 / (100 - p.pay) },
+      it: {
+        q: (p, W) => `Un'azienda ha un ROE ${W.delp(p.roe)} e distribuisce ai soci ${W.ilp(p.pay)} degli utili. Quanto vale la sua crescita sostenibile?`,
+        exp: (p, W, ok) => `La **crescita sostenibile** è la quota di utili trattenuta per quanto l'azienda la fa rendere.\n\n$$g = (1 - \\text{payout}) \\times \\text{ROE}$$\n\nLa quota trattenuta è \\(100\\% - ${p.pay}\\% = ${100 - p.pay}\\%\\).\n\n$$g = ${100 - p.pay}\\% \\times ${p.roe}\\% = ${W.f(W.pct(ok))}$$`,
+        err: { payout: 'Hai usato il payout: la crescita nasce dagli utili che restano in azienda, cioè dalla quota trattenuta.', roe: 'Questo è il ROE: va moltiplicato per la quota di utili trattenuta.', diviso: 'Hai diviso il ROE per la quota trattenuta: va moltiplicato.' }
+      },
+      en: {
+        q: (p, W) => `A company has an ROE of ${W.pct(p.roe)} and pays out ${W.pct(p.pay)} of its earnings to shareholders. What is its sustainable growth rate?`,
+        exp: (p, W, ok) => `The **sustainable growth rate** is the share of earnings retained times the return the company earns on it.\n\n$$g = (1 - \\text{payout}) \\times \\text{ROE}$$\n\nThe retained share is \\(100\\% - ${p.pay}\\% = ${100 - p.pay}\\%\\).\n\n$$g = ${100 - p.pay}\\% \\times ${p.roe}\\% = ${W.f(W.pct(ok))}$$`,
+        err: { payout: 'You used the payout ratio: growth comes from the earnings that stay in the company, the retained share.', roe: 'This is the ROE: it must be multiplied by the share of earnings retained.', diviso: 'You divided the ROE by the retained share: it must be multiplied.' }
+      }
+    },
+    pegiusto: {
+      liv: 3, tema: 'valutare', forma: 'volte', lab: 'flussi',
+      par: R => { const pay = scegli(R, [20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90]), r = scegli(R, [7, 8, 9, 10, 11, 12, 13]), g = scegli(R, [1, 2, 3, 4, 5, 6, 7]), pe = pay / (r - g); return r - g >= 2 && intero(pe * 10) ? { pay, r, g } : null; },
+      ok: p => p.pay / (p.r - p.g),
+      err: { senzag: p => p.pay / p.r, trattenuta: p => (100 - p.pay) / (p.r - p.g), somma: p => p.pay / (p.r + p.g) },
+      it: {
+        q: (p, W) => `Un'azienda distribuisce ${W.ilp(p.pay)} degli utili. I soci chiedono un rendimento ${W.delp(p.r)} e si aspettano una crescita ${W.delp(p.g)} l'anno per sempre. Quanto vale il P/E giusto, calcolato sugli utili attesi?`,
+        exp: (p, W, ok) => `Il **P/E giusto** è quello che un'azienda merita per quanto distribuisce, quanto cresce e quanto rischia.\n\n$$\\text{P/E giusto} = \\frac{\\text{payout}}{r - g}$$\n\n\\(r\\) = rendimento richiesto, \\(g\\) = crescita.\n\n$$\\text{P/E giusto} = \\frac{${p.pay}\\%}{${p.r}\\% - ${p.g}\\%} = \\frac{${W.fn(p.pay / 100, 2, true)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fn(ok, 1)}$$`,
+        err: { senzag: 'Hai diviso per il solo rendimento richiesto: sotto va la differenza tra rendimento richiesto e crescita.', trattenuta: 'Hai usato la quota trattenuta: sopra va il payout, la quota di utili distribuita.', somma: 'Hai sommato rendimento richiesto e crescita: la crescita va tolta.' }
+      },
+      en: {
+        q: (p, W) => `A company pays out ${W.pct(p.pay)} of its earnings. Shareholders require a return of ${W.pct(p.r)} and expect growth of ${W.pct(p.g)} a year forever. What is the justified P/E, based on expected earnings?`,
+        exp: (p, W, ok) => `The **justified P/E** is the one a company deserves for how much it pays out, how fast it grows and how risky it is.\n\n$$\\text{Justified P/E} = \\frac{\\text{payout}}{r - g}$$\n\n\\(r\\) = required return, \\(g\\) = growth.\n\n$$\\text{Justified P/E} = \\frac{${p.pay}\\%}{${p.r}\\% - ${p.g}\\%} = \\frac{${W.fn(p.pay / 100, 2, true)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fn(ok, 1)}$$`,
+        err: { senzag: 'You divided by the required return alone: the difference between required return and growth goes underneath.', trattenuta: 'You used the retained share: the payout ratio, the share of earnings paid out, goes on top.', somma: 'You added required return and growth: growth must be subtracted.' }
+      }
+    },
+    priv: {
+      liv: 2, tema: 'valutare', forma: 'euro2', lab: 'flussi',
+      par: R => { const r = scegli(R, [4, 5, 6, 7, 8, 10, 12]), V = scegli(R, [8, 10, 12, 12.5, 15, 16, 20, 24, 25, 30, 40, 50, 60]), D = V * r / 100; return intero(D * 100) ? { D: giro(D, 2), r } : null; },
+      ok: p => p.D / (p.r / 100),
+      err: { per: p => p.D * p.r, cresciuto: p => p.D * (1 + p.r / 100) / (p.r / 100), dieci: p => p.D / (p.r / 100) / 10 },
+      it: {
+        q: (p, W) => `Un'azione privilegiata paga un dividendo fisso di ${W.soldi(p.D)} l'anno, per sempre. Chi la compra chiede un rendimento ${W.delp(p.r)}. Quanto vale?`,
+        exp: (p, W, ok) => `Un dividendo fisso, per sempre, è una **rendita perpetua**: vale il pagamento diviso il rendimento richiesto.\n\n$$V = \\frac{\\text{Div}}{r}$$\n\n\\(\\text{Div}\\) = dividendo fisso, \\(r\\) = rendimento richiesto.\n\n$$V = \\frac{${W.fs(p.D)}}{${W.fn(p.r / 100, 2, true)}} = ${W.fs(ok)}$$\n\nL'azione privilegiata vale **${W.soldi(ok)}**.`,
+        err: { per: 'Hai moltiplicato il dividendo per il rendimento: va diviso per il rendimento richiesto.', cresciuto: 'Hai fatto crescere il dividendo: è fisso, va diviso così com\'è per il rendimento richiesto.', dieci: 'Controlla la virgola: il risultato giusto è dieci volte più grande.' }
+      },
+      en: {
+        q: (p, W) => `A preferred share pays a fixed dividend of ${W.soldi(p.D)} a year, forever. Buyers require a return of ${W.pct(p.r)}. What is it worth?`,
+        exp: (p, W, ok) => `A fixed dividend, forever, is a **perpetuity**: it is worth the payment divided by the required return.\n\n$$V = \\frac{\\text{Div}}{r}$$\n\n\\(\\text{Div}\\) = fixed dividend, \\(r\\) = required return.\n\n$$V = \\frac{${W.fs(p.D)}}{${W.fn(p.r / 100, 2, true)}} = ${W.fs(ok)}$$\n\nThe preferred share is worth **${W.soldi(ok)}**.`,
+        err: { per: 'You multiplied the dividend by the return: it must be divided by the required return.', cresciuto: 'You grew the dividend: it is fixed, so divide it as it is by the required return.', dieci: 'Check the decimal point: the right result is ten times larger.' }
+      }
+    },
+    duefasi: {
+      liv: 3, tema: 'valutare', forma: 'euro2', lab: 'flussi',
+      par: R => { const r = scegli(R, [10, 20, 25]), g = scegli(R, r === 10 ? [2, 4, 5, 6] : r === 20 ? [4, 5, 8, 10] : [5, 10, 15]), k = 1 + r / 100, a = scegli(R, [0.5, 1, 1.5, 2, 2.5, 3]), c = scegli(R, [8, 10, 12, 15, 16, 18, 20, 22, 24, 25, 30, 32, 36, 40, 44, 50]), D1 = a * k, D2 = c * k * (r - g) / 100;
+        return intero(D1 * 100) && intero(D2 * 100) && D2 >= D1 && D2 <= 1.6 * D1 && intero(D2 * (1 + g / 100) / ((r - g) / 100) * 100) ? { D1: giro(D1, 2), D2: giro(D2, 2), r, g } : null; },
+      ok: p => { const k = 1 + p.r / 100, P2 = p.D2 * (1 + p.g / 100) / ((p.r - p.g) / 100); return p.D1 / k + (p.D2 + P2) / (k * k); },
+      err: { senzafinale: p => { const k = 1 + p.r / 100; return p.D1 / k + p.D2 / (k * k); },
+        nonscontato: p => { const k = 1 + p.r / 100, P2 = p.D2 * (1 + p.g / 100) / ((p.r - p.g) / 100); return p.D1 / k + p.D2 / (k * k) + P2; },
+        unanno: p => { const k = 1 + p.r / 100, P2 = p.D2 * (1 + p.g / 100) / ((p.r - p.g) / 100); return (p.D1 + p.D2 + P2) / k; } },
+      it: {
+        q: (p, W) => `Un'azione pagherà un dividendo di ${W.soldi(p.D1)} tra un anno e di ${W.soldi(p.D2)} tra due anni. Da lì in poi il dividendo crescerà ${W.delp(p.g)} l'anno per sempre. Chiedi un rendimento ${W.delp(p.r)}. Quanto vale oggi l'azione?`,
+        exp: (p, W, ok) => { const k = 1 + p.r / 100, D3 = p.D2 * (1 + p.g / 100), P2 = D3 / ((p.r - p.g) / 100);
+          return `Due fasi: prima i dividendi previsti uno per uno, poi un **valore finale** calcolato con Gordon, tutto riportato a oggi.\n\n• Primo dividendo della seconda fase: \\(${W.fs(p.D2)} \\times ${W.fn(1 + p.g / 100, 2, true)} = ${W.fn(D3, 4)}\\).\n• Valore finale tra due anni: \\(P_2 = \\dfrac{${W.fn(D3, 4)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fs(P2)}\\).\n\n$$V = \\frac{\\text{Div}_1}{1 + r} + \\frac{\\text{Div}_2 + P_2}{(1 + r)^2} = \\frac{${W.fs(p.D1)}}{${W.fn(k, 2, true)}} + \\frac{${W.fs(p.D2)} + ${W.fs(P2)}}{${W.fn(k * k, 2, true)}} = ${W.fs(ok)}$$\n\nL'azione vale oggi **${W.soldi(ok)}**.`; },
+        err: { senzafinale: 'Hai scontato solo i dividendi dei primi due anni: manca il valore finale, che racchiude tutti i dividendi successivi.', nonscontato: 'Hai aggiunto il valore finale senza scontarlo: è un prezzo di tra due anni, va riportato a oggi.', unanno: 'Hai scontato tutto per un anno solo: il secondo dividendo e il valore finale arrivano tra due anni.' }
+      },
+      en: {
+        q: (p, W) => `A stock will pay a dividend of ${W.soldi(p.D1)} in one year and ${W.soldi(p.D2)} in two years. After that the dividend will grow ${W.pct(p.g)} a year forever. You require a return of ${W.pct(p.r)}. What is the stock worth today?`,
+        exp: (p, W, ok) => { const k = 1 + p.r / 100, D3 = p.D2 * (1 + p.g / 100), P2 = D3 / ((p.r - p.g) / 100);
+          return `Two stages: first the dividends forecast one by one, then a **terminal value** from the Gordon growth model, all brought back to today.\n\n• First dividend of the second stage: \\(${W.fs(p.D2)} \\times ${W.fn(1 + p.g / 100, 2, true)} = ${W.fn(D3, 4)}\\).\n• Terminal value in two years: \\(P_2 = \\dfrac{${W.fn(D3, 4)}}{${W.fn((p.r - p.g) / 100, 2, true)}} = ${W.fs(P2)}\\).\n\n$$V = \\frac{\\text{Div}_1}{1 + r} + \\frac{\\text{Div}_2 + P_2}{(1 + r)^2} = \\frac{${W.fs(p.D1)}}{${W.fn(k, 2, true)}} + \\frac{${W.fs(p.D2)} + ${W.fs(P2)}}{${W.fn(k * k, 2, true)}} = ${W.fs(ok)}$$\n\nThe stock is worth **${W.soldi(ok)}** today.`; },
+        err: { senzafinale: 'You discounted only the dividends of the first two years: the terminal value, which holds all the later dividends, is missing.', nonscontato: 'You added the terminal value without discounting it: it is a price two years from now, so it must be brought back to today.', unanno: 'You discounted everything for one year only: the second dividend and the terminal value arrive in two years.' }
       }
     }
   };
@@ -3341,7 +3660,7 @@ function MateriaScreen({ nav, id }) {
     <${Sheet} pad=${false} style=${{ paddingTop: 22 }}>
       <div class="o-rowf" style="gap:8px;flex-wrap:wrap">${M.levels.map((x, k) => html`<button key=${k} type="button" class=${'o-chip' + (lv === k ? ' on' : '')} aria-pressed=${lv === k ? 'true' : 'false'} onClick=${() => setLv(k)}>${k + 1} · ${x.tab}</button>`)}</div>
       <h2 class="o-h2" style="font-size:22px;line-height:26px;margin:18px 0 14px">${L.name}</h2>
-      <${Stats3} items=${[[tot, 'chapters'], ['5-8', 'minutes per lesson'], [tot, 'labs']]}/>
+      <${Stats3} items=${[[tot, 'chapters'], ['6-12', 'minutes per lesson'], [tot, 'labs']]}/>
       <div style="height:2px;background:${SEP};margin:18px 0"></div>
       <h2 class="o-h2" style="font-size:18px;margin-bottom:10px">What you'll learn</h2>
       <ul class="o-col" style="gap:8px;list-style:none">${L.learn.map(t => html`<li key=${t} class="o-rowf" style="gap:12px;align-items:flex-start">${PathIco(D_CHECK, 20, 3)}<span class="o-t" style="font-size:15px;font-weight:600">${t}</span></li>`)}</ul>
@@ -3350,7 +3669,7 @@ function MateriaScreen({ nav, id }) {
       ${L.parts.map(([t, qs]) => html`<div key=${t}>${t && html`<p class="o-lab" style="margin:12px 0 6px">${t}</p>`}<ol class="o-col" style="gap:8px;list-style:none;padding:0;margin-top:${t ? 0 : 10}px">${qs.map(q => { n++; const u = ready(n), num = n;
         const dot = html`<span style="width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;border:2px solid ${INK};border-radius:999px;background:${u ? M.color || AZ : '#fff'};font-size:13px;font-weight:800">${num}</span>`;
         return u ? html`<li key=${q}><button type="button" class="o-rowf" onClick=${() => open(u)} style="gap:12px;width:100%;min-height:56px;padding:6px 10px 6px 10px;border:2.5px solid ${INK};border-radius:14px;background:#fff;box-shadow:3px 3px 0 ${INK};text-align:left">${dot}
-            <span class="o-grow o-col" style="gap:1px"><span style="font-size:15px;line-height:20px;font-weight:800">${q}</span><span class="o-s">${plural(unitLessons(u).length, 'lezione', 'lezioni')}, with a lab and a case</span></span><span class="o-tag" style="background:${MENTA}">Ready</span>${PathIco(D_NEXT, 18, 2.6)}</button></li>`
+            <span class="o-grow o-col" style="gap:1px"><span style="font-size:15px;line-height:20px;font-weight:800">${q}</span><span class="o-s">${plural(unitLessons(u).length, 'lezione', 'lezioni')}, with ${u.sections.filter(x => x.lab).length > 1 ? 'labs' : 'a lab'} and a case</span></span><span class="o-tag" style="background:${MENTA}">Ready</span>${PathIco(D_NEXT, 18, 2.6)}</button></li>`
           : html`<li key=${q} class="o-rowf" style="gap:12px;min-height:48px;padding:6px 14px 6px 10px;border:2px dashed ${INK};border-radius:14px;background:${T_BG}">${dot}<span style="font-size:15px;line-height:20px;font-weight:700">${q}</span></li>`; })}</ol></div>`)}
       <p class="o-s" style="text-align:center;font-size:14px;font-weight:700;color:${INK};margin-top:22px">${pronti === 1 ? `For now there is chapter ${c.units[0].num}. The others arrive one at a time.` : 'Chapters arrive one at a time.'}</p>
       <div style="padding:12px 0 max(30px,calc(env(safe-area-inset-bottom) + 12px))">${c ? html`<${Btn} cls="lg" onClick=${() => open(null)}>${!mine ? 'Add to my app and start' : begun ? 'Continue the path' : 'Start the path'}<//>` : html`<${Btn} cls="lg" disabled=${true}>Coming soon<//>`}</div>
