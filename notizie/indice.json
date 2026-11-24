@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-23",
+ "aggiornato": "2026-11-24",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-24-gas",
+   "data": "2026-11-24",
+   "cat": "Bollette",
+   "titolo": "Gas, arriva il freddo e il prezzo all'ingrosso sfiora i 96 €",
+   "nastro": "Gas, il freddo spinge il prezzo fino a 96 €",
+   "numero": "96 €",
+   "min": 3
+  },
+  {
+   "id": "2026-11-24-credito-imprese",
+   "data": "2026-11-24",
+   "cat": "Europa",
+   "titolo": "Prestiti alle imprese, in Italia ostacoli doppi del Nord Europa",
+   "nastro": "Prestiti alle imprese, Italia più in salita",
+   "numero": "10%",
+   "min": 3
+  },
+  {
+   "id": "2026-11-24-borsa",
+   "data": "2026-11-24",
+   "cat": "Borsa",
+   "titolo": "Borse in rialzo con la tecnologia, Milano sale dello 0,65%",
+   "nastro": "Borse, rimbalza la tecnologia: Milano +0,65%",
+   "numero": "+0,65%",
+   "min": 2
+  },
   {
    "id": "2026-11-23-pensioni",
    "data": "2026-11-23",

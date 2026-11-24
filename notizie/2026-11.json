@@ -3,6 +3,211 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-24-gas",
+   "cat": "Bollette",
+   "nastro": "Gas, il freddo spinge il prezzo fino a 96 €",
+   "titolo": "Gas, arriva il freddo e il prezzo all'ingrosso sfiora i 96 €",
+   "evid": "sfiora i 96 €",
+   "sommario": "Nella notte tra domenica 22 e lunedì 23 novembre il prezzo del gas in Europa è salito fino all'8,6%. Pesano le previsioni di freddo e scorte più basse del solito.",
+   "numero": "96 €",
+   "nota": "+8,6% in una notte",
+   "didascalia": "Il prezzo massimo toccato dal gas sul mercato all'ingrosso europeo di Amsterdam, in euro per megawattora, per le consegne di dicembre",
+   "breve": [
+    "Lunedì 23 novembre il prezzo del gas sul mercato europeo di riferimento, ad Amsterdam, è arrivato vicino a 96 € per megawattora, con un rialzo fino all'8,6%.",
+    "Le previsioni danno per questa settimana temperature da 3 a 5 gradi sotto la media nel nord-ovest dell'Europa, e le scorte europee sono intorno al 69%, meno del solito in questo periodo.",
+    "Il prezzo all'ingrosso non passa subito nelle bollette: conta il tipo di contratto che si ha."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "In Europa il gas si compra e si vende all'ingrosso su un mercato che ha sede ad Amsterdam, chiamato TTF. Il prezzo si misura in euro per **megawattora**, un'unità di misura dell'energia.",
+      "Nella notte tra domenica 22 e lunedì 23 novembre il contratto per le consegne di dicembre è salito fino all'8,6% e ha sfiorato i 96 €. È stato il terzo giorno di fila in aumento. Nel corso della giornata il prezzo è poi sceso sotto quel massimo."
+     ]
+    },
+    {
+     "h": "Perché il prezzo sale",
+     "p": [
+      "Il motivo principale è il freddo. Le previsioni del tempo indicano per questa settimana temperature da 3 a 5 gradi sotto la media nel nord-ovest dell'Europa, e un freddo ancora più forte all'inizio di dicembre. Con il freddo si accendono di più i riscaldamenti e serve più gas.",
+      "Le scorte, cioè il gas messo da parte in estate nei depositi sotterranei, sono intorno al 69% in Europa, meno di quanto succede di solito a fine novembre. Le forniture di gas liquefatto dal Golfo restano limitate e alcuni impianti in Norvegia sono fermi."
+     ]
+    },
+    {
+     "h": "Che cosa cambia nelle bollette",
+     "p": [
+      "Il prezzo di Amsterdam è un prezzo all'ingrosso: è quello che pagano i venditori di gas, non direttamente le famiglie. In Italia il prezzo all'ingrosso di riferimento si chiama PSV e di solito si muove insieme a quello di Amsterdam.",
+      "Chi ha un contratto a prezzo **variabile** di solito paga la materia prima in base alla media mensile del prezzo all'ingrosso, quindi un rialzo di uno o due giorni pesa poco, mentre un rialzo che dura settimane si vede. Chi ha un contratto a prezzo **fisso** paga lo stesso prezzo fino alla scadenza dell'offerta."
+     ]
+    },
+    {
+     "h": "Che cosa guardare adesso",
+     "p": [
+      "Molto dipende da quanto durerà il freddo e da quanto velocemente si svuoteranno i depositi. Il prezzo del gas cambia ogni giorno e può scendere così come è salito: un singolo giorno non dice come sarà l'inverno."
+     ]
+    }
+   ],
+   "perche": "Il gas serve per riscaldare le case e per produrre elettricità, quindi il suo prezzo all'ingrosso finisce, con un certo ritardo, nelle bollette. Conviene sapere se il proprio contratto è a prezzo fisso o variabile: si legge sulla bolletta o nel contratto.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Il prezzo del gas oltre 93 euro con l'ondata di freddo (23 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/23/il-prezzo-del-gas-oltre-93-euro-con-ondata-di-freddo-che-minaccia_d7287258-db2e-40ab-876f-4dd4dc56f593.html"
+    },
+    {
+     "nome": "GEA",
+     "titolo": "Gas ad Amsterdam, il prezzo nel pomeriggio e le scorte europee (23 novembre)",
+     "url": "https://geagency.it/breaking-news/gas-prezzo-ttf-amsterdam-torna-sotto-90-euro-mwh-16/"
+    },
+    {
+     "nome": "Notizie Geopolitiche",
+     "titolo": "Gas europeo in rialzo con il freddo: scorte, Golfo e Norvegia (23 novembre)",
+     "url": "https://www.notiziegeopolitiche.net/il-gas-europeo-sale-dell86-con-londata-di-freddo-scorte-al-69-e-il-qatar-resta-fermo/"
+    },
+    {
+     "nome": "DiarioDelWeb",
+     "titolo": "Il prezzo del gas di lunedì mattina e come si legge la bolletta",
+     "url": "https://diariodelweb.it/economia/energia/prezzo-gas-bolletta-come-controllare/"
+    }
+   ],
+   "data": "2026-11-24"
+  },
+  {
+   "id": "2026-11-24-credito-imprese",
+   "cat": "Europa",
+   "nastro": "Prestiti alle imprese, Italia più in salita",
+   "titolo": "Prestiti alle imprese, in Italia ostacoli doppi del Nord Europa",
+   "evid": "ostacoli doppi",
+   "sommario": "Uno studio preparato in un programma di ricerca della Bce calcola che circa un'impresa italiana su dieci ha difficoltà ad avere un prestito in banca. In Germania e nei paesi nordici sono il 5 o 6%.",
+   "numero": "10%",
+   "nota": "Germania 5-6%",
+   "didascalia": "La quota di imprese italiane che hanno avuto ostacoli nel chiedere un prestito in banca, in media tra il 2014 e il 2023",
+   "breve": [
+    "Secondo uno studio degli economisti Alexander Haas e Rustam Jamilov, reso noto lunedì 23 novembre, circa il 10% delle imprese italiane e spagnole trova ostacoli nel chiedere un prestito in banca.",
+    "In Germania, Austria, Finlandia e Svezia la quota è del 5 o 6%, in Lussemburgo sotto il 4%, in Grecia arriva al 27%.",
+    "Secondo gli autori, dove il credito è più difficile i tagli dei tassi della Bce aiutano meno la crescita."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa dice lo studio",
+     "p": [
+      "Lo studio, preparato da due economisti nell'ambito di un programma di ricerca della Bce, la **banca centrale** dell'area dell'euro, usa un'indagine che la Bce fa periodicamente su migliaia di imprese europee, per il periodo dal 2014 al 2023. Le opinioni sono degli autori e non della Bce.",
+      "Un'impresa ha un ostacolo quando non chiede il prestito perché teme un rifiuto, quando la banca glielo nega o lo concede solo in parte, oppure quando lo rifiuta perché costa troppo. In Italia succede a circa un'impresa su dieci, come in Spagna. In Germania, Austria, Finlandia e Svezia a cinque o sei su cento, in Lussemburgo a meno di quattro, in Grecia a 27."
+     ]
+    },
+    {
+     "h": "Perché conta per i tassi",
+     "p": [
+      "La Bce decide i **tassi di riferimento**, che influenzano quanto costa prendere soldi in prestito in tutta l'area dell'euro. Quando li abbassa, le imprese dovrebbero chiedere più prestiti e fare più **investimenti**.",
+      "Secondo lo studio, nei paesi dove le imprese trovano più ostacoli questo effetto è più debole. Secondo le loro stime, due anni dopo un taglio dei tassi la crescita della produzione può essere più bassa di circa 14 **punti base**, cioè 0,14 punti percentuali, nei paesi dove gli ostacoli sono più alti. Tra i paesi con l'effetto più debole gli autori indicano Italia e Grecia; tra quelli con l'effetto più forte Germania e Finlandia."
+     ]
+    },
+    {
+     "h": "Da che cosa dipende",
+     "p": [
+      "Gli autori collegano le differenze alla capacità delle banche di recuperare i soldi quando un prestito non viene restituito. Dove recuperarli è difficile e lento, le banche prestano con più cautela e a costi più alti."
+     ]
+    },
+    {
+     "h": "Che cosa propongono",
+     "p": [
+      "Gli autori hanno simulato con un modello che cosa succederebbe se tutti i paesi avessero regole simili e più efficaci per il recupero dei crediti. Secondo il modello, nel lungo periodo la produzione in Europa sarebbe circa l'8% più alta, con i guadagni maggiori nei paesi dove gli ostacoli sono più alti. Gli stessi autori avvertono che più credito può portare anche più rischi per la stabilità finanziaria."
+     ]
+    }
+   ],
+   "perche": "Se un'impresa fatica ad avere un prestito, assume e investe di meno, e questo pesa su lavoro e stipendi. Lo studio spiega anche perché un taglio dei tassi della Bce può avere effetti diversi in Italia e in Germania.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Studio Bce sugli ostacoli al credito per le imprese italiane (23 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/23/studio-bce-in-italia-ostacoli-finanziari-doppi-per-le-imprese-rispetto-ai-nordici_fa07ce79-0364-4405-8107-18b7c28a935f.html"
+    },
+    {
+     "nome": "CEPR VoxEU",
+     "titolo": "La sintesi dello studio scritta dagli autori, in inglese",
+     "url": "https://cepr.org/voxeu/columns/geography-financial-frictions"
+    },
+    {
+     "nome": "Università di Oxford",
+     "titolo": "Il testo completo dello studio, in inglese (novembre 2026)",
+     "url": "https://users.ox.ac.uk/~econ0628/Financial_Frictions.pdf"
+    },
+    {
+     "nome": "Economy Magazine",
+     "titolo": "Credito alle imprese, i risultati dello studio e le simulazioni",
+     "url": "https://www.economymagazine.it/imprese-lallarme-dello-studio-bce-in-italia-ostacoli-al-credito-doppi-rispetto-al-nord-europa/"
+    }
+   ],
+   "data": "2026-11-24"
+  },
+  {
+   "id": "2026-11-24-borsa",
+   "cat": "Borsa",
+   "nastro": "Borse, rimbalza la tecnologia: Milano +0,65%",
+   "titolo": "Borse in rialzo con la tecnologia, Milano sale dello 0,65%",
+   "evid": "in rialzo",
+   "sommario": "Lunedì 23 novembre le Borse europee hanno recuperato dopo i cali della settimana prima, trainate dai titoli tecnologici. Milano è salita meno delle altre per lo stacco dei dividendi.",
+   "numero": "+0,65%",
+   "nota": "Francoforte +2,15%",
+   "didascalia": "La variazione del FTSE MIB, l'indice delle principali società della Borsa di Milano, nella seduta di lunedì 23 novembre",
+   "breve": [
+    "Lunedì 23 novembre il FTSE MIB ha chiuso a 49.021,93 punti, in rialzo dello 0,65%. Francoforte ha guadagnato il 2,15%.",
+    "A spingere i listini sono stati i titoli legati ai semiconduttori, dopo la notizia del ritorno di Jensen Huang alla guida di Nvidia, il grande produttore americano di chip.",
+    "A Milano nove società dell'indice hanno staccato il dividendo: questo da solo ha tolto circa l'1,4% all'indice."
+   ],
+   "corpo": [
+    {
+     "h": "Com'è andata",
+     "p": [
+      "Dopo una settimana di forti cali, lunedì 23 novembre le Borse europee hanno chiuso in rialzo. Il FTSE MIB, l'**indice** che raccoglie le 40 principali società di Piazza Affari, è salito dello 0,65% a 49.021,93 punti. Francoforte ha guadagnato il 2,15%.",
+      "Il rialzo è venuto soprattutto dalla tecnologia. A Milano STMicroelectronics, che produce chip, è salita di quasi il 9%, e sono cresciuti anche Technoprobe e Prysmian. Le notizie riportano che la spinta è arrivata dal ritorno di Jensen Huang alla guida di Nvidia."
+     ]
+    },
+    {
+     "h": "Lo stacco dei dividendi",
+     "p": [
+      "Il **dividendo** è la parte degli utili che una società distribuisce ai soci. Il giorno in cui viene staccato, il prezzo dell'azione scende più o meno della stessa cifra: i soldi passano dalla società agli azionisti, che non perdono nulla.",
+      "Lunedì 23 novembre hanno staccato il dividendo nove società del FTSE MIB, tra cui UniCredit, Intesa Sanpaolo, Eni, Poste Italiane e Terna. Secondo le stime riportate dalle agenzie, questo ha tolto all'indice circa l'1,4%. Per questo Milano è salita meno delle altre Borse, e alcune banche, come UniCredit, risultano in calo solo in apparenza."
+     ]
+    },
+    {
+     "h": "Titoli di Stato e altri mercati",
+     "p": [
+      "Lo **spread** tra i **Btp** italiani a dieci anni e i **Bund** tedeschi, cioè la differenza tra i loro rendimenti, è rimasto intorno a 105 punti base. Negli Stati Uniti, a **Wall Street**, la giornata si è aperta in forte rialzo, soprattutto per i titoli tecnologici."
+     ]
+    },
+    {
+     "h": "Che cosa significa",
+     "p": [
+      "Una seduta positiva dopo una settimana negativa non dice che cosa succederà nei prossimi giorni. Le Borse si muovono molto quando le notizie riguardano poche società molto grandi, come succede in questo periodo con quelle legate all'intelligenza artificiale."
+     ]
+    }
+   ],
+   "perche": "Chi ha un fondo o un piano di risparmio che investe in azioni vede il suo valore muoversi con giornate come questa. Lo stacco dei dividendi spiega perché a volte un indice sembra scendere anche quando i soci non perdono nulla.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "Borsa di Milano, la chiusura del 23 novembre",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/23/borsa-milano-chiude-in-rialzo-065-con-il-ritorno-di-huang-in-nvidia_0ca8e574-9d86-4d2f-a2f9-14f2c10d98f9.html"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Le Borse europee in chiusura, tecnologia e dividendi (23 novembre)",
+     "url": "https://www.teleborsa.it/News/2026/11/23/effetto-huang-sui-listini-europei-a-piazza-affari-volano-stm-e-technoprobe-181.html"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "Piazza Affari, chiusura e titoli migliori e peggiori (23 novembre)",
+     "url": "https://www.money.it/piazza-affari-chiude-in-rialzo-23-11-2026"
+    },
+    {
+     "nome": "Finanza Report",
+     "titolo": "Le società che hanno staccato il dividendo lunedì 23 novembre",
+     "url": "https://finanzareport.it/news-e-mercati/borsa-italiana-oggi-23-novembre-2026"
+    }
+   ],
+   "data": "2026-11-24"
+  },
+  {
    "id": "2026-11-23-pensioni",
    "cat": "Pensioni",
    "nastro": "Pensioni, proposte per l'aumento pieno",
