@@ -3,6 +3,206 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-25-gasolio",
+   "cat": "Prezzi",
+   "nastro": "Gasolio, finito lo sconto sulle accise",
+   "titolo": "Gasolio, è finito lo sconto di 4,88 centesimi sulle accise",
+   "evid": "finito lo sconto",
+   "sommario": "Da martedì 24 novembre il gasolio non ha più lo sconto sulle accise, le tasse fisse sui carburanti. Nella prima mattina senza sconto il prezzo medio è rimasto quasi fermo.",
+   "numero": "2,196 €",
+   "nota": "−0,001 € in un giorno",
+   "didascalia": "Il prezzo medio del gasolio self in Italia, in euro al litro, nella mattina di martedì 24 novembre secondo i dati del ministero delle Imprese",
+   "breve": [
+    "Dal 10 al 23 novembre il governo aveva ridotto di 4 centesimi al litro, cioè 4,88 centesimi con l'Iva, le accise sul gasolio. Da martedì 24 novembre lo sconto non c'è più.",
+    "Nella mattina di martedì 24 novembre il gasolio self costava in media 2,196 € al litro e la benzina self 1,939 €, quasi come il giorno prima.",
+    "Senza lo sconto, un pieno da 50 litri di gasolio costa fino a circa 2,44 € in più, se il distributore aumenta il prezzo di tutto lo sconto perso."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Su ogni litro di carburante lo Stato chiede una tassa fissa, l'accisa, e poi l'Iva. Con un decreto del 9 novembre il governo aveva abbassato l'accisa sul gasolio di 4 centesimi al litro, che diventano 4,88 centesimi contando l'Iva. Lo sconto valeva dal 10 al 23 novembre e riguardava solo il gasolio, non la benzina.",
+      "Lo sconto è scaduto alla mezzanotte tra lunedì 23 e martedì 24 novembre. Nella mattina di martedì 24 novembre il governo non aveva annunciato una nuova proroga."
+     ]
+    },
+    {
+     "h": "Che cosa è successo ai prezzi",
+     "p": [
+      "Il ministero delle Imprese raccoglie ogni giorno i prezzi dei distributori. Nella mattina di martedì 24 novembre il gasolio self costava in media 2,196 € al litro, un millesimo in meno del giorno prima. La benzina self costava 1,939 €, due millesimi in meno.",
+      "I prezzi della mattina, però, possono ancora riflettere i listini dei giorni con lo sconto. Per capire se l'accisa piena arriverà alla pompa bisogna guardare i prezzi dei giorni successivi."
+     ]
+    },
+    {
+     "h": "Quanto può costare in più",
+     "p": [
+      "Se un distributore aumenta il prezzo di tutti i 4,88 centesimi persi, un pieno da 50 litri di gasolio costa circa 2,44 € in più, uno da 40 litri circa 1,95 €. È il caso peggiore: il prezzo finale dipende anche da quanto costa il gasolio all'ingrosso, che cambia ogni giorno."
+     ]
+    },
+    {
+     "h": "Chi riguarda",
+     "p": [
+      "Riguarda chi ha un'auto o un furgone a gasolio e le aziende che trasportano merci. Quando il gasolio costa di più, i costi del trasporto salgono e possono finire, con un po' di ritardo, nei prezzi di molti prodotti.",
+      "Le associazioni dei consumatori, come Assoutenti, hanno chiesto al governo di tenere lo sconto almeno fino alla fine dell'anno."
+     ]
+    }
+   ],
+   "perche": "Il prezzo del carburante pesa su chi usa l'auto ogni giorno e sui costi di trasporto. I prezzi di ogni distributore si possono confrontare sul sito Osservaprezzi carburanti del ministero delle Imprese.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "I prezzi medi del ministero nel primo giorno senza sconto (24 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/24/mimit-gasolio-stabile-a-2196-euro-dopo-scadenza-taglio-accise_e84ff26f-fcd7-4016-b6c3-9165ae40b246.html"
+    },
+    {
+     "nome": "Quattroruote",
+     "titolo": "Gasolio con accisa piena, i prezzi della mattina (24 novembre)",
+     "url": "https://www.quattroruote.it/news/mercato/2026/11/24/prezzi_carburanti_diesel_con_accisa_piena_ma_prezzo_in_calo.html"
+    },
+    {
+     "nome": "QuiFinanza",
+     "titolo": "Fine dello sconto sul gasolio e quanto costa in più il pieno (24 novembre)",
+     "url": "https://quifinanza.it/osservatorio-prezzi/sconto-accise-gasolio-prezzi-24-novembre-2026/1025558/"
+    },
+    {
+     "nome": "Automoto.it",
+     "titolo": "Il decreto del 9 novembre e la scadenza dello sconto (23 novembre)",
+     "url": "https://www.automoto.it/news/gasolio-dal-24-novembre-scade-il-taglio-delle-accise-fare-il-pieno-di-diesel-costera-di-piu.html"
+    }
+   ],
+   "data": "2026-11-25"
+  },
+  {
+   "id": "2026-11-25-previsioni-sp",
+   "cat": "Europa",
+   "nastro": "S&P: nel 2027 l'Italia crescerà di meno",
+   "titolo": "S&P, nel 2027 l'economia italiana crescerà dello 0,5%",
+   "evid": "crescerà dello 0,5%",
+   "sommario": "L'agenzia S&P Global Ratings ha pubblicato le sue nuove previsioni sull'Europa. Per l'Italia prevede una crescita dello 0,8% nel 2026 e dello 0,5% nel 2027.",
+   "numero": "0,5%",
+   "nota": "2026: 0,8%",
+   "didascalia": "La crescita del Pil italiano prevista da S&P Global Ratings per il 2027",
+   "breve": [
+    "Martedì 24 novembre sono state rese note le previsioni di S&P Global Ratings sull'economia europea: per l'Italia una crescita dello 0,8% nel 2026 e dello 0,5% nel 2027.",
+    "Secondo S&P l'inflazione in Italia nel 2027 sarà in media del 2,7%. Nell'area dell'euro avrebbe il punto più alto, intorno al 4%, all'inizio del 2027.",
+    "S&P si aspetta altri rialzi dei tassi da parte della Bce prima che comincino i tagli, nel 2028."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa prevede S&P",
+     "p": [
+      "S&P Global Ratings è una delle grandi agenzie che danno un voto, il **rating**, ai debiti degli Stati e delle imprese. Più volte l'anno pubblica anche le sue previsioni sull'economia.",
+      "Per l'Italia, nelle previsioni rese note martedì 24 novembre, S&P prevede una crescita del **Pil**, il valore di tutto quello che il paese produce in un anno, dello 0,8% nel 2026. Per il 2027 la crescita scende allo 0,5%. Per l'area dell'euro S&P prevede l'1,1% nel 2026 e l'1,2% nel 2027."
+     ]
+    },
+    {
+     "h": "Prezzi e tassi",
+     "p": [
+      "Per S&P l'**inflazione**, cioè l'aumento dei prezzi, in Italia sarà in media del 2,7% nel 2027. Nell'area dell'euro toccherebbe il punto più alto, intorno al 4%, all'inizio del 2027, per poi scendere.",
+      "Per frenare i prezzi, secondo S&P, la Bce, la **banca centrale** dell'area dell'euro, alzerà ancora i tassi prima di cominciare a tagliarli, nel 2028."
+     ]
+    },
+    {
+     "h": "Perché le stime cambiano",
+     "p": [
+      "Secondo S&P l'Europa ha retto all'aumento dei prezzi dell'energia del 2026 meglio del previsto: le famiglie avevano più risparmi da parte e molte imprese si erano già adattate dopo la crisi del 2022. La crescita però resta debole.",
+      "Anche altri enti fanno previsioni simili. L'11 novembre l'Istat ha stimato per l'Italia una crescita dello 0,9% nel 2026 e dello 0,6% nel 2027."
+     ]
+    },
+    {
+     "h": "Come leggere questi numeri",
+     "p": [
+      "Sono previsioni, non dati: dipendono da quello che succederà all'energia, alle guerre e ai mercati, e vengono riviste spesso. Una crescita dello 0,5% non è una **recessione**, che c'è quando il Pil scende, ma è una crescita lenta."
+     ]
+    }
+   ],
+   "perche": "Quando l'economia cresce poco, le imprese assumono con più cautela e gli stipendi salgono più lentamente. Le previsioni sull'inflazione e sui tassi aiutano a capire che cosa potrebbe succedere a prezzi e rate dei prestiti nei prossimi mesi.",
+   "fonti": [
+    {
+     "nome": "Quotidiano Nazionale",
+     "titolo": "Le previsioni di S&P per l'Italia: Pil, inflazione e confronto con gli altri enti (24 novembre)",
+     "url": "https://www.quotidiano.net/economia/pil-s-and-p-conferma-la-crescita-italiana-allo-0-8-nel-2026-tagliate-le-stime-2027-28-sale-linflazione-w9iczu3z"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Le previsioni di S&P sull'Europa per il 2027 (24 novembre)",
+     "url": "https://www.teleborsa.it/News/2026/11/24/europa-s-p-prevede-un-grande-raffreddamento-nel-2027-73.html"
+    },
+    {
+     "nome": "Milano Finanza",
+     "titolo": "S&P sull'inflazione europea e sui tassi delle banche centrali (24 novembre)",
+     "url": "https://www.milanofinanza.it/news/europa-nel-2027-l-inflazione-tornera-sotto-il-3-ecco-perche-202611241240433663"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Le previsioni dell'Istat per l'economia italiana (11 novembre)",
+     "url": "https://teleborsa.ansa.it/notiziario/economia/istat-pil-atteso-in-crescita-dello-09-nel-2026-e-dello-06-nel-2027/"
+    }
+   ],
+   "data": "2026-11-25"
+  },
+  {
+   "id": "2026-11-25-borsa",
+   "cat": "Borsa",
+   "nastro": "Borsa, Milano perde l'1,84% con i chip",
+   "titolo": "Borsa, Milano scende dell'1,84%: pesano i titoli dei chip",
+   "evid": "scende dell'1,84%",
+   "sommario": "Martedì 24 novembre la Borsa di Milano ha chiuso in calo. Le perdite più forti sono state di STMicroelectronics e Technoprobe, due aziende dei microchip, scese di circa il 10%.",
+   "numero": "−1,84%",
+   "nota": "48.121 punti",
+   "didascalia": "Il calo del Ftse Mib, l'indice delle principali aziende della Borsa di Milano, nella seduta di martedì 24 novembre",
+   "breve": [
+    "Martedì 24 novembre il Ftse Mib, l'indice della Borsa di Milano, ha chiuso a 48.121 punti, in calo dell'1,84%.",
+    "STMicroelectronics e Technoprobe, che producono o controllano microchip, hanno perso circa il 10%.",
+    "Lunedì 23 novembre le Borse avevano corso per il ritorno di Jensen Huang alla guida di Nvidia; martedì quell'entusiasmo si è spento."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Il Ftse Mib è l'**indice** che riassume l'andamento delle 40 aziende più grandi della Borsa di Milano. Martedì 24 novembre ha chiuso a 48.121 punti, con un calo dell'1,84%.",
+      "Le perdite più forti sono state di due aziende dei microchip: STMicroelectronics, che li produce, ha perso oltre il 10%, e Technoprobe, che fa strumenti per controllarli, circa il 10%. In controtendenza Leonardo, salita dell'1,4%, Inwit e Tim."
+     ]
+    },
+    {
+     "h": "Perché",
+     "p": [
+      "Lunedì 23 novembre Nvidia, la grande azienda americana dei chip per l'intelligenza artificiale, era salita di oltre il 30% a **Wall Street** dopo il ritorno di Jensen Huang alla sua guida. Quel giorno erano salite molte Borse nel mondo.",
+      "Martedì 24 novembre l'entusiasmo si è spento. Secondo i commentatori, gli investitori sono tornati a chiedersi se le grandi spese per l'intelligenza artificiale continueranno e quanto valga la pena pagare per le aziende del settore. Nvidia ha perso terreno e le vendite hanno colpito i titoli tecnologici anche in Europa."
+     ]
+    },
+    {
+     "h": "Che cosa vuol dire per chi risparmia",
+     "p": [
+      "Chi ha risparmi investiti in fondi che contengono azioni, anche attraverso un fondo pensione, può vedere il loro valore muoversi in giorni come questo. Un calo in una sola giornata, dopo un forte rialzo il giorno prima, non dice come andranno le Borse nei prossimi mesi."
+     ]
+    }
+   ],
+   "perche": "Le Borse si muovono molto quando un settore attira tanti soldi in poco tempo, come succede con l'intelligenza artificiale. Capire perché un indice sale o scende aiuta a non spaventarsi per un singolo giorno.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "La chiusura della Borsa di Milano e i titoli migliori e peggiori (24 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/24/borsa-milano-chiude-in-calo-ftse-mib-18_6bc71bd4-8e88-4a75-9343-ed2469cb04a9.html"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "Il Ftse Mib in chiusura, punti e variazioni dei titoli (24 novembre)",
+     "url": "https://www.money.it/piazza-affari-chiude-in-calo-ftse-mib-24-11-2026"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Le Borse europee a metà giornata e la fine dell'euforia per Nvidia (24 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/24/borsa-leuropa-in-calo-placata-leuforia-per-il-ritorno-di-huang-a-nvidia_45a9600d-be45-424a-ae2c-a8b98ee91a3d.html"
+    },
+    {
+     "nome": "Il Corriere Nazionale",
+     "titolo": "La giornata dei mercati, da Milano a Wall Street (24 novembre)",
+     "url": "https://www.corrierenazionale.net/2026/11/24/borse-in-retromarcia-dopo-il-rimbalzo/"
+    }
+   ],
+   "data": "2026-11-25"
+  },
+  {
    "id": "2026-11-24-gas",
    "cat": "Bollette",
    "nastro": "Gas, il freddo spinge il prezzo fino a 96 €",

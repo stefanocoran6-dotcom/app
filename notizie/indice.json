@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-24",
+ "aggiornato": "2026-11-25",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-25-gasolio",
+   "data": "2026-11-25",
+   "cat": "Prezzi",
+   "titolo": "Gasolio, è finito lo sconto di 4,88 centesimi sulle accise",
+   "nastro": "Gasolio, finito lo sconto sulle accise",
+   "numero": "2,196 €",
+   "min": 2
+  },
+  {
+   "id": "2026-11-25-previsioni-sp",
+   "data": "2026-11-25",
+   "cat": "Europa",
+   "titolo": "S&P, nel 2027 l'economia italiana crescerà dello 0,5%",
+   "nastro": "S&P: nel 2027 l'Italia crescerà di meno",
+   "numero": "0,5%",
+   "min": 2
+  },
+  {
+   "id": "2026-11-25-borsa",
+   "data": "2026-11-25",
+   "cat": "Borsa",
+   "titolo": "Borsa, Milano scende dell'1,84%: pesano i titoli dei chip",
+   "nastro": "Borsa, Milano perde l'1,84% con i chip",
+   "numero": "−1,84%",
+   "min": 2
+  },
   {
    "id": "2026-11-24-gas",
    "data": "2026-11-24",
