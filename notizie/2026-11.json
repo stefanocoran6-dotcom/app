@@ -3,6 +3,222 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-26-carte-contante",
+   "cat": "Pagamenti",
+   "nastro": "Nei negozi la carta supera il contante",
+   "titolo": "Bce, nei negozi dell'area euro la carta supera il contante",
+   "evid": "la carta supera il contante",
+   "sommario": "Per la prima volta, nei negozi dell'area euro si paga più spesso con la carta che in contanti. Lo dice un'indagine della Bce pubblicata mercoledì 25 novembre.",
+   "numero": "45%",
+   "nota": "contante 44%",
+   "didascalia": "La quota dei pagamenti fatti con una carta nei negozi dell'area euro, contando il numero dei pagamenti, secondo l'indagine della Bce del 2026",
+   "breve": [
+    "Secondo un'indagine della Bce pubblicata mercoledì 25 novembre, nei negozi dell'area euro il 45% dei pagamenti si fa con una carta e il 44% in contanti.",
+    "È la prima volta che le carte superano il contante nel numero di pagamenti nei negozi. Telefono e orologio coprono il 9% dei pagamenti, contro il 6% dell'indagine del 2024.",
+    "Il 62% delle persone intervistate ritiene importante poter continuare a pagare in contanti."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa dice l'indagine",
+     "p": [
+      "La Bce, la **banca centrale** dei paesi che usano l'euro, chiede periodicamente a decine di migliaia di persone come pagano. L'ultima indagine si chiama SPACE ed è stata fatta in due momenti: nell'autunno del 2025 e nella primavera del 2026. I risultati sono stati pubblicati mercoledì 25 novembre.",
+      "Nei negozi, nei bar e negli altri punti vendita, il 45% dei pagamenti è stato fatto con una carta e il 44% in contanti. È la prima volta che le carte passano davanti al contante contando il numero dei pagamenti, e non solo il valore."
+     ]
+    },
+    {
+     "h": "Cresce il telefono",
+     "p": [
+      "Una parte dei pagamenti si fa ormai con lo smartphone, l'orologio o un'app: è il 9% dei pagamenti nei negozi, contro il 6% dell'indagine del 2024. Spesso dietro il telefono c'è comunque una **carta di debito** o una **carta di credito** registrata nel dispositivo.",
+      "Le differenze tra paesi sono grandi. Nei Paesi Bassi, per esempio, solo il 18% dei pagamenti nei negozi si fa in contanti."
+     ]
+    },
+    {
+     "h": "Il contante resta importante",
+     "p": [
+      "Il sorpasso è di misura: un punto solo. E per molte persone il contante conta ancora. Il 62% degli intervistati dice che è importante poter pagare in contanti.",
+      "Secondo Piero Cipollone, del comitato esecutivo della Bce, i pagamenti digitali contano sempre di più, ma per i cittadini la cosa più importante è poter scegliere come pagare. La Bce dice che continuerà a proteggere il contante mentre prepara l'euro digitale, una forma elettronica di euro emessa dalla banca centrale."
+     ]
+    },
+    {
+     "h": "Chi riguarda",
+     "p": [
+      "Riguarda tutti quelli che fanno la spesa o pagano un caffè. Pagare con la carta lascia una traccia e permette di controllare le spese nell'estratto conto. Il contante aiuta altre persone a tenere sotto controllo quanto spendono e funziona anche senza rete o elettricità."
+     ]
+    }
+   ],
+   "perche": "Il modo in cui paghiamo cambia in fretta, ma il contante non sparisce. Sapere come funzionano carte e app, e quanto costano, aiuta a scegliere il mezzo più adatto a ogni spesa.",
+   "fonti": [
+    {
+     "nome": "Bce",
+     "titolo": "L'indagine SPACE 2026 sulle abitudini di pagamento nell'area euro (25 novembre)",
+     "url": "https://www.ecb.europa.eu/stats/ecb_surveys/space/html/ecb.space2026.en.html"
+    },
+    {
+     "nome": "Eunews",
+     "titolo": "Nell'area euro i pagamenti con carta superano il contante (25 novembre)",
+     "url": "https://www.eunews.it/2026/11/25/eurozona-pagamenti-carta-superano-cash/"
+    },
+    {
+     "nome": "RTÉ",
+     "titolo": "Le carte superano il contante nei negozi, i dati per paese (25 novembre)",
+     "url": "https://www.rte.ie/news/business/2026/1125/1600625-card-payments-overtake-cash-in-euro-zone-shops/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Il sorpasso della carta sul contante secondo la Bce (25 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/25/bce-nel-2026-sorpasso-dei-pagamenti-con-carta-sul-contante_6c5aea6e-f915-4a62-921c-c335159214c7.html"
+    }
+   ],
+   "data": "2026-11-26"
+  },
+  {
+   "id": "2026-11-26-dazi-usa",
+   "cat": "Stati Uniti",
+   "nastro": "Dazi, gli Usa propongono nuove tariffe",
+   "titolo": "Dazi, gli Stati Uniti propongono nuove tariffe per 14 economie",
+   "evid": "propongono nuove tariffe",
+   "sommario": "Mercoledì 25 novembre gli Stati Uniti hanno proposto nuovi dazi contro 14 economie, tra cui l'Unione europea e la Cina. Per ora sono solo una proposta. La Commissione europea chiede di rispettare il tetto del 15% concordato con Washington.",
+   "numero": "14",
+   "nota": "Cina: 20%",
+   "didascalia": "Le economie, tra cui l'Unione europea e la Cina, coinvolte dalla proposta di nuovi dazi degli Stati Uniti del 25 novembre",
+   "breve": [
+    "Mercoledì 25 novembre gli Stati Uniti hanno proposto nuovi dazi, cioè tasse sulle merci importate, contro 14 economie, tra cui l'Unione europea, la Cina e l'India. Per la Cina la proposta è del 20%.",
+    "I dazi non sono ancora in vigore: prima servono alcuni passaggi formali.",
+    "La Commissione europea ricorda che l'accordo con gli Stati Uniti fissa per le merci europee un tetto del 15%, anche contando i dazi che ci sono già."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Un dazio è una tassa che un paese fa pagare sulle merci che arrivano dall'estero. Mercoledì 25 novembre l'amministrazione degli Stati Uniti ha proposto nuovi dazi contro 14 economie, tra cui l'Unione europea, la Cina, l'India e il Giappone.",
+      "Per la Cina la proposta è un dazio del 20%. Gli Stati Uniti accusano questi paesi di produrre molto più di quanto il mercato chieda, la cosiddetta sovraccapacità, e di danneggiare così le aziende americane."
+     ]
+    },
+    {
+     "h": "Non sono ancora in vigore",
+     "p": [
+      "Per ora è una proposta. La base è un'indagine fatta secondo la Sezione 301, una legge americana sul commercio del 1974. Prima che i dazi entrino in vigore servono altri passaggi formali."
+     ]
+    },
+    {
+     "h": "Che cosa dice l'Europa",
+     "p": [
+      "L'Unione europea e gli Stati Uniti hanno firmato l'anno scorso una dichiarazione comune sul commercio. Secondo la Commissione europea, quel testo fissa un tetto del 15% ai dazi americani sulle merci europee, tutto compreso.",
+      "La Commissione si aspetta che ogni nuova misura rispetti quel limite, anche sommata ai dazi che ci sono già. Respinge l'idea che l'Europa produca troppo e dice che esaminerà i risultati dell'indagine americana."
+     ]
+    },
+    {
+     "h": "Perché conta anche qui",
+     "p": [
+      "Gli Stati Uniti sono uno dei mercati più importanti per le aziende europee e italiane. Se i dazi salgono, le merci europee costano di più ai clienti americani e possono vendersi meno. Mercoledì 25 novembre la notizia ha pesato anche sulle Borse europee."
+     ]
+    }
+   ],
+   "perche": "I dazi toccano le aziende che vendono all'estero e, attraverso loro, il lavoro e gli stipendi. Nelle prossime settimane conterà capire se il tetto del 15% chiesto dall'Europa verrà rispettato.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "La proposta americana di nuovi dazi e le aliquote (25 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/mondo/2026/11/25/usa-propongono-nuovi-dazi-per-cina-ue-e-altri-12-paesi_7b5dc39c-cbf2-4816-91bd-81f56b44833b.html"
+    },
+    {
+     "nome": "AGI",
+     "titolo": "I nuovi dazi contro 14 economie e la Sezione 301 (25 novembre)",
+     "url": "https://www.agi.it/economia/news/2026-11-25/trump-dazi-cina-ue-40186413/"
+    },
+    {
+     "nome": "Il Post",
+     "titolo": "I nuovi dazi annunciati e i passaggi che mancano (25 novembre)",
+     "url": "https://www.ilpost.it/2026/11/25/stati-uniti-dazi-novembre-2026/"
+    },
+    {
+     "nome": "Reuters (Investing.com)",
+     "titolo": "La Commissione europea chiede di rispettare il tetto del 15% (25 novembre)",
+     "url": "https://it.investing.com/news/stock-market-news/dazi-usa-devono-rispettare-tetto-tariffario-del-15-perue--commissione-ue-3666111"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "La risposta dell'Unione europea sulla sovraccapacità (25 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/mondo/europa/2026/11/25/ue-a-usa-non-siamo-fonte-di-sovraccapacita-si-rispetti-limite-15-sui-dazi_197664dd-2987-43cb-8fa7-9546f2725f9c.html"
+    }
+   ],
+   "data": "2026-11-26"
+  },
+  {
+   "id": "2026-11-26-borsa",
+   "cat": "Borsa",
+   "nastro": "Borsa, Milano −1,81% tra dazi e tech",
+   "titolo": "Borsa, Milano perde l'1,81%: pesano dazi e titoli tecnologici",
+   "evid": "perde l'1,81%",
+   "sommario": "Mercoledì 25 novembre la Borsa di Milano ha chiuso di nuovo in calo. Hanno pesato i nuovi dazi proposti dagli Stati Uniti, i dati sui prezzi americani e il crollo dei titoli tecnologici a Wall Street.",
+   "numero": "−1,81%",
+   "nota": "47.249 punti",
+   "didascalia": "Il calo del Ftse Mib, l'indice delle principali aziende della Borsa di Milano, nella seduta di mercoledì 25 novembre",
+   "breve": [
+    "Mercoledì 25 novembre il Ftse Mib ha chiuso a 47.249 punti, in calo dell'1,81%, dopo il −1,84% di martedì 24 novembre.",
+    "Le perdite più forti sono state di Prysmian (−5,4%) e STMicroelectronics (−4,81%). Stellantis è salita del 3,58%.",
+    "Lo spread tra i titoli di Stato italiani e tedeschi è salito a circa 112 punti."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Il Ftse Mib è l'**indice** che riassume l'andamento delle 40 aziende più grandi della Borsa di Milano. Mercoledì 25 novembre ha chiuso a 47.249 punti, in calo dell'1,81%. È il secondo giorno di fila di forte calo: martedì 24 novembre aveva perso l'1,84%.",
+      "A metà giornata il calo era più contenuto. Le vendite sono aumentate nel pomeriggio, con l'apertura di **Wall Street**, la Borsa di New York."
+     ]
+    },
+    {
+     "h": "Perché è scesa",
+     "p": [
+      "Il primo motivo sono i nuovi dazi proposti dagli Stati Uniti contro 14 economie, tra cui l'Unione europea e la Cina. Il secondo sono i dati sull'inflazione americana, più alta del previsto: secondo gli operatori fanno temere che la **Fed**, la banca centrale degli Stati Uniti, alzi i tassi.",
+      "A Wall Street il Nasdaq, l'indice dei titoli tecnologici, ha perso intorno al 4%. A Milano le **azioni** delle aziende legate alla tecnologia sono state tra le più colpite."
+     ]
+    },
+    {
+     "h": "Chi è salito e chi è sceso",
+     "p": [
+      "Le perdite più forti sono state di Prysmian, che produce cavi, scesa del 5,4%, e di STMicroelectronics, che produce microchip, scesa del 4,81%. Hanno perso anche le banche, come Bper (−3,99%) e Intesa Sanpaolo (−3,34%).",
+      "In controtendenza Stellantis, che produce automobili, salita del 3,58%, e Ferrari, salita dell'1,25%."
+     ]
+    },
+    {
+     "h": "Lo spread",
+     "p": [
+      "Lo **spread** misura la differenza tra gli interessi che lo Stato italiano paga sui **Btp** a dieci anni e quelli che paga la Germania sui **Bund**. Mercoledì 25 novembre ha chiuso a circa 112 punti, un po' più alto della mattina. Quando sale, per l'Italia prendere soldi in prestito costa un po' di più."
+     ]
+    }
+   ],
+   "perche": "Chi ha risparmi in fondi o in un piano pensione investiti in azioni vede il loro valore muoversi con la Borsa. Un calo di due giorni dice poco sul lungo periodo: conta di più capire che cosa lo ha causato.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "La chiusura della Borsa di Milano (25 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/25/borsa-milano-chiude-in-deciso-calo-181_afda4529-e7fd-4e99-bb7c-0fabeb32ddc2.html"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "I titoli migliori e peggiori del Ftse Mib (25 novembre)",
+     "url": "https://www.money.it/piazza-affari-chiude-in-calo-ftse-mib-25-11-2026"
+    },
+    {
+     "nome": "Open",
+     "titolo": "Borse in calo per dazi e inflazione americana (25 novembre)",
+     "url": "https://www.open.online/2026/11/25/borse-europee-calo-dazi-usa-inflazione-milano-ftse-mib/"
+    },
+    {
+     "nome": "Affaritaliani",
+     "titolo": "La chiusura di Milano e lo spread a fine giornata (25 novembre)",
+     "url": "https://www.affaritaliani.it/economia/borsa-i-dazi-di-trump-mandano-in-rosso-milano-e-i-listini-europei.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "Le Borse europee nel pomeriggio, dopo i dati americani (25 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/25/borsa_b52b3de9-f125-46e1-9618-47b4a674880f.html"
+    }
+   ],
+   "data": "2026-11-26"
+  },
+  {
    "id": "2026-11-25-gasolio",
    "cat": "Prezzi",
    "nastro": "Gasolio, finito lo sconto sulle accise",

@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-25",
+ "aggiornato": "2026-11-26",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-26-carte-contante",
+   "data": "2026-11-26",
+   "cat": "Pagamenti",
+   "titolo": "Bce, nei negozi dell'area euro la carta supera il contante",
+   "nastro": "Nei negozi la carta supera il contante",
+   "numero": "45%",
+   "min": 2
+  },
+  {
+   "id": "2026-11-26-dazi-usa",
+   "data": "2026-11-26",
+   "cat": "Stati Uniti",
+   "titolo": "Dazi, gli Stati Uniti propongono nuove tariffe per 14 economie",
+   "nastro": "Dazi, gli Usa propongono nuove tariffe",
+   "numero": "14",
+   "min": 2
+  },
+  {
+   "id": "2026-11-26-borsa",
+   "data": "2026-11-26",
+   "cat": "Borsa",
+   "titolo": "Borsa, Milano perde l'1,81%: pesano dazi e titoli tecnologici",
+   "nastro": "Borsa, Milano −1,81% tra dazi e tech",
+   "numero": "−1,81%",
+   "min": 2
+  },
   {
    "id": "2026-11-25-gasolio",
    "data": "2026-11-25",
