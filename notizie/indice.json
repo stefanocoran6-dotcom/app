@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-26",
+ "aggiornato": "2026-11-27",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-27-carburanti",
+   "data": "2026-11-27",
+   "cat": "Prezzi",
+   "titolo": "Carburanti ancora in calo: la benzina self a 1,930 € al litro",
+   "nastro": "Benzina self giù a 1,930 € al litro",
+   "numero": "1,930 €",
+   "min": 3
+  },
+  {
+   "id": "2026-11-27-bce-verbali",
+   "data": "2026-11-27",
+   "cat": "Tassi",
+   "titolo": "Bce, i verbali di ottobre: molti erano pronti ad alzare i tassi",
+   "nastro": "Bce, a ottobre molti volevano alzare i tassi",
+   "numero": "2,50%",
+   "min": 3
+  },
+  {
+   "id": "2026-11-27-borsa",
+   "data": "2026-11-27",
+   "cat": "Borsa",
+   "titolo": "Borsa, Milano rimbalza del 2,36% mentre Wall Street è chiusa",
+   "nastro": "Borsa, Milano rimbalza: +2,36%",
+   "numero": "+2,36%",
+   "min": 2
+  },
   {
    "id": "2026-11-26-carte-contante",
    "data": "2026-11-26",

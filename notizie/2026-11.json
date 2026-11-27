@@ -3,6 +3,219 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-27-carburanti",
+   "cat": "Prezzi",
+   "nastro": "Benzina self giù a 1,930 € al litro",
+   "titolo": "Carburanti ancora in calo: la benzina self a 1,930 € al litro",
+   "evid": "ancora in calo",
+   "sommario": "Giovedì 26 novembre benzina e gasolio sono scesi ancora, secondo i dati del ministero delle Imprese. Il gasolio cala anche se dal 24 novembre non c'è più lo sconto sulle accise.",
+   "numero": "1,930 €",
+   "nota": "−0,005 € in un giorno",
+   "didascalia": "Il prezzo medio della benzina self sulle strade italiane, in euro al litro, giovedì 26 novembre secondo i dati del ministero delle Imprese",
+   "breve": [
+    "Giovedì 26 novembre la benzina self costava in media 1,930 € al litro, 5 millesimi meno del giorno prima. Il gasolio self costava 2,192 €, 2 millesimi meno.",
+    "Il gasolio scende anche se da martedì 24 novembre non c'è più lo sconto di 4,88 centesimi al litro sulle accise.",
+    "In autostrada i prezzi sono più alti: 1,961 € al litro per la benzina self e 2,240 € per il gasolio self."
+   ],
+   "corpo": [
+    {
+     "h": "I prezzi di giovedì 26 novembre",
+     "p": [
+      "Ogni giorno il ministero delle Imprese raccoglie i prezzi dei distributori di tutta Italia e calcola una media. Giovedì 26 novembre la benzina self, cioè quella che ci si mette da soli, costava in media 1,930 € al litro sulle strade normali: 5 millesimi meno di mercoledì 25 novembre.",
+      "Il gasolio self costava 2,192 € al litro, 2 millesimi meno del giorno prima. Il Gpl, il gas per le auto, era a 0,844 € al litro e il metano a 2,157 € al chilo."
+     ]
+    },
+    {
+     "h": "Il gasolio scende anche senza sconto",
+     "p": [
+      "Su ogni litro di carburante lo Stato chiede una tassa fissa, l'accisa, e poi l'Iva. Dal 10 al 23 novembre il governo aveva abbassato l'accisa sul gasolio di 4,88 centesimi al litro, Iva compresa. Lo sconto è finito e da martedì 24 novembre non è stato rinnovato.",
+      "Nonostante questo, il prezzo medio del gasolio self è passato da 2,196 € al litro di martedì 24 novembre a 2,192 € di giovedì 26 novembre. Nello stesso periodo la benzina self è scesa da 1,939 € a 1,930 €. Il prezzo alla pompa non dipende solo dalle tasse: conta anche quanto costano benzina e gasolio all'ingrosso, che cambia ogni giorno."
+     ]
+    },
+    {
+     "h": "Quanto costa un pieno",
+     "p": [
+      "Con i prezzi medi di giovedì 26 novembre, un pieno da 50 litri di benzina self costa circa 96,50 €. Uno da 50 litri di gasolio self costa circa 109,60 €.",
+      "In autostrada si paga di più: la benzina self costava in media 1,961 € al litro e il gasolio self 2,240 €. I prezzi del singolo distributore possono essere più alti o più bassi della media."
+     ]
+    },
+    {
+     "h": "Chi riguarda",
+     "p": [
+      "Riguarda chi usa l'auto o la moto ogni giorno, ma anche chi non guida. Il gasolio muove camion e furgoni: quando costa meno, scendono un po' i costi per trasportare le merci, che con il tempo possono arrivare nei prezzi dei prodotti nei negozi."
+     ]
+    }
+   ],
+   "perche": "Il carburante è una spesa che torna ogni settimana per molte famiglie. I prezzi di ogni distributore si possono confrontare sul sito Osservaprezzi carburanti del ministero delle Imprese, prima di fare il pieno.",
+   "fonti": [
+    {
+     "nome": "Teleborsa",
+     "titolo": "I prezzi medi del ministero delle Imprese (26 novembre)",
+     "url": "https://www.teleborsa.it/News/2026/11/26/carburanti-mimit-prezzo-medio-self-benzina-scende-a-1-930-euro-litro-gasolio-a-2-192-35.html"
+    },
+    {
+     "nome": "Quattroruote",
+     "titolo": "Benzina e gasolio in calo, i prezzi su strade e autostrade (26 novembre)",
+     "url": "https://www.quattroruote.it/news/mercato/2026/11/26/prezzi_carburanti_calo_benzina_e_diesel.html"
+    },
+    {
+     "nome": "Motorionline",
+     "titolo": "Il calo dei prezzi dopo la fine dello sconto sulle accise (26 novembre)",
+     "url": "https://www.motorionline.com/prezzi-benzina-continua-il-calo-anche-se-lo-sconto-non-ce-piu/"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "I prezzi medi nel primo giorno senza sconto sul gasolio (24 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/24/mimit-gasolio-stabile-a-2196-euro-dopo-scadenza-taglio-accise_e84ff26f-fcd7-4016-b6c3-9165ae40b246.html"
+    }
+   ],
+   "data": "2026-11-27"
+  },
+  {
+   "id": "2026-11-27-bce-verbali",
+   "cat": "Tassi",
+   "nastro": "Bce, a ottobre molti volevano alzare i tassi",
+   "titolo": "Bce, i verbali di ottobre: molti erano pronti ad alzare i tassi",
+   "evid": "pronti ad alzare i tassi",
+   "sommario": "Giovedì 26 novembre la Bce ha pubblicato il resoconto della riunione di fine ottobre. I tassi erano rimasti fermi, ma molti membri avrebbero potuto sostenere già allora un aumento.",
+   "numero": "2,50%",
+   "nota": "fermo a ottobre",
+   "didascalia": "Il tasso sui depositi della Bce, rimasto invariato nella riunione del 28 e 29 ottobre",
+   "breve": [
+    "Giovedì 26 novembre la Bce ha pubblicato il resoconto della riunione del 28 e 29 ottobre, quando i tassi erano rimasti fermi: il principale, quello sui depositi, è al 2,50%.",
+    "Tutti i membri hanno votato per la pausa, ma secondo il resoconto molti avrebbero potuto sostenere già allora un aumento. Un nuovo rialzo è ritenuto probabile, salvo un netto miglioramento delle prospettive sui prezzi.",
+    "La prossima decisione sui tassi è attesa giovedì 17 dicembre."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa ha pubblicato la Bce",
+     "p": [
+      "La Bce è la **banca centrale** dei paesi che usano l'euro. Il suo compito principale è tenere l'**inflazione**, cioè l'aumento dei prezzi, vicino al 2% l'anno. Lo fa soprattutto con i tassi d'interesse, che decide in riunioni a scadenza fissa.",
+      "Circa quattro settimane dopo ogni riunione la Bce pubblica un resoconto, chiamato anche verbale, che racconta la discussione. Giovedì 26 novembre è uscito quello della riunione del 28 e 29 ottobre."
+     ]
+    },
+    {
+     "h": "Tassi fermi, ma con molti dubbi",
+     "p": [
+      "A ottobre la Bce aveva lasciato i tassi com'erano: il 2,50% sui depositi, il 2,65% sui prestiti principali alle banche e il 2,90% sui prestiti a brevissimo termine alle banche. Prima li aveva alzati a giugno e a settembre.",
+      "Dal resoconto risulta che tutti i membri hanno appoggiato la pausa proposta dal capo economista Philip Lane. Molti però avrebbero potuto sostenere un aumento già a ottobre. Hanno accettato di aspettare per avere più dati e le nuove previsioni di dicembre. Secondo il resoconto, un altro rialzo sarà probabilmente necessario, salvo che le prospettive sui prezzi migliorino in modo netto."
+     ]
+    },
+    {
+     "h": "Perché la Bce è preoccupata",
+     "p": [
+      "Il problema è l'energia. A settembre l'inflazione nell'area dell'euro è salita al 3,8%, dal 3,2% di agosto, e i prezzi dell'energia erano più alti del 18,9% rispetto a un anno prima.",
+      "L'**inflazione di fondo**, che non conta le voci che cambiano più in fretta come l'energia, è rimasta per ora abbastanza stabile. La Bce teme però che i rincari dell'energia passino col tempo a stipendi e altri prezzi."
+     ]
+    },
+    {
+     "h": "Che cosa succede adesso",
+     "p": [
+      "La prossima decisione è attesa giovedì 17 dicembre, insieme alle nuove previsioni della Bce. Secondo l'agenzia Reuters, dopo la riunione di ottobre la maggior parte dei membri che si sono espressi, in pubblico o senza farsi nominare, ha indicato un aumento di 25 **punti base**, cioè di 0,25 punti percentuali.",
+      "Riguarda chi ha un **mutuo** a **tasso variabile**: la rata segue i tassi del mercato, che si muovono insieme a quello che ci si aspetta dalla Bce. Riguarda anche chi sta per chiedere un prestito e chi tiene i risparmi sul conto o in titoli di Stato."
+     ]
+    }
+   ],
+   "perche": "Le decisioni della Bce cambiano quanto costano mutui e prestiti e quanto rendono i risparmi. Il resoconto aiuta a capire che cosa la Bce guarderà prima della riunione del 17 dicembre.",
+   "fonti": [
+    {
+     "nome": "Bce",
+     "titolo": "La dichiarazione sulla politica monetaria del 29 ottobre, con tassi e dati sui prezzi",
+     "url": "https://www.banque-france.fr/system/files/2026-10/ecb.mps261029.en_.pdf"
+    },
+    {
+     "nome": "Teleborsa",
+     "titolo": "Il resoconto della Bce: tassi fermi all'unanimità, ma molti per il rialzo (26 novembre)",
+     "url": "https://www.teleborsa.it/News/2026/11/26/bce-ad-ottobre-tassi-fermi-all-unanimita-ma-molti-avrebbero-alzato-105.html"
+    },
+    {
+     "nome": "Reuters",
+     "titolo": "Ampio sostegno per un rialzo già a ottobre, secondo il resoconto (26 novembre)",
+     "url": "https://it.investing.com/news/stock-market-news/bce-ampio-sostegno-per-rialzo-tassi-gia-in-consiglio-ottobre--verbali-3666894"
+    },
+    {
+     "nome": "OraFinanza",
+     "titolo": "Il resoconto di ottobre e le attese per dicembre (26 novembre)",
+     "url": "https://it.investing.com/news/stock-market-news/bce-i-verbali-di-ottobre-svelano-un-consiglio-gia-pronto-ad-alzare-i-tassi-3666932"
+    },
+    {
+     "nome": "DiariodelWeb",
+     "titolo": "Che cosa dice il resoconto della Bce e la prossima riunione (26 novembre)",
+     "url": "https://diariodelweb.it/economia/bce-verbali-tassi-mutui-fisso-variabile"
+    }
+   ],
+   "data": "2026-11-27"
+  },
+  {
+   "id": "2026-11-27-borsa",
+   "cat": "Borsa",
+   "nastro": "Borsa, Milano rimbalza: +2,36%",
+   "titolo": "Borsa, Milano rimbalza del 2,36% mentre Wall Street è chiusa",
+   "evid": "rimbalza del 2,36%",
+   "sommario": "Giovedì 26 novembre la Borsa di Milano ha recuperato parte delle perdite dei due giorni prima. Quasi tutte le principali aziende hanno chiuso in rialzo, con Stellantis e Prysmian in testa.",
+   "numero": "+2,36%",
+   "nota": "48.362 punti",
+   "didascalia": "Il rialzo del Ftse Mib, l'indice delle principali aziende della Borsa di Milano, nella seduta di giovedì 26 novembre",
+   "breve": [
+    "Giovedì 26 novembre il Ftse Mib ha chiuso a 48.362 punti, in rialzo del 2,36%, dopo i cali di martedì 24 (−1,84%) e mercoledì 25 novembre (−1,81%).",
+    "Stellantis è salita di circa l'8,8% e Prysmian del 6,57%. Bene anche Saipem (+4,64%) e STMicroelectronics (+4,58%).",
+    "Wall Street era chiusa per la festa del Ringraziamento e in Borsa si sono scambiate meno azioni del solito."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Il Ftse Mib è l'**indice** che riassume l'andamento delle 40 aziende più grandi della Borsa di Milano. Giovedì 26 novembre ha chiuso a 48.362 punti, con un rialzo del 2,36%. Quasi tutte le 40 aziende hanno chiuso in positivo.",
+      "È un rimbalzo, cioè una risalita dopo un calo. Martedì 24 novembre il Ftse Mib aveva perso l'1,84% e mercoledì 25 novembre l'1,81%. Con il rialzo di giovedì ha recuperato una buona parte di quelle perdite, ma non tutte."
+     ]
+    },
+    {
+     "h": "Chi è salito di più",
+     "p": [
+      "Il rialzo più forte è stato di Stellantis, il gruppo che produce auto come Fiat e Peugeot, salita di circa l'8,8%. Prysmian, che produce cavi elettrici, è salita del 6,57%: la Grecia ha dato il via libera ai lavori per collegare con cavi sottomarini le isole del Dodecaneso alla terraferma.",
+      "Sono salite anche Saipem, che lavora per le compagnie del petrolio e del gas (+4,64%), STMicroelectronics, che produce microchip (+4,58%), Nexi, che gestisce pagamenti con le carte (+4,23%), e Fincantieri, che costruisce navi (+4,09%)."
+     ]
+    },
+    {
+     "h": "Una giornata senza New York",
+     "p": [
+      "Giovedì 26 novembre **Wall Street**, la Borsa di New York, era chiusa per la festa del Ringraziamento, una delle feste più importanti degli Stati Uniti. Di solito il pomeriggio delle Borse europee è influenzato da quello che succede a New York: questa volta non è successo.",
+      "Anche per questo si sono scambiate meno **azioni** del solito. Quando gli scambi sono pochi, i movimenti di una sola giornata dicono ancora meno del solito sulla direzione dei mercati."
+     ]
+    },
+    {
+     "h": "Che cosa vuol dire per chi risparmia",
+     "p": [
+      "Chi ha risparmi in fondi che contengono azioni, anche attraverso un fondo pensione, ha visto il loro valore scendere martedì e mercoledì e risalire giovedì. In settimane come questa la Borsa si muove molto da un giorno all'altro: più che il singolo giorno, conta il periodo lungo."
+     ]
+    }
+   ],
+   "perche": "Tre giorni di grandi movimenti, prima in giù e poi in su, mostrano quanto la Borsa possa cambiare in fretta. Capire che cosa muove i prezzi aiuta a non prendere decisioni sui propri risparmi sull'onda di una sola giornata.",
+   "fonti": [
+    {
+     "nome": "ANSA",
+     "titolo": "La chiusura della Borsa di Milano (26 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/11/26/borsa-milano-chiude-in-forte-rialzo-236_4dcf4e5a-cc42-4c52-9da2-e23050aca16e.html"
+    },
+    {
+     "nome": "ANSA",
+     "titolo": "I titoli migliori della giornata e Wall Street chiusa (26 novembre)",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/11/26/borsa-milano-regina-deuropa-236-botto-di-sellantis-e-prysmian_4ec9495f-05c0-469b-9f99-ebdba0e8c92b.html"
+    },
+    {
+     "nome": "Money.it",
+     "titolo": "Il Ftse Mib in chiusura, punti e variazioni dei titoli (26 novembre)",
+     "url": "https://www.money.it/piazza-affari-rimbalza-ftse-mib-a-236-26-11-2026"
+    },
+    {
+     "nome": "SoldiOnline",
+     "titolo": "La Borsa a metà giornata e il via libera greco ai lavori di Prysmian (26 novembre)",
+     "url": "https://www.soldionline.it/notizie/azioni-italia/borsa-italiana-commento-giornata-26-novembre-2026"
+    }
+   ],
+   "data": "2026-11-27"
+  },
+  {
    "id": "2026-11-26-carte-contante",
    "cat": "Pagamenti",
    "nastro": "Nei negozi la carta supera il contante",
