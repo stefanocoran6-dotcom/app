@@ -3,6 +3,220 @@
  "mese": "2026-11",
  "articoli": [
   {
+   "id": "2026-11-28-black-friday",
+   "cat": "Consumi",
+   "nastro": "Black Friday, in media 262 € a testa",
+   "titolo": "Black Friday, Confcommercio stima una spesa media di 262 € a testa",
+   "evid": "262 € a testa",
+   "sommario": "Secondo l'Ufficio Studi di Confcommercio, nella settimana del Black Friday gli italiani spendono in tutto 6,6 miliardi di euro, tra negozi e siti. Per chi compra vale una regola precisa su come si calcolano gli sconti.",
+   "numero": "262 €",
+   "nota": "6,6 miliardi in tutto",
+   "didascalia": "La spesa media a persona stimata da Confcommercio per la settimana del Black Friday 2026",
+   "breve": [
+    "Giovedì 26 novembre Confcommercio ha stimato per la settimana del Black Friday un giro d'affari di 6,6 miliardi di euro e una spesa media di 262 € a persona.",
+    "Secondo la stessa stima, il valore delle vendite cresce del 3,1% rispetto al 2025 e sette persone su dieci approfittano delle offerte anche per i regali di Natale.",
+    "Per legge, chi annuncia uno sconto deve indicare come prezzo di partenza il più basso praticato nei 30 giorni precedenti."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa ha stimato Confcommercio",
+     "p": [
+      "Il Black Friday è una giornata di sconti nata negli Stati Uniti. Quest'anno è caduto venerdì 27 novembre, ma molti negozi e siti allungano le offerte a tutta la settimana.",
+      "Giovedì 26 novembre l'Ufficio Studi di Confcommercio, l'associazione che rappresenta i commercianti, ha diffuso le sue stime. Nella settimana delle offerte il giro d'affari, cioè il valore di tutto quello che si vende, arriva a 6,6 miliardi di euro, contando sia gli acquisti nei negozi sia quelli online. La spesa media è di 262 € a persona. Il valore delle vendite cresce del 3,1% rispetto al 2025."
+     ]
+    },
+    {
+     "h": "Come comprano gli italiani",
+     "p": [
+      "Secondo Confcommercio, il 72,1% degli intervistati usa sia i negozi sia i siti, il 22,6% compra solo online e il 5,3% solo nei negozi.",
+      "Il 70% usa le offerte anche per comprare i regali di Natale. Per l'associazione, solo una parte di questi acquisti, tra il 10 e il 15%, è spesa in più: il resto è spesa che altrimenti si farebbe a dicembre e che viene solo anticipata."
+     ]
+    },
+    {
+     "h": "La regola dei 30 giorni",
+     "p": [
+      "Dal 2023 in Italia vale una regola europea, la direttiva Omnibus, entrata nell'articolo 17-bis del Codice del consumo. Chi annuncia uno sconto deve indicare come prezzo precedente il prezzo più basso praticato nei 30 giorni prima dello sconto.",
+      "Un esempio: un televisore costa 400 €, poi il prezzo sale a 500 € e infine viene proposto a 450 € come sconto del 10%. Per la legge il prezzo di partenza è 400 €, quindi a 450 € non c'è nessuno sconto.",
+      "Ci sono alcune eccezioni, per esempio per i prodotti alimentari che si deteriorano in fretta e per i prodotti in vendita da meno di 30 giorni. Chi pensa che uno sconto non rispetti la regola può fare una segnalazione all'Autorità Antitrust."
+     ]
+    },
+    {
+     "h": "Se si compra online",
+     "p": [
+      "Per gli acquisti a distanza, come quelli su internet, chi compra ha di norma 14 giorni dalla consegna per ripensarci e restituire il prodotto. È il diritto di recesso, che ha alcune eccezioni previste dalla legge."
+     ]
+    }
+   ],
+   "perche": "Il prezzo precedente scritto accanto allo sconto dice da quale cifra si parte davvero. Sapere come va calcolato aiuta a capire quanto vale davvero un'offerta.",
+   "fonti": [
+    {
+     "nome": "LaPresse",
+     "titolo": "Le stime di Confcommercio sul Black Friday (26 novembre)",
+     "url": "https://www.lapresse.it/economia/2026/11/26/black-friday-confcom-stima-giro-daffari-da-66-mld/"
+    },
+    {
+     "nome": "Sky TG24",
+     "titolo": "Giro d'affari, spesa media e canali di acquisto secondo Confcommercio (26 novembre)",
+     "url": "https://tg24.sky.it/economia/2026/11/26/black-friday-confcom-giro-affari"
+    },
+    {
+     "nome": "Italpress",
+     "titolo": "Confcommercio e la settimana del Black Friday (26 novembre)",
+     "url": "https://www.italpress.com/confcom-per-il-black-friday-giro-daffari-da-66-miliardi-di-euro/"
+    },
+    {
+     "nome": "Quotidiano di Ragusa",
+     "titolo": "La regola dei 30 giorni sul prezzo precedente e il diritto di recesso",
+     "url": "https://www.quotidianodiragusa.it/2026/11/13/tecnologie/sconti-falsi-black-friday-prezzo-precedente-30-giorni/"
+    },
+    {
+     "nome": "Affaritaliani",
+     "titolo": "Le date del Black Friday 2026 e come si calcolano gli sconti",
+     "url": "https://www.affaritaliani.it/economia/black-friday-2026-quando-inizia-e-come-riconoscere-i-falsi-sconti.html"
+    }
+   ],
+   "data": "2026-11-28"
+  },
+  {
+   "id": "2026-11-28-export-extra-ue",
+   "cat": "Commercio",
+   "nastro": "Export fuori dall'Ue: −1,8% a ottobre",
+   "titolo": "Istat, a ottobre l'export verso i Paesi fuori dall'Ue cala dell'1,8%",
+   "evid": "cala dell'1,8%",
+   "sommario": "A ottobre le vendite italiane verso i Paesi fuori dall'Unione europea sono scese rispetto a settembre, mentre gli acquisti sono saliti. Il saldo resta positivo, ma pesa di più l'energia.",
+   "numero": "−1,8%",
+   "nota": "su settembre",
+   "didascalia": "La variazione delle esportazioni italiane verso i Paesi fuori dall'Unione europea a ottobre 2026, rispetto a settembre",
+   "breve": [
+    "Venerdì 27 novembre l'Istat ha comunicato che a ottobre l'export verso i Paesi fuori dall'Ue è sceso dell'1,8% rispetto a settembre, mentre l'import è salito del 10,7%.",
+    "Rispetto a ottobre 2025 l'export è comunque cresciuto del 3,7%, con aumenti verso la Cina (+13,6%) e gli Stati Uniti (+10,9%).",
+    "Il saldo resta positivo ma scende a 2.337 milioni di euro, da 5.183 milioni di un anno prima, soprattutto per il peso dell'energia comprata all'estero."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa ha detto l'Istat",
+     "p": [
+      "L'export, o esportazioni, è il valore di quello che le aziende italiane vendono all'estero. L'import, o importazioni, è il valore di quello che l'Italia compra dall'estero.",
+      "Venerdì 27 novembre l'Istat, l'istituto nazionale di statistica, ha comunicato che a ottobre l'export verso i Paesi fuori dall'Unione europea è sceso dell'1,8% rispetto a settembre. L'import invece è salito del 10,7%."
+     ]
+    },
+    {
+     "h": "Che cosa si vende di meno",
+     "p": [
+      "Rispetto a settembre sono calate le vendite di quasi tutti i tipi di prodotti: i beni intermedi, cioè materiali e componenti che servono ad altre aziende per produrre (−4,2%), i beni di consumo durevoli, come mobili ed elettrodomestici (−3,1%), i beni strumentali, cioè macchinari e attrezzature (−2,5%), e i beni di consumo non durevoli, come cibo e vestiti (−2,3%). È salito solo l'export di energia (+24,0%).",
+      "Se si guarda a un anno prima, il quadro è diverso: rispetto a ottobre 2025 l'export è cresciuto del 3,7%. Sono aumentate soprattutto le vendite verso la Cina (+13,6%), gli Stati Uniti (+10,9%) e la Turchia (+8,0%). Sono calate quelle verso i Paesi dell'Opec, i grandi produttori di petrolio (−6,7%), e la Svizzera (−2,9%)."
+     ]
+    },
+    {
+     "h": "Il peso dell'energia",
+     "p": [
+      "Il saldo commerciale è la differenza tra quello che si vende e quello che si compra. A ottobre è rimasto positivo, cioè l'Italia ha venduto più di quanto ha comprato, ma è sceso a 2.337 milioni di euro, contro i 5.183 milioni di ottobre 2025.",
+      "A pesare è soprattutto l'energia. Il deficit energetico, cioè quanto si spende per l'energia importata in più di quanto se ne vende, è salito a 6.889 milioni di euro, da 3.582 milioni di un anno prima. Senza l'energia il saldo è positivo per 9.226 milioni, più degli 8.765 milioni di ottobre 2025.",
+      "Nei primi dieci mesi dell'anno il saldo con i Paesi fuori dall'Ue è positivo per 38,5 miliardi di euro, contro i 35,4 miliardi dello stesso periodo del 2025."
+     ]
+    },
+    {
+     "h": "Che cosa guardare adesso",
+     "p": [
+      "I dati di un solo mese possono cambiare molto. Per questo l'Istat confronta anche periodi più lunghi: tra agosto e ottobre l'export è rimasto fermo rispetto ai tre mesi prima, mentre l'import è cresciuto dell'1,0%, spinto dall'energia (+13,6%)."
+     ]
+    }
+   ],
+   "perche": "Vendere all'estero è una parte importante del lavoro di molte aziende italiane. Il saldo con l'estero mostra inoltre quanto costa all'Italia l'energia che deve comprare fuori.",
+   "fonti": [
+    {
+     "nome": "Agrapress",
+     "titolo": "I dati Istat sul commercio con i Paesi extra Ue a ottobre, per prodotti e Paesi",
+     "url": "https://www.agrapress.it/2026/11/commercio-extra-ue-istat-a-ottobre-export-18-import-107-su-mese-saldo-commerciale-2-337mln/"
+    },
+    {
+     "nome": "La Voce d'Italia",
+     "titolo": "Export extra Ue in calo a ottobre, saldo energetico e non energetico",
+     "url": "https://lavoceditalia.com/2026/11/27/846092/commercio-extra-ue-frenata-dellexport-a-ottobre-boom-dellimport/"
+    },
+    {
+     "nome": "Tgcom24",
+     "titolo": "Il commercio estero extra Ue a ottobre secondo l'Istat",
+     "url": "https://www.tgcom24.mediaset.it/economia/commercio-estero-istat-ue-unione-europea_119480927-202602k.shtml"
+    },
+    {
+     "nome": "Geagency",
+     "titolo": "Export extra Ue e saldo commerciale di ottobre",
+     "url": "https://geagency.it/breaking-news/commercio-istat-a-ottobre-18-export-extra-ue-surplus-scende-a-23-mld-euro/"
+    }
+   ],
+   "data": "2026-11-28"
+  },
+  {
+   "id": "2026-11-28-borsa",
+   "cat": "Borsa",
+   "nastro": "Borsa, Milano sale ancora: +1,9%",
+   "titolo": "Borsa, Milano sale ancora dell'1,9% con UniCredit e Fincantieri",
+   "evid": "sale ancora dell'1,9%",
+   "sommario": "Venerdì 27 novembre la Borsa di Milano ha chiuso il secondo giorno di fila in forte rialzo ed è tornata sopra i 49.000 punti. In testa Fincantieri, UniCredit e STMicroelectronics.",
+   "numero": "+1,9%",
+   "nota": "sopra 49.000 punti",
+   "didascalia": "Il rialzo del Ftse Mib, l'indice delle principali aziende della Borsa di Milano, nella seduta di venerdì 27 novembre",
+   "breve": [
+    "Venerdì 27 novembre il Ftse Mib ha chiuso in rialzo di circa l'1,9%, sopra i 49.000 punti, dopo il +2,36% di giovedì 26 novembre.",
+    "Fincantieri è salita di circa il 5,7%, UniCredit del 4,3% e STMicroelectronics del 3,9%. Pirelli ha chiuso in lieve calo (−0,3%).",
+    "Wall Street ha riaperto dopo la festa del Ringraziamento, con una seduta più corta del solito."
+   ],
+   "corpo": [
+    {
+     "h": "Che cosa è successo",
+     "p": [
+      "Il Ftse Mib è l'**indice** che riassume l'andamento delle 40 aziende più grandi della Borsa di Milano. Venerdì 27 novembre ha chiuso in rialzo di circa l'1,9%, poco sopra i 49.000 punti.",
+      "È il secondo giorno di fila di forte crescita: giovedì 26 novembre il Ftse Mib era salito del 2,36%. I due rialzi hanno più che recuperato i cali di martedì 24 e mercoledì 25 novembre. Nell'intera settimana l'indice ha guadagnato poco più dell'1%."
+     ]
+    },
+    {
+     "h": "Chi è salito di più",
+     "p": [
+      "Il rialzo più forte è stato di Fincantieri, che costruisce navi, salita di circa il 5,7%. UniCredit, una delle principali banche italiane, è salita di circa il 4,3%, dopo un nuovo via libera delle autorità all'acquisto della banca tedesca Commerzbank.",
+      "È salita anche STMicroelectronics, che produce microchip (+3,9%). Tra le poche **azioni** in calo c'è Pirelli, che produce pneumatici, scesa dello 0,3%."
+     ]
+    },
+    {
+     "h": "Perché le Borse salgono",
+     "p": [
+      "Secondo l'agenzia Radiocor, Milano ha continuato a recuperare dopo gli scossoni delle ultime settimane sulle aziende legate all'intelligenza artificiale, seguendo la ripresa del Nasdaq, la Borsa americana dove sono quotate molte aziende tecnologiche.",
+      "Venerdì 27 novembre **Wall Street**, la Borsa di New York, ha riaperto dopo la festa del Ringraziamento, ma con una seduta più corta del solito, nel giorno del Black Friday."
+     ]
+    },
+    {
+     "h": "Che cosa vuol dire per chi risparmia",
+     "p": [
+      "Chi ha risparmi in fondi che contengono azioni, anche attraverso un fondo pensione, ha visto in questa settimana il loro valore scendere e poi risalire. Sono movimenti normali per la Borsa: più che i singoli giorni, conta il periodo lungo."
+     ]
+    }
+   ],
+   "perche": "Due giorni di forti rialzi dopo due di forti cali mostrano quanto la Borsa possa cambiare in fretta. Capire che cosa muove i prezzi aiuta a non giudicare i propri risparmi da una sola giornata.",
+   "fonti": [
+    {
+     "nome": "Money.it",
+     "titolo": "La chiusura del Ftse Mib e dei singoli titoli (27 novembre)",
+     "url": "https://www.money.it/piazza-affari-chiude-in-rialzo-27-11-2026"
+    },
+    {
+     "nome": "L'Unione Sarda (Radiocor)",
+     "titolo": "Milano prosegue il recupero, i titoli migliori e peggiori (27 novembre)",
+     "url": "https://www.unionesarda.it/economia/borsa-milano-prosegue-il-recupero-ftse-mib-1-9-jlzl49yi"
+    },
+    {
+     "nome": "Il Sole 24 Ore",
+     "titolo": "Gli indici di Borsa del 27 novembre (Radiocor)",
+     "url": "https://stream24.ilsole24ore.com/video/radiocor/la-borsa-indici-27-novembre-2026/AJd4R8UC"
+    },
+    {
+     "nome": "Milano Finanza",
+     "titolo": "La diretta dei mercati e la chiusura anticipata di Wall Street (27 novembre)",
+     "url": "https://www.milanofinanza.it/news/borse-oggi-diretta-27-novembre-2026-chiusura-apertura-europee-borsa-milano-ftse-mib-piazza-affari-202611270737073527"
+    }
+   ],
+   "data": "2026-11-28"
+  },
+  {
    "id": "2026-11-27-carburanti",
    "cat": "Prezzi",
    "nastro": "Benzina self giù a 1,930 € al litro",

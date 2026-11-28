@@ -1,10 +1,37 @@
 {
  "v": 1,
- "aggiornato": "2026-11-27",
+ "aggiornato": "2026-11-28",
  "mesi": [
   "2026-11"
  ],
  "articoli": [
+  {
+   "id": "2026-11-28-black-friday",
+   "data": "2026-11-28",
+   "cat": "Consumi",
+   "titolo": "Black Friday, Confcommercio stima una spesa media di 262 € a testa",
+   "nastro": "Black Friday, in media 262 € a testa",
+   "numero": "262 €",
+   "min": 3
+  },
+  {
+   "id": "2026-11-28-export-extra-ue",
+   "data": "2026-11-28",
+   "cat": "Commercio",
+   "titolo": "Istat, a ottobre l'export verso i Paesi fuori dall'Ue cala dell'1,8%",
+   "nastro": "Export fuori dall'Ue: −1,8% a ottobre",
+   "numero": "−1,8%",
+   "min": 3
+  },
+  {
+   "id": "2026-11-28-borsa",
+   "data": "2026-11-28",
+   "cat": "Borsa",
+   "titolo": "Borsa, Milano sale ancora dell'1,9% con UniCredit e Fincantieri",
+   "nastro": "Borsa, Milano sale ancora: +1,9%",
+   "numero": "+1,9%",
+   "min": 2
+  },
   {
    "id": "2026-11-27-carburanti",
    "data": "2026-11-27",
